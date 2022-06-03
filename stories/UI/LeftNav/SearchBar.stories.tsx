@@ -5,6 +5,7 @@ import { ComponentMeta, Story } from '@storybook/react'
 import SearchBar from '@eplant/UI/LeftNav/SearchBar'
 import { range } from 'lodash'
 import * as _ from 'lodash'
+import axios from 'axios'
 
 const sxOptions = {
   width100: { width: 100 },
@@ -31,6 +32,14 @@ const complete = {
       )
     )
   },
+  async genes(s: string) {
+    return (
+      await axios.get(
+        'https://bar.utoronto.ca/eplant/cgi-bin/idautocomplete.cgi?species=Arabidopsis_thaliana&term=' +
+          s
+      )
+    ).data
+  },
 }
 
 export default {
@@ -53,7 +62,7 @@ export default {
 const Template = SearchBar
 export const Default: Story = Template.bind({})
 Default.args = {
-  label: 'test',
+  label: 'Enter a gene name',
   sx: { width: 100 },
-  placeholder: 'This is what a placeholder looks like',
+  placeholder: '',
 }
