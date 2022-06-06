@@ -1,0 +1,50 @@
+{
+  "name": "eplant",
+  "version": "0.0.0",
+  "description": "Eplant",
+  "main": "index.ts",
+  "scripts": {
+    "test": "jest",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "author": "Alex Waese-Perlman",
+  "license": "undecided",
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@storybook/addon-actions": "^6.5.6",
+    "@storybook/addon-essentials": "^6.5.6",
+    "@storybook/addon-interactions": "^6.5.6",
+    "@storybook/addon-jest": "^6.5.6",
+    "@storybook/addon-links": "^6.5.6",
+    "@storybook/builder-webpack5": "^6.5.6",
+    "@storybook/manager-webpack5": "^6.5.6",
+    "@storybook/react": "^6.5.6",
+    "@storybook/testing-library": "^0.0.11",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.2.0",
+    "@types/jest": "^27.5.1",
+    "babel-loader": "^8.2.5",
+    "chromatic": "^6.5.4",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
+    "msw": "^0.42.0",
+    "ts-jest": "^28.0.3",
+    "tsconfig-paths": "^4.0.0",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "typescript": "^4.7.2",
+    "webpack": "^5.72.1"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.8.2",
+    "@mui/material": "^5.8.2",
+    "axios": "^0.27.2",
+    "lodash": "^4.17.21",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-router": "^6.3.0"
+  }
+}
