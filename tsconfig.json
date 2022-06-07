@@ -5,6 +5,7 @@
         "paths": {
             "@eplant/*": ["Eplant/*"]
         },
-        "strict": true
+        "strict": true,
+        "sourceMap": true
     }
 }
