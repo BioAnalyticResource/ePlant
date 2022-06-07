@@ -6,7 +6,7 @@ import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { debounce } from 'lodash'
 import * as React from 'react'
 import { Theme, SxProps } from '@mui/system'
-import { InputAdornment } from '@mui/material'
+import { Chip, InputAdornment } from '@mui/material'
 
 export default function SearchBar(props: {
   complete?: (input: string) => Promise<string[]>
@@ -40,18 +40,22 @@ export default function SearchBar(props: {
       options={options}
       freeSolo
       multiple
+      size="small"
       disableClearable
       onInputChange={(event, value) => setInputValue(value)}
       sx={props.sx}
       onBlur={() => setFocused(false)}
       onFocus={() => setFocused(true)}
+      renderTags={(value: readonly string[], getTagProps) =>
+        value.map((option: string, index: number) => (
+          <Chip label={option} size="small" {...getTagProps({ index })} />
+        ))
+      }
       renderInput={({ InputProps, ...params }) => (
         <TextField
           placeholder={props.placeholder}
           label={props.label}
           variant="filled"
-          {...props.inputProps}
-          style={{ overflow: 'scroll' }}
           InputProps={{
             ...InputProps,
             endAdornment: (
@@ -59,6 +63,7 @@ export default function SearchBar(props: {
                 <IconButton
                   sx={{
                     color: focused ? 'primary.main' : 'text.secondary',
+                    top: '-7px',
                   }}
                   onClick={() => props.onSubmit?.(value)}
                 >

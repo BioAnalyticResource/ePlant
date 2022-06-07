@@ -23,6 +23,7 @@ export function SearchGroup({ species: speciesList }: { species: Species[] }) {
     <Stack direction="column" spacing={2}>
       <TextField
         select
+        size="small"
         value={species?.id ?? ''}
         onChange={(e) =>
           setSpecies(speciesList.find((s) => s.id == e.target.value))
