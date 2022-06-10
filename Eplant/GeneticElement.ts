@@ -1,12 +1,19 @@
 import Species from './Species'
 
 export default class GeneticElement {
-  name: string
+  annotation: string
   id: string
   species: Species
-  constructor(name: string, id: string, species: Species) {
-    this.name = name
+  aliases: string[]
+  constructor(
+    id: string,
+    annotation: string,
+    species: Species,
+    aliases: string[]
+  ) {
     this.id = id
+    this.annotation = annotation
     this.species = species
+    this.aliases = aliases
   }
 }
