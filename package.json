@@ -5,6 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "test": "jest",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -45,6 +48,7 @@
     "@mui/material": "^5.8.4",
     "axios": "^0.27.2",
     "lodash": "^4.17.21",
+    "next": "^12.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zod": "^3.17.3"
