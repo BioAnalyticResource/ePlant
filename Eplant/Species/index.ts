@@ -1,7 +1,7 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { View } from '@eplant/views/View'
 
-type SpeciesApi = {
+export type SpeciesApi = {
   searchGene: (term: string) => Promise<GeneticElement | null>
   autocomplete: (term: string) => Promise<string[]>
 }
@@ -9,8 +9,8 @@ type SpeciesApi = {
 export default class Species {
   name: string
   api: SpeciesApi
-  views: Array<View<any>>
-  constructor(name: string, api: SpeciesApi, views: Array<View<any>>) {
+  views: Array<View>
+  constructor(name: string, api: SpeciesApi, views: Array<View>) {
     this.name = name
     this.api = api
     this.views = views

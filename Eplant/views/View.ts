@@ -1,12 +1,21 @@
 import GeneticElement from '@eplant/GeneticElement'
 import * as React from 'react'
+import { z } from 'zod'
 
-export type ViewProps<Data> = {
-  activeData: Data
+export type ViewProps = {
+  activeData: unknown
 }
 
-export type View<Data> = {
-  loadData: () => Promise<Data>
-  component: (props: ViewProps<Data>) => JSX.Element
+export type View = {
+  // loadEvent should be called to update the view's loading bar.
+  // The input is a float between 0 and 1 which represents the fraction of the data
+  // that has currently loaded
+  dataType: z.ZodType
+  loadData: (
+    gene: GeneticElement,
+    loadEvent: (amount: number) => void
+  ) => Promise<unknown>
+  // Validate props.activeData with the ZodType
+  component: (props: ViewProps) => JSX.Element
   readonly name: string
 }
