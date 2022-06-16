@@ -31,7 +31,6 @@ export default function SearchBar(props: {
     updateOptions.current(inputValue)
   }, [inputValue])
 
-  console.log(value)
   return (
     <Autocomplete
       onChange={(event, newVal) => setValue(newVal)}
