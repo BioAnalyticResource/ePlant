@@ -3,7 +3,8 @@ import * as React from 'react'
 import { z } from 'zod'
 
 export type ViewProps = {
-  activeData: unknown
+  activeData: any
+  geneticElement: GeneticElement
 }
 
 export type View = {
@@ -14,7 +15,7 @@ export type View = {
   loadData: (
     gene: GeneticElement,
     loadEvent: (amount: number) => void
-  ) => Promise<unknown>
+  ) => Promise<any>
   // Validate props.activeData with the ZodType
   component: (props: ViewProps) => JSX.Element
   readonly name: string
