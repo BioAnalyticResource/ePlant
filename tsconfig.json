@@ -5,12 +5,15 @@
     "paths": {
       "@eplant/*": [
         "Eplant/*"
+      ],
+      "@stories/*": [
+        "stories/*"
       ]
     },
     "strict": true,
     "sourceMap": true,
     "moduleResolution": "node",
-    "target": "es5",
+    "target": "es2015",
     "lib": [
       "dom",
       "dom.iterable",

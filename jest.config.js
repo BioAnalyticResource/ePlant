@@ -1,17 +1,17 @@
-const { pathsToModuleNameMapper } = require('ts-jest')
-const { compilerOptions } = require('./tsconfig')
+const path = require('path')
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   globals: {
     'ts-jest': {
-      tsConfig: 'tsconfig.test.json',
+      tsconfig: 'tsconfig.test.json',
     },
   },
   testEnvironmentOptions: {
     url: 'https://bar.utoronto.ca/eplant',
   },
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: __dirname,
-  }),
+  moduleNameMapper: {
+    '^@eplant/(.*)$': path.resolve(__dirname, 'Eplant/$1'),
+    '^@stories/(.*)$': path.resolve(__dirname, 'stories/$1'),
+  },
 }
