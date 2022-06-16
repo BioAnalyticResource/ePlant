@@ -3,8 +3,6 @@ import { z } from 'zod'
 import { View, ViewProps } from '../View'
 
 export const GeneInfoViewData = z.object({
-  locus: z.string(),
-  synonyms: z.string().array(),
   name: z.string(),
   brief_description: z.string(),
   computational_description: z.string(),

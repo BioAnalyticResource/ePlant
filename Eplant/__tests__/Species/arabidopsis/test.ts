@@ -1,4 +1,4 @@
-import arabidopsis from '.'
+import arabidopsis from '@eplant/Species/arabidopsis'
 
 describe('arabidopsis species', () => {
   it('should be able to search genes', async () => {

@@ -1,4 +1,4 @@
-import loadData from '.'
+import loadData from '@eplant/Species/arabidopsis/loaders/GeneInfoView'
 import GeneticElement from '@eplant/GeneticElement'
 import { GeneInfoViewData } from '@eplant/views/GeneInfoView'
 import arabidopsis from '@eplant/Species/arabidopsis'
