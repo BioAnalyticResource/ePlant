@@ -1,5 +1,5 @@
 import * as React from 'react'
-import SearchBar from './SearchBar'
+import SearchBar from '@eplant/UI/GeneSearch/SearchBar'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import { render, fireEvent, waitFor, screen } from '@testing-library/react'

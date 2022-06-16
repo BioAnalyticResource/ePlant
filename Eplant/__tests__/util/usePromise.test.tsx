@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import usePromise from '.'
-import delayed from '../delayed'
+import usePromise from '@eplant/util/usePromise'
+import delayed from '@eplant/util/delayed'
 const TestComponent = ({
   promise,
   callback,

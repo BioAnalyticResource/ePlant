@@ -1,4 +1,4 @@
-import { GeneInfoView } from '.'
+import { GeneInfoView } from '@eplant/views/GeneInfoView'
 
 describe('Gene Info View', () => {
   it('should be named `Gene Info Viewer`', () => {

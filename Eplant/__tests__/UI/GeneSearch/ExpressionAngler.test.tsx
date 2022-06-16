@@ -1,7 +1,7 @@
 import { render, fireEvent, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
-import ExpressionAngler from './ExpressionAngler'
+import ExpressionAngler from '@eplant/UI/GeneSearch/ExpressionAngler'
 import * as React from 'react'
 describe('expression angler', () => {
   it('should render', () => {

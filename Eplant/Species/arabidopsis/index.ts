@@ -4,9 +4,11 @@ import axios from 'axios'
 import Species, { SpeciesApi } from '../'
 import GeneticElement from '@eplant/GeneticElement'
 
-const arabidopsis = new Species('Arabidopsis', { autocomplete, searchGene }, [
-  { ...GeneInfoView, loadData: GeneInfoViewLoader },
-])
+const arabidopsis: Species = new Species(
+  'Arabidopsis',
+  { autocomplete, searchGene },
+  [{ ...GeneInfoView, loadData: GeneInfoViewLoader }]
+)
 async function autocomplete(s: string) {
   return (
     await axios.get(
@@ -29,7 +31,7 @@ async function searchGene(s: string) {
     arabidopsis,
     data.aliases
   )
-  return null
+  return gene
 }
 
 export default arabidopsis
