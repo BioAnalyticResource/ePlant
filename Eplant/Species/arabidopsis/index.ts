@@ -1,13 +1,19 @@
-import { GeneInfoView } from '@eplant/views/GeneInfoView'
+import { GeneInfoView, GeneInfoViewData } from '@eplant/views/GeneInfoView'
 import GeneInfoViewLoader from './loaders/GeneInfoView'
 import axios from 'axios'
 import Species, { SpeciesApi } from '../'
 import GeneticElement from '@eplant/GeneticElement'
+import { View } from '@eplant/views/View'
 
-const arabidopsis: Species = new Species(
+const ArabidopsisGeneInfoView: View<GeneInfoViewData> = {
+  ...GeneInfoView,
+  loadData: GeneInfoViewLoader,
+}
+
+const arabidopsis: Species<[View<GeneInfoViewData>]> = new Species(
   'Arabidopsis',
   { autocomplete, searchGene },
-  [{ ...GeneInfoView, loadData: GeneInfoViewLoader }]
+  [ArabidopsisGeneInfoView]
 )
 async function autocomplete(s: string) {
   return (

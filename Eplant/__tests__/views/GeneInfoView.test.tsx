@@ -6,8 +6,8 @@ import { render, act, prettyDOM } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { ViewProps } from '@eplant/views/View'
 
-function testForDataset(props: ViewProps) {
-  const activeData = GeneInfoViewData.parse(props.activeData)
+function testForDataset(props: ViewProps<GeneInfoViewData>) {
+  const { activeData } = props
   describe('Gene info view for ' + props.geneticElement.id, () => {
     let rows: HTMLDivElement[]
     beforeAll(async () => {

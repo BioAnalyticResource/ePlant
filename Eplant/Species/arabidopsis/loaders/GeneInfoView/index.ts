@@ -2,7 +2,10 @@ import axios from 'axios'
 import { GeneFeature, GeneInfoViewData } from '@eplant/views/GeneInfoView'
 import { View } from '@eplant/views/View'
 
-const out: View['loadData'] = async (geneticElement, loadEvent) => {
+const out: View<GeneInfoViewData>['loadData'] = async (
+  geneticElement,
+  loadEvent
+) => {
   // Get general data on the gene
   const [data, features, sequence] = await Promise.all([
     axios

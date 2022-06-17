@@ -147,9 +147,7 @@ const GeneSequence = ({
 export const GeneInfoView = {
   name: 'Gene Info Viewer',
   dataType: GeneInfoViewData,
-  component({ geneticElement, activeData: _data }: ViewProps) {
-    // ePlant ensures that _data is actually of type GeneInfoViewData using zod
-    const activeData: GeneInfoViewData = _data
+  component({ geneticElement, activeData }: ViewProps<GeneInfoViewData>) {
     return (
       <Stack direction="row" gap={'20px'}>
         <Stack direction="column" gap={'16px'} flex={1}>
