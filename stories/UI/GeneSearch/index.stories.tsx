@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ComponentMeta, Story } from '@storybook/react'
-import { SearchGroup } from '@eplant/UI/LeftNav'
+import { SearchGroup } from '@eplant/UI/GeneSearch'
 import Species from '@eplant/Species'
 import arabidopsis from '@eplant/Species/arabidopsis'
 
