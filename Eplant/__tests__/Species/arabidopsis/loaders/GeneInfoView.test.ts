@@ -8,6 +8,11 @@ describe('load data', () => {
     const gene = await arabidopsis.api.searchGene('AT3G24650')
     if (!gene) throw new Error("Couldn't find gene")
     const data = await loadData(gene, (loading: number) => {})
-    GeneInfoViewData.parse(data)
+    //console.log(
+    JSON.stringify({
+      geneticElement: gene,
+      activeData: GeneInfoViewData.parse(data),
+    })
+    //)
   })
 })
