@@ -6,7 +6,4 @@ import {
 
 export type EplantProps = {}
 
-export default function Eplant() {
-  const genes = useGeneticElementsState()
-  return <GenesContext.Provider value={genes}></GenesContext.Provider>
-}
+export default function Eplant() {}

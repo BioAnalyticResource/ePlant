@@ -3,6 +3,8 @@ import { light, dark } from '../Eplant/theme'
 import Container from '@mui/material/Container'
 import '@fontsource/roboto-mono'
 import { useEffect, useState } from 'react'
+import EplantStateProvider from '../Eplant/contexts/EplantState'
+import arabidopsis from '../Eplant/Species/arabidopsis'
 export const decorators = [
   (Story) => {
     const [darkMode, setDarkMode] = useState(true)
@@ -15,7 +17,9 @@ export const decorators = [
     })
     return (
       <ThemeProvider theme={darkMode ? dark : light}>
-        <Story />
+        <EplantStateProvider species={[arabidopsis]} genes={[]}>
+          <Story />
+        </EplantStateProvider>
         <CssBaseline />
       </ThemeProvider>
     )
