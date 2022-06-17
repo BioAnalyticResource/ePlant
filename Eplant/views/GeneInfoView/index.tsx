@@ -72,7 +72,6 @@ const GeneSequence = ({
   const feature = activeData.features.find(
     (sf) => sf.uniqueID == geneticElement.id + '.1'
   )
-  console.log(feature)
   for (
     let i = 0, prevStyle = {}, str = '';
     i < activeData.geneSequence.length;
@@ -132,7 +131,11 @@ const GeneSequence = ({
       !_.isEqual(prevStyle, currentStyle) ||
       i == activeData.geneSequence.length - 1
     ) {
-      spans.push(<span style={prevStyle}>{str}</span>)
+      spans.push(
+        <span style={prevStyle} key={spans.length}>
+          {str}
+        </span>
+      )
       str = ''
     }
     str += char
@@ -184,7 +187,7 @@ export const GeneInfoView = {
             <Typography variant="body1">Computational Description</Typography>
             <SecondaryText>
               {activeData.computational_description}
-            </SecondaryText>
+            </SecondaryText>{' '}
           </div>
           <div>
             <Typography variant="body1">Curator Summary</Typography>

@@ -13,9 +13,9 @@ function testForDataset(props: ViewProps) {
     beforeAll(async () => {
       const s = render(<GeneInfoView.component {...props} />)
       const table = await s.findByTestId('gene-info-stack')
-      rows = Array.from(table.querySelectorAll('div').entries()).map(
-        (a) => a[1]
-      )
+      rows = Array.from(table.children).filter(
+        (c) => c.tagName == 'DIV'
+      ) as HTMLDivElement[]
     })
     it('contains a row for `Gene`', async () => {
       const [label, value] = rows[0].children

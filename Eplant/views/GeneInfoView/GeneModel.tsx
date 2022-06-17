@@ -106,6 +106,7 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
               const text = `Type:${sf.type}\nStart:${sf.start}\nEnd:${sf.end}\nStrand:${sf.strand}`
               return (
                 <Tooltip
+                  key={sf.uniqueID}
                   title={
                     <Stack direction="column" spacing={1}>
                       <Typography variant="subtitle1">{sf.type}</Typography>
