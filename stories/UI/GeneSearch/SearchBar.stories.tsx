@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { ComponentMeta, Story } from '@storybook/react'
 
-import SearchBar from '@eplant/UI/LeftNav/SearchBar'
+import SearchBar from '@eplant/UI/GeneSearch/SearchBar'
 import { range } from 'lodash'
 import * as _ from 'lodash'
 import axios from 'axios'

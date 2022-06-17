@@ -1,10 +1,40 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "jsx": "react",
-        "paths": {
-            "@eplant/*": ["Eplant/*"]
-        },
-        "strict": true
-    }
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "preserve",
+    "paths": {
+      "@eplant/*": [
+        "Eplant/*"
+      ],
+      "@stories/*": [
+        "stories/*"
+      ]
+    },
+    "strict": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "target": "es2015",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

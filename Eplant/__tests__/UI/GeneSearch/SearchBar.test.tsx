@@ -1,5 +1,5 @@
 import * as React from 'react'
-import SearchBar from './SearchBar'
+import SearchBar from '@eplant/UI/GeneSearch/SearchBar'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import { render, fireEvent, waitFor, screen } from '@testing-library/react'
@@ -63,7 +63,9 @@ describe('search bar', () => {
       expect(rows).toContain('abc')
     })
   })
-  it('should submit when the user presses enter', async () => {
+  // Unnecessary if we decide to use a multiselect box
+  // TODO: decide whether or not we are using a multiselect box
+  /*it('should submit when the user presses enter', async () => {
     const onSubmit = jest.fn((x: string) => x)
     const { s, input } = await setup({
       props: {
@@ -76,7 +78,7 @@ describe('search bar', () => {
     await userEvent.type(input, '{enter}')
     expect(onSubmit).toHaveBeenCalledTimes(1)
     expect(onSubmit).toHaveBeenCalledWith('test')
-  })
+  })*/
   it('should display its label', async () => {
     const { s, input } = await setup({
       props: {
@@ -99,9 +101,10 @@ describe('search bar', () => {
     })
     const button = await s.findByRole('button')
     await userEvent.type(input, 'test')
+    await userEvent.type(input, '{enter}')
     await userEvent.click(button)
     expect(onSubmit).toHaveBeenCalledTimes(1)
-    expect(onSubmit).toHaveBeenCalledWith('test')
+    expect(onSubmit).toHaveBeenCalledWith(['test'])
   })
   it('renders placeholder text', async () => {
     const { s, input } = await setup({
