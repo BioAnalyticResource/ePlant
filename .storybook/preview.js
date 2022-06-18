@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import EplantStateProvider from '../Eplant/contexts/EplantState'
 import arabidopsis from '../Eplant/Species/arabidopsis'
 import geneticElements from '../Eplant/__mocks__/geneticElements'
+import { DndContext } from '@dnd-kit/core'
 export const decorators = [
   (Story) => {
     const [darkMode, setDarkMode] = useState(true)

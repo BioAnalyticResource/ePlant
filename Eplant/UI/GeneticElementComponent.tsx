@@ -22,11 +22,11 @@ const SelectedIndicator = (props: SVGProps<SVGSVGElement>) => {
         y="0"
         width="10"
         height="24"
-        fill={theme.palette.background.default}
+        fill={theme.palette.background.paper}
       />
       <path
         d="M6 4C6 1.79086 7.79086 0 10 0H16V24H10C7.79086 24 6 22.2091 6 20V4Z"
-        fill={theme.palette.background.default}
+        fill={theme.palette.background.paper}
       />
       <path
         d="M6 4C6 1.79086 7.79086 0 10 0H14V24H10C7.79086 24 6 22.2091 6 20V4Z"
@@ -40,23 +40,33 @@ const scrollFrames = (a: string) => keyframes`
 0%   { transform: translateX(0); }
 100% { transform: translateX(-${a}); }`
 
+export type GeneticElementComponentProps = {
+  geneticElement: GeneticElement
+  selected: boolean
+  onClickMenu?: (e: React.MouseEvent<HTMLElement>) => void
+  hovered?: boolean
+  animateText?: boolean
+}
+
 export default function GeneticElementComponent({
   geneticElement,
   selected,
   onClickMenu,
-}: {
-  geneticElement: GeneticElement
-  selected: boolean
-  onClickMenu: (e: React.MouseEvent<HTMLElement>) => void
-}) {
-  const [hover, setHover] = useState<boolean>(false)
+  // Force the genetic element component to render in hovered state
+  hovered,
+  // Defaults to true
+  animateText,
+}: GeneticElementComponentProps) {
+  const [_hover, setHover] = useState<boolean>(false)
+  const hover = _hover || hovered
+
   const [textScroll, setTextScroll] = useState<boolean>(false)
 
   const textGroupRef = useRef<HTMLDivElement>()
   const textContainerRef = useRef<HTMLDivElement>()
 
   useEffect(() => {
-    if (hover) {
+    if (hover && (animateText ?? true)) {
       const timeout = setTimeout(() => {
         setTextScroll(true)
       }, 1000)
@@ -71,7 +81,7 @@ export default function GeneticElementComponent({
   const backgroundColor =
     hover || selected
       ? theme.palette.secondary.main
-      : theme.palette.background.default
+      : theme.palette.background.paper
 
   const iconSx = (theme: Theme) => ({
     cursor: 'pointer',

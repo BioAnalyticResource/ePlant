@@ -13,6 +13,9 @@ export const light: ThemeOptions = createTheme({
       paper: '#f0f0f0',
     },
   },
+  shape: {
+    borderRadius: '4px',
+  },
 })
 
 export const dark: ThemeOptions = createTheme({
@@ -28,5 +31,8 @@ export const dark: ThemeOptions = createTheme({
       default: '#121212',
       paper: '#222222',
     },
+  },
+  shape: {
+    borderRadius: '4px',
   },
 })

@@ -8,6 +8,7 @@ import { SearchGroup } from './GeneSearch'
 import { LogoWithText } from '../Logo'
 import { useGeneticElements } from '@eplant/contexts/geneticElements'
 import GeneticElementComponent from '../GeneticElementComponent'
+import { Collections } from './Collections'
 
 export function LeftNav(props: {}) {
   const [species, setSpecies] = useSpecies()
@@ -17,16 +18,7 @@ export function LeftNav(props: {}) {
       <LogoWithText text="ePlant" />
       <SearchGroup addGeneticElement={() => {}}></SearchGroup>
       <Divider light />
-      <Stack gap={1} direction="column">
-        {geneticElements.map((g) => (
-          <GeneticElementComponent
-            geneticElement={g}
-            selected={false}
-            key={g.id}
-            onClickMenu={() => {}}
-          ></GeneticElementComponent>
-        ))}
-      </Stack>
+      <Collections />
     </Stack>
   )
 }
