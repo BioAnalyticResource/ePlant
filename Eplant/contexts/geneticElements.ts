@@ -9,6 +9,8 @@ export const GenesContext = React.createContext<GeneticElementsState>([
   [],
   () => {},
 ])
-export const useGeneticElements = () => React.useContext(GenesContext)
+export function useGeneticElements() {
+  return React.useContext(GenesContext)
+}
 export const useGeneticElementsState = (ge: GeneticElement[] = []) =>
   React.useState<GeneticElement[]>(ge)

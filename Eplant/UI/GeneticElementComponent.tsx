@@ -11,7 +11,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import React, { SVGProps, useEffect, useState } from 'react'
+import React, { SVGProps, useEffect, useRef, useState } from 'react'
 
 const SelectedIndicator = (props: SVGProps<SVGSVGElement>) => {
   const theme = useTheme()
@@ -38,9 +38,7 @@ const SelectedIndicator = (props: SVGProps<SVGSVGElement>) => {
 
 const scrollFrames = (a: string) => keyframes`
 0%   { transform: translateX(0); }
-33% { transform: translateX(-${a}); }
-66% {transform: translateX(0);}
-100% {transform: translateX(0);}`
+100% { transform: translateX(-${a}); }`
 
 export default function GeneticElementComponent({
   geneticElement,
@@ -54,11 +52,14 @@ export default function GeneticElementComponent({
   const [hover, setHover] = useState<boolean>(false)
   const [textScroll, setTextScroll] = useState<boolean>(false)
 
+  const textGroupRef = useRef<HTMLDivElement>()
+  const textContainerRef = useRef<HTMLDivElement>()
+
   useEffect(() => {
     if (hover) {
       const timeout = setTimeout(() => {
         setTextScroll(true)
-      }, 3000)
+      }, 1000)
       return () => clearTimeout(timeout)
     } else {
       setTextScroll(false)
@@ -73,7 +74,6 @@ export default function GeneticElementComponent({
       : theme.palette.background.default
 
   const iconSx = (theme: Theme) => ({
-    transition: 'all .2s ease',
     cursor: 'pointer',
 
     color: hover ? theme.palette.text.primary : backgroundColor,
@@ -116,7 +116,6 @@ export default function GeneticElementComponent({
       }}
       sx={(theme) => ({
         background: backgroundColor,
-        transition: 'all .2s ease',
         overflow: 'hidden',
       })}
       elevation={0}
@@ -127,9 +126,7 @@ export default function GeneticElementComponent({
         height={24}
         overflow="hidden"
         whiteSpace={'nowrap'}
-        sx={(theme) => ({
-          transition: 'all .2s ease',
-        })}
+        sx={(theme) => ({})}
       >
         <Box minWidth={24} minHeight={24}>
           {indicator}
@@ -140,9 +137,7 @@ export default function GeneticElementComponent({
             flex: 1,
             overflow: 'hidden',
             position: 'relative',
-            transition: 'all .2s ease',
             ':before': {
-              transition: 'all .2s ease',
               content: '""',
               background: `linear-gradient(to right, transparent 80%, ${backgroundColor})`,
               width: '100%',
@@ -152,17 +147,24 @@ export default function GeneticElementComponent({
               zIndex: 5,
             },
           }}
+          ref={textContainerRef}
         >
           <Stack
             direction="row"
             gap={1}
             sx={(theme) => ({
               animation: textScroll
-                ? `${scrollFrames('100px')} 7.5s linear`
+                ? `${scrollFrames(
+                    20 +
+                      (textGroupRef.current?.clientWidth ?? 1000) -
+                      (textContainerRef.current?.clientWidth ?? 1000) +
+                      'px'
+                  )} 3s linear forwards`
                 : '',
               position: 'absolute',
               userSelect: 'none',
             })}
+            ref={textGroupRef}
           >
             <Typography>{geneticElement.id}</Typography>
             <Divider orientation="vertical" flexItem></Divider>

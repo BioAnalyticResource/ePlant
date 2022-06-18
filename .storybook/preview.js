@@ -5,6 +5,7 @@ import '@fontsource/roboto-mono'
 import { useEffect, useState } from 'react'
 import EplantStateProvider from '../Eplant/contexts/EplantState'
 import arabidopsis from '../Eplant/Species/arabidopsis'
+import geneticElements from '../Eplant/__mocks__/geneticElements'
 export const decorators = [
   (Story) => {
     const [darkMode, setDarkMode] = useState(true)
@@ -17,7 +18,7 @@ export const decorators = [
     })
     return (
       <ThemeProvider theme={darkMode ? dark : light}>
-        <EplantStateProvider species={[arabidopsis]} genes={[]}>
+        <EplantStateProvider species={[arabidopsis]} genes={geneticElements}>
           <Story />
         </EplantStateProvider>
         <CssBaseline />
