@@ -2,7 +2,7 @@ import { render } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import * as React from 'react'
 import { LeftNav } from '@eplant/UI/LeftNav'
-import { SearchGroup } from '@eplant/UI/GeneSearch'
+import { SearchGroup } from '@eplant/UI/LeftNav/GeneSearch'
 
 describe('left nav', () => {
   it('should have a dropdown to select species', async () => {

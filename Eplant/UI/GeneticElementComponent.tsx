@@ -58,7 +58,7 @@ export default function GeneticElementComponent({
     if (hover) {
       const timeout = setTimeout(() => {
         setTextScroll(true)
-      }, 1000)
+      }, 3000)
       return () => clearTimeout(timeout)
     } else {
       setTextScroll(false)
@@ -78,6 +78,7 @@ export default function GeneticElementComponent({
 
     color: hover ? theme.palette.text.primary : backgroundColor,
   })
+  // TODO: Create an animation that morphs between the handle and the indicator
   const indicator = (
     <SelectedIndicator
       style={{
@@ -157,7 +158,7 @@ export default function GeneticElementComponent({
             gap={1}
             sx={(theme) => ({
               animation: textScroll
-                ? `${scrollFrames('100px')} 7.5s linear infinite`
+                ? `${scrollFrames('100px')} 7.5s linear`
                 : '',
               position: 'absolute',
               userSelect: 'none',

@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { SearchGroup } from './GeneSearch'
-import { LogoWithText } from './Logo'
+import { LogoWithText } from '../Logo'
 
 export function LeftNav(props: {}) {
   const species = useSpecies()
