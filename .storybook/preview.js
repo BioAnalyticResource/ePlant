@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import EplantStateProvider from '../Eplant/contexts/EplantState'
 import arabidopsis from '../Eplant/Species/arabidopsis'
 import geneticElements from '../Eplant/__mocks__/geneticElements'
+import { Box } from '@mui/material'
 import { DndContext } from '@dnd-kit/core'
 export const decorators = [
   (Story) => {
@@ -20,7 +21,15 @@ export const decorators = [
     return (
       <ThemeProvider theme={darkMode ? dark : light}>
         <EplantStateProvider species={[arabidopsis]} genes={geneticElements}>
-          <Story />
+          <Box
+            sx={(theme) => ({
+              width: '100%',
+              height: '100%',
+              background: theme.palette.background.paper,
+            })}
+          >
+            <Story />
+          </Box>
         </EplantStateProvider>
         <CssBaseline />
       </ThemeProvider>
@@ -35,5 +44,8 @@ export const parameters = {
       color: /(background|color)$/i,
       date: /Date$/,
     },
+  },
+  backgrounds: {
+    default: undefined,
   },
 }

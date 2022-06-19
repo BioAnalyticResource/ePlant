@@ -2,6 +2,7 @@ import GeneticElement from '@eplant/GeneticElement'
 import { DragIndicator, MoreVert } from '@mui/icons-material'
 import {
   Box,
+  BoxProps,
   Divider,
   keyframes,
   Paper,
@@ -13,26 +14,35 @@ import {
 } from '@mui/material'
 import React, { SVGProps, useEffect, useRef, useState } from 'react'
 
-const SelectedIndicator = (props: SVGProps<SVGSVGElement>) => {
+const SelectedIndicator = (props: BoxProps & { hover: boolean }) => {
   const theme = useTheme()
   return (
-    <svg viewBox="0 0 24 24" {...props}>
-      <rect
-        x="0"
-        y="0"
-        width="10"
-        height="24"
-        fill={theme.palette.background.paper}
+    <Box {...props} position={'relative'}>
+      <Box
+        position="absolute"
+        sx={(theme) => ({
+          left: 0,
+          top: 0,
+          width: props.hover ? '24px' : '16px',
+          height: '24px',
+          background: theme.palette.background.paper,
+          transition: '0.1s ease all',
+        })}
       />
-      <path
-        d="M6 4C6 1.79086 7.79086 0 10 0H16V24H10C7.79086 24 6 22.2091 6 20V4Z"
-        fill={theme.palette.background.paper}
+      <Box
+        position="absolute"
+        sx={(theme) => ({
+          left: props.hover ? 0 : '6px',
+          top: 0,
+          width: props.hover ? '22px' : '8px',
+          height: '24px',
+          background: theme.palette.primary.main,
+          borderTopLeftRadius: theme.shape.borderRadius,
+          borderBottomLeftRadius: theme.shape.borderRadius,
+          transition: '0.1s ease all',
+        })}
       />
-      <path
-        d="M6 4C6 1.79086 7.79086 0 10 0H14V24H10C7.79086 24 6 22.2091 6 20V4Z"
-        fill={theme.palette.primary.light}
-      />
-    </svg>
+    </Box>
   )
 }
 
@@ -58,7 +68,7 @@ export default function GeneticElementComponent({
   animateText,
 }: GeneticElementComponentProps) {
   const [_hover, setHover] = useState<boolean>(false)
-  const hover = _hover || hovered
+  const hover = hovered || _hover
 
   const [textScroll, setTextScroll] = useState<boolean>(false)
 
@@ -89,20 +99,14 @@ export default function GeneticElementComponent({
     color: hover ? theme.palette.text.primary : backgroundColor,
   })
   // TODO: Create an animation that morphs between the handle and the indicator
-  const indicator = (
-    <SelectedIndicator
-      style={{
-        display: hover || !selected ? 'none' : 'block',
-      }}
-    />
-  )
+  const indicator = <SelectedIndicator hover={hover} />
   const Handle = (
     <DragIndicator
       sx={(theme) => ({
         ...iconSx(theme),
-        display: selected && !hover ? 'none' : 'flex',
-        background: selected ? theme.palette.primary.light : 'none',
-        color: theme.palette.background.default,
+        color: theme.palette.background.paper,
+        opacity: hover ? '1' : '0',
+        transition: '0.1s ease all',
       })}
     />
   )
@@ -112,9 +116,15 @@ export default function GeneticElementComponent({
         ...iconSx(theme),
         position: 'sticky',
         right: 0,
+        transition: '0.1s ease all',
       })}
     />
   )
+
+  const transformDist =
+    20 +
+    (textGroupRef.current?.clientWidth ?? 1000) -
+    (textContainerRef.current?.clientWidth ?? 1000)
 
   return (
     <Paper
@@ -126,6 +136,7 @@ export default function GeneticElementComponent({
       }}
       sx={(theme) => ({
         background: backgroundColor,
+        transition: '0.1s ease all',
         overflow: 'hidden',
       })}
       elevation={0}
@@ -138,9 +149,13 @@ export default function GeneticElementComponent({
         whiteSpace={'nowrap'}
         sx={(theme) => ({})}
       >
-        <Box minWidth={24} minHeight={24}>
-          {indicator}
-          {Handle}
+        <Box sx={{ position: 'relative' }} minWidth={24} minHeight={24}>
+          <Box sx={{ position: 'absolute' }} minWidth={24} minHeight={24}>
+            {selected && indicator}
+          </Box>
+          <Box sx={{ position: 'absolute' }} minWidth={24} minHeight={24}>
+            {Handle}
+          </Box>
         </Box>
         <Box
           sx={{
@@ -164,12 +179,9 @@ export default function GeneticElementComponent({
             gap={1}
             sx={(theme) => ({
               animation: textScroll
-                ? `${scrollFrames(
-                    20 +
-                      (textGroupRef.current?.clientWidth ?? 1000) -
-                      (textContainerRef.current?.clientWidth ?? 1000) +
-                      'px'
-                  )} 3s linear forwards`
+                ? `${scrollFrames(transformDist + 'px')} ${
+                    transformDist / 50
+                  }s linear forwards`
                 : '',
               position: 'absolute',
               userSelect: 'none',

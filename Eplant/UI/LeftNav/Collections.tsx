@@ -247,7 +247,6 @@ export function Collections() {
   ) {
     if (finished) setActiveId(undefined)
     const { active, over } = event
-    console.log(active, over)
     // Put active gene in place of the gene that it is currently over
     if (!over) return // Not dropped on a droppable
 
