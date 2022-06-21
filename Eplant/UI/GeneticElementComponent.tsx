@@ -14,7 +14,12 @@ import {
 } from '@mui/material'
 import React, { SVGProps, useEffect, useRef, useState } from 'react'
 
-const SelectedIndicator = (props: BoxProps & { hover: boolean }) => {
+/**
+ * Mark whether or not a genetic element component is selected
+ *
+ * @param {(BoxProps & { hover: boolean })} props Set hover to whether or not the genetic element component is hovered
+ */
+function SelectedIndicator(props: BoxProps & { hover: boolean }) {
   const theme = useTheme()
   return (
     <Box {...props} position={'relative'}>
@@ -58,6 +63,17 @@ export type GeneticElementComponentProps = {
   animateText?: boolean
 }
 
+/**
+ * Displays a marker for a genetic element component
+ *
+ * @export
+ * @param {GeneticElementComponentProps} props
+ * @param {boolean} props.animateText When set to true the name of the genetic element will scroll after it is hovered for long enough
+ * @param {boolean} props.hovered When set to true the component is forced to be in hovered state
+ * @param {GeneticElementComponentProps['onClickMenu']} props.onClickMenu Called when the user clicks the 3-dot menu button on the right of the component
+ * @param {boolean} props.selected Defines whether this component should be rendered as if it is currently active
+ * @param {GeneticElement} props.geneticElement The genetic element being rendered
+ */
 export default function GeneticElementComponent({
   geneticElement,
   selected,

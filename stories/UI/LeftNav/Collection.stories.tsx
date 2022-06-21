@@ -4,7 +4,27 @@ import { ComponentMeta } from '@storybook/react'
 
 export const Default = () => {
   const genes = useGeneticElements()[0]
-  return <Collection genes={genes} name="Collection 1"></Collection>
+  return (
+    <Collection
+      setOpen={() => {}}
+      onNameChange={() => {}}
+      open={false}
+      genes={genes}
+      name="Collection 1"
+    ></Collection>
+  )
+}
+export const Open = () => {
+  const genes = useGeneticElements()[0]
+  return (
+    <Collection
+      setOpen={() => {}}
+      onNameChange={() => {}}
+      open={true}
+      genes={genes}
+      name="Collection 1"
+    ></Collection>
+  )
 }
 
 export default {

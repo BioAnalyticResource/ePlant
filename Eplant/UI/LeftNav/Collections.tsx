@@ -35,6 +35,11 @@ import {
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers'
 
+/**
+ * A draggable/sortable version of {@link GeneticElementComponent}
+ * @param {(GeneticElementComponentProps & { active: boolean })} props
+ * @param {boolean} props.active Set to active if this component is currently being dragged
+ */
 function SortableGeneticElement(
   props: GeneticElementComponentProps & { active: boolean }
 ) {
@@ -72,6 +77,28 @@ function SortableGeneticElement(
   )
 }
 
+type CollectionProps = {
+  genes: GeneticElement[]
+  name: string
+  id?: number
+  activeId?: string
+  open: boolean
+  setOpen: (open: boolean) => void
+  onNameChange: (newName: string) => void
+}
+/**
+ * A sortable, renamable collection of {@link GeneticElementComponent}s
+ *
+ * @export
+ * @param {CollectionProps} props
+ * @param {GeneticElement[]} props.genes The genetic elements in this collection
+ * @param {string} props.name The current name of this collection
+ * @param {number} props.id The id of this collection. Necessary if multiple collections are being used {@link Collections}
+ * @param {string} props.activeId The id of the {@link GeneticElement} that is being dragged
+ * @param {boolean} props.open When set to false the collection is rendered as collapsed
+ * @param {CollectionProps['setOpen']} props.setOpen Called when a user clicks the collection
+ * @param {CollectionProps['onNameChange']} props.onNameChange Called when a user renames the collection
+ */
 export function Collection({
   genes,
   name,
@@ -79,14 +106,7 @@ export function Collection({
   activeId,
   open,
   setOpen,
-}: {
-  genes: GeneticElement[]
-  name: string
-  id?: number
-  activeId?: string
-  open: boolean
-  setOpen: (open: boolean) => void
-}) {
+}: CollectionProps) {
   const [hover, setHover] = React.useState<boolean>(false)
 
   const { setNodeRef: setTopRef } = useDroppable({
@@ -96,7 +116,7 @@ export function Collection({
     id: 'Collection-bottom' + id ?? '',
   })
   return (
-    <Stack direction="column" spacing={1}>
+    <Stack direction="column" spacing={1} data-testid="collection">
       <Stack
         onClick={() => setOpen(!open)}
         onMouseOver={() => setHover(true)}
@@ -137,7 +157,7 @@ export function Collection({
                   key={g.id}
                   geneticElement={g}
                   // TODO: select the gene that is in the currently focused view
-                  selected={g.id == 'AT1G01010'}
+                  selected={false}
                   // TODO: Make the menu popup that allows you to remove genes
                   onClickMenu={() => {}}
                 ></SortableGeneticElement>
@@ -198,6 +218,17 @@ export function Collections() {
             key={i}
             id={i}
             {...props}
+            onNameChange={(newName) => {
+              setCollections((collections) => {
+                const cols = collections.slice()
+                cols[i] = {
+                  open: cols[i].open,
+                  genes: cols[i].genes,
+                  name: newName,
+                }
+                return cols
+              })
+            }}
             setOpen={() => {
               setCollections((collections) => {
                 const cols = collections.slice()
