@@ -1,10 +1,12 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { DragIndicator, MoreVert } from '@mui/icons-material'
+import { DragIndicator } from '@mui/icons-material'
 import {
   Box,
   BoxProps,
   Divider,
   keyframes,
+  Menu,
+  MenuItem,
   Paper,
   Stack,
   Theme,
@@ -12,7 +14,8 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import React, { SVGProps, useEffect, useRef, useState } from 'react'
+import React, { SVGProps, useEffect, useId, useRef, useState } from 'react'
+import OptionsButton from './OptionsButton'
 
 /**
  * Mark whether or not a genetic element component is selected
@@ -50,7 +53,6 @@ function SelectedIndicator(props: BoxProps & { hover: boolean }) {
     </Box>
   )
 }
-
 const scrollFrames = (a: string) => keyframes`
 0%   { transform: translateX(0); }
 100% { transform: translateX(-${a}); }`
@@ -58,9 +60,9 @@ const scrollFrames = (a: string) => keyframes`
 export type GeneticElementComponentProps = {
   geneticElement: GeneticElement
   selected: boolean
-  onClickMenu?: (e: React.MouseEvent<HTMLElement>) => void
   hovered?: boolean
   animateText?: boolean
+  onRemove?: () => void
 }
 
 /**
@@ -70,14 +72,14 @@ export type GeneticElementComponentProps = {
  * @param {GeneticElementComponentProps} props
  * @param {boolean} props.animateText When set to true the name of the genetic element will scroll after it is hovered for long enough
  * @param {boolean} props.hovered When set to true the component is forced to be in hovered state
- * @param {GeneticElementComponentProps['onClickMenu']} props.onClickMenu Called when the user clicks the 3-dot menu button on the right of the component
+ * @param {() => void} props.onRemove Called when this genetic element is deleted
  * @param {boolean} props.selected Defines whether this component should be rendered as if it is currently active
  * @param {GeneticElement} props.geneticElement The genetic element being rendered
  */
 export default function GeneticElementComponent({
   geneticElement,
   selected,
-  onClickMenu,
+  onRemove,
   // Force the genetic element component to render in hovered state
   hovered,
   // Defaults to true
@@ -90,6 +92,10 @@ export default function GeneticElementComponent({
 
   const textGroupRef = useRef<HTMLDivElement>()
   const textContainerRef = useRef<HTMLDivElement>()
+
+  const menuId = useId()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuEl, setMenuEl] = useState<HTMLElement>()
 
   useEffect(() => {
     if (hover && (animateText ?? true)) {
@@ -112,6 +118,7 @@ export default function GeneticElementComponent({
   const iconSx = (theme: Theme) => ({
     cursor: 'pointer',
 
+    transition: '0.1s ease all',
     color: hover ? theme.palette.text.primary : backgroundColor,
   })
   // TODO: Create an animation that morphs between the handle and the indicator
@@ -122,17 +129,6 @@ export default function GeneticElementComponent({
         ...iconSx(theme),
         color: theme.palette.background.paper,
         opacity: hover ? '1' : '0',
-        transition: '0.1s ease all',
-      })}
-    />
-  )
-  const Options = (
-    <MoreVert
-      sx={(theme) => ({
-        ...iconSx(theme),
-        position: 'sticky',
-        right: 0,
-        transition: '0.1s ease all',
       })}
     />
   )
@@ -153,7 +149,6 @@ export default function GeneticElementComponent({
       sx={(theme) => ({
         background: backgroundColor,
         transition: '0.1s ease all',
-        overflow: 'hidden',
       })}
       elevation={0}
     >
@@ -209,10 +204,38 @@ export default function GeneticElementComponent({
             <Typography>{geneticElement.aliases.join(', ')}</Typography>
           </Stack>
         </Box>
-        <Box minWidth={24} minHeight={24}>
-          {Options}
-        </Box>
+        <OptionsButton
+          sx={(theme) => ({
+            width: '24px',
+            height: '24px',
+            ...iconSx(theme),
+          })}
+          onClick={openMenu}
+        />
       </Stack>
+      <Menu
+        id={menuId}
+        anchorEl={menuEl}
+        open={menuOpen}
+        onClose={closeMenu}
+        MenuListProps={{
+          dense: true,
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={() => (closeMenu(), onRemove?.())}>
+          Remove gene from list
+        </MenuItem>
+      </Menu>
     </Paper>
   )
+
+  function openMenu(e: React.MouseEvent<HTMLElement>) {
+    setMenuEl(e.currentTarget)
+    setMenuOpen(true)
+  }
+  function closeMenu() {
+    setMenuEl(undefined)
+    setMenuOpen(false)
+  }
 }

@@ -1,16 +1,23 @@
 import { useGeneticElements } from '@eplant/contexts/geneticElements'
 import GeneticElement from '@eplant/GeneticElement'
-import { ExpandMore, MoreVert } from '@mui/icons-material'
+import {
+  ExpandMore,
+  MoreVert,
+  SignalCellularNoSimOutlined,
+} from '@mui/icons-material'
 import {
   Card,
   Collapse,
   IconButton,
+  Menu,
+  MenuItem,
   Paper,
   Stack,
+  TextField,
   Typography,
 } from '@mui/material'
 import { Box } from '@mui/system'
-import React from 'react'
+import React, { useId, useState, useRef } from 'react'
 import GeneticElementComponent, {
   GeneticElementComponentProps,
 } from '../GeneticElementComponent'
@@ -27,6 +34,10 @@ import {
   DragOverEvent,
   DragStartEvent,
   DragOverlay,
+  useSensors,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
 } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import _, { truncate } from 'lodash'
@@ -34,6 +45,7 @@ import {
   restrictToVerticalAxis,
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers'
+import OptionsButton from '../OptionsButton'
 
 /**
  * A draggable/sortable version of {@link GeneticElementComponent}
@@ -85,6 +97,8 @@ type CollectionProps = {
   open: boolean
   setOpen: (open: boolean) => void
   onNameChange: (newName: string) => void
+  deleteGene: (gene: GeneticElement) => void
+  onRemove: () => void
 }
 /**
  * A sortable, renamable collection of {@link GeneticElementComponent}s
@@ -98,6 +112,8 @@ type CollectionProps = {
  * @param {boolean} props.open When set to false the collection is rendered as collapsed
  * @param {CollectionProps['setOpen']} props.setOpen Called when a user clicks the collection
  * @param {CollectionProps['onNameChange']} props.onNameChange Called when a user renames the collection
+ * @param {CollectionProps['deleteGene']} props.deleteGene Called when a user deletes a gene
+ * @param {CollectionProps['onRemove']} props.onRemove Called when this collection is deleted
  */
 export function Collection({
   genes,
@@ -106,8 +122,11 @@ export function Collection({
   activeId,
   open,
   setOpen,
+  deleteGene,
+  onRemove,
+  onNameChange,
 }: CollectionProps) {
-  const [hover, setHover] = React.useState<boolean>(false)
+  const [hover, setHover] = useState<boolean>(false)
 
   const { setNodeRef: setTopRef } = useDroppable({
     id: 'Collection-top' + id ?? '',
@@ -115,6 +134,15 @@ export function Collection({
   const { setNodeRef: setBottomRef } = useDroppable({
     id: 'Collection-bottom' + id ?? '',
   })
+
+  const menuId = useId()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuEl, setMenuEl] = useState<HTMLElement>()
+
+  const [deleting, setDeleting] = useState(false)
+  const [renaming, setRenaming] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+
   return (
     <Stack direction="column" spacing={1} data-testid="collection">
       <Stack
@@ -138,9 +166,35 @@ export function Collection({
             transition: 'all 0.5s ease',
           })}
         />
-        <Typography>{name}</Typography>
+        <TextField
+          style={{
+            display: renaming ? undefined : 'none',
+            maxHeight: '100%',
+          }}
+          size="small"
+          inputRef={inputRef}
+          onSubmit={(e) => console.log(e)}
+          onKeyPress={(e) => {
+            if (e.key == 'Enter') rename()
+          }}
+          onBlur={() => rename()}
+        ></TextField>
+        <Typography
+          style={{
+            display: !renaming ? undefined : 'none',
+          }}
+        >
+          {name}
+        </Typography>
         <div style={{ flex: 1 }} />
-        <MoreVert onClick={(e) => e.stopPropagation()} />
+        <OptionsButton
+          onClick={(e) => (openMenu(e), e.stopPropagation())}
+          sx={(theme) => ({
+            width: '24px',
+            height: '24px',
+            color: theme.palette.text.secondary,
+          })}
+        ></OptionsButton>
       </Stack>
       <Collapse in={open}>
         <SortableContext items={genes} strategy={verticalListSortingStrategy}>
@@ -158,8 +212,7 @@ export function Collection({
                   geneticElement={g}
                   // TODO: select the gene that is in the currently focused view
                   selected={false}
-                  // TODO: Make the menu popup that allows you to remove genes
-                  onClickMenu={() => {}}
+                  onRemove={() => deleteGene(g)}
                 ></SortableGeneticElement>
               ))
             ) : (
@@ -179,8 +232,65 @@ export function Collection({
           </Stack>
         </SortableContext>
       </Collapse>
+      <Menu
+        id={menuId}
+        anchorEl={menuEl}
+        open={menuOpen}
+        onClose={closeMenu}
+        MenuListProps={{
+          dense: true,
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            setRenaming(true)
+            if (inputRef.current) {
+              inputRef.current.value = name
+              setTimeout(() => {
+                inputRef.current?.focus()
+                inputRef.current?.select()
+              }, 50)
+            }
+            closeMenu()
+          }}
+        >
+          Rename collection
+        </MenuItem>
+        <MenuItem
+          sx={(theme) => ({
+            ':hover': {
+              background: theme.palette.error.main,
+            },
+          })}
+          onClick={remove}
+        >
+          {deleting ? 'Are you sure?' : 'Remove collection'}
+        </MenuItem>
+      </Menu>
     </Stack>
   )
+
+  function openMenu(e: React.MouseEvent<HTMLElement>) {
+    setMenuEl(e.currentTarget)
+    setMenuOpen(true)
+  }
+  function closeMenu() {
+    setMenuEl(undefined)
+    setMenuOpen(false)
+    setDeleting(false)
+  }
+
+  function rename() {
+    setRenaming(false)
+    if (inputRef.current) onNameChange(inputRef.current.value)
+  }
+  function remove() {
+    if (!deleting) setDeleting(true)
+    else {
+      onRemove()
+    }
+  }
 }
 export function Collections() {
   const [genes, setGenes] = useGeneticElements()
@@ -199,10 +309,20 @@ export function Collections() {
     },
   ])
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, {})
+  )
+
   const [activeId, setActiveId] = React.useState<string | undefined>(undefined)
 
   return (
     <DndContext
+      sensors={sensors}
       modifiers={[restrictToVerticalAxis]}
       onDragStart={handleDragStart}
       onDragOver={(ev) =>
@@ -218,17 +338,22 @@ export function Collections() {
             key={i}
             id={i}
             {...props}
+            onRemove={() => {
+              setCollections((collections) => {
+                return collections.filter((c) => c != props)
+              })
+            }}
             onNameChange={(newName) => {
               setCollections((collections) => {
                 const cols = collections.slice()
                 cols[i] = {
-                  open: cols[i].open,
-                  genes: cols[i].genes,
+                  ...cols[i],
                   name: newName,
                 }
                 return cols
               })
             }}
+            deleteGene={(g) => deleteGene(g)}
             setOpen={() => {
               setCollections((collections) => {
                 const cols = collections.slice()
@@ -354,5 +479,18 @@ export function Collections() {
       }
       return cols
     })
+  }
+
+  function deleteGene(gene: GeneticElement) {
+    setCollections((collections) => {
+      const cols = collections.slice()
+      const idx = cols.findIndex((c) => c.genes.includes(gene))
+      cols[idx] = {
+        ...cols[idx],
+        genes: cols[idx].genes.filter((g) => g != gene),
+      }
+      return cols
+    })
+    setGenes(genes.filter((g) => g != gene))
   }
 }
