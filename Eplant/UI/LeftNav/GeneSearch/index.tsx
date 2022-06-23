@@ -14,9 +14,9 @@ export const MenuButton = styled(Button)(({ theme }) => ({
 }))
 
 export function SearchGroup({
-  addGeneticElement,
+  addGeneticElements,
 }: {
-  addGeneticElement: (gene: GeneticElement) => void
+  addGeneticElements: (gene: GeneticElement[]) => void
 }) {
   const [species, setSpecies] = React.useState<Species>()
   const [speciesList, setSpeciesList] = useSpecies()
@@ -38,6 +38,7 @@ export function SearchGroup({
           setSpecies(speciesList.find((s) => s.name == e.target.value))
         }
         label="Species"
+        variant="standard"
       >
         {speciesList.map((s, idx) => (
           <MenuItem key={s.name} value={s.name}>
@@ -53,12 +54,11 @@ export function SearchGroup({
         }}
         complete={species?.api?.autocomplete}
         onSubmit={(terms: string[]) => {
+          console.log(terms)
           if (!species) return
-          for (const s of terms) {
-            species.api
-              .searchGene(s)
-              .then((gene) => gene && addGeneticElement(gene))
-          }
+          Promise.all(terms.map(species.api.searchGene)).then((a) =>
+            addGeneticElements(a.filter((x) => x != null) as GeneticElement[])
+          )
         }}
       ></SearchBar>
       {/* TODO: Implement alternate search options */}

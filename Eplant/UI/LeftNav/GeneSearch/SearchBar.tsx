@@ -66,7 +66,10 @@ export default function SearchBar(props: {
                     color: focused ? 'primary.main' : 'text.secondary',
                     top: '-7px',
                   }}
-                  onClick={() => props.onSubmit?.(value)}
+                  onClick={() => {
+                    props.onSubmit?.(value)
+                    setValue([])
+                  }}
                 >
                   <SearchIcon />
                 </IconButton>

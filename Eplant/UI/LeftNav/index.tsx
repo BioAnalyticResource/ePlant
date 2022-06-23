@@ -16,7 +16,15 @@ export function LeftNav(props: {}) {
   return (
     <Stack gap={4} direction="column">
       <LogoWithText text="ePlant" />
-      <SearchGroup addGeneticElement={() => {}}></SearchGroup>
+      <SearchGroup
+        addGeneticElements={(s) => {
+          setGeneticElements(
+            geneticElements.concat(
+              s.filter((g) => !geneticElements.includes(g))
+            )
+          )
+        }}
+      />
       <Divider light />
       <Collections />
     </Stack>

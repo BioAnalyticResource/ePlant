@@ -1,11 +1,14 @@
 import { useGeneticElements } from '@eplant/contexts/geneticElements'
 import GeneticElement from '@eplant/GeneticElement'
 import {
+  Add,
+  Check,
   ExpandMore,
   MoreVert,
   SignalCellularNoSimOutlined,
 } from '@mui/icons-material'
 import {
+  Button,
   Card,
   Collapse,
   IconButton,
@@ -17,7 +20,7 @@ import {
   Typography,
 } from '@mui/material'
 import { Box } from '@mui/system'
-import React, { useId, useState, useRef } from 'react'
+import React, { useId, useState, useRef, useEffect } from 'react'
 import GeneticElementComponent, {
   GeneticElementComponentProps,
 } from '../GeneticElementComponent'
@@ -144,7 +147,14 @@ export function Collection({
   const inputRef = useRef<HTMLInputElement>(null)
 
   return (
-    <Stack direction="column" spacing={1} data-testid="collection">
+    <Stack
+      direction="column"
+      spacing={1}
+      data-testid="collection"
+      style={{
+        justifyContent: 'center',
+      }}
+    >
       <Stack
         onClick={() => setOpen(!open)}
         onMouseOver={() => setHover(true)}
@@ -158,6 +168,7 @@ export function Collection({
           background: hover ? theme.palette.secondary.main : 'transparent',
           borderRadius: theme.shape.borderRadius,
           color: theme.palette.text.secondary,
+          alignItems: 'center',
         })}
       >
         <ExpandMore
@@ -187,14 +198,20 @@ export function Collection({
           {name}
         </Typography>
         <div style={{ flex: 1 }} />
-        <OptionsButton
-          onClick={(e) => (openMenu(e), e.stopPropagation())}
-          sx={(theme) => ({
-            width: '24px',
-            height: '24px',
-            color: theme.palette.text.secondary,
-          })}
-        ></OptionsButton>
+        {renaming ? (
+          <IconButton color="primary" onClick={rename}>
+            <Check></Check>
+          </IconButton>
+        ) : (
+          <OptionsButton
+            onClick={(e) => (openMenu(e), e.stopPropagation())}
+            sx={(theme) => ({
+              width: '24px',
+              height: '24px',
+              color: theme.palette.text.secondary,
+            })}
+          ></OptionsButton>
+        )}
       </Stack>
       <Collapse in={open}>
         <SortableContext items={genes} strategy={verticalListSortingStrategy}>
@@ -289,6 +306,7 @@ export function Collection({
     if (!deleting) setDeleting(true)
     else {
       onRemove()
+      closeMenu()
     }
   }
 }
@@ -320,6 +338,24 @@ export function Collections() {
 
   const [activeId, setActiveId] = React.useState<string | undefined>(undefined)
 
+  // If there are genes that aren't in a collection, put them in the first
+  useEffect(() => {
+    const unincluded = genes.map(
+      (g) => !collections.some((c) => c.genes.includes(g))
+    )
+
+    if (unincluded.some((x) => x)) {
+      setCollections((collections) => {
+        const cols = collections.slice()
+        cols[0] = {
+          ...cols[0],
+          genes: cols[0].genes.concat(genes.filter((g, i) => unincluded[i])),
+        }
+        return cols
+      })
+    }
+  }, [genes, collections])
+
   return (
     <DndContext
       sensors={sensors}
@@ -339,9 +375,7 @@ export function Collections() {
             id={i}
             {...props}
             onRemove={() => {
-              setCollections((collections) => {
-                return collections.filter((c) => c != props)
-              })
+              deleteCollection(i)
             }}
             onNameChange={(newName) => {
               setCollections((collections) => {
@@ -368,6 +402,21 @@ export function Collections() {
             activeId={activeId}
           />
         ))}
+        <Button
+          startIcon={<Add />}
+          variant="text"
+          size="small"
+          sx={(theme) => ({
+            color: theme.palette.text.secondary,
+            alignSelf: 'start',
+            ':hover': {
+              backgroundColor: theme.palette.secondary.main,
+            },
+          })}
+          onClick={addCollection}
+        >
+          Add collection
+        </Button>
       </Stack>
       <DragOverlay modifiers={[restrictToWindowEdges]}>
         {activeId ? (
@@ -492,5 +541,22 @@ export function Collections() {
       return cols
     })
     setGenes(genes.filter((g) => g != gene))
+  }
+
+  function deleteCollection(index: number) {
+    setGenes(genes.filter((g) => !collections[index].genes.includes(g)))
+    setCollections(collections.filter((c, i) => i != index))
+  }
+
+  function addCollection() {
+    setCollections(
+      collections.concat([
+        {
+          genes: [],
+          name: 'Collection ' + (collections.length + 1),
+          open: true,
+        },
+      ])
+    )
   }
 }
