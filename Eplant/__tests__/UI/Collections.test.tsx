@@ -18,7 +18,10 @@ describe('Collection', () => {
     open: boolean
   }) {
     const onNameChange = jest.fn(),
-      setOpen = jest.fn()
+      setOpen = jest.fn(),
+      deleteGene = jest.fn(),
+      onRemove = jest.fn()
+
     const s = render(
       <Collection
         name={name}
@@ -27,10 +30,12 @@ describe('Collection', () => {
         onNameChange={onNameChange}
         activeId={activeId}
         genes={geneticElements}
+        deleteGene={deleteGene}
+        onRemove={onRemove}
       ></Collection>
     )
     const parent = await s.findByTestId('collection')
-    return { onNameChange, setOpen, s, parent }
+    return { onNameChange, setOpen, deleteGene, onRemove, s, parent }
   }
 
   it('should render correctly when closed', async () => {
