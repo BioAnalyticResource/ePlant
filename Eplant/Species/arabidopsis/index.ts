@@ -31,6 +31,7 @@ async function searchGene(s: string) {
         s
     )
   ).data
+  if (!data.id || !data.annotation || !data.aliases) return null
   const gene = new GeneticElement(
     data.id,
     data.annotation,

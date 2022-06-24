@@ -20,11 +20,13 @@ export default function SearchBar(props: {
   const [inputValue, setInputValue] = React.useState<string>('')
   const [options, setOptions] = React.useState<string[]>([])
   const [focused, setFocused] = React.useState<boolean>(false)
-  const updateOptions = React.useRef(
-    debounce(async (newValue) => {
+  const updateOptions = React.useRef((text: string) => {})
+
+  React.useEffect(() => {
+    updateOptions.current = debounce(async (newValue) => {
       setOptions((await props.complete?.(newValue)) ?? [])
     }, 100)
-  )
+  }, [props.complete])
   const id = React.useId()
 
   React.useEffect(() => {
@@ -64,7 +66,10 @@ export default function SearchBar(props: {
                     color: focused ? 'primary.main' : 'text.secondary',
                     top: '-7px',
                   }}
-                  onClick={() => props.onSubmit?.(value)}
+                  onClick={() => {
+                    props.onSubmit?.(value)
+                    setValue([])
+                  }}
                 >
                   <SearchIcon />
                 </IconButton>
