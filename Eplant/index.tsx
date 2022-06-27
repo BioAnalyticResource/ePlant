@@ -1,9 +1,5 @@
 import * as React from 'react'
-import {
-  GenesContext,
-  useGeneticElementsState,
-} from './contexts/geneticElements'
+import * as ReactDOM from 'react-dom'
+import Eplant from './Eplant'
 
-export type EplantProps = {}
-
-export default function Eplant() {}
+ReactDOM.render(<Eplant />, document.getElementById('root'))

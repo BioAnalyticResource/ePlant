@@ -10,5 +10,5 @@ export default {
 } as ComponentMeta<typeof SearchGroup>
 
 export const Default: Story = () => (
-  <SearchGroup addGeneticElement={() => undefined}></SearchGroup>
+  <SearchGroup addGeneticElements={(g) => {}}></SearchGroup>
 )

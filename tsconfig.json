@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "jsx": "preserve",
+    "jsx": "react",
     "paths": {
       "@eplant/*": [
         "Eplant/*"
@@ -13,7 +13,7 @@
     "strict": true,
     "sourceMap": true,
     "moduleResolution": "node",
-    "target": "es2015",
+    "target": "ES2018",
     "lib": [
       "dom",
       "dom.iterable",
@@ -22,10 +22,9 @@
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
     "incremental": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    "module": "CommonJS",
     "resolveJsonModule": true,
     "isolatedModules": true
   },
