@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ComponentMeta, Story } from '@storybook/react'
-import { SearchGroup } from '@eplant/UI/LeftNav'
+import { SearchGroup } from '@eplant/UI/LeftNav/GeneSearch'
 import Species from '@eplant/Species'
 import arabidopsis from '@eplant/Species/arabidopsis'
 
@@ -10,8 +10,5 @@ export default {
 } as ComponentMeta<typeof SearchGroup>
 
 export const Default: Story = () => (
-  <SearchGroup
-    addGeneticElement={() => undefined}
-    species={[arabidopsis]}
-  ></SearchGroup>
+  <SearchGroup addGeneticElement={() => undefined}></SearchGroup>
 )
