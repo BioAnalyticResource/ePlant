@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { debounce } from 'lodash'
 import * as React from 'react'
-import { Theme, SxProps } from '@mui/system'
+import { Theme, SxProps } from '@mui/material'
 import { Chip, InputAdornment } from '@mui/material'
 
 export default function SearchBar(props: {

@@ -1,6 +1,7 @@
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 
 module.exports = {
   entry: './Eplant/index.tsx',
@@ -15,6 +16,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    plugins: [new TsconfigPathsPlugin()],
   },
   output: {
     filename: '[name].js',
@@ -32,9 +34,7 @@ module.exports = {
     static: {
       directory: path.join(__dirname, 'dist'),
     },
-    compress: true,
-    hot: true,
-    port: 3000,
+    port: 8080,
   },
   mode: 'development',
   devtool: 'source-map',

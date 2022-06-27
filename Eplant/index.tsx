@@ -1,5 +1,7 @@
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
+import * as ReactDOM from 'react-dom/client'
 import Eplant from './Eplant'
 
-ReactDOM.render(<Eplant />, document.getElementById('root'))
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <Eplant />
+)

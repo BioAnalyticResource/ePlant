@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { Box } from '@mui/system'
+import { Box } from '@mui/material'
 import React, { useId, useState, useRef, useEffect } from 'react'
 import GeneticElementComponent, {
   GeneticElementComponentProps,
@@ -320,11 +320,6 @@ export function Collections() {
       name: 'Collection 1',
       open: true,
     },
-    {
-      genes: [],
-      name: 'Collection 2',
-      open: true,
-    },
   ])
 
   const sensors = useSensors(
@@ -347,6 +342,13 @@ export function Collections() {
     if (unincluded.some((x) => x)) {
       setCollections((collections) => {
         const cols = collections.slice()
+        if (cols.length == 0) {
+          cols.push({
+            genes: [],
+            name: 'Collection 1',
+            open: true,
+          })
+        }
         cols[0] = {
           ...cols[0],
           genes: cols[0].genes.concat(genes.filter((g, i) => unincluded[i])),
