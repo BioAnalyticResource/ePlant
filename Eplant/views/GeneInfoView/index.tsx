@@ -154,7 +154,7 @@ export const GeneInfoView = {
           <div style={{ whiteSpace: 'nowrap' }}>
             <Typography variant="body1">Available views</Typography>
           </div>
-          {geneticElement.species.views.map((view) => (
+          {geneticElement.views.map((view) => (
             <div key={view.name}>{view.name}</div>
           ))}
         </Stack>

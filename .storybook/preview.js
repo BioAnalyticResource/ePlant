@@ -21,12 +21,7 @@ export const decorators = [
     })
     return (
       <ThemeProvider theme={darkMode ? dark : light}>
-        <Provider
-          initialState={[
-            [speciesAtom, [arabidopsis]],
-            [genesAtom, geneticElements],
-          ]}
-        >
+        <Provider initialState={[[genesAtom, geneticElements]]}>
           <Box
             sx={(theme) => ({
               width: '100%',

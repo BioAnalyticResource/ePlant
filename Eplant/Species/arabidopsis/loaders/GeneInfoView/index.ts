@@ -1,5 +1,9 @@
 import axios from 'axios'
-import { GeneFeature, GeneInfoViewData } from '@eplant/views/GeneInfoView'
+import {
+  GeneFeature,
+  GeneInfoView,
+  GeneInfoViewData,
+} from '@eplant/views/GeneInfoView'
 import { View } from '@eplant/views/View'
 
 const out: View<GeneInfoViewData>['loadData'] = async (
@@ -82,4 +86,9 @@ const out: View<GeneInfoViewData>['loadData'] = async (
   }
 }
 
-export default out
+const ArabidopsisGeneInfoView: View<GeneInfoViewData> = {
+  ...GeneInfoView,
+  loadData: out,
+}
+
+export default ArabidopsisGeneInfoView

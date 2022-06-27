@@ -6,13 +6,11 @@ export type SpeciesApi = {
   autocomplete: (term: string) => Promise<string[]>
 }
 
-export default class Species<T extends View<any>[] = View<any>[]> {
+export default class Species {
   name: string
   api: SpeciesApi
-  views: T
-  constructor(name: string, api: SpeciesApi, views: T) {
+  constructor(name: string, api: SpeciesApi) {
     this.name = name
     this.api = api
-    this.views = views
   }
 }
