@@ -1,4 +1,4 @@
-import { useSpecies } from '@eplant/contexts/species'
+import { useSpecies } from '@eplant/state'
 import GeneticElement from '@eplant/GeneticElement'
 import Species from '@eplant/Species'
 import { Button, MenuItem, styled, TextField } from '@mui/material'

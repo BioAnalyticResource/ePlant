@@ -9,15 +9,11 @@ import {
   IconButton,
 } from '@mui/material'
 import * as React from 'react'
-import EplantStateProvider from './contexts/EplantState'
-import {
-  GenesContext,
-  useGeneticElementsState,
-} from './contexts/geneticElements'
 import arabidopsis from './Species/arabidopsis'
 import { dark, light } from './theme'
 import { LeftNav } from './UI/LeftNav'
 import { ExpandMore } from '@mui/icons-material'
+import { Provider } from 'jotai'
 
 // TODO: Make this drawer support opening/closing on mobile
 function ResponsiveDrawer(props: DrawerProps) {
@@ -34,7 +30,7 @@ export type EplantProps = {}
 
 export default function Eplant() {
   return (
-    <EplantStateProvider species={[arabidopsis]}>
+    <Provider>
       <ThemeProvider theme={dark}>
         <CssBaseline />
         <ResponsiveDrawer variant="persistent" open={true}>
@@ -43,6 +39,6 @@ export default function Eplant() {
           </Container>
         </ResponsiveDrawer>
       </ThemeProvider>
-    </EplantStateProvider>
+    </Provider>
   )
 }

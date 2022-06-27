@@ -1,4 +1,4 @@
-import { useGeneticElements } from '@eplant/contexts/geneticElements'
+import { useGeneticElements } from '@eplant/state'
 import GeneticElement from '@eplant/GeneticElement'
 import {
   Add,
