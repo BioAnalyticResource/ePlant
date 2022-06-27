@@ -20,7 +20,7 @@ export function LeftNav(props: {}) {
         addGeneticElements={(s) => {
           setGeneticElements(
             geneticElements.concat(
-              s.filter((g) => !geneticElements.includes(g))
+              s.filter((g) => !geneticElements.find((gene) => g.id == gene.id))
             )
           )
         }}
