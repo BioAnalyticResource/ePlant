@@ -11,7 +11,6 @@ function randomColor() {
 }
 
 export const Selected = () => {
-  const [color, setColor] = React.useState<string>('#000')
   return (
     <GeneticElementComponent
       geneticElement={exampleData.geneticElement}
