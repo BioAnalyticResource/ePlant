@@ -1,4 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
+import downloadFile from '@eplant/util/downloadFile'
 import {
   AppBar,
   Button,
@@ -61,7 +62,18 @@ export function ViewContainer(props: {
               </Select>
             </FormControl>
           </Box>
-          <Button variant="outlined">Download data</Button>
+          <Button
+            variant="outlined"
+            disabled={loading}
+            onClick={() => {
+              downloadFile(
+                `${props.view.name}-${props.gene.id}.json`,
+                JSON.stringify(activeData, null, 2)
+              )
+            }}
+          >
+            Download data
+          </Button>
         </Toolbar>
       </AppBar>
       <Container
