@@ -1,4 +1,4 @@
-import { Tabs, Tab, Typography, styled } from '@mui/material'
+import { styled, Tab, Tabs, Typography } from '@mui/material'
 import * as React from 'react'
 import { ViewProps } from '../View'
 import { GeneRIFs } from './GeneRIFs'

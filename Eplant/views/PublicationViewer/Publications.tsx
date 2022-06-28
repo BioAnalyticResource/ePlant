@@ -3,9 +3,9 @@ import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
-  GridToolbar,
+  GridToolbar
 } from '@mui/x-data-grid'
-import { useEffect, useState } from 'react'
+import * as React from 'react'
 import { PublicationData } from './types'
 
 const columns: GridColDef[] = [
@@ -53,8 +53,8 @@ export const Publications = ({
 }: {
   publications: PublicationData[]
 }) => {
-  const [rows, setRows] = useState(toRows(publications))
-  useEffect(() => {
+  const [rows, setRows] = React.useState(toRows(publications))
+  React.useEffect(() => {
     setRows(toRows(publications))
   }, [publications])
 
