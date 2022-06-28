@@ -20,7 +20,7 @@ const out: View<GeneInfoViewData>['loadData'] = async (
       .then((d) => d.data.result[0]),
     // Get features of the gene (used for gene model and sequence highlighting)
     axios
-      .get(
+      .get<{ features: GeneFeature[] }>(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
           `gene_structure_by_locus.php?locus=${geneticElement.id}`
       )
@@ -40,8 +40,7 @@ const out: View<GeneInfoViewData>['loadData'] = async (
     childFeatType
 
   // Find the subfeatures for this genetic element
-  for (const raw of features) {
-    const feature = GeneFeature.parse(raw)
+  for (const feature of features) {
     if (feature.uniqueID === geneticElement.id) {
       geneModelFeatures = feature.subfeatures
       parentFeatType = feature.type

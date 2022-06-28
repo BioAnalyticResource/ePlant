@@ -15,7 +15,7 @@ describe('load data', () => {
     //console.log(
     JSON.stringify({
       geneticElement: gene,
-      activeData: GeneInfoViewData.parse(data),
+      activeData: data,
     })
     //)
   })

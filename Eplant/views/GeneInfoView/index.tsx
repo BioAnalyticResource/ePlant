@@ -1,6 +1,5 @@
 import { Container, Stack, Table, TableHead, Typography } from '@mui/material'
 import * as React from 'react'
-import { z } from 'zod'
 import { View, ViewProps } from '../View'
 import { styled, ThemeProvider, useTheme } from '@mui/material/styles'
 import TableBody from '@mui/material/TableBody'
@@ -8,49 +7,39 @@ import { GeneModel } from './GeneModel'
 import GeneticElement from '@eplant/GeneticElement'
 import _ from 'lodash'
 
-export const GeneFeature: z.ZodType = z.object({
-  type: z.enum([
-    'exon',
-    'CDS',
-    'five_prime_UTR',
-    'three_prime_UTR',
-    'gene',
-    'mRNA',
-  ]),
-  uniqueID: z.string(),
-  start: z.number().int(),
-  end: z.number().int(),
-  subfeatures: z.lazy(() => GeneFeature).array(),
-  strand: z.string(),
-})
-export type GeneFeature = z.infer<typeof GeneFeature>
+export type GeneFeature = {
+  type:
+    | 'exon'
+    | 'CDS'
+    | 'five_prime_UTR'
+    | 'three_prime_UTR'
+    | 'gene'
+    | 'mRNA'
+    | 'transcript_region'
+  uniqueID: string
+  start: number
+  end: number
+  subfeatures: GeneFeature[]
+  strand: string
+}
 
-export const GeneInfoViewData = z
-  .object({
-    name: z.string(),
-    brief_description: z.string(),
-    computational_description: z.string(),
-    curator_summary: z.string(),
-    location: z.string(),
-    chromosome_start: z.number(),
-    chromosome_end: z.number(),
-    strand: z.string(),
-    geneSequence: z.string(),
-    geneticElementType: z.enum([
-      'protein_coding',
-      'novel_transcribed_region',
-      'non_coding',
-    ]),
-    features: GeneFeature.array(),
-    proteinSequence: z.string().optional(),
-  })
-  .refine(
-    (obj) => obj.geneticElementType != 'protein_coding' || obj.proteinSequence,
-    (obj) => ({
-      message: `proteinSequence must be defined if it is a protein_coding gene`,
-    })
-  )
-export type GeneInfoViewData = z.infer<typeof GeneInfoViewData>
+export type GeneInfoViewData = {
+  name: string
+  brief_description: string
+  computational_description: string
+  curator_summary: string
+  location: string
+  chromosome_start: number
+  chromosome_end: number
+  strand: string
+  geneSequence: string
+  geneticElementType:
+    | 'protein_coding'
+    | 'novel_transcribed_region'
+    | 'non_coding'
+  features: GeneFeature[]
+  proteinSequence?: string
+}
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -72,6 +61,8 @@ const GeneSequence = ({
   const feature = activeData.features.find(
     (sf) => sf.uniqueID == geneticElement.id + '.1'
   )
+  // Can't render anything if there is no feature
+  if (!feature) return <></>
   for (
     let i = 0, prevStyle = {}, str = '';
     i < activeData.geneSequence.length;
@@ -81,7 +72,12 @@ const GeneSequence = ({
     const currentStyle: React.CSSProperties = {}
 
     // Add regions around the three prime utr and five prime utr
-    const features = [...feature.subfeatures]
+    const features: {
+      type: string
+      start: number
+      end: number
+      [key: string]: any
+    }[] = [...feature.subfeatures]
 
     features
       .filter(
@@ -146,7 +142,6 @@ const GeneSequence = ({
 
 export const GeneInfoView = {
   name: 'Gene Info Viewer',
-  dataType: GeneInfoViewData,
   component({ geneticElement, activeData }: ViewProps<GeneInfoViewData>) {
     return (
       <Stack direction="row" gap={'20px'}>
