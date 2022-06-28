@@ -78,7 +78,7 @@ export function ViewContainer(props: {
       </AppBar>
       <Container
         sx={{
-          paddingTop: '2rem',
+          padding: '2rem',
         }}
       >
         {loading || !activeData ? (
