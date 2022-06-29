@@ -15,7 +15,7 @@ export type View<T = any> = {
   // The input is a float between 0 and 1 which represents the fraction of the data
   // that has currently loaded
   loadData: (
-    gene: GeneticElement,
+    gene: GeneticElement | null,
     loadEvent: (amount: number) => void
   ) => Promise<any>
   // Validate props.activeData with the ZodType

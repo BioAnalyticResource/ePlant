@@ -10,6 +10,8 @@ const out: View<GeneInfoViewData>['loadData'] = async (
   geneticElement,
   loadEvent
 ) => {
+  if (!geneticElement)
+    throw new TypeError('A gene must be provided for the GeneInfoView')
   // Get general data on the gene
   const [data, features, sequence] = await Promise.all([
     axios

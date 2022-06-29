@@ -141,7 +141,7 @@ const GeneSequence = ({
 }
 
 export const GeneInfoView = {
-  name: 'Gene Info Viewer',
+  name: 'Gene info',
   component({ geneticElement, activeData }: ViewProps<GeneInfoViewData>) {
     return (
       <Stack direction="row" gap={'20px'}>
@@ -169,25 +169,25 @@ export const GeneInfoView = {
             <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
           </div>
           <div>
-            <Typography variant="body1">Full Name</Typography>
+            <Typography variant="body1">Full name</Typography>
             <SecondaryText>{activeData.name}</SecondaryText>
           </div>
           <div>
-            <Typography variant="body1">Brief Description</Typography>
+            <Typography variant="body1">Brief description</Typography>
             <SecondaryText>{activeData.brief_description}</SecondaryText>
           </div>
           <div>
-            <Typography variant="body1">Computational Description</Typography>
+            <Typography variant="body1">Computational description</Typography>
             <SecondaryText>
               {activeData.computational_description}
             </SecondaryText>{' '}
           </div>
           <div>
-            <Typography variant="body1">Curator Summary</Typography>
+            <Typography variant="body1">Curator summary</Typography>
             <SecondaryText>{activeData.curator_summary}</SecondaryText>
           </div>
           <div>
-            <Typography variant="body1">Location & Gene Model</Typography>
+            <Typography variant="body1">Location & Gene model</Typography>
             <div>
               <SecondaryText>
                 {activeData.location}: {activeData.chromosome_start} to{' '}
@@ -205,7 +205,7 @@ export const GeneInfoView = {
             </div>
           </div>
           <div>
-            <Typography variant="body1">DNA Sequence</Typography>
+            <Typography variant="body1">DNA sequence</Typography>
             <div>
               <div>
                 <SecondaryText variant="caption" whiteSpace={'nowrap'}>
@@ -222,7 +222,7 @@ export const GeneInfoView = {
           </div>
           {activeData.geneticElementType == 'protein_coding' ? (
             <div>
-              <Typography variant="body1">Protein Sequence</Typography>
+              <Typography variant="body1">Protein sequence</Typography>
               <div>
                 <SecondaryText variant="caption" whiteSpace={'nowrap'}>
                   {'> ' + geneticElement.id}

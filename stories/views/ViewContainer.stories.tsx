@@ -16,8 +16,11 @@ const AlwaysLoadingView: View = {
     }, 10)
     return new Promise(() => {})
   },
-  name: 'Always Loading View',
+  name: 'Always loading',
 }
+
+const geneticElement = { ...exampleData.geneticElement }
+geneticElement.views = [ArabidopsisGeneInfoView, AlwaysLoadingView]
 
 export default {
   title: 'View Container',
@@ -25,8 +28,6 @@ export default {
 } as ComponentMeta<typeof ViewContainer>
 
 export const Loading = () => {
-  const geneticElement = { ...exampleData.geneticElement }
-  geneticElement.views = [ArabidopsisGeneInfoView, AlwaysLoadingView]
   return (
     <ViewContainer
       view={AlwaysLoadingView}
@@ -36,7 +37,6 @@ export const Loading = () => {
   )
 }
 export const Default = () => {
-  console.log(exampleData.activeData)
   return (
     <ViewContainer
       view={
@@ -46,7 +46,7 @@ export const Default = () => {
         } as View<typeof exampleData.activeData>
       }
       setView={() => {}}
-      gene={exampleData.geneticElement}
+      gene={geneticElement}
     ></ViewContainer>
   )
 }

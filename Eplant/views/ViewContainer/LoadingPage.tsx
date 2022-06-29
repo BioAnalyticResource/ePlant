@@ -42,7 +42,7 @@ export default function LoadingPage(props: {
 }) {
   const theme = useTheme()
   return (
-    <Stack gap={3}>
+    <Stack gap={4}>
       {/* TODO: Use gene name and variants component for this */}
       <Typography variant="h4">{props.gene.id}</Typography>
       <Typography variant="body2">
