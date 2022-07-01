@@ -22,7 +22,7 @@ describe('left nav', () => {
   })
   it('should have a search bar', async () => {
     const s = render(<SearchGroup addGeneticElements={() => {}} />)
-    const search = await s.findByText('Search by gene name')
-    expect(search).toBeVisible()
+    const search = await s.findAllByText('Search by gene name')
+    expect(search[0]).toBeVisible()
   })
 })
