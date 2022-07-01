@@ -41,6 +41,7 @@ export default function SearchBar(props: {
       options={options}
       freeSolo
       multiple
+      size="small"
       disableClearable
       onInputChange={(event, value) => setInputValue(value)}
       sx={props.sx}
