@@ -125,6 +125,7 @@ export default function Eplant() {
 
   const [views, setViews] = useViews()
 
+  //TODO: Create a way for the user to add tabs and remove this line
   // @ts-ignore
   window.addTab = addTab
   //TODO: Break into more components to prevent unnecessary rerendering
