@@ -22,7 +22,7 @@ const out: View<GeneInfoViewData>['loadData'] = async (
       )
       .then((d) => {
         loaded++
-        loadEvent(loaded / 3)
+        loadEvent(loaded / 4)
         return d.data.result[0]
       }),
     // Get features of the gene (used for gene model and sequence highlighting)
@@ -33,7 +33,7 @@ const out: View<GeneInfoViewData>['loadData'] = async (
       )
       .then((d) => {
         loaded++
-        loadEvent(loaded / 3)
+        loadEvent(loaded / 4)
         return d.data.features
       }),
 
@@ -45,7 +45,7 @@ const out: View<GeneInfoViewData>['loadData'] = async (
       )
       .then((d) => {
         loaded++
-        loadEvent(loaded / 3)
+        loadEvent(loaded / 4)
         return d.data.result[0].sequence
       }),
   ])
@@ -55,11 +55,12 @@ const out: View<GeneInfoViewData>['loadData'] = async (
     childFeatType
 
   // Find the subfeatures for this genetic element
-  for (const feature of features) {
+  for (let i = 0; i < features.length; i++) {
+    const feature = features[i]
     if (feature.uniqueID === geneticElement.id) {
       geneModelFeatures = feature.subfeatures
       parentFeatType = feature.type
-      childFeatType = geneModelFeatures[0].type
+      childFeatType = geneModelFeatures?.[0]?.type
       break
     }
   }
@@ -82,6 +83,7 @@ const out: View<GeneInfoViewData>['loadData'] = async (
           `get_protein_sequence_by_identifier.php?locus=${geneticElement.id}.1`
       )
     ).data.result[0].sequence
+    loadEvent(0.75)
   }
 
   return {
