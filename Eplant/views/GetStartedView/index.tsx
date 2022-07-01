@@ -5,6 +5,7 @@ const GetStartedView: View<{}> = {
   name: 'Get started',
   component: () => <div>Get started</div>,
   loadData: async () => ({}),
+  id: 'get-started',
 }
 
 export default GetStartedView

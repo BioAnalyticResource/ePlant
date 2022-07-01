@@ -102,6 +102,8 @@ type CollectionProps = {
   onNameChange: (newName: string) => void
   deleteGene: (gene: GeneticElement) => void
   onRemove: () => void
+  selectedGene?: GeneticElement
+  onSelectGene?: (gene: GeneticElement) => void
 }
 /**
  * A sortable, renamable collection of {@link GeneticElementComponent}s
@@ -128,6 +130,8 @@ export function Collection({
   deleteGene,
   onRemove,
   onNameChange,
+  selectedGene,
+  onSelectGene,
 }: CollectionProps) {
   const [hover, setHover] = useState<boolean>(false)
 
@@ -228,8 +232,9 @@ export function Collection({
                   key={g.id}
                   geneticElement={g}
                   // TODO: select the gene that is in the currently focused view
-                  selected={false}
+                  selected={g.id == selectedGene?.id}
                   onRemove={() => deleteGene(g)}
+                  onClick={() => onSelectGene?.(g)}
                 ></SortableGeneticElement>
               ))
             ) : (
@@ -310,7 +315,10 @@ export function Collection({
     }
   }
 }
-export function Collections() {
+export function Collections(props: {
+  onSelectGene?: (gene: GeneticElement) => void
+  selectedGene?: GeneticElement
+}) {
   const [genes, setGenes] = useGeneticElements()
   const [collections, setCollections] = React.useState<
     { genes: GeneticElement[]; name: string; open: boolean }[]
@@ -371,11 +379,13 @@ export function Collections() {
       }
     >
       <Stack direction="column" spacing={2}>
-        {collections.map((props, i) => (
+        {collections.map((p, i) => (
           <Collection
             key={i}
+            selectedGene={props.selectedGene}
+            onSelectGene={props.onSelectGene}
             id={i}
-            {...props}
+            {...p}
             onRemove={() => {
               deleteCollection(i)
             }}
@@ -425,7 +435,7 @@ export function Collections() {
           <GeneticElementComponent
             hovered={true}
             // TODO: Make this follow the selected gene
-            selected={false}
+            selected={activeId == props.selectedGene?.id}
             geneticElement={
               genes.find((g) => g.id == activeId) as GeneticElement
             }

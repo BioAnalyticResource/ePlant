@@ -6,9 +6,11 @@ import React from 'react'
 import { GeneInfoView } from '@eplant/views/GeneInfoView'
 
 import ArabidopsisGeneInfoView from '@eplant/Species/arabidopsis/loaders/GeneInfoView'
+import GeneticElement from '@eplant/GeneticElement'
 
 const AlwaysLoadingView: View = {
   component: () => <div></div>,
+  id: 'always-loading',
   loadData(gene, loadState) {
     console.log('load data')
     setInterval(() => {
@@ -19,7 +21,7 @@ const AlwaysLoadingView: View = {
   name: 'Always loading',
 }
 
-const geneticElement = { ...exampleData.geneticElement }
+const geneticElement = { ...(exampleData.geneticElement as GeneticElement) }
 geneticElement.views = [ArabidopsisGeneInfoView, AlwaysLoadingView]
 
 export default {

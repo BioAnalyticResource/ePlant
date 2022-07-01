@@ -142,7 +142,11 @@ const GeneSequence = ({
 
 export const GeneInfoView = {
   name: 'Gene info',
+  id: 'gene-info',
   component({ geneticElement, activeData }: ViewProps<GeneInfoViewData>) {
+    if (geneticElement == null) {
+      throw new TypeError('Genetic element must be provided for Gene Info View')
+    }
     return (
       <Stack direction="row" gap={'20px'}>
         <Stack direction="column" gap={'16px'} flex={1}>

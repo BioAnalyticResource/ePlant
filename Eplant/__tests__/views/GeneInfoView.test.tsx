@@ -8,7 +8,7 @@ import { ViewProps } from '@eplant/views/View'
 
 function testForDataset(props: ViewProps<GeneInfoViewData>) {
   const { activeData } = props
-  describe('Gene info view for ' + props.geneticElement.id, () => {
+  describe('Gene info view for ' + props.geneticElement?.id, () => {
     let rows: HTMLDivElement[]
     beforeAll(async () => {
       const s = render(<GeneInfoView.component {...props} />)
@@ -20,12 +20,14 @@ function testForDataset(props: ViewProps<GeneInfoViewData>) {
     it('contains a row for `Gene`', async () => {
       const [label, value] = rows[0].children
       expect(label.textContent).toEqual('Gene')
-      expect(value.textContent).toEqual(props.geneticElement.id)
+      expect(value.textContent).toEqual(props.geneticElement?.id)
     })
     it('contains a row for `Aliases`', async () => {
       const [label, value] = rows[1].children
       expect(label.textContent).toEqual('Aliases')
-      expect(value.textContent).toEqual(props.geneticElement.aliases.join(', '))
+      expect(value.textContent).toEqual(
+        props.geneticElement?.aliases.join(', ')
+      )
     })
     it('contains a row for `Full Name`', async () => {
       const [label, value] = rows[2].children

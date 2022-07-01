@@ -63,6 +63,7 @@ export type GeneticElementComponentProps = {
   hovered?: boolean
   animateText?: boolean
   onRemove?: () => void
+  onClick?: () => void
 }
 
 /**
@@ -80,6 +81,7 @@ export default function GeneticElementComponent({
   geneticElement,
   selected,
   onRemove,
+  onClick,
   // Force the genetic element component to render in hovered state
   hovered,
   // Defaults to true
@@ -151,6 +153,7 @@ export default function GeneticElementComponent({
         transition: '0.1s ease all',
       })}
       elevation={0}
+      onClick={onClick}
     >
       <Stack
         direction="row"

@@ -1,4 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
+import { useFreeViews } from '@eplant/state'
 import downloadFile from '@eplant/util/downloadFile'
 import {
   AppBar,
@@ -11,25 +12,30 @@ import {
   TextField,
   Toolbar,
 } from '@mui/material'
-import Box from '@mui/material/Box'
+import Box, { BoxProps } from '@mui/material/Box'
 import * as React from 'react'
 import { useViewData, View } from '../View'
 import LoadingPage from './LoadingPage'
 
-export function ViewContainer(props: {
+export function ViewContainer({
+  view,
+  setView,
+  gene,
+  ...props
+}: {
   view: View
   setView: (view: View) => void
-  gene: GeneticElement
-}) {
-  const { activeData, error, loading, loadingAmount } = useViewData(
-    props.view,
-    props.gene
-  )
+  gene: GeneticElement | null
+} & BoxProps) {
+  const { activeData, error, loading, loadingAmount } = useViewData(view, gene)
+
+  const freeViews = useFreeViews()
+  const viewList = gene?.views ?? freeViews
 
   const idLabel = React.useId()
   const selectId = React.useId()
   return (
-    <Box>
+    <Box {...props}>
       <AppBar
         position="static"
         elevation={0}
@@ -43,21 +49,19 @@ export function ViewContainer(props: {
             <FormControl variant="standard">
               <InputLabel id={idLabel}>View</InputLabel>
               <Select
-                value={props.gene.views.findIndex(
-                  (view) => view.name === props.view.name
-                )}
+                value={viewList.findIndex((view) => view.name === view.name)}
                 labelId={idLabel}
                 label={'View'}
                 id={selectId}
                 onChange={(e) =>
                   !isNaN(parseInt(e?.target?.value as string)) &&
-                  props.setView(
-                    props.gene.views[parseInt(e.target.value as string)]
-                  )
+                  setView(viewList[parseInt(e.target.value as string)])
                 }
               >
-                {props.gene.views.map((v, i) => (
-                  <MenuItem value={i}>{v.name}</MenuItem>
+                {viewList.map((v, i) => (
+                  <MenuItem key={i} value={i}>
+                    {v.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -67,7 +71,7 @@ export function ViewContainer(props: {
             disabled={loading}
             onClick={() => {
               downloadFile(
-                `${props.view.name}-${props.gene.id}.json`,
+                `${view.id}${gene ? '-' + gene.id : ''}.json`,
                 JSON.stringify(activeData, null, 2)
               )
             }}
@@ -82,16 +86,9 @@ export function ViewContainer(props: {
         }}
       >
         {loading || !activeData ? (
-          <LoadingPage
-            loadingAmount={loadingAmount}
-            gene={props.gene}
-            view={props.view}
-          />
+          <LoadingPage loadingAmount={loadingAmount} gene={gene} view={view} />
         ) : (
-          <props.view.component
-            geneticElement={props.gene}
-            activeData={activeData}
-          />
+          <view.component geneticElement={gene} activeData={activeData} />
         )}
       </Container>
     </Box>

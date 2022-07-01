@@ -9,8 +9,11 @@ import { LogoWithText } from '../Logo'
 import { useGeneticElements } from '@eplant/state'
 import GeneticElementComponent from '../GeneticElementComponent'
 import { Collections } from './Collections'
+import GeneticElement from '@eplant/GeneticElement'
 
-export function LeftNav(props: {}) {
+export function LeftNav(props: {
+  onSelectGene?: (gene: GeneticElement) => void
+}) {
   const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
   return (
@@ -26,7 +29,7 @@ export function LeftNav(props: {}) {
         }}
       />
       <Divider light />
-      <Collections />
+      <Collections onSelectGene={props.onSelectGene} />
     </Stack>
   )
 }

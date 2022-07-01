@@ -6,7 +6,7 @@ import * as React from 'react'
 
 export type ViewProps<T> = {
   activeData: T
-  geneticElement: GeneticElement
+  geneticElement: GeneticElement | null
 }
 
 // T must be serializable/deserializable with JSON.stringify/JSON.parse
@@ -21,6 +21,7 @@ export type View<T = any> = {
   // Validate props.activeData with the ZodType
   component: (props: ViewProps<T>) => JSX.Element
   readonly name: string
+  readonly id: string
 }
 
 type ViewDataType = {
@@ -48,8 +49,8 @@ const viewDataStorage = {
   },
 }
 
-const getViewDataAtom = (view: View<any>, gene: GeneticElement) => {
-  const key = `${view.name}-${gene.id}`
+const getViewDataAtom = (view: View<any>, gene: GeneticElement | null) => {
+  const key = `${view.id}-${gene?.id ?? 'free-view'}`
   if (!viewData[key])
     viewData[key] = atomWithStorage<ViewDataType>(
       'view-data-' + key,
@@ -64,7 +65,7 @@ const getViewDataAtom = (view: View<any>, gene: GeneticElement) => {
   return viewData[key]
 }
 
-export const useViewData = (view: View, gene: GeneticElement) => {
+export const useViewData = (view: View, gene: GeneticElement | null) => {
   const [viewData, setViewData] = useAtom(getViewDataAtom(view, gene))
 
   React.useEffect(() => {
@@ -84,4 +85,11 @@ export const useViewData = (view: View, gene: GeneticElement) => {
   }, [view, gene])
 
   return viewData
+}
+
+export class NoViewError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'NoViewError'
+  }
 }
