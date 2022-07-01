@@ -41,7 +41,6 @@ export default function SearchBar(props: {
       options={options}
       freeSolo
       multiple
-      size="small"
       disableClearable
       onInputChange={(event, value) => setInputValue(value)}
       sx={props.sx}
@@ -56,15 +55,29 @@ export default function SearchBar(props: {
         <TextField
           placeholder={props.placeholder}
           label={props.label}
-          variant="filled"
+          variant="outlined"
+          {...params}
           InputProps={{
             ...InputProps,
+            onKeyDown(e) {
+              if (e.key === 'Enter') {
+                if (inputValue == '') {
+                  props.onSubmit?.(value)
+                  setValue([])
+                }
+              }
+            },
             endAdornment: (
-              <InputAdornment position="end">
+              <InputAdornment
+                position="end"
+                sx={{
+                  position: 'absolute',
+                  right: '4px',
+                }}
+              >
                 <IconButton
                   sx={{
                     color: focused ? 'primary.main' : 'text.secondary',
-                    top: '-7px',
                   }}
                   onClick={() => {
                     props.onSubmit?.(value)
