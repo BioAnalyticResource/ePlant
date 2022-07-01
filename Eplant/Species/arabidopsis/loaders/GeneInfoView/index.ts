@@ -12,6 +12,7 @@ const out: View<GeneInfoViewData>['loadData'] = async (
 ) => {
   if (!geneticElement)
     throw new TypeError('A gene must be provided for the GeneInfoView')
+  let loaded = 0
   // Get general data on the gene
   const [data, features, sequence] = await Promise.all([
     axios
@@ -19,14 +20,22 @@ const out: View<GeneInfoViewData>['loadData'] = async (
         `https://bar.utoronto.ca/webservices/bar_araport/` +
           `gene_summary_by_locus.php?locus=${geneticElement.id}`
       )
-      .then((d) => d.data.result[0]),
+      .then((d) => {
+        loaded++
+        loadEvent(loaded / 3)
+        return d.data.result[0]
+      }),
     // Get features of the gene (used for gene model and sequence highlighting)
     axios
       .get<{ features: GeneFeature[] }>(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
           `gene_structure_by_locus.php?locus=${geneticElement.id}`
       )
-      .then((d) => d.data.features),
+      .then((d) => {
+        loaded++
+        loadEvent(loaded / 3)
+        return d.data.features
+      }),
 
     // Get gene sequence
     axios
@@ -34,7 +43,11 @@ const out: View<GeneInfoViewData>['loadData'] = async (
         `https://bar.utoronto.ca/webservices/bar_araport/` +
           `get_sequence_by_identifier.php?locus=${geneticElement.id}`
       )
-      .then((d) => d.data.result[0].sequence),
+      .then((d) => {
+        loaded++
+        loadEvent(loaded / 3)
+        return d.data.result[0].sequence
+      }),
   ])
 
   let geneModelFeatures,

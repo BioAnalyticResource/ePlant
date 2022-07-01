@@ -54,7 +54,10 @@ function ViewTab(props: { id: string }) {
     // TODO: Better fallback
     return <div>Uh oh</div>
   }
-  const v = (gene ? gene.views : freeViews).find((v) => v.id == view.view)
+  const v = (gene ? gene.views.concat(freeViews) : freeViews).find(
+    (v) => v.id == view.view
+  )
+  console.log(gene)
 
   if (!v) throw new NoViewError(`No ${view.view} found for ${view.activeGene}`)
 
@@ -63,11 +66,18 @@ function ViewTab(props: { id: string }) {
       sx={{
         width: '100%',
         height: '100%',
+        overflow: 'scroll',
       }}
       view={v}
       gene={gene ?? null}
       setView={(newView) => {
-        //setViews
+        setViews((views) => ({
+          ...views,
+          [props.id]: {
+            ...views[props.id],
+            view: newView.id,
+          },
+        }))
       }}
     />
   )
@@ -76,7 +86,7 @@ function ViewTab(props: { id: string }) {
 const factory: (node: FlexLayout.TabNode) => JSX.Element | undefined = (
   node
 ) => {
-  const component = node.getComponent() as string
+  const id = node.getId() as string
   const name = node.getName()
   return (
     <div
@@ -90,7 +100,7 @@ const factory: (node: FlexLayout.TabNode) => JSX.Element | undefined = (
         alignItems: 'center',
       }}
     >
-      <ViewTab id={component} />
+      <ViewTab id={id} />
     </div>
   )
 }
@@ -100,8 +110,7 @@ const eplantScope = Symbol('Eplant scope')
 
 export default function Eplant() {
   const layout = React.useRef<Layout>(null)
-  const [selectedGene, setSelectedGene] =
-    React.useState<GeneticElement | null>(null)
+  const [activeId, setActiveId] = React.useState<string>('')
   const [model, setModel] = React.useState(
     FlexLayout.Model.fromJson({
       global: {},
@@ -114,8 +123,11 @@ export default function Eplant() {
     })
   )
 
-  const setViews = useSetViews()
+  const [views, setViews] = useViews()
 
+  // @ts-ignore
+  window.addTab = addTab
+  //TODO: Break into more components to prevent unnecessary rerendering
   return (
     <Provider scope={eplantScope}>
       <ThemeProvider theme={dark}>
@@ -129,7 +141,18 @@ export default function Eplant() {
               boxSizing: 'border-box',
             }}
           >
-            <LeftNav />
+            <LeftNav
+              onSelectGene={(gene: GeneticElement) =>
+                setViews((views) => ({
+                  ...views,
+                  [activeId]: {
+                    ...views[activeId],
+                    activeGene: gene.id,
+                  },
+                }))
+              }
+              selectedGene={views[activeId ?? '']?.activeGene ?? undefined}
+            />
           </Container>
         </ResponsiveDrawer>
         <Box
@@ -154,6 +177,14 @@ export default function Eplant() {
             onTabSetPlaceHolder={() => (
               <TabsetPlaceholder addTab={() => addTab()} />
             )}
+            onModelChange={(newModel) => {
+              const newId = newModel
+                .getActiveTabset()
+                ?.getSelectedNode?.()
+                ?.getId?.()
+              if (!newId) throw new Error('No active tabset')
+              setActiveId(newId)
+            }}
           ></FlexLayout.Layout>
         </Box>
       </ThemeProvider>
@@ -174,7 +205,8 @@ export default function Eplant() {
     })
     layout.current.addTabToActiveTabSet({
       name: 'Get Started',
-      component: id,
+      component: 'view',
+      id,
       type: 'tab',
     })
   }

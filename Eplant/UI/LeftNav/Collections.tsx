@@ -102,7 +102,7 @@ type CollectionProps = {
   onNameChange: (newName: string) => void
   deleteGene: (gene: GeneticElement) => void
   onRemove: () => void
-  selectedGene?: GeneticElement
+  selectedGene?: string
   onSelectGene?: (gene: GeneticElement) => void
 }
 /**
@@ -232,7 +232,7 @@ export function Collection({
                   key={g.id}
                   geneticElement={g}
                   // TODO: select the gene that is in the currently focused view
-                  selected={g.id == selectedGene?.id}
+                  selected={g.id == selectedGene}
                   onRemove={() => deleteGene(g)}
                   onClick={() => onSelectGene?.(g)}
                 ></SortableGeneticElement>
@@ -317,7 +317,7 @@ export function Collection({
 }
 export function Collections(props: {
   onSelectGene?: (gene: GeneticElement) => void
-  selectedGene?: GeneticElement
+  selectedGene?: string
 }) {
   const [genes, setGenes] = useGeneticElements()
   const [collections, setCollections] = React.useState<
@@ -435,7 +435,7 @@ export function Collections(props: {
           <GeneticElementComponent
             hovered={true}
             // TODO: Make this follow the selected gene
-            selected={activeId == props.selectedGene?.id}
+            selected={activeId == props.selectedGene}
             geneticElement={
               genes.find((g) => g.id == activeId) as GeneticElement
             }

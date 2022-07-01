@@ -70,7 +70,7 @@ export const useViewData = (view: View, gene: GeneticElement | null) => {
 
   React.useEffect(() => {
     ;(async () => {
-      if (viewData.loading) return
+      if (viewData.loading || viewData.activeData) return
       setViewData((viewData) => ({ ...viewData, loading: true }))
       try {
         const data = await view.loadData(gene, (amount) =>

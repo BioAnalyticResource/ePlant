@@ -30,14 +30,14 @@ export function ViewContainer({
   const { activeData, error, loading, loadingAmount } = useViewData(view, gene)
 
   const freeViews = useFreeViews()
-  const viewList = gene?.views ?? freeViews
+  const viewList = freeViews.concat(gene?.views ?? [])
 
   const idLabel = React.useId()
   const selectId = React.useId()
   return (
     <Box {...props}>
       <AppBar
-        position="static"
+        position="sticky"
         elevation={0}
         sx={(theme) => ({
           backgroundColor: theme.palette.secondary.main,
@@ -49,17 +49,17 @@ export function ViewContainer({
             <FormControl variant="standard">
               <InputLabel id={idLabel}>View</InputLabel>
               <Select
-                value={viewList.findIndex((view) => view.name === view.name)}
+                value={view.id}
                 labelId={idLabel}
                 label={'View'}
                 id={selectId}
-                onChange={(e) =>
-                  !isNaN(parseInt(e?.target?.value as string)) &&
-                  setView(viewList[parseInt(e.target.value as string)])
-                }
+                onChange={(e) => {
+                  const v = viewList.find((v) => v.id == e?.target?.value)
+                  if (v) setView(v)
+                }}
               >
                 {viewList.map((v, i) => (
-                  <MenuItem key={i} value={i}>
+                  <MenuItem key={v.id} value={v.id}>
                     {v.name}
                   </MenuItem>
                 ))}
@@ -83,6 +83,7 @@ export function ViewContainer({
       <Container
         sx={{
           padding: '2rem',
+          overflow: 'scroll',
         }}
       >
         {loading || !activeData ? (

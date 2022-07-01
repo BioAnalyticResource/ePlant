@@ -13,6 +13,7 @@ import GeneticElement from '@eplant/GeneticElement'
 
 export function LeftNav(props: {
   onSelectGene?: (gene: GeneticElement) => void
+  selectedGene?: string
 }) {
   const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
@@ -29,7 +30,10 @@ export function LeftNav(props: {
         }}
       />
       <Divider light />
-      <Collections onSelectGene={props.onSelectGene} />
+      <Collections
+        onSelectGene={props.onSelectGene}
+        selectedGene={props.selectedGene}
+      />
     </Stack>
   )
 }
