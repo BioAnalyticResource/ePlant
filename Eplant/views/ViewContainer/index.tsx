@@ -17,6 +17,14 @@ import * as React from 'react'
 import { useViewData, View } from '../View'
 import LoadingPage from './LoadingPage'
 
+/**
+ * Wraps a view in a container that provides a toolbar and a download button. It also manages loading the view's data.
+ * @param props.view The view to wrap
+ * @param props.setView A function that is called when the user requests to change the wrapped view
+ * @param props.gene The gene that is currently selected
+ * @param props The remaining props are passed directly to the container
+ * @returns
+ */
 export function ViewContainer({
   view,
   setView,

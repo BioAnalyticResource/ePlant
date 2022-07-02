@@ -3,6 +3,11 @@ import { Box, LinearProgress, Stack, Typography, useTheme } from '@mui/material'
 import React, { SVGProps } from 'react'
 import { View } from '../View'
 
+/**
+ * The svg shown while a genetic element is loading. It looks like a plant being watered by a watering can
+ * @param props Props are passed directly to the SVG element
+ * @returns
+ */
 export function LoadingImage(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -35,6 +40,13 @@ export function LoadingImage(props: SVGProps<SVGSVGElement>) {
   )
 }
 
+/**
+ * The loading page for a view
+ * @param props.loadingAmount The proportion that has already loaded
+ * @param props.gene The gene for which the view is being loaded
+ * @param props.view The view that is being loaded
+ * @returns
+ */
 export default function LoadingPage(props: {
   loadingAmount: number
   gene: GeneticElement | null

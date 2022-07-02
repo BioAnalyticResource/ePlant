@@ -2,7 +2,13 @@ import '@eplant/__mocks__/ResizeObserver'
 import * as React from 'react'
 import { GeneInfoView, GeneInfoViewData } from '@eplant/views/GeneInfoView'
 import exampleData from '@eplant/Species/arabidopsis/loaders/GeneInfoView/exampleData'
-import { render, act, prettyDOM } from '@testing-library/react'
+import {
+  render,
+  act,
+  prettyDOM,
+  waitFor,
+  getByTestId,
+} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { ViewProps } from '@eplant/views/View'
 
@@ -11,11 +17,16 @@ function testForDataset(props: ViewProps<GeneInfoViewData>) {
   describe('Gene info view for ' + props.geneticElement?.id, () => {
     let rows: HTMLDivElement[]
     beforeAll(async () => {
-      const s = render(<GeneInfoView.component {...props} />)
-      const table = await s.findByTestId('gene-info-stack')
-      rows = Array.from(table.children).filter(
-        (c) => c.tagName == 'DIV'
-      ) as HTMLDivElement[]
+      let s: ReturnType<typeof render>
+      act(() => {
+        s = render(<GeneInfoView.component {...props} />)
+      })
+      await waitFor(() => {
+        const table = s.getByTestId('gene-info-stack')
+        rows = Array.from(table.children).filter(
+          (c) => c.tagName == 'DIV'
+        ) as HTMLDivElement[]
+      })
     })
     it('contains a row for `Gene`', async () => {
       const [label, value] = rows[0].children
@@ -71,9 +82,14 @@ describe('Gene Info View', () => {
     expect(GeneInfoView.name).toEqual('Gene info')
   })
 
-  it('contains a table', () => {
-    const s = render(<GeneInfoView.component {...exampleData} />)
-    s.getByTestId('gene-info-stack')
+  it('contains a table', async () => {
+    let s: ReturnType<typeof render>
+    act(() => {
+      s = render(<GeneInfoView.component {...exampleData} />)
+    })
+    await waitFor(() => {
+      s.getByTestId('gene-info-stack')
+    })
   })
   testForDataset(exampleData)
 })

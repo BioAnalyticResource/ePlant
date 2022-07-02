@@ -2,6 +2,8 @@ const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   entry: './Eplant/index.tsx',
@@ -33,6 +35,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [{ from: 'static' }],
     }),
+    new BundleAnalyzerPlugin(),
   ],
   devServer: {
     static: {

@@ -13,6 +13,13 @@ export const MenuButton = styled(Button)(({ theme }) => ({
   justifyContent: 'left',
 }))
 
+/**
+ * Contains all methods of searching for genes. Currently only supports searching by name.
+ *
+ * @export
+ * @param props.addGeneticElements A function that is called when new genes are added
+ * @return {*}
+ */
 export function SearchGroup({
   addGeneticElements,
 }: {

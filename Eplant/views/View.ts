@@ -19,7 +19,7 @@ export type View<T = any> = {
     loadEvent: (amount: number) => void
   ) => Promise<any>
   // Validate props.activeData with the ZodType
-  component: (props: ViewProps<T>) => JSX.Element
+  component: (props: ViewProps<T>) => JSX.Element | null
   readonly name: string
   readonly id: string
 }

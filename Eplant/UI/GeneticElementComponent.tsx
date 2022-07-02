@@ -67,7 +67,7 @@ export type GeneticElementComponentProps = {
 }
 
 /**
- * Displays a marker for a genetic element component
+ * Displays a genetic element.
  *
  * @export
  * @param {GeneticElementComponentProps} props

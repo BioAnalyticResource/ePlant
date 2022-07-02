@@ -21,6 +21,11 @@ const Illustration = ({
   </svg>
 )
 
+/**
+ * Displayed when the user has closed all tabs.
+ * @param props.addTab Called when the user adds a new tab.
+ * @returns
+ */
 export default function TabsetPlaceholder(props: { addTab: () => void }) {
   const theme = useTheme()
   return (

@@ -10,7 +10,14 @@ import { useGeneticElements } from '@eplant/state'
 import GeneticElementComponent from '../GeneticElementComponent'
 import { Collections } from './Collections'
 import GeneticElement from '@eplant/GeneticElement'
+import _ from 'lodash'
 
+/**
+ * The left nav bar in ePlant. Contains a search bar, and list of collections of genes.
+ * @param props.onSelectGene A function that is called when a new gene is selected
+ * @param props.selectedGene The currently selected gene
+ * @returns
+ */
 export function LeftNav(props: {
   onSelectGene?: (gene: GeneticElement) => void
   selectedGene?: string
@@ -24,7 +31,12 @@ export function LeftNav(props: {
         addGeneticElements={(s) => {
           setGeneticElements(
             geneticElements.concat(
-              s.filter((g) => !geneticElements.find((gene) => g.id == gene.id))
+              _.uniqWith(
+                s.filter(
+                  (g) => !geneticElements.find((gene) => g.id == gene.id)
+                ),
+                (a, b) => a.id == b.id
+              )
             )
           )
         }}

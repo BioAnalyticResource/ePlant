@@ -44,6 +44,11 @@ function ResponsiveDrawer(props: DrawerProps) {
 
 export type EplantProps = {}
 
+/**
+ * Rendered in each tab. Contains a view container.
+ * @param props The id of this tab
+ * @returns The rendered tab
+ */
 function ViewTab(props: { id: string }) {
   const [views, setViews] = useViews()
   const freeViews = useFreeViews()
@@ -83,6 +88,11 @@ function ViewTab(props: { id: string }) {
   )
 }
 
+/**
+ * The flexlayout factory is a function that takes a layout node and returns the React component that should be rendered there.
+ * @param node The node to render
+ * @returns The React component to render
+ */
 const factory: (node: FlexLayout.TabNode) => JSX.Element | undefined = (
   node
 ) => {
@@ -108,6 +118,10 @@ const factory: (node: FlexLayout.TabNode) => JSX.Element | undefined = (
 // For some reason this is necessary to make the tabs work, maybe FlexLayout uses a Jotai provider?
 const eplantScope = Symbol('Eplant scope')
 
+/**
+ * The main Eplant component. This is the root of the application. It contains the left nav and the layout.
+ * @returns {JSX.Element} The rendered Eplant component
+ */
 export default function Eplant() {
   const layout = React.useRef<Layout>(null)
   const [activeId, setActiveId] = React.useState<string>('')

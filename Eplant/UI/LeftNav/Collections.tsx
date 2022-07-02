@@ -315,6 +315,12 @@ export function Collection({
     }
   }
 }
+/**
+ * A list of {@link Collection}s that genes can be dragged between.
+ * @param props.onSelectGene A method called when a gene is selected
+ * @param props.selectedGene The id of the gene that is currently selected
+ * @returns
+ */
 export function Collections(props: {
   onSelectGene?: (gene: GeneticElement) => void
   selectedGene?: string
