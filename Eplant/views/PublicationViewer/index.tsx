@@ -1,13 +1,10 @@
-import { styled, Tab, Tabs, Typography } from '@mui/material'
+import { Tab, Tabs } from '@mui/material'
 import * as React from 'react'
 import { ViewProps } from '../View'
+import GeneHeader from '@eplant/UI/GeneHeader'
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
-
-const SecondaryColour = styled('span')(({ theme }) => ({
-  color: theme.palette.text.secondary,
-}))
 
 export const PublicationViewer = {
   name: 'Publication Viewer',
@@ -16,10 +13,8 @@ export const PublicationViewer = {
     const [tab, setTab] = React.useState<TabValues>('publications')
     return (
       <div>
-        <Typography variant='h4'>
-          {geneticElement.id} <SecondaryColour>I</SecondaryColour> {geneticElement.aliases.join(', ')}
-        </Typography>
-        <Tabs value={tab} onChange={(e, val) => setTab(val)}>
+        <GeneHeader geneticElement={geneticElement}/>
+        <Tabs value={tab} onChange={(e, val: TabValues) => setTab(val)}>
           <Tab label="PUBLICATIONS" value="publications" />
           <Tab label="GENE RIFS" value="geneRIFs" />
         </Tabs>

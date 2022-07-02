@@ -1,22 +1,43 @@
-import { Button } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
-  GridToolbar
+  GridToolbar,
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { PublicationData } from './types'
 
 const columns: GridColDef[] = [
-  { field: 'author', headerName: 'Author', flex: 0.15 },
-  { field: 'year', headerName: 'Year', flex: 0.15 },
-  { field: 'journal', headerName: 'Journal', flex: 0.15 },
-  { field: 'title', headerName: 'Title', flex: 0.5 },
+  {
+    field: 'author',
+    headerName: 'Author',
+    flex: 0.15,
+    headerClassName: 'select-none',
+  },
+  {
+    field: 'year',
+    headerName: 'Year',
+    flex: 0.15,
+    headerClassName: 'select-none',
+  },
+  {
+    field: 'journal',
+    headerName: 'Journal',
+    flex: 0.15,
+    headerClassName: 'select-none',
+  },
+  {
+    field: 'title',
+    headerName: 'Title',
+    flex: 0.5,
+    headerClassName: 'select-none',
+  },
   {
     field: 'link',
     headerName: 'Link',
     width: 130,
+    headerClassName: 'select-none',
     renderCell: (params: GridRenderCellParams<string>) => (
       <Button href={params.value} variant="outlined" size="small">
         VIEW PAPER
@@ -59,7 +80,13 @@ export const Publications = ({
   }, [publications])
 
   return (
-    <>
+    <Box
+      sx={{
+        '& .select-none': {
+          userSelect: 'none',
+        },
+      }}
+    >
       <DataGrid
         rows={rows}
         autoHeight
@@ -75,6 +102,6 @@ export const Publications = ({
           },
         }}
       />
-    </>
+    </Box>
   )
 }

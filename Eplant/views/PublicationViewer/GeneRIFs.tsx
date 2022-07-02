@@ -1,5 +1,10 @@
-import { Button } from '@mui/material'
-import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar } from '@mui/x-data-grid'
+import { Box, Button } from '@mui/material'
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridToolbar,
+} from '@mui/x-data-grid'
 import * as React from 'react'
 import { GeneRIFsData } from './types'
 
@@ -8,11 +13,13 @@ const columns: GridColDef[] = [
     field: 'annotation',
     headerName: 'Annotation',
     flex: 1,
+    headerClassName: 'select-none',
   },
   {
     field: 'link',
     headerName: 'Link',
     width: 130,
+    headerClassName: 'select-none',
     renderCell: (params: GridRenderCellParams<string>) => (
       <Button href={params.value} variant="outlined" size="small">
         VIEW PAPER
@@ -21,7 +28,7 @@ const columns: GridColDef[] = [
   },
 ]
 
-// Generate DataGrid rows from publication data
+// Generate DataGrid rows from gene RIF data
 const toRows = (geneRIFs: GeneRIFsData[]) => {
   const props: {
     id: string
@@ -44,7 +51,13 @@ export const GeneRIFs = ({ geneRIFs }: { geneRIFs: GeneRIFsData[] }) => {
     setRows(toRows(geneRIFs))
   }, [geneRIFs])
   return (
-    <>
+    <Box
+      sx={{
+        '& .select-none': {
+          userSelect: 'none',
+        },
+      }}
+    >
       <DataGrid
         rows={rows}
         autoHeight
@@ -60,6 +73,6 @@ export const GeneRIFs = ({ geneRIFs }: { geneRIFs: GeneRIFsData[] }) => {
           },
         }}
       />
-    </>
+    </Box>
   )
 }
