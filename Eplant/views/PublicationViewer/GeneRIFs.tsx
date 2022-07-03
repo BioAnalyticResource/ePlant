@@ -1,11 +1,7 @@
 import { Box, Button } from '@mui/material'
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  GridToolbar,
-} from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
+import { SearchBar } from './SearchBar'
 import { GeneRIFsData } from './types'
 
 const columns: GridColDef[] = [
@@ -61,17 +57,9 @@ export const GeneRIFs = ({ geneRIFs }: { geneRIFs: GeneRIFsData[] }) => {
       <DataGrid
         rows={rows}
         autoHeight
-        disableColumnFilter
-        disableColumnSelector
-        disableDensitySelector
         columns={columns}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
-          toolbar: {
-            showQuickFilter: true,
-            quickFilterProps: { debounceMs: 500 },
-          },
-        }}
+        sx={{ border: 0 }}
+        components={{ Toolbar: SearchBar }}
       />
     </Box>
   )
