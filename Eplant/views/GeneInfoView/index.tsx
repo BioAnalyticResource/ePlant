@@ -1,5 +1,6 @@
 import * as React from 'react'
 import _ from 'lodash'
+import component from './component'
 
 export type GeneFeature = {
   type:
@@ -37,5 +38,7 @@ export type GeneInfoViewData = {
 export const GeneInfoView = {
   name: 'Gene info',
   id: 'gene-info',
-  component: React.lazy(() => import('./component')),
+  //TODO: figure out how to make this a component lazy
+  // component: React.lazy(() => import('./component')),
+  component: component,
 }

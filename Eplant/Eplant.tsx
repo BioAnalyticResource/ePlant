@@ -62,7 +62,6 @@ function ViewTab(props: { id: string }) {
   const v = (gene ? gene.views.concat(freeViews) : freeViews).find(
     (v) => v.id == view.view
   )
-  console.log(gene)
 
   if (!v) throw new NoViewError(`No ${view.view} found for ${view.activeGene}`)
 
