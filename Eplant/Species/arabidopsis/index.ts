@@ -5,6 +5,7 @@ import Species, { SpeciesApi } from '../'
 import GeneticElement from '@eplant/GeneticElement'
 import { View } from '@eplant/views/View'
 import ArabidopsisGeneInfoView from './loaders/GeneInfoView'
+import ArabidopsisPublicationViewer from './loaders/PublicationViewer'
 const arabidopsis: Species = new Species('Arabidopsis', {
   autocomplete,
   searchGene,
@@ -31,7 +32,7 @@ async function searchGene(s: string) {
     data.annotation,
     arabidopsis,
     data.aliases,
-    [ArabidopsisGeneInfoView]
+    [ArabidopsisGeneInfoView, ArabidopsisPublicationViewer]
   )
   return gene
 }
