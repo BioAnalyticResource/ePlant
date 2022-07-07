@@ -1,6 +1,7 @@
 import GeneHeader from '@eplant/UI/GeneHeader'
 import { ComponentMeta, Story } from '@storybook/react'
 import exampleData from '@eplant/Species/arabidopsis/loaders/GeneInfoView/exampleData'
+import React from 'react'
 
 export default {
   title: 'GeneHeader',
@@ -10,4 +11,3 @@ export default {
 export const Default: Story = () => (
   <GeneHeader geneticElement={exampleData.geneticElement} />
 )
-    

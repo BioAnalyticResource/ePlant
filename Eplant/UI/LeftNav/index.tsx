@@ -1,4 +1,4 @@
-import { useSpecies } from '@eplant/contexts/species'
+import { useSpecies } from '@eplant/state'
 import Species from '@eplant/Species'
 import { Divider, FormControl, InputLabel, styled } from '@mui/material'
 import Button from '@mui/material/Button'
@@ -6,11 +6,22 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { SearchGroup } from './GeneSearch'
 import { LogoWithText } from '../Logo'
-import { useGeneticElements } from '@eplant/contexts/geneticElements'
+import { useGeneticElements } from '@eplant/state'
 import GeneticElementComponent from '../GeneticElementComponent'
 import { Collections } from './Collections'
+import GeneticElement from '@eplant/GeneticElement'
+import _ from 'lodash'
 
-export function LeftNav(props: {}) {
+/**
+ * The left nav bar in ePlant. Contains a search bar, and list of collections of genes.
+ * @param props.onSelectGene A function that is called when a new gene is selected
+ * @param props.selectedGene The currently selected gene
+ * @returns
+ */
+export function LeftNav(props: {
+  onSelectGene?: (gene: GeneticElement) => void
+  selectedGene?: string
+}) {
   const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
   return (
@@ -20,13 +31,21 @@ export function LeftNav(props: {}) {
         addGeneticElements={(s) => {
           setGeneticElements(
             geneticElements.concat(
-              s.filter((g) => !geneticElements.includes(g))
+              _.uniqWith(
+                s.filter(
+                  (g) => !geneticElements.find((gene) => g.id == gene.id)
+                ),
+                (a, b) => a.id == b.id
+              )
             )
           )
         }}
       />
       <Divider light />
-      <Collections />
+      <Collections
+        onSelectGene={props.onSelectGene}
+        selectedGene={props.selectedGene}
+      />
     </Stack>
   )
 }

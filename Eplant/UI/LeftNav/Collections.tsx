@@ -1,4 +1,4 @@
-import { useGeneticElements } from '@eplant/contexts/geneticElements'
+import { useGeneticElements } from '@eplant/state'
 import GeneticElement from '@eplant/GeneticElement'
 import {
   Add,
@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { Box } from '@mui/system'
+import { Box } from '@mui/material'
 import React, { useId, useState, useRef, useEffect } from 'react'
 import GeneticElementComponent, {
   GeneticElementComponentProps,
@@ -102,6 +102,8 @@ type CollectionProps = {
   onNameChange: (newName: string) => void
   deleteGene: (gene: GeneticElement) => void
   onRemove: () => void
+  selectedGene?: string
+  onSelectGene?: (gene: GeneticElement) => void
 }
 /**
  * A sortable, renamable collection of {@link GeneticElementComponent}s
@@ -128,6 +130,8 @@ export function Collection({
   deleteGene,
   onRemove,
   onNameChange,
+  selectedGene,
+  onSelectGene,
 }: CollectionProps) {
   const [hover, setHover] = useState<boolean>(false)
 
@@ -228,8 +232,9 @@ export function Collection({
                   key={g.id}
                   geneticElement={g}
                   // TODO: select the gene that is in the currently focused view
-                  selected={false}
+                  selected={g.id == selectedGene}
                   onRemove={() => deleteGene(g)}
+                  onClick={() => onSelectGene?.(g)}
                 ></SortableGeneticElement>
               ))
             ) : (
@@ -310,7 +315,16 @@ export function Collection({
     }
   }
 }
-export function Collections() {
+/**
+ * A list of {@link Collection}s that genes can be dragged between.
+ * @param props.onSelectGene A method called when a gene is selected
+ * @param props.selectedGene The id of the gene that is currently selected
+ * @returns
+ */
+export function Collections(props: {
+  onSelectGene?: (gene: GeneticElement) => void
+  selectedGene?: string
+}) {
   const [genes, setGenes] = useGeneticElements()
   const [collections, setCollections] = React.useState<
     { genes: GeneticElement[]; name: string; open: boolean }[]
@@ -318,11 +332,6 @@ export function Collections() {
     {
       genes: genes,
       name: 'Collection 1',
-      open: true,
-    },
-    {
-      genes: [],
-      name: 'Collection 2',
       open: true,
     },
   ])
@@ -347,6 +356,13 @@ export function Collections() {
     if (unincluded.some((x) => x)) {
       setCollections((collections) => {
         const cols = collections.slice()
+        if (cols.length == 0) {
+          cols.push({
+            genes: [],
+            name: 'Collection 1',
+            open: true,
+          })
+        }
         cols[0] = {
           ...cols[0],
           genes: cols[0].genes.concat(genes.filter((g, i) => unincluded[i])),
@@ -369,11 +385,13 @@ export function Collections() {
       }
     >
       <Stack direction="column" spacing={2}>
-        {collections.map((props, i) => (
+        {collections.map((p, i) => (
           <Collection
             key={i}
+            selectedGene={props.selectedGene}
+            onSelectGene={props.onSelectGene}
             id={i}
-            {...props}
+            {...p}
             onRemove={() => {
               deleteCollection(i)
             }}
@@ -423,7 +441,7 @@ export function Collections() {
           <GeneticElementComponent
             hovered={true}
             // TODO: Make this follow the selected gene
-            selected={false}
+            selected={activeId == props.selectedGene}
             geneticElement={
               genes.find((g) => g.id == activeId) as GeneticElement
             }

@@ -4,7 +4,6 @@ import { ComponentMeta, Story } from '@storybook/react'
 
 import SearchBar from '@eplant/UI/LeftNav/GeneSearch/SearchBar'
 import { range } from 'lodash'
-import * as _ from 'lodash'
 import axios from 'axios'
 
 const sxOptions = {

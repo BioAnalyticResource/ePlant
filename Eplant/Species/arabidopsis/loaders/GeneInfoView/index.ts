@@ -1,11 +1,18 @@
 import axios from 'axios'
-import { GeneFeature, GeneInfoViewData } from '@eplant/views/GeneInfoView'
+import {
+  GeneFeature,
+  GeneInfoView,
+  GeneInfoViewData,
+} from '@eplant/views/GeneInfoView'
 import { View } from '@eplant/views/View'
 
 const out: View<GeneInfoViewData>['loadData'] = async (
   geneticElement,
   loadEvent
 ) => {
+  if (!geneticElement)
+    throw new TypeError('A gene must be provided for the GeneInfoView')
+  let loaded = 0
   // Get general data on the gene
   const [data, features, sequence] = await Promise.all([
     axios
@@ -13,14 +20,22 @@ const out: View<GeneInfoViewData>['loadData'] = async (
         `https://bar.utoronto.ca/webservices/bar_araport/` +
           `gene_summary_by_locus.php?locus=${geneticElement.id}`
       )
-      .then((d) => d.data.result[0]),
+      .then((d) => {
+        loaded++
+        loadEvent(loaded / 4)
+        return d.data.result[0]
+      }),
     // Get features of the gene (used for gene model and sequence highlighting)
     axios
-      .get(
+      .get<{ features: GeneFeature[] }>(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
           `gene_structure_by_locus.php?locus=${geneticElement.id}`
       )
-      .then((d) => d.data.features),
+      .then((d) => {
+        loaded++
+        loadEvent(loaded / 4)
+        return d.data.features
+      }),
 
     // Get gene sequence
     axios
@@ -28,7 +43,11 @@ const out: View<GeneInfoViewData>['loadData'] = async (
         `https://bar.utoronto.ca/webservices/bar_araport/` +
           `get_sequence_by_identifier.php?locus=${geneticElement.id}`
       )
-      .then((d) => d.data.result[0].sequence),
+      .then((d) => {
+        loaded++
+        loadEvent(loaded / 4)
+        return d.data.result[0].sequence
+      }),
   ])
 
   let geneModelFeatures,
@@ -36,12 +55,12 @@ const out: View<GeneInfoViewData>['loadData'] = async (
     childFeatType
 
   // Find the subfeatures for this genetic element
-  for (const raw of features) {
-    const feature = GeneFeature.parse(raw)
+  for (let i = 0; i < features.length; i++) {
+    const feature = features[i]
     if (feature.uniqueID === geneticElement.id) {
       geneModelFeatures = feature.subfeatures
       parentFeatType = feature.type
-      childFeatType = geneModelFeatures[0].type
+      childFeatType = geneModelFeatures?.[0]?.type
       break
     }
   }
@@ -64,6 +83,7 @@ const out: View<GeneInfoViewData>['loadData'] = async (
           `get_protein_sequence_by_identifier.php?locus=${geneticElement.id}.1`
       )
     ).data.result[0].sequence
+    loadEvent(0.75)
   }
 
   return {
@@ -82,4 +102,9 @@ const out: View<GeneInfoViewData>['loadData'] = async (
   }
 }
 
-export default out
+const ArabidopsisGeneInfoView: View<GeneInfoViewData> = {
+  ...GeneInfoView,
+  loadData: out,
+}
+
+export default ArabidopsisGeneInfoView

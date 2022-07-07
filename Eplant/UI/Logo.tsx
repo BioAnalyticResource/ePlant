@@ -1,8 +1,15 @@
+import * as React from 'react'
 import { Stack, Typography, useTheme } from '@mui/material'
 import { SVGProps } from 'react'
 
+/**
+ * The BAR logo in ePlant.
+ * @param props Props are forwarded to the underlying SVG element.
+ * @returns
+ */
 export function Logo(props: SVGProps<SVGSVGElement>) {
   const theme = useTheme()
+  console.log(theme)
   return (
     <svg
       {...props}
@@ -21,6 +28,12 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
   )
 }
 
+/**
+ * Draws the ePlant logo with text beside it
+ * @param props.text Text to display beside the logo
+ * @param props Props other than text are forwarded to the underlying SVG element.
+ * @returns
+ */
 export function LogoWithText({
   text,
   ...props

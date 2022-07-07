@@ -2,54 +2,67 @@ import '@eplant/__mocks__/ResizeObserver'
 import * as React from 'react'
 import { GeneInfoView, GeneInfoViewData } from '@eplant/views/GeneInfoView'
 import exampleData from '@eplant/Species/arabidopsis/loaders/GeneInfoView/exampleData'
-import { render, act, prettyDOM } from '@testing-library/react'
+import {
+  render,
+  act,
+  prettyDOM,
+  waitFor,
+  getByTestId,
+} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { ViewProps } from '@eplant/views/View'
 
 function testForDataset(props: ViewProps<GeneInfoViewData>) {
   const { activeData } = props
-  describe('Gene info view for ' + props.geneticElement.id, () => {
+  describe('Gene info view for ' + props.geneticElement?.id, () => {
     let rows: HTMLDivElement[]
     beforeAll(async () => {
-      const s = render(<GeneInfoView.component {...props} />)
-      const table = await s.findByTestId('gene-info-stack')
-      rows = Array.from(table.children).filter(
-        (c) => c.tagName == 'DIV'
-      ) as HTMLDivElement[]
+      let s: ReturnType<typeof render>
+      act(() => {
+        s = render(<GeneInfoView.component {...props} />)
+      })
+      await waitFor(() => {
+        const table = s.getByTestId('gene-info-stack')
+        rows = Array.from(table.children).filter(
+          (c) => c.tagName == 'DIV'
+        ) as HTMLDivElement[]
+      })
     })
     it('contains a row for `Gene`', async () => {
       const [label, value] = rows[0].children
       expect(label.textContent).toEqual('Gene')
-      expect(value.textContent).toEqual(props.geneticElement.id)
+      expect(value.textContent).toEqual(props.geneticElement?.id)
     })
     it('contains a row for `Aliases`', async () => {
       const [label, value] = rows[1].children
       expect(label.textContent).toEqual('Aliases')
-      expect(value.textContent).toEqual(props.geneticElement.aliases.join(', '))
+      expect(value.textContent).toEqual(
+        props.geneticElement?.aliases.join(', ')
+      )
     })
-    it('contains a row for `Full Name`', async () => {
+    it('contains a row for `Full name`', async () => {
       const [label, value] = rows[2].children
-      expect(label.textContent).toEqual('Full Name')
+      expect(label.textContent).toEqual('Full name')
       expect(value.textContent).toEqual(activeData.name)
     })
-    it('contains a row for `Brief Description`', async () => {
+    it('contains a row for `Brief description`', async () => {
       const [label, value] = rows[3].children
-      expect(label.textContent).toEqual('Brief Description')
+      expect(label.textContent).toEqual('Brief description')
       expect(value.textContent).toEqual(activeData.brief_description)
     })
-    it('contains a row for `Computational Description`', async () => {
+    it('contains a row for `Computational description`', async () => {
       const [label, value] = rows[4].children
-      expect(label.textContent).toEqual('Computational Description')
+      expect(label.textContent).toEqual('Computational description')
       expect(value.textContent).toEqual(activeData.computational_description)
     })
-    it('contains a row for `Curator Summary`', async () => {
+    it('contains a row for `Curator summary`', async () => {
       const [label, value] = rows[5].children
-      expect(label.textContent).toEqual('Curator Summary')
+      expect(label.textContent).toEqual('Curator summary')
       expect(value.textContent).toEqual(activeData.curator_summary)
     })
-    it('renders a row for `location & gene model`', async () => {
+    it('renders a row for `Location & Gene model`', async () => {
       const [label, value] = rows[6].children
-      expect(label.textContent).toEqual('Location & Gene Model')
+      expect(label.textContent).toEqual('Location & Gene model')
       expect(
         value.textContent?.startsWith?.(
           `${activeData.location}: ${activeData.chromosome_start} to ${activeData.chromosome_end}, Strand ${activeData.strand}`
@@ -59,19 +72,24 @@ function testForDataset(props: ViewProps<GeneInfoViewData>) {
     })
     it('renders a row for the dna sequence', async () => {
       const [label, value] = rows[7].children
-      expect(label.textContent).toEqual('DNA Sequence')
+      expect(label.textContent).toEqual('DNA sequence')
     })
   })
 }
 
 describe('Gene Info View', () => {
-  it('should be named `Gene Info Viewer`', () => {
-    expect(GeneInfoView.name).toEqual('Gene Info Viewer')
+  it('should be named `Gene info`', () => {
+    expect(GeneInfoView.name).toEqual('Gene info')
   })
 
-  it('contains a table', () => {
-    const s = render(<GeneInfoView.component {...exampleData} />)
-    s.getByTestId('gene-info-stack')
+  it('contains a table', async () => {
+    let s: ReturnType<typeof render>
+    act(() => {
+      s = render(<GeneInfoView.component {...exampleData} />)
+    })
+    await waitFor(() => {
+      s.getByTestId('gene-info-stack')
+    })
   })
   testForDataset(exampleData)
 })

@@ -5,22 +5,30 @@ import * as React from 'react'
 export default function GeneHeader({
   geneticElement,
 }: {
-  geneticElement: GeneticElement
+  geneticElement: GeneticElement | null
 }) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', width: 'fit-content' }}>
-      <Typography variant="h4">{geneticElement.id}</Typography>
-      <Divider
-        orientation="vertical"
-        variant="middle"
-        sx={{
-          borderColor: (theme) => theme.palette.text.secondary,
-          borderRightWidth: '3px',
-          mx: 1,
-        }}
-        flexItem
-      />
-      <Typography variant="h4">{geneticElement.aliases.join(', ')}</Typography>
+      {geneticElement ? (
+        <>
+          <Typography variant="h4">{geneticElement.id}</Typography>
+          <Divider
+            orientation="vertical"
+            variant="middle"
+            sx={{
+              borderColor: (theme) => theme.palette.text.secondary,
+              borderRightWidth: '3px',
+              mx: 1,
+            }}
+            flexItem
+          />
+          <Typography variant="h4">
+            {geneticElement.aliases.join(', ')}
+          </Typography>
+        </>
+      ) : (
+        <Typography variant="h4">No gene selected</Typography>
+      )}
     </Box>
   )
 }

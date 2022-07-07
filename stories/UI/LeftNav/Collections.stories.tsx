@@ -1,4 +1,5 @@
-import { useGeneticElements } from '@eplant/contexts/geneticElements'
+import * as React from 'react'
+import { useGeneticElements } from '@eplant/state'
 import { Collections } from '@eplant/UI/LeftNav/Collections'
 import { ComponentMeta } from '@storybook/react'
 

@@ -1,4 +1,4 @@
-import { useSpecies } from '@eplant/contexts/species'
+import { useSpecies } from '@eplant/state'
 import GeneticElement from '@eplant/GeneticElement'
 import Species from '@eplant/Species'
 import { Button, MenuItem, styled, TextField } from '@mui/material'
@@ -13,6 +13,13 @@ export const MenuButton = styled(Button)(({ theme }) => ({
   justifyContent: 'left',
 }))
 
+/**
+ * Contains all methods of searching for genes. Currently only supports searching by name.
+ *
+ * @export
+ * @param props.addGeneticElements A function that is called when new genes are added
+ * @return {*}
+ */
 export function SearchGroup({
   addGeneticElements,
 }: {

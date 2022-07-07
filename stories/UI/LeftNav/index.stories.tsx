@@ -1,3 +1,4 @@
+import * as React from 'react'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import { LeftNav } from '@eplant/UI/LeftNav'
 import { ComponentMeta } from '@storybook/react'

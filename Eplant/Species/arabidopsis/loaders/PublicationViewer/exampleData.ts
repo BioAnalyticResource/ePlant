@@ -1,6 +1,7 @@
 import arabidopsis from '@eplant/Species/arabidopsis'
 import { PublicationViewerData } from '@eplant/views/PublicationViewer/types'
 import { ViewProps } from '@eplant/views/View'
+import ArabidopsisPublicationViewer from '.'
 
 const a: ViewProps<PublicationViewerData> = {
   geneticElement: {
@@ -8,6 +9,7 @@ const a: ViewProps<PublicationViewerData> = {
     annotation: 'AP2/B3-like transcriptional factor family protein',
     species: arabidopsis,
     aliases: ['ABI3', 'AtABI3', 'SIS10'],
+    views: [ArabidopsisPublicationViewer],
   },
   activeData: {
     publications: [

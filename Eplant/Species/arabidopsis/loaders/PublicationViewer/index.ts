@@ -5,11 +5,14 @@ import {
   PublicationViewerData,
 } from '@eplant/views/PublicationViewer/types'
 import { View } from '@eplant/views/View'
+import { PublicationViewer } from '@eplant/views/PublicationViewer'
 
 const out: View<PublicationViewerData>['loadData'] = async (
   geneticElement,
   loadEvent
 ) => {
+  if (!geneticElement)
+    throw new TypeError('A gene must be provided for the publication viewer')
   let loaded = 0
 
   const [publications, geneRIFs] = await Promise.all([
@@ -40,5 +43,9 @@ const out: View<PublicationViewerData>['loadData'] = async (
     geneRIFs,
   }
 }
+const ArabidopsisPublicationViewer: View<PublicationViewerData> = {
+  ...PublicationViewer,
+  loadData: out,
+}
 
-export default out
+export default ArabidopsisPublicationViewer

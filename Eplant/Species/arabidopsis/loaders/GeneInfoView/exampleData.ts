@@ -1,5 +1,6 @@
 import arabidopsis from '@eplant/Species/arabidopsis'
 import { GeneInfoViewData } from '@eplant/views/GeneInfoView'
+import ArabidopsisGeneInfoView from '.'
 import { ViewProps } from '@eplant/views/View'
 
 const a: ViewProps<GeneInfoViewData> = {
@@ -8,6 +9,7 @@ const a: ViewProps<GeneInfoViewData> = {
     annotation: 'AP2/B3-like transcriptional factor family protein',
     species: arabidopsis,
     aliases: ['ABI3', 'AtABI3', 'SIS10'],
+    views: [ArabidopsisGeneInfoView],
   },
   activeData: {
     name: 'ABA INSENSITIVE 3',

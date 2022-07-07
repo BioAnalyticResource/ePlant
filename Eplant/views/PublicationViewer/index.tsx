@@ -8,12 +8,12 @@ import { PublicationViewerData, TabValues } from './types'
 
 export const PublicationViewer = {
   name: 'Publication Viewer',
-  dataType: PublicationViewerData,
+  id: 'publication-viewer',
   component({ geneticElement, activeData }: ViewProps<PublicationViewerData>) {
     const [tab, setTab] = React.useState<TabValues>('publications')
     return (
       <div>
-        <GeneHeader geneticElement={geneticElement}/>
+        <GeneHeader geneticElement={geneticElement} />
         <Tabs value={tab} onChange={(e, val: TabValues) => setTab(val)}>
           <Tab label="PUBLICATIONS" value="publications" />
           <Tab label="GENE RIFS" value="geneRIFs" />

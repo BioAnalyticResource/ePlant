@@ -5,9 +5,19 @@ import Stack from '@mui/material/Stack'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { debounce } from 'lodash'
 import * as React from 'react'
-import { Theme, SxProps } from '@mui/system'
+import { Theme, SxProps } from '@mui/material'
 import { Chip, InputAdornment } from '@mui/material'
 
+/**
+ * The search bar in ePlant. Supports async autocomplete and searching for multiple genes at once.
+ * @param props.label The label of the search bar
+ * @param props.inputProps The props to pass to the input
+ * @param props.complete A function that returns a list of suggestions
+ * @param props.onSubmit A function that is called when the user submits the search
+ * @param props.placeholder The placeholder of the input
+ * @param props.sx The style of the search bar
+ * @return {*}
+ */
 export default function SearchBar(props: {
   complete?: (input: string) => Promise<string[]>
   label?: string
@@ -56,15 +66,29 @@ export default function SearchBar(props: {
         <TextField
           placeholder={props.placeholder}
           label={props.label}
-          variant="filled"
+          variant="outlined"
+          {...params}
           InputProps={{
             ...InputProps,
+            onKeyDown(e) {
+              if (e.key === 'Enter') {
+                if (inputValue == '') {
+                  props.onSubmit?.(value)
+                  setValue([])
+                }
+              }
+            },
             endAdornment: (
-              <InputAdornment position="end">
+              <InputAdornment
+                position="end"
+                sx={{
+                  position: 'absolute',
+                  right: '4px',
+                }}
+              >
                 <IconButton
                   sx={{
                     color: focused ? 'primary.main' : 'text.secondary',
-                    top: '-7px',
                   }}
                   onClick={() => {
                     props.onSubmit?.(value)
