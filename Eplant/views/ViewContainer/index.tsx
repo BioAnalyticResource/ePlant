@@ -1,5 +1,6 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { useFreeViews } from '@eplant/state'
+import GeneHeader from '@eplant/UI/GeneHeader'
 import downloadFile from '@eplant/util/downloadFile'
 import {
   AppBar,
@@ -9,6 +10,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Toolbar,
 } from '@mui/material'
@@ -94,11 +96,18 @@ export function ViewContainer({
           overflow: 'scroll',
         }}
       >
-        {loading || !activeData ? (
-          <LoadingPage loadingAmount={loadingAmount} gene={gene} view={view} />
-        ) : (
-          <view.component geneticElement={gene} activeData={activeData} />
-        )}
+        <Stack gap={4} direction="column">
+          {gene ? <GeneHeader geneticElement={gene} /> : null}
+          {loading || !activeData ? (
+            <LoadingPage
+              loadingAmount={loadingAmount}
+              gene={gene}
+              view={view}
+            />
+          ) : (
+            <view.component geneticElement={gene} activeData={activeData} />
+          )}
+        </Stack>
       </Container>
     </Box>
   )

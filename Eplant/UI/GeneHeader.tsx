@@ -11,7 +11,7 @@ export default function GeneHeader({
     <Box sx={{ display: 'flex', alignItems: 'center', width: 'fit-content' }}>
       {geneticElement ? (
         <>
-          <Typography variant="h4">{geneticElement.id}</Typography>
+          <Typography variant="h6">{geneticElement.id}</Typography>
           <Divider
             orientation="vertical"
             variant="middle"
@@ -22,7 +22,7 @@ export default function GeneHeader({
             }}
             flexItem
           />
-          <Typography variant="h4">
+          <Typography variant="h6">
             {geneticElement.aliases.join(', ')}
           </Typography>
         </>

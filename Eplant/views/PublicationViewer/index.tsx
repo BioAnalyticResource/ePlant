@@ -13,7 +13,6 @@ export const PublicationViewer = {
     const [tab, setTab] = React.useState<TabValues>('publications')
     return (
       <div>
-        <GeneHeader geneticElement={geneticElement} />
         <Tabs value={tab} onChange={(e, val: TabValues) => setTab(val)}>
           <Tab label="PUBLICATIONS" value="publications" />
           <Tab label="GENE RIFS" value="geneRIFs" />

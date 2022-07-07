@@ -56,7 +56,6 @@ export default function LoadingPage(props: {
   return (
     <Stack gap={4}>
       {/* TODO: Use gene name and variants component for this */}
-      <Typography variant="h4">{props.gene?.id ?? props.view.name}</Typography>
       <Typography variant="body2">
         Loading data for {props.view.name}...
       </Typography>
