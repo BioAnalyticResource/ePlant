@@ -37,7 +37,7 @@ const GeneSequence = ({
     i++
   ) {
     let char = activeData.geneSequence[i].toUpperCase()
-    const currentStyle: React.CSSProperties = {}
+    let currentStyle: React.CSSProperties = {}
 
     // Add regions around the three prime utr and five prime utr
     const features: {
@@ -71,22 +71,31 @@ const GeneSequence = ({
 
     // Add styles for each feature that includes this char
     const pos = i + activeData.chromosome_start
+    let found = false
     for (const sf of features) {
       if (sf.start <= pos && pos <= sf.end) {
         if (sf.type.endsWith('UTR')) {
           char = char.toLowerCase()
-          currentStyle.color = theme.palette.text.disabled
+          currentStyle = { color: theme.palette.error.main }
+          found = true
         }
         if (sf.type == 'exon') {
-          currentStyle.color = theme.palette.primary.dark
-        }
-        if (sf.type == 'CDS') {
-          currentStyle.backgroundColor = theme.palette.secondary.main
+          currentStyle = { color: theme.palette.warning.main }
+          found = true
         }
         if (sf.type == 'end-cap') {
-          currentStyle.backgroundColor = theme.palette.primary.main
-          currentStyle.color = theme.palette.primary.contrastText
+          currentStyle = {
+            backgroundColor: theme.palette.info.main,
+            color: theme.palette.info.contrastText,
+          }
+          found = true
         }
+      }
+    }
+    if (!found) {
+      char = char.toLowerCase()
+      currentStyle = {
+        color: theme.palette.info.main,
       }
     }
 

@@ -64,9 +64,9 @@ export default function LoadingPage(props: {
         <LoadingImage
           style={{
             maxWidth: '100%',
-            maxHeight: '550px',
+            maxHeight: '450px',
           }}
-          fill={theme.palette.secondary.main}
+          fill={theme.palette.divider}
         />
       </Box>
     </Stack>

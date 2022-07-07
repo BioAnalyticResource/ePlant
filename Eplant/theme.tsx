@@ -7,7 +7,7 @@ export const light: ThemeOptions = createTheme({
       main: '#99CC00',
     },
     secondary: {
-      main: '#e9e9e9',
+      main: '#888',
     },
     background: {
       paper: '#fafafa',
@@ -25,7 +25,7 @@ export const dark: ThemeOptions = createTheme({
       main: '#99CC00',
     },
     secondary: {
-      main: '#333333',
+      main: '#888',
     },
     background: {
       default: '#121212',

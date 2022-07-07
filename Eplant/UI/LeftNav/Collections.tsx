@@ -159,64 +159,69 @@ export function Collection({
         justifyContent: 'center',
       }}
     >
-      <Stack
-        onClick={() => setOpen(!open)}
-        onMouseOver={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        direction="row"
-        gap={1}
-        ref={setTopRef}
+      <Card
+        elevation={hover ? 2 : 0}
         sx={(theme) => ({
-          userSelect: 'none',
-          cursor: 'pointer',
-          background: hover ? theme.palette.secondary.main : 'transparent',
           borderRadius: theme.shape.borderRadius,
           color: theme.palette.text.secondary,
-          alignItems: 'center',
         })}
       >
-        <ExpandMore
+        <Stack
+          onClick={() => setOpen(!open)}
+          onMouseOver={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          direction="row"
+          gap={1}
+          ref={setTopRef}
           sx={(theme) => ({
-            transform: `rotate(${open ? 0 : -90}deg)`,
-            transition: 'all 0.5s ease',
+            userSelect: 'none',
+            cursor: 'pointer',
+            alignItems: 'center',
           })}
-        />
-        <TextField
-          style={{
-            display: renaming ? undefined : 'none',
-            maxHeight: '100%',
-          }}
-          size="small"
-          inputRef={inputRef}
-          onSubmit={(e) => console.log(e)}
-          onKeyPress={(e) => {
-            if (e.key == 'Enter') rename()
-          }}
-          onBlur={() => rename()}
-        ></TextField>
-        <Typography
-          style={{
-            display: !renaming ? undefined : 'none',
-          }}
         >
-          {name}
-        </Typography>
-        <div style={{ flex: 1 }} />
-        {renaming ? (
-          <IconButton color="primary" onClick={rename}>
-            <Check></Check>
-          </IconButton>
-        ) : (
-          <OptionsButton
-            onClick={(e) => (openMenu(e), e.stopPropagation())}
+          <ExpandMore
             sx={(theme) => ({
-              width: '24px',
-              height: '24px',
-              color: theme.palette.text.secondary,
+              transform: `rotate(${open ? 0 : -90}deg)`,
+              transition: 'all 0.5s ease',
             })}
-          ></OptionsButton>
-        )}
-      </Stack>
+          />
+          <TextField
+            style={{
+              display: renaming ? undefined : 'none',
+              maxHeight: '100%',
+            }}
+            size="small"
+            inputRef={inputRef}
+            onSubmit={(e) => console.log(e)}
+            onKeyPress={(e) => {
+              if (e.key == 'Enter') rename()
+            }}
+            onBlur={() => rename()}
+          ></TextField>
+          <Typography
+            style={{
+              display: !renaming ? undefined : 'none',
+            }}
+          >
+            {name}
+          </Typography>
+          <div style={{ flex: 1 }} />
+          {renaming ? (
+            <IconButton color="primary" onClick={rename}>
+              <Check></Check>
+            </IconButton>
+          ) : (
+            <OptionsButton
+              onClick={(e) => (openMenu(e), e.stopPropagation())}
+              sx={(theme) => ({
+                width: '24px',
+                height: '24px',
+                color: theme.palette.text.secondary,
+              })}
+            ></OptionsButton>
+          )}
+        </Stack>
+      </Card>
       <Collapse in={open}>
         <SortableContext items={genes} strategy={verticalListSortingStrategy}>
           <Stack
@@ -423,13 +428,10 @@ export function Collections(props: {
         <Button
           startIcon={<Add />}
           variant="text"
+          color="secondary"
           size="small"
           sx={(theme) => ({
-            color: theme.palette.text.secondary,
             alignSelf: 'start',
-            ':hover': {
-              backgroundColor: theme.palette.secondary.main,
-            },
           })}
           onClick={addCollection}
         >

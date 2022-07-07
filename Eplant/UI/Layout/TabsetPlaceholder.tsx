@@ -31,7 +31,7 @@ export default function TabsetPlaceholder(props: { addTab: () => void }) {
   return (
     <Stack gap={6} direction="column" width="100%">
       <Illustration
-        color={theme.palette.secondary.main}
+        color={theme.palette.divider}
         style={{
           maxHeight: '250px',
         }}

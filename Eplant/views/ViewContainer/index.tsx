@@ -47,11 +47,10 @@ export function ViewContainer({
   return (
     <Box {...props}>
       <AppBar
+        variant="elevation"
+        color="secondary"
         position="sticky"
-        elevation={0}
-        sx={(theme) => ({
-          backgroundColor: theme.palette.secondary.main,
-        })}
+        elevation={4}
       >
         <Toolbar>
           {/* View selector dropdown */}
@@ -79,6 +78,7 @@ export function ViewContainer({
           <Button
             variant="outlined"
             disabled={loading}
+            color="secondary"
             onClick={() => {
               downloadFile(
                 `${view.id}${gene ? '-' + gene.id : ''}.json`,
