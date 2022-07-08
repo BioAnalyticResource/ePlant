@@ -236,7 +236,6 @@ export function Collection({
                   active={g.id == activeId}
                   key={g.id}
                   geneticElement={g}
-                  // TODO: select the gene that is in the currently focused view
                   selected={g.id == selectedGene}
                   onRemove={() => deleteGene(g)}
                   onClick={() => onSelectGene?.(g)}
@@ -442,7 +441,6 @@ export function Collections(props: {
         {activeId ? (
           <GeneticElementComponent
             hovered={true}
-            // TODO: Make this follow the selected gene
             selected={activeId == props.selectedGene}
             geneticElement={
               genes.find((g) => g.id == activeId) as GeneticElement

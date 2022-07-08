@@ -120,7 +120,6 @@ export default function GeneticElementComponent({
     transition: '0.1s ease all',
     color: hover ? theme.palette.text.primary : backgroundColor,
   })
-  // TODO: Create an animation that morphs between the handle and the indicator
   const indicator = <SelectedIndicator hover={hover} />
   const Handle = (
     <DragIndicator

@@ -55,7 +55,6 @@ export default function LoadingPage(props: {
   const theme = useTheme()
   return (
     <Stack gap={4}>
-      {/* TODO: Use gene name and variants component for this */}
       <Typography variant="body2">
         Loading data for {props.view.name}...
       </Typography>
