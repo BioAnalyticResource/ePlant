@@ -1,9 +1,5 @@
 import { Box, Button } from '@mui/material'
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams
-} from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { SearchBar } from './SearchBar'
 import { PublicationData } from './types'
@@ -39,7 +35,12 @@ const columns: GridColDef[] = [
     width: 130,
     headerClassName: 'select-none',
     renderCell: (params: GridRenderCellParams<string>) => (
-      <Button href={params.value} variant="outlined" size="small">
+      <Button
+        href={params.value}
+        variant="outlined"
+        size="small"
+        color="secondary"
+      >
         VIEW PAPER
       </Button>
     ),
@@ -91,7 +92,7 @@ export const Publications = ({
         rows={rows}
         autoHeight
         columns={columns}
-        sx={{border: 0}}
+        sx={{ border: 0 }}
         components={{ Toolbar: SearchBar }}
       />
     </Box>
