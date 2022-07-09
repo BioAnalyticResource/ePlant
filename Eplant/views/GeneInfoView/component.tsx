@@ -224,6 +224,7 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
         <Button
           color="secondary"
           sx={{
+            textAlign: 'left',
             justifyContent: 'flex-start',
           }}
           startIcon={<view.icon />}

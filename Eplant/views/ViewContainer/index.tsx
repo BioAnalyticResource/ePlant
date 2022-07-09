@@ -50,7 +50,7 @@ export function ViewContainer({
         variant="elevation"
         color="secondary"
         position="sticky"
-        elevation={4}
+        elevation={0}
       >
         <Toolbar>
           {/* View selector dropdown */}

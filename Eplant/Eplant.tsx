@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider, useTheme } from '@mui/material/styles'
 import {
   Box,
   Container,
@@ -105,7 +105,6 @@ const factory: (node: FlexLayout.TabNode) => JSX.Element | undefined = (
       style={{
         height: '100%',
         width: '100%',
-        border: '1px solid #555',
         display: 'flex',
         justifyContent: 'center',
         boxSizing: 'border-box',
@@ -125,29 +124,14 @@ const eplantScope = Symbol('Eplant scope')
  * @returns {JSX.Element} The rendered Eplant component
  */
 export default function Eplant() {
-  const layout = React.useRef<Layout>(null)
   const [activeId, setActiveId] = React.useState<string>('')
-  const [model, setModel] = React.useState(
-    FlexLayout.Model.fromJson({
-      global: {},
-      borders: [],
-      layout: {
-        type: 'row',
-        weight: 100,
-        children: [],
-      },
-    })
-  )
-
   const [views, setViews] = useViews()
+  const [darkMode, setDarkMode] = React.useState<boolean>(true)
 
-  //TODO: Create a way for the user to add tabs and remove this line
-  // @ts-ignore
-  window.addTab = addTab
   //TODO: Break into more components to prevent unnecessary rerendering
   return (
     <Provider scope={eplantScope}>
-      <ThemeProvider theme={dark}>
+      <ThemeProvider theme={darkMode ? dark : light}>
         <CssBaseline />
         <ResponsiveDrawer variant="persistent" open={true}>
           <Container
@@ -172,40 +156,72 @@ export default function Eplant() {
             />
           </Container>
         </ResponsiveDrawer>
-        <Box
-          sx={(theme) => ({
-            height: '100%',
-            left: `${sideBarWidth}px`,
-            right: '0px',
-            position: 'absolute',
-          })}
-        >
-          <Box
-            sx={{
-              background: '#fff',
-              width: '100%',
-              height: '100%',
-            }}
-          ></Box>
-          <FlexLayout.Layout
-            ref={layout}
-            model={model}
-            factory={factory}
-            onTabSetPlaceHolder={() => (
-              <TabsetPlaceholder addTab={() => addTab()} />
-            )}
-            onModelChange={(newModel) => {
-              const newId = newModel
-                .getActiveTabset()
-                ?.getSelectedNode?.()
-                ?.getId?.()
-              if (!newId) throw new Error('No active tabset')
-              setActiveId(newId)
-            }}
-          ></FlexLayout.Layout>
-        </Box>
+        <EplantLayout setActiveId={setActiveId} />
       </ThemeProvider>
     </Provider>
+  )
+}
+function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
+  const setViews = useSetViews()
+  const layout = React.useRef<Layout>(null)
+
+  const [model, setModel] = React.useState(
+    FlexLayout.Model.fromJson({
+      global: {
+        tabSetTabStripHeight: 48,
+      },
+      borders: [],
+      layout: {
+        type: 'row',
+        weight: 100,
+        children: [],
+      },
+    })
+  )
+  const theme = useTheme()
+
+  React.useEffect(() => {
+    updateColors()
+  }, [theme, layout.current])
+
+  //TODO: Create a way for the user to add tabs and remove this line
+  // @ts-ignore
+  window.addTab = addTab
+  return (
+    <Box
+      sx={(theme) => ({
+        height: `calc(100% - ${theme.spacing(1)})`,
+        left: `${sideBarWidth}px`,
+        right: '0px',
+        position: 'absolute',
+        margin: theme.spacing(1),
+        boxSizing: 'border-box',
+      })}
+    >
+      <Box
+        sx={{
+          background: '#fff',
+          width: '100%',
+          height: '100%',
+        }}
+      ></Box>
+      <FlexLayout.Layout
+        ref={layout}
+        model={model}
+        factory={factory}
+        onTabSetPlaceHolder={() => (
+          <TabsetPlaceholder addTab={() => addTab()} />
+        )}
+        onModelChange={(newModel) => {
+          const newId = newModel
+            .getActiveTabset()
+            ?.getSelectedNode?.()
+            ?.getId?.()
+          if (!newId) throw new Error('No active tabset')
+          setActiveId(newId)
+        }}
+      ></FlexLayout.Layout>
+    </Box>
   )
   function addTab() {
     if (!layout.current) return
@@ -225,6 +241,28 @@ export default function Eplant() {
       component: 'view',
       id,
       type: 'tab',
+    })
+  }
+
+  function updateColors() {
+    if (!layout.current) return
+    console.log(theme)
+    ;(
+      Array.from(
+        document.getElementsByClassName('flexlayout__layout')
+      ) as HTMLDivElement[]
+    ).map((el) => {
+      el.style.setProperty('--color-text', theme.palette.text.primary)
+      el.style.setProperty(
+        '--color-background',
+        theme.palette.background.default
+      )
+      el.style.setProperty('--color-base', theme.palette.background.default)
+      el.style.setProperty('--color-active', theme.palette.primary.main)
+      el.style.setProperty('--color-1', theme.palette.background.default)
+      el.style.setProperty('--color-2', theme.palette.background.paper)
+      el.style.setProperty('--color-3', theme.palette.secondary.main)
+      el.style.setProperty('--color-divider', theme.palette.divider)
     })
   }
 }

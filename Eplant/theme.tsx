@@ -10,7 +10,7 @@ export const light: ThemeOptions = createTheme({
       main: '#888',
     },
     background: {
-      paper: '#fafafa',
+      paper: '#f5f5f5',
     },
   },
   shape: {
