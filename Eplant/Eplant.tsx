@@ -22,6 +22,7 @@ import {
   viewsAtom,
   useFreeViews,
   useSetViews,
+  ViewIDContext,
 } from './state'
 import { ViewContainer } from './views/ViewContainer'
 import { Actions, Layout } from 'flexlayout-react'
@@ -66,24 +67,26 @@ function ViewTab(props: { id: string }) {
   if (!v) throw new NoViewError(`No ${view.view} found for ${view.activeGene}`)
 
   return (
-    <ViewContainer
-      sx={{
-        width: '100%',
-        height: '100%',
-        overflow: 'scroll',
-      }}
-      view={v}
-      gene={gene ?? null}
-      setView={(newView) => {
-        setViews((views) => ({
-          ...views,
-          [props.id]: {
-            ...views[props.id],
-            view: newView.id,
-          },
-        }))
-      }}
-    />
+    <ViewIDContext.Provider value={props.id}>
+      <ViewContainer
+        sx={{
+          width: '100%',
+          height: '100%',
+          overflow: 'scroll',
+        }}
+        view={v}
+        gene={gene ?? null}
+        setView={(newView) => {
+          setViews((views) => ({
+            ...views,
+            [props.id]: {
+              ...views[props.id],
+              view: newView.id,
+            },
+          }))
+        }}
+      />
+    </ViewIDContext.Provider>
   )
 }
 

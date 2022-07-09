@@ -7,6 +7,7 @@ import { GeneInfoView } from '@eplant/views/GeneInfoView'
 
 import ArabidopsisGeneInfoView from '@eplant/Species/arabidopsis/loaders/GeneInfoView'
 import GeneticElement from '@eplant/GeneticElement'
+import { HourglassFull } from '@mui/icons-material'
 
 const AlwaysLoadingView: View = {
   component: () => <div></div>,
@@ -19,6 +20,7 @@ const AlwaysLoadingView: View = {
     return new Promise(() => {})
   },
   name: 'Always loading',
+  icon: () => <HourglassFull />,
 }
 
 const geneticElement = { ...(exampleData.geneticElement as GeneticElement) }

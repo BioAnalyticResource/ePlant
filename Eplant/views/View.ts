@@ -1,4 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
+import { IconProps } from '@mui/material'
 import { atom, Atom, useAtom } from 'jotai'
 import { atomFamily, atomWithStorage } from 'jotai/utils'
 
@@ -20,6 +21,7 @@ export type View<T = any> = {
   ) => Promise<any>
   // Validate props.activeData with the ZodType
   component: (props: ViewProps<T>) => JSX.Element | null
+  icon: () => JSX.Element
   readonly name: string
   readonly id: string
 }

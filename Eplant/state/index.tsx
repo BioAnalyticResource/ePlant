@@ -28,3 +28,6 @@ export const viewsAtom = atom<{
 }>({})
 export const useViews = () => useAtom(viewsAtom)
 export const useSetViews = () => useSetAtom(viewsAtom)
+
+export const ViewIDContext = React.createContext<string>('')
+export const useViewID = () => React.useContext(ViewIDContext)

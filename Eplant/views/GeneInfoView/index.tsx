@@ -1,6 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import component from './component'
+import { Info } from '@mui/icons-material'
 
 export type GeneFeature = {
   type:
@@ -41,4 +42,5 @@ export const GeneInfoView = {
   //TODO: figure out how to make this a component lazy
   // component: React.lazy(() => import('./component')),
   component: component,
+  icon: () => <Info />,
 }

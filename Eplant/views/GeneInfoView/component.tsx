@@ -1,12 +1,15 @@
 import GeneticElement from '@eplant/GeneticElement'
+import { useSetViews, useViewID, useViews } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
+import { Info } from '@mui/icons-material'
+import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import _ from 'lodash'
 import React from 'react'
 import { GeneInfoViewData } from '.'
-import { ViewProps } from '../View'
+import { View, ViewProps } from '../View'
 import { GeneModel } from './GeneModel'
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
@@ -124,101 +127,122 @@ export default function ({
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
-  return (
-    <Stack gap={5}>
-      <Stack direction="row" gap={'20px'}>
-        <Stack direction="column" gap={'16px'} flex={1}>
-          <div style={{ whiteSpace: 'nowrap' }}>
-            <Typography variant="body1">Available views</Typography>
-          </div>
-          {geneticElement.views.map((view) => (
-            <div key={view.name}>{view.name}</div>
-          ))}
-        </Stack>
 
-        <Stack
-          direction="column"
-          gap={'16px'}
-          flex={4}
-          data-testid="gene-info-stack"
-        >
+  return (
+    <Stack direction="row" gap={'20px'}>
+      <ViewSwitcher geneticElement={geneticElement} />
+      <Stack
+        direction="column"
+        gap={'16px'}
+        flex={4}
+        data-testid="gene-info-stack"
+      >
+        <div>
+          <Typography variant="body1">Gene</Typography>
+          <SecondaryText>{geneticElement.id}</SecondaryText>
+        </div>
+        <div>
+          <Typography variant="body1">Aliases</Typography>
+          <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
+        </div>
+        <div>
+          <Typography variant="body1">Full name</Typography>
+          <SecondaryText>{activeData.name}</SecondaryText>
+        </div>
+        <div>
+          <Typography variant="body1">Brief description</Typography>
+          <SecondaryText>{activeData.brief_description}</SecondaryText>
+        </div>
+        <div>
+          <Typography variant="body1">Computational description</Typography>
+          <SecondaryText>
+            {activeData.computational_description}
+          </SecondaryText>{' '}
+        </div>
+        <div>
+          <Typography variant="body1">Curator summary</Typography>
+          <SecondaryText>{activeData.curator_summary}</SecondaryText>
+        </div>
+        <div>
+          <Typography variant="body1">Location & Gene model</Typography>
           <div>
-            <Typography variant="body1">Gene</Typography>
-            <SecondaryText>{geneticElement.id}</SecondaryText>
-          </div>
-          <div>
-            <Typography variant="body1">Aliases</Typography>
-            <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
-          </div>
-          <div>
-            <Typography variant="body1">Full name</Typography>
-            <SecondaryText>{activeData.name}</SecondaryText>
-          </div>
-          <div>
-            <Typography variant="body1">Brief description</Typography>
-            <SecondaryText>{activeData.brief_description}</SecondaryText>
-          </div>
-          <div>
-            <Typography variant="body1">Computational description</Typography>
             <SecondaryText>
-              {activeData.computational_description}
-            </SecondaryText>{' '}
-          </div>
-          <div>
-            <Typography variant="body1">Curator summary</Typography>
-            <SecondaryText>{activeData.curator_summary}</SecondaryText>
-          </div>
-          <div>
-            <Typography variant="body1">Location & Gene model</Typography>
+              {activeData.location}: {activeData.chromosome_start} to{' '}
+              {activeData.chromosome_end}, Strand {activeData.strand}
+            </SecondaryText>
             <div>
-              <SecondaryText>
-                {activeData.location}: {activeData.chromosome_start} to{' '}
-                {activeData.chromosome_end}, Strand {activeData.strand}
+              {activeData.features.map((f) => (
+                <GeneModel key={f.uniqueID} margin={5} feature={f}></GeneModel>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div>
+          <Typography variant="body1">DNA sequence</Typography>
+          <div>
+            <div>
+              <SecondaryText variant="caption" whiteSpace={'nowrap'}>
+                {'> ' + geneticElement.id}
               </SecondaryText>
-              <div>
-                {activeData.features.map((f) => (
-                  <GeneModel
-                    key={f.uniqueID}
-                    margin={5}
-                    feature={f}
-                  ></GeneModel>
-                ))}
-              </div>
+            </div>
+            <div>
+              <GeneSequence
+                geneticElement={geneticElement}
+                activeData={activeData}
+              ></GeneSequence>
             </div>
           </div>
+        </div>
+        {activeData.geneticElementType == 'protein_coding' ? (
           <div>
-            <Typography variant="body1">DNA sequence</Typography>
+            <Typography variant="body1">Protein sequence</Typography>
             <div>
-              <div>
-                <SecondaryText variant="caption" whiteSpace={'nowrap'}>
-                  {'> ' + geneticElement.id}
-                </SecondaryText>
-              </div>
-              <div>
-                <GeneSequence
-                  geneticElement={geneticElement}
-                  activeData={activeData}
-                ></GeneSequence>
-              </div>
+              <SecondaryText variant="caption" whiteSpace={'nowrap'}>
+                {'> ' + geneticElement.id}
+              </SecondaryText>
+            </div>
+            <div>
+              <CodeBody variant="caption" style={{ wordBreak: 'break-word' }}>
+                {activeData.proteinSequence}
+              </CodeBody>
             </div>
           </div>
-          {activeData.geneticElementType == 'protein_coding' ? (
-            <div>
-              <Typography variant="body1">Protein sequence</Typography>
-              <div>
-                <SecondaryText variant="caption" whiteSpace={'nowrap'}>
-                  {'> ' + geneticElement.id}
-                </SecondaryText>
-              </div>
-              <div>
-                <CodeBody variant="caption" style={{ wordBreak: 'break-word' }}>
-                  {activeData.proteinSequence}
-                </CodeBody>
-              </div>
-            </div>
-          ) : undefined}
-        </Stack>
+        ) : undefined}
       </Stack>
     </Stack>
   )
+}
+function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
+  const id = useViewID()
+  const setViews = useSetViews()
+  return (
+    <Stack direction="column" gap={'16px'} flex={1}>
+      <div style={{ whiteSpace: 'nowrap' }}>
+        <SecondaryText>Available views</SecondaryText>
+      </div>
+      {geneticElement.views.map((view) => (
+        <Button
+          color="secondary"
+          sx={{
+            justifyContent: 'flex-start',
+          }}
+          startIcon={<view.icon />}
+          key={view.name}
+          onClick={() => switchViews(view)}
+        >
+          {view.name}
+        </Button>
+      ))}
+    </Stack>
+  )
+
+  function switchViews(view: View) {
+    setViews((views) => ({
+      ...views,
+      [id]: {
+        ...views[id],
+        view: view.id,
+      },
+    }))
+  }
 }

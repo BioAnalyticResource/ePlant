@@ -5,6 +5,7 @@ import GeneHeader from '@eplant/UI/GeneHeader'
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
+import { DocumentScanner } from '@mui/icons-material'
 
 export const PublicationViewer = {
   name: 'Publication Viewer',
@@ -28,4 +29,5 @@ export const PublicationViewer = {
       </div>
     )
   },
+  icon: () => <DocumentScanner />,
 }
