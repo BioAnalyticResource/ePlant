@@ -4,22 +4,19 @@
   --color-base: red;
   --color-1: red;
   --color-2: red;
-  --color-3: red;
+  --color-active: red;
   --color-divider: red;
-  --color-5: red;
   --color-6: red;
-  --color-active: #99CC00
-  --color-drag1: rgb(207, 232, 255);
-  --color-drag2: rgb(183, 209, 181);
-  --color-drag1-background: rgba(128, 128, 128, 0.15);
-  --color-drag2-background: rgba(128, 128, 128, 0.15);
+  --color-primary: #99CC00;
+  --color-drag1: var(--color-primary);
+  --color-drag2: var(--color-primary);
   --font-size: medium;
   --font-family: Roboto, Arial, sans-serif;
   --color-overflow: gray;
   --color-icon: gray;
   --color-tabset-background: var(--color-background);
   --color-tabset-background-selected: var(--color-1);
-  --color-tabset-background-maximized: var(--color-6);
+  --color-tabset-background-maximized: var(--color-1);
   --color-tab-background: var(--color-2);
   --color-tabset-divider-line: var(--color-divider);
   --color-tabset-header-background: var(--color-1);
@@ -27,19 +24,19 @@
   --color-border-background: var(--color-1);
   --color-border-divider-line: var(--color-divider);
   --color-tab-selected: var(--color-text);
-  --color-tab-selected-background: var(--color-3);
+  --color-tab-selected-background: var(--color-active);
   --color-tab-unselected: gray;
   --color-tab-unselected-background: var(--color-2);
   --color-tab-textbox: var(--color-text);
-  --color-tab-textbox-background: var(--color-3);
+  --color-tab-textbox-background: var(--color-active);
   --color-border-tab-selected: var(--color-text);
   --color-border-tab-selected-background: var(--color-divider);
   --color-border-tab-unselected: gray;
   --color-border-tab-unselected-background: var(--color-2);
   --color-splitter: var(--color-background);
   --color-splitter-hover: var(--color-divider);
-  --color-splitter-drag: var(--color-5);
-  --color-drag-rect-border: var(--color-divider);
+  --color-splitter-drag: var(--color-primary);
+  --color-drag-rect-border: var(--color-primary);
   --color-drag-rect-background: var(--color-1);
   --color-drag-rect: var(--color-text);
   --color-popup-border: var(--color-6);
@@ -72,7 +69,7 @@
   z-index: 10;
 }
 .flexlayout__splitter_drag {
-  z-index: 1000;
+  z-index: 10000;
   background-color: var(--color-splitter-drag);
   border-radius: 5px;
 }
@@ -83,17 +80,19 @@
   position: absolute;
   pointer-events: none;
   box-sizing: border-box;
-  border: 2px solid var(--color-drag1);
-  background: var(--color-drag1-background);
+  border: 2px solid var(--color-drag1) 100%;
+  background: var(--color-drag1);
+  opacity: 0.15;
   border-radius: 5px;
-  z-index: 1000;
+  z-index: 1500;
 }
 .flexlayout__outline_rect_edge {
   pointer-events: none;
-  border: 2px solid var(--color-drag2);
-  background: var(--color-drag2-background);
+  border: 2px solid var(--color-drag2) 100%;
+  background: var(--color-drag2);
+  opacity: 0.3;
   border-radius: 5px;
-  z-index: 1000;
+  z-index: 1500;
   box-sizing: border-box;
 }
 .flexlayout__edge_rect {
@@ -161,7 +160,7 @@
   display: flex;
 }
 .flexlayout__tabset_tabbar_outer_top {
-  border-bottom: 1px solid var(--color-tabset-divider-line);
+    /* no styles */
 }
 .flexlayout__tabset_tabbar_outer_bottom {
   border-top: 1px solid var(--color-tabset-divider-line);
@@ -222,8 +221,9 @@
 }
 .flexlayout__tabset-selected .flexlayout__tab_button--selected {
     background-color: var(--color-tab-selected-background);
-    color: var(--color-active) !important;
-    border-bottom: 2px solid var(--color-active);
+    color: var(--color-primary) !important;
+    border-bottom: 2px solid var(--color-primary);
+    transition: border-bottom 
 }
 @media (hover: hover) {
   .flexlayout__tab_button:hover {

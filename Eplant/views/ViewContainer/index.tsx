@@ -48,7 +48,9 @@ export function ViewContainer({
     <Box {...props}>
       <AppBar
         variant="elevation"
-        color="secondary"
+        sx={(theme) => ({
+          background: theme.palette.background.active,
+        })}
         position="sticky"
         elevation={0}
       >

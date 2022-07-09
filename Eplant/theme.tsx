@@ -1,4 +1,11 @@
-import { createTheme, ThemeOptions } from '@mui/material'
+import { createTheme, ThemeOptions, TypeBackground } from '@mui/material'
+import React from 'react'
+
+declare module '@mui/material/styles' {
+  interface TypeBackground {
+    active: string
+  }
+}
 
 export const light: ThemeOptions = createTheme({
   palette: {
@@ -10,7 +17,9 @@ export const light: ThemeOptions = createTheme({
       main: '#888',
     },
     background: {
-      paper: '#f5f5f5',
+      default: '#e0e0e0',
+      paper: '#ffffff',
+      active: '#f5f5f5',
     },
   },
   shape: {
@@ -30,6 +39,7 @@ export const dark: ThemeOptions = createTheme({
     background: {
       default: '#121212',
       paper: '#222222',
+      active: '#333333',
     },
   },
   shape: {

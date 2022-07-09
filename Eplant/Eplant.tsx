@@ -126,7 +126,7 @@ const eplantScope = Symbol('Eplant scope')
 export default function Eplant() {
   const [activeId, setActiveId] = React.useState<string>('')
   const [views, setViews] = useViews()
-  const [darkMode, setDarkMode] = React.useState<boolean>(true)
+  const [darkMode, setDarkMode] = React.useState<boolean>(false)
 
   //TODO: Break into more components to prevent unnecessary rerendering
   return (
@@ -258,10 +258,11 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
         theme.palette.background.default
       )
       el.style.setProperty('--color-base', theme.palette.background.default)
-      el.style.setProperty('--color-active', theme.palette.primary.main)
+      el.style.setProperty('--color-primary', theme.palette.primary.main)
       el.style.setProperty('--color-1', theme.palette.background.default)
       el.style.setProperty('--color-2', theme.palette.background.paper)
-      el.style.setProperty('--color-3', theme.palette.secondary.main)
+      el.style.setProperty('--color-active', theme.palette.background.active)
+      el.style.setProperty('--color-6', theme.palette.background.active)
       el.style.setProperty('--color-divider', theme.palette.divider)
     })
   }
