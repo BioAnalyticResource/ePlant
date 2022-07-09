@@ -15,9 +15,9 @@ export const useSpecies = () => useAtom(speciesAtom)
 export const useSetSpecies = () => useSetAtom(speciesAtom)
 
 // Views that aren't associated with genes
-const freeViews = [GetStartedView] as const
-export const freeViewsAtom = atom(freeViews)
-export const useFreeViews = () => useAtomValue(freeViewsAtom)
+const genericViews = [GetStartedView] as const
+export const genericViewsAtom = atom(genericViews)
+export const useGenericViews = () => useAtomValue(genericViewsAtom)
 
 // All open views, and genes if they are associated
 export const viewsAtom = atom<{

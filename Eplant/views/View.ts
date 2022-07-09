@@ -52,7 +52,7 @@ const viewDataStorage = {
 }
 
 const getViewDataAtom = (view: View<any>, gene: GeneticElement | null) => {
-  const key = `${view.id}-${gene?.id ?? 'free-view'}`
+  const key = `${view.id}-${gene?.id ?? 'generic-view'}`
   if (!viewData[key])
     viewData[key] = atomWithStorage<ViewDataType>(
       'view-data-' + key,

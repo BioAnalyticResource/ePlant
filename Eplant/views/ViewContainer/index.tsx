@@ -1,5 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { useFreeViews } from '@eplant/state'
+import { useGenericViews } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import downloadFile from '@eplant/util/downloadFile'
 import {
@@ -39,8 +39,8 @@ export function ViewContainer({
 } & BoxProps) {
   const { activeData, error, loading, loadingAmount } = useViewData(view, gene)
 
-  const freeViews = useFreeViews()
-  const viewList = freeViews.concat(gene?.views ?? [])
+  const genericViews = useGenericViews()
+  const viewList = genericViews.concat(gene?.views ?? [])
 
   const idLabel = React.useId()
   const selectId = React.useId()

@@ -146,8 +146,11 @@ export default function GeneticElementComponent({
       }}
       sx={(theme) => ({
         transition: '0.1s ease all',
+        ':hover': {
+          background: theme.palette.background.active,
+        },
       })}
-      elevation={hover ? 2 : 0}
+      elevation={0}
       onClick={onClick}
     >
       <Stack

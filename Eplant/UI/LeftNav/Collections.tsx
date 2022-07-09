@@ -160,10 +160,13 @@ export function Collection({
       }}
     >
       <Card
-        elevation={hover ? 2 : 0}
+        elevation={0}
         sx={(theme) => ({
           borderRadius: theme.shape.borderRadius,
           color: theme.palette.text.secondary,
+          ':hover': {
+            backgroundColor: theme.palette.background.active,
+          },
         })}
       >
         <Stack

@@ -8,6 +8,7 @@
   --color-divider: red;
   --color-6: red;
   --color-primary: #99CC00;
+  --color-primary-light: red;
   --color-drag1: var(--color-primary);
   --color-drag2: var(--color-primary);
   --font-size: medium;
@@ -24,7 +25,7 @@
   --color-border-background: var(--color-1);
   --color-border-divider-line: var(--color-divider);
   --color-tab-selected: var(--color-text);
-  --color-tab-selected-background: var(--color-active);
+  --color-tab-selected-background: var(--color-primary-light);
   --color-tab-unselected: gray;
   --color-tab-unselected-background: var(--color-2);
   --color-tab-textbox: var(--color-text);
@@ -221,16 +222,10 @@
 }
 .flexlayout__tabset-selected .flexlayout__tab_button--selected {
     background-color: var(--color-tab-selected-background);
-    color: var(--color-primary) !important;
     border-bottom: 2px solid var(--color-primary);
     transition: border-bottom 
 }
-@media (hover: hover) {
-  .flexlayout__tab_button:hover {
-    background-color: var(--color-tab-selected-background);
-    color: var(--color-tab-selected);
-  }
-}
+
 .flexlayout__tab_button--unselected {
   background-color: var(--color-tab-unselected-background);
   color: var(--color-tab-unselected);

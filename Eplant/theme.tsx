@@ -5,9 +5,12 @@ declare module '@mui/material/styles' {
   interface TypeBackground {
     active: string
   }
+  interface PaletteColor {
+    pale?: string
+  }
 }
 
-export const light: ThemeOptions = createTheme({
+export const light = createTheme({
   palette: {
     mode: 'light',
     primary: {
@@ -26,8 +29,9 @@ export const light: ThemeOptions = createTheme({
     borderRadius: 2,
   },
 })
+if (light.palette?.primary) light.palette.primary.pale = '#fbfff2'
 
-export const dark: ThemeOptions = createTheme({
+export const dark = createTheme({
   palette: {
     mode: 'dark',
     primary: {
@@ -46,3 +50,5 @@ export const dark: ThemeOptions = createTheme({
     borderRadius: 2,
   },
 })
+
+if (dark.palette?.primary) dark.palette.primary.pale = '#303328'

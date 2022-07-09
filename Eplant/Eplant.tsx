@@ -20,7 +20,7 @@ import {
   useGeneticElements,
   useViews,
   viewsAtom,
-  useFreeViews,
+  useGenericViews,
   useSetViews,
   ViewIDContext,
 } from './state'
@@ -50,9 +50,13 @@ export type EplantProps = {}
  * @param props The id of this tab
  * @returns The rendered tab
  */
-function ViewTab(props: { id: string }) {
+function ViewTab(props: {
+  model: FlexLayout.Model
+  id: string
+  node: FlexLayout.TabNode
+}) {
   const [views, setViews] = useViews()
-  const freeViews = useFreeViews()
+  const genericViews = useGenericViews()
   const genes = useGeneticElements()[0]
   const view = views[props.id]
   const gene = genes.find((g) => g.id == view.activeGene) ?? null
@@ -60,9 +64,16 @@ function ViewTab(props: { id: string }) {
     // TODO: Better fallback
     return <div>Uh oh</div>
   }
-  const v = (gene ? gene.views.concat(freeViews) : freeViews).find(
+  const v = (gene ? gene.views.concat(genericViews) : genericViews).find(
     (v) => v.id == view.view
   )
+
+  React.useEffect(() => {
+    const targetName = `${gene ? gene.id + ' - ' : ''}${v ? v.name : 'No view'}`
+    if (props.node.getName() != targetName) {
+      props.model.doAction(Actions.renameTab(props.node.getId(), targetName))
+    }
+  })
 
   if (!v) throw new NoViewError(`No ${view.view} found for ${view.activeGene}`)
 
@@ -93,11 +104,13 @@ function ViewTab(props: { id: string }) {
 /**
  * The flexlayout factory is a function that takes a layout node and returns the React component that should be rendered there.
  * @param node The node to render
+ * @param model The flexlayout model
  * @returns The React component to render
  */
-const factory: (node: FlexLayout.TabNode) => JSX.Element | undefined = (
-  node
-) => {
+const factory: (
+  node: FlexLayout.TabNode,
+  model: FlexLayout.Model
+) => JSX.Element | undefined = (node, model) => {
   const id = node.getId() as string
   const name = node.getName()
   return (
@@ -111,7 +124,7 @@ const factory: (node: FlexLayout.TabNode) => JSX.Element | undefined = (
         alignItems: 'center',
       }}
     >
-      <ViewTab id={id} />
+      <ViewTab model={model} id={id} node={node} />
     </div>
   )
 }
@@ -126,14 +139,22 @@ const eplantScope = Symbol('Eplant scope')
 export default function Eplant() {
   const [activeId, setActiveId] = React.useState<string>('')
   const [views, setViews] = useViews()
-  const [darkMode, setDarkMode] = React.useState<boolean>(false)
+  const [darkMode, setDarkMode] = React.useState<boolean>(true)
 
   //TODO: Break into more components to prevent unnecessary rerendering
   return (
     <Provider scope={eplantScope}>
       <ThemeProvider theme={darkMode ? dark : light}>
         <CssBaseline />
-        <ResponsiveDrawer variant="persistent" open={true}>
+        <ResponsiveDrawer
+          variant="persistent"
+          open={true}
+          PaperProps={{
+            sx: (theme) => ({
+              border: 'none',
+            }),
+          }}
+        >
           <Container
             disableGutters
             sx={{
@@ -169,6 +190,8 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
     FlexLayout.Model.fromJson({
       global: {
         tabSetTabStripHeight: 48,
+        tabEnableFloat: true,
+        tabEnableRename: false,
       },
       borders: [],
       layout: {
@@ -208,7 +231,7 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
       <FlexLayout.Layout
         ref={layout}
         model={model}
-        factory={factory}
+        factory={(node) => factory(node, model)}
         onTabSetPlaceHolder={() => (
           <TabsetPlaceholder addTab={() => addTab()} />
         )}
@@ -259,6 +282,10 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
       )
       el.style.setProperty('--color-base', theme.palette.background.default)
       el.style.setProperty('--color-primary', theme.palette.primary.main)
+      el.style.setProperty(
+        '--color-primary-light',
+        theme.palette.primary.pale ?? theme.palette.primary.main
+      )
       el.style.setProperty('--color-1', theme.palette.background.default)
       el.style.setProperty('--color-2', theme.palette.background.paper)
       el.style.setProperty('--color-active', theme.palette.background.active)

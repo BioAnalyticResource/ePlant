@@ -32,9 +32,9 @@ module.exports = {
     new HTMLWebpackPlugin({
       template: path.join(__dirname, 'Eplant', 'index.html'),
     }),
-    /*new CopyWebpackPlugin({
+    new CopyWebpackPlugin({
       patterns: [{ from: 'static' }],
-    }),*/
+    }),
     new BundleAnalyzerPlugin(),
   ],
   devServer: {
