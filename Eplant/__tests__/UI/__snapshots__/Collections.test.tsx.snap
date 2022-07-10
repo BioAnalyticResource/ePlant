@@ -11,7 +11,513 @@ Object {
         style="justify-content: center;"
       >
         <div
-          class="css-1v1w31p-MuiStack-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiCard-root css-1dsf6qi-MuiPaper-root-MuiCard-root"
+        >
+          <div
+            class="css-1izrny4-MuiStack-root"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-6vgxwp-MuiSvgIcon-root"
+              data-testid="ExpandMoreIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+            <div
+              class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+              style="display: none; max-height: 100%;"
+            >
+              <div
+                class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
+              >
+                <input
+                  aria-invalid="false"
+                  class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputSizeSmall css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input"
+                  id=":r1:"
+                  type="text"
+                  value=""
+                />
+                <fieldset
+                  aria-hidden="true"
+                  class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+                >
+                  <legend
+                    class="css-hdw1oc"
+                  >
+                    <span
+                      class="notranslate"
+                    >
+                      ​
+                    </span>
+                  </legend>
+                </fieldset>
+              </div>
+            </div>
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+            >
+              name
+            </p>
+            <div
+              style="flex: 1;"
+            />
+            <button
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-aay4mv-MuiButtonBase-root-MuiIconButton-root"
+              tabindex="0"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                data-testid="MoreVertIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden css-bz4dnt-MuiCollapse-root"
+          style="min-height: 0px;"
+        >
+          <div
+            class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
+          >
+            <div
+              class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
+            >
+              <div
+                class="css-d9qxkx-MuiStack-root"
+              >
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT1G01010
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            ANAC001, NAC001, NTL10
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT1G03020
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            GRXS1, ROXY16
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT3G24650
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            ABI3, AtABI3, SIS10
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT5G20980
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            ATMS3, MS3
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT5G60200
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            DOF5.3, TMO6
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="css-1okj3ks-MuiStack-root"
+      data-testid="collection"
+      style="justify-content: center;"
+    >
+      <div
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiCard-root css-1dsf6qi-MuiPaper-root-MuiCard-root"
+      >
+        <div
+          class="css-1izrny4-MuiStack-root"
         >
           <svg
             aria-hidden="true"
@@ -83,504 +589,6 @@ Object {
             />
           </button>
         </div>
-        <div
-          class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden css-bz4dnt-MuiCollapse-root"
-          style="min-height: 0px;"
-        >
-          <div
-            class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
-          >
-            <div
-              class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
-            >
-              <div
-                class="css-d9qxkx-MuiStack-root"
-              >
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT1G01010
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            ANAC001, NAC001, NTL10
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT1G03020
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            GRXS1, ROXY16
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT3G24650
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            ABI3, AtABI3, SIS10
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT5G20980
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            ATMS3, MS3
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT5G60200
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            DOF5.3, TMO6
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div
-      class="css-1okj3ks-MuiStack-root"
-      data-testid="collection"
-      style="justify-content: center;"
-    >
-      <div
-        class="css-1v1w31p-MuiStack-root"
-      >
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-6vgxwp-MuiSvgIcon-root"
-          data-testid="ExpandMoreIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-          />
-        </svg>
-        <div
-          class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
-          style="display: none; max-height: 100%;"
-        >
-          <div
-            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
-          >
-            <input
-              aria-invalid="false"
-              class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputSizeSmall css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1:"
-              type="text"
-              value=""
-            />
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-hdw1oc"
-              >
-                <span
-                  class="notranslate"
-                >
-                  ​
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-        >
-          name
-        </p>
-        <div
-          style="flex: 1;"
-        />
-        <button
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-aay4mv-MuiButtonBase-root-MuiIconButton-root"
-          tabindex="0"
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-            data-testid="MoreVertIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-            />
-          </svg>
-          <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
-        </button>
       </div>
       <div
         class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden css-bz4dnt-MuiCollapse-root"
@@ -604,7 +612,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -632,7 +640,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"
@@ -684,7 +692,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -712,7 +720,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"
@@ -764,7 +772,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -792,7 +800,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"
@@ -844,7 +852,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -872,7 +880,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"
@@ -924,7 +932,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -952,7 +960,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"
@@ -1066,7 +1074,513 @@ Object {
         style="justify-content: center;"
       >
         <div
-          class="css-1v1w31p-MuiStack-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiCard-root css-1dsf6qi-MuiPaper-root-MuiCard-root"
+        >
+          <div
+            class="css-1izrny4-MuiStack-root"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-iky5q-MuiSvgIcon-root"
+              data-testid="ExpandMoreIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+            <div
+              class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+              style="display: none; max-height: 100%;"
+            >
+              <div
+                class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
+              >
+                <input
+                  aria-invalid="false"
+                  class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputSizeSmall css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input"
+                  id=":r8:"
+                  type="text"
+                  value=""
+                />
+                <fieldset
+                  aria-hidden="true"
+                  class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+                >
+                  <legend
+                    class="css-hdw1oc"
+                  >
+                    <span
+                      class="notranslate"
+                    >
+                      ​
+                    </span>
+                  </legend>
+                </fieldset>
+              </div>
+            </div>
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+            >
+              name
+            </p>
+            <div
+              style="flex: 1;"
+            />
+            <button
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-aay4mv-MuiButtonBase-root-MuiIconButton-root"
+              tabindex="0"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                data-testid="MoreVertIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-entered css-pwcg7p-MuiCollapse-root"
+          style="min-height: 0px;"
+        >
+          <div
+            class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
+          >
+            <div
+              class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
+            >
+              <div
+                class="css-d9qxkx-MuiStack-root"
+              >
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT1G01010
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            ANAC001, NAC001, NTL10
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT1G03020
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            GRXS1, ROXY16
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT3G24650
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            ABI3, AtABI3, SIS10
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT5G20980
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            ATMS3, MS3
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  aria-describedby=""
+                  aria-disabled="false"
+                  aria-roledescription="sortable"
+                  class="MuiBox-root css-0"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
+                  >
+                    <div
+                      class="css-1sp4cpl-MuiStack-root"
+                    >
+                      <div
+                        class="MuiBox-root css-14fun5h"
+                      >
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        />
+                        <div
+                          class="MuiBox-root css-1bbexvi"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
+                            data-testid="DragIndicatorIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1dig4xi"
+                      >
+                        <div
+                          class="css-u0cilm-MuiStack-root"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            AT5G60200
+                          </p>
+                          <hr
+                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
+                          />
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                          >
+                            DOF5.3, TMO6
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                          data-testid="MoreVertIcon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                          />
+                        </svg>
+                        <span
+                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="css-1okj3ks-MuiStack-root"
+      data-testid="collection"
+      style="justify-content: center;"
+    >
+      <div
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiCard-root css-1dsf6qi-MuiPaper-root-MuiCard-root"
+      >
+        <div
+          class="css-1izrny4-MuiStack-root"
         >
           <svg
             aria-hidden="true"
@@ -1138,504 +1652,6 @@ Object {
             />
           </button>
         </div>
-        <div
-          class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-entered css-pwcg7p-MuiCollapse-root"
-          style="min-height: 0px;"
-        >
-          <div
-            class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
-          >
-            <div
-              class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
-            >
-              <div
-                class="css-d9qxkx-MuiStack-root"
-              >
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT1G01010
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            ANAC001, NAC001, NTL10
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT1G03020
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            GRXS1, ROXY16
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT3G24650
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            ABI3, AtABI3, SIS10
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT5G20980
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            ATMS3, MS3
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  aria-describedby=""
-                  aria-disabled="false"
-                  aria-roledescription="sortable"
-                  class="MuiBox-root css-0"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
-                  >
-                    <div
-                      class="css-1sp4cpl-MuiStack-root"
-                    >
-                      <div
-                        class="MuiBox-root css-14fun5h"
-                      >
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        />
-                        <div
-                          class="MuiBox-root css-1bbexvi"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-pdb3gp-MuiSvgIcon-root"
-                            data-testid="DragIndicatorIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div
-                        class="MuiBox-root css-1d5wq8t"
-                      >
-                        <div
-                          class="css-u0cilm-MuiStack-root"
-                        >
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            AT5G60200
-                          </p>
-                          <hr
-                            class="MuiDivider-root MuiDivider-fullWidth MuiDivider-vertical MuiDivider-flexItem css-1tk1bks-MuiDivider-root"
-                          />
-                          <p
-                            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-                          >
-                            DOF5.3, TMO6
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-sx0zw5-MuiButtonBase-root-MuiIconButton-root"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                          data-testid="MoreVertIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                          />
-                        </svg>
-                        <span
-                          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div
-      class="css-1okj3ks-MuiStack-root"
-      data-testid="collection"
-      style="justify-content: center;"
-    >
-      <div
-        class="css-1v1w31p-MuiStack-root"
-      >
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-iky5q-MuiSvgIcon-root"
-          data-testid="ExpandMoreIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-          />
-        </svg>
-        <div
-          class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
-          style="display: none; max-height: 100%;"
-        >
-          <div
-            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
-          >
-            <input
-              aria-invalid="false"
-              class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputSizeSmall css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r8:"
-              type="text"
-              value=""
-            />
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-hdw1oc"
-              >
-                <span
-                  class="notranslate"
-                >
-                  ​
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-        >
-          name
-        </p>
-        <div
-          style="flex: 1;"
-        />
-        <button
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-aay4mv-MuiButtonBase-root-MuiIconButton-root"
-          tabindex="0"
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-            data-testid="MoreVertIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-            />
-          </svg>
-          <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
-        </button>
       </div>
       <div
         class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-entered css-pwcg7p-MuiCollapse-root"
@@ -1659,7 +1675,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -1687,7 +1703,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"
@@ -1739,7 +1755,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -1767,7 +1783,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"
@@ -1819,7 +1835,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -1847,7 +1863,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"
@@ -1899,7 +1915,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -1927,7 +1943,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"
@@ -1979,7 +1995,7 @@ Object {
                 tabindex="0"
               >
                 <div
-                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-nwyxng-MuiPaper-root"
+                  class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-18sxdbe-MuiPaper-root"
                 >
                   <div
                     class="css-1sp4cpl-MuiStack-root"
@@ -2007,7 +2023,7 @@ Object {
                       </div>
                     </div>
                     <div
-                      class="MuiBox-root css-1d5wq8t"
+                      class="MuiBox-root css-1dig4xi"
                     >
                       <div
                         class="css-u0cilm-MuiStack-root"

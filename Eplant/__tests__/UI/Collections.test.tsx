@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { prettyDOM, render } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import * as React from 'react'
 import { LeftNav } from '@eplant/UI/LeftNav'
@@ -34,7 +34,7 @@ describe('Collection', () => {
         onRemove={onRemove}
       ></Collection>
     )
-    const parent = await s.findByTestId('collection')
+    const parent = await s.findByText(name)
     return { onNameChange, setOpen, deleteGene, onRemove, s, parent }
   }
 
@@ -58,7 +58,7 @@ describe('Collection', () => {
       name: 'name',
       open: false,
     })
-    await userEvent.click(parent.children[0])
+    await userEvent.click(parent)
     expect(setOpen).toHaveBeenCalledTimes(1)
   })
   it('should open when clicked while open', async () => {
@@ -66,7 +66,7 @@ describe('Collection', () => {
       name: 'name',
       open: true,
     })
-    await userEvent.click(parent.children[0])
+    await userEvent.click(parent)
     expect(setOpen).toHaveBeenCalledTimes(1)
   })
 })

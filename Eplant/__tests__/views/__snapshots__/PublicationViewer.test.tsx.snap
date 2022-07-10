@@ -7,23 +7,6 @@ Object {
     <div>
       <div>
         <div
-          class="MuiBox-root css-xyomv4"
-        >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-          >
-            AT3G24650
-          </h4>
-          <hr
-            class="MuiDivider-root MuiDivider-middle MuiDivider-vertical MuiDivider-flexItem css-2601tu-MuiDivider-root"
-          />
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-          >
-            ABI3, AtABI3, SIS10
-          </h4>
-        </div>
-        <div
           class="MuiTabs-root css-1ujnqem-MuiTabs-root"
         >
           <div
@@ -3286,23 +3269,6 @@ Object {
   </body>,
   "container": <div>
     <div>
-      <div
-        class="MuiBox-root css-xyomv4"
-      >
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-        >
-          AT3G24650
-        </h4>
-        <hr
-          class="MuiDivider-root MuiDivider-middle MuiDivider-vertical MuiDivider-flexItem css-2601tu-MuiDivider-root"
-        />
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-        >
-          ABI3, AtABI3, SIS10
-        </h4>
-      </div>
       <div
         class="MuiTabs-root css-1ujnqem-MuiTabs-root"
       >
