@@ -12,7 +12,7 @@ import * as React from 'react'
 import arabidopsis from './Species/arabidopsis'
 import { dark, light } from './theme'
 import { LeftNav } from './UI/LeftNav'
-import { ExpandMore } from '@mui/icons-material'
+import { Add, ExpandMore } from '@mui/icons-material'
 import { Provider } from 'jotai'
 import * as FlexLayout from 'flexlayout-react'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
@@ -25,7 +25,13 @@ import {
   ViewIDContext,
 } from './state'
 import { ViewContainer } from './views/ViewContainer'
-import { Actions, Layout } from 'flexlayout-react'
+import {
+  Actions,
+  BorderNode,
+  ITabSetRenderValues,
+  Layout,
+  TabSetNode,
+} from 'flexlayout-react'
 import GeneticElement from './GeneticElement'
 import { NoViewError } from './views/View'
 
@@ -64,12 +70,19 @@ function ViewTab(props: {
     // TODO: Better fallback
     return <div>Uh oh</div>
   }
+  // If there is no gene selected choose one
+
   const v = (gene ? gene.views.concat(genericViews) : genericViews).find(
     (v) => v.id == view.view
   )
 
   React.useEffect(() => {
-    const targetName = `${gene ? gene.id + ' - ' : ''}${v ? v.name : 'No view'}`
+    // Only include the gene name in the tab name if a gene is selected and this view belongs to that gene
+    const targetName = `${
+      gene && gene.views.some((geneView) => geneView.id == view.view)
+        ? gene.id + ' - '
+        : ''
+    }${v ? v.name : 'No view'}`
     if (props.node.getName() != targetName) {
       props.model.doAction(Actions.renameTab(props.node.getId(), targetName))
     }
@@ -112,7 +125,6 @@ const factory: (
   model: FlexLayout.Model
 ) => JSX.Element | undefined = (node, model) => {
   const id = node.getId() as string
-  const name = node.getName()
   return (
     <div
       style={{
@@ -190,14 +202,26 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
     FlexLayout.Model.fromJson({
       global: {
         tabSetTabStripHeight: 48,
-        tabEnableFloat: true,
+        //TODO: Make tab popout work, currently styles are messed up when copied to the popout
+        tabEnableFloat: false,
         tabEnableRename: false,
       },
       borders: [],
       layout: {
         type: 'row',
         weight: 100,
-        children: [],
+        children: [
+          {
+            type: 'tabset',
+            active: true,
+            children: [
+              {
+                type: 'tab',
+                id: 'default',
+              },
+            ],
+          },
+        ],
       },
     })
   )
@@ -207,9 +231,6 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
     updateColors()
   }, [theme, layout.current])
 
-  //TODO: Create a way for the user to add tabs and remove this line
-  // @ts-ignore
-  window.addTab = addTab
   return (
     <Box
       sx={(theme) => ({
@@ -243,6 +264,7 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
           if (!newId) throw new Error('No active tabset')
           setActiveId(newId)
         }}
+        onRenderTabSet={onRenderTabSet}
       ></FlexLayout.Layout>
     </Box>
   )
@@ -292,5 +314,17 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
       el.style.setProperty('--color-6', theme.palette.background.active)
       el.style.setProperty('--color-divider', theme.palette.divider)
     })
+  }
+
+  function onRenderTabSet(
+    node: TabSetNode | BorderNode,
+    renderValues: ITabSetRenderValues
+  ) {
+    if (node.getChildren().length == 0) return
+    renderValues.stickyButtons.push(
+      <IconButton onClick={() => addTab()} size="small">
+        <Add />
+      </IconButton>
+    )
   }
 }

@@ -25,7 +25,12 @@ export const viewsAtom = atom<{
     view: string
     activeGene: string | null
   }
-}>({})
+}>({
+  default: {
+    view: 'get-started',
+    activeGene: null,
+  },
+})
 export const useViews = () => useAtom(viewsAtom)
 export const useSetViews = () => useSetAtom(viewsAtom)
 

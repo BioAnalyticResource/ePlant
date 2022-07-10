@@ -217,7 +217,7 @@
   cursor: pointer;
 }
 .flexlayout__tab_button--selected {
-  background-color: var(--color-tab-selected-background);
+  background-color: var(--color-6);
   color: var(--color-tab-selected);
 }
 .flexlayout__tabset-selected .flexlayout__tab_button--selected {

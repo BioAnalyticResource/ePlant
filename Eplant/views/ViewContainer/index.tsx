@@ -99,7 +99,10 @@ export function ViewContainer({
         }}
       >
         <Stack gap={4} direction="column">
-          {gene ? <GeneHeader geneticElement={gene} /> : null}
+          {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
+          {gene && gene.views.some((geneView) => view.id == geneView.id) ? (
+            <GeneHeader geneticElement={gene} />
+          ) : null}
           {loading || !activeData ? (
             <LoadingPage
               loadingAmount={loadingAmount}
