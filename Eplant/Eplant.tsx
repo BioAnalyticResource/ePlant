@@ -34,6 +34,7 @@ import {
 } from 'flexlayout-react'
 import GeneticElement from './GeneticElement'
 import { NoViewError } from './views/View'
+import NotSupportedView from './views/NotSupportedView'
 
 // TODO: Make this drawer support opening/closing on mobile
 
@@ -72,7 +73,7 @@ function ViewTab(props: {
   }
   // If there is no gene selected choose one
 
-  const v = (gene ? gene.views.concat(genericViews) : genericViews).find(
+  let v = (gene ? gene.views.concat(genericViews) : genericViews).find(
     (v) => v.id == view.view
   )
 
@@ -88,7 +89,17 @@ function ViewTab(props: {
     }
   })
 
-  if (!v) throw new NoViewError(`No ${view.view} found for ${view.activeGene}`)
+  if (!v) {
+    if (view.activeGene) {
+      if (gene) {
+        return (
+          <div>
+            {view.activeGene} does not support {view.view}.
+          </div>
+        )
+      } else v = NotSupportedView
+    } else throw new NoViewError(`No ${view.view} found for ${view.activeGene}`)
+  }
 
   return (
     <ViewIDContext.Provider value={props.id}>
@@ -268,7 +279,7 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
       ></FlexLayout.Layout>
     </Box>
   )
-  function addTab() {
+  function addTab(tabsetId?: string) {
     if (!layout.current) return
     const id = Math.random().toString(16).split('.')[1]
     setViews((views) => {
@@ -281,7 +292,9 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
       }
       return a
     })
-    layout.current.addTabToActiveTabSet({
+    ;(tabsetId
+      ? layout.current.addTabToTabSet.bind(layout.current, tabsetId)
+      : layout.current.addTabToActiveTabSet)({
       name: 'Get Started',
       component: 'view',
       id,
@@ -322,7 +335,7 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
   ) {
     if (node.getChildren().length == 0) return
     renderValues.stickyButtons.push(
-      <IconButton onClick={() => addTab()} size="small">
+      <IconButton onClick={() => addTab(node.getId())} size="small">
         <Add />
       </IconButton>
     )

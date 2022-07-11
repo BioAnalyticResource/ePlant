@@ -227,7 +227,7 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
             textAlign: 'left',
             justifyContent: 'flex-start',
           }}
-          startIcon={<view.icon />}
+          startIcon={view.icon ? <view.icon /> : undefined}
           key={view.name}
           onClick={() => switchViews(view)}
         >

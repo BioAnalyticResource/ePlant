@@ -21,7 +21,7 @@ export type View<T = any> = {
   ) => Promise<any>
   // Validate props.activeData with the ZodType
   component: (props: ViewProps<T>) => JSX.Element | null
-  icon: () => JSX.Element
+  icon?: () => JSX.Element
   readonly name: string
   readonly id: string
 }
