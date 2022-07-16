@@ -69,11 +69,21 @@ export function ViewContainer({
                   if (v) setView(v)
                 }}
               >
-                {viewList.map((v, i) => (
-                  <MenuItem key={v.id} value={v.id}>
-                    {v.name}
-                  </MenuItem>
-                ))}
+                {viewList
+                  .map((v, i) => (
+                    <MenuItem key={v.id} value={v.id}>
+                      {v.name}
+                    </MenuItem>
+                  ))
+                  .concat([
+                    <MenuItem
+                      key="not-supported"
+                      value="not-supported"
+                      style={{ display: 'none' }}
+                    >
+                      Select a different view
+                    </MenuItem>,
+                  ])}
               </Select>
             </FormControl>
           </Box>

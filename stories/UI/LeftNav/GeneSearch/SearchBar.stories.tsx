@@ -34,7 +34,7 @@ const complete = {
   async genes(s: string) {
     return (
       await axios.get(
-        'https://bar.utoronto.ca/eplant/cgi-bin/idautocomplete.cgi?species=Arabidopsis_thaliana&term=' +
+        'http://bar.utoronto.ca/eplant/cgi-bin/idautocomplete.cgi?species=Arabidopsis_thaliana&term=' +
           s
       )
     ).data

@@ -36,6 +36,9 @@ export type GeneInfoViewData = {
   features: GeneFeature[]
   proteinSequence?: string
 }
+/**
+ * Show information about a gene, including its sequence and features.
+ */
 export const GeneInfoView = {
   name: 'Gene info',
   id: 'gene-info',

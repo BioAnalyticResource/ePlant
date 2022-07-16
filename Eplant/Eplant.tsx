@@ -16,6 +16,7 @@ import { Add, ExpandMore } from '@mui/icons-material'
 import { Provider } from 'jotai'
 import * as FlexLayout from 'flexlayout-react'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
+import useStateWithStorage from '@eplant/util/useStateWithStorage'
 import {
   useGeneticElements,
   useViews,
@@ -34,7 +35,7 @@ import {
 } from 'flexlayout-react'
 import GeneticElement from './GeneticElement'
 import { NoViewError } from './views/View'
-import NotSupportedView from './views/NotSupportedView'
+import NotSupportedView from './UI/Layout/ViewNotSupported'
 
 // TODO: Make this drawer support opening/closing on mobile
 
@@ -91,13 +92,10 @@ function ViewTab(props: {
 
   if (!v) {
     if (view.activeGene) {
-      if (gene) {
-        return (
-          <div>
-            {view.activeGene} does not support {view.view}.
-          </div>
-        )
-      } else v = NotSupportedView
+      if (!gene) {
+        props.model.doAction(Actions.deleteTab(props.node.getId()))
+        return null
+      }
     } else throw new NoViewError(`No ${view.view} found for ${view.activeGene}`)
   }
 
@@ -160,7 +158,10 @@ const eplantScope = Symbol('Eplant scope')
  * @returns {JSX.Element} The rendered Eplant component
  */
 export default function Eplant() {
-  const [activeId, setActiveId] = React.useState<string>('')
+  const [activeId, setActiveId] = useStateWithStorage<string>(
+    'eplant-active-id',
+    ''
+  )
   const [views, setViews] = useViews()
   const [darkMode, setDarkMode] = React.useState<boolean>(true)
 
@@ -181,12 +182,16 @@ export default function Eplant() {
           <Container
             disableGutters
             sx={{
+              height: '100%',
               padding: '20px',
               width: `${sideBarWidth}px`,
               boxSizing: 'border-box',
             }}
           >
             <LeftNav
+              setTheme={(theme) => {
+                setDarkMode(theme === 'dark')
+              }}
               onSelectGene={(gene: GeneticElement) =>
                 setViews((views) => ({
                   ...views,
@@ -206,35 +211,39 @@ export default function Eplant() {
   )
 }
 function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
-  const setViews = useSetViews()
+  const [views, setViews] = useViews()
   const layout = React.useRef<Layout>(null)
 
   const [model, setModel] = React.useState(
-    FlexLayout.Model.fromJson({
-      global: {
-        tabSetTabStripHeight: 48,
-        //TODO: Make tab popout work, currently styles are messed up when copied to the popout
-        tabEnableFloat: false,
-        tabEnableRename: false,
-      },
-      borders: [],
-      layout: {
-        type: 'row',
-        weight: 100,
-        children: [
-          {
-            type: 'tabset',
-            active: true,
+    localStorage.getItem('flexlayout-model')
+      ? FlexLayout.Model.fromJson(
+          JSON.parse(localStorage.getItem('flexlayout-model') as string)
+        )
+      : FlexLayout.Model.fromJson({
+          global: {
+            tabSetTabStripHeight: 48,
+            //TODO: Make tab popout work, currently styles are messed up when copied to the popout
+            tabEnableFloat: false,
+            tabEnableRename: false,
+          },
+          borders: [],
+          layout: {
+            type: 'row',
+            weight: 100,
             children: [
               {
-                type: 'tab',
-                id: 'default',
+                type: 'tabset',
+                active: true,
+                children: [
+                  {
+                    type: 'tab',
+                    id: 'default',
+                  },
+                ],
               },
             ],
           },
-        ],
-      },
-    })
+        })
   )
   const theme = useTheme()
 
@@ -272,8 +281,11 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
             .getActiveTabset()
             ?.getSelectedNode?.()
             ?.getId?.()
-          if (!newId) throw new Error('No active tabset')
-          setActiveId(newId)
+          setActiveId(newId ?? '__none__')
+          localStorage.setItem(
+            'flexlayout-model',
+            JSON.stringify(newModel.toJson())
+          )
         }}
         onRenderTabSet={onRenderTabSet}
       ></FlexLayout.Layout>
@@ -282,24 +294,25 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
   function addTab(tabsetId?: string) {
     if (!layout.current) return
     const id = Math.random().toString(16).split('.')[1]
-    setViews((views) => {
-      const a = {
-        ...views,
-        [id]: {
-          activeGene: null,
-          view: 'get-started',
-        },
+    const activeTab = model.getActiveTabset()?.getSelectedNode?.()?.getId?.()
+    const activeGene = activeTab ? views[activeTab].activeGene : null
+    console.log(model.toJson())
+    setViews({
+      ...views,
+      [id]: {
+        activeGene: activeGene,
+        view: 'get-started',
+      },
+    })
+    layout.current.addTabToTabSet(
+      tabsetId ?? model.getActiveTabset()?.getId?.() ?? '',
+      {
+        name: 'Get Started',
+        component: 'view',
+        id,
+        type: 'tab',
       }
-      return a
-    })
-    ;(tabsetId
-      ? layout.current.addTabToTabSet.bind(layout.current, tabsetId)
-      : layout.current.addTabToActiveTabSet)({
-      name: 'Get Started',
-      component: 'view',
-      id,
-      type: 'tab',
-    })
+    )
   }
 
   function updateColors() {

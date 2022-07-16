@@ -15,8 +15,14 @@ export type SpeciesApi = {
 export default class Species {
   name: string
   api: SpeciesApi
+  private static registry: Species[] = []
   constructor(name: string, api: SpeciesApi) {
     this.name = name
     this.api = api
+    Species.registry.push(this)
+  }
+
+  static getSpecies(name: string): Species | null {
+    return Species.registry.find((s) => s.name === name) ?? null
   }
 }
