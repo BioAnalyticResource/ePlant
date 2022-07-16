@@ -7,16 +7,20 @@ import {
   useViews,
 } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
+import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
 import {
   AppBar,
   Button,
   ButtonBase,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
-  Modal,
   Select,
   Stack,
   TextField,
@@ -71,39 +75,21 @@ export function ViewContainer({
   return (
     <Box {...props}>
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            bgcolor: 'background.paper',
-            width: ['100%', '80%', '60%'],
-            p: 4,
-            boxShadow: 24,
-            zIndex: 2500,
-            gap: '40px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            //alignItems: 'center',
-
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          <Box>
-            <Typography variant="h6">
-              Citation and experiment information for "{view.name}"
-            </Typography>
-          </Box>
+        <DialogTitle>
+          <Typography variant="h6">
+            Citation and experiment information for "{view.name}"
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
           {view.citation ? (
             <view.citation gene={gene} />
           ) : (
             <Box>No citations provided for this view</Box>
           )}
-          <Box>
-            <Button onClick={() => setViewingCitations(false)}>Close</Button>
-          </Box>
-        </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewingCitations(false)}>Close</Button>
+        </DialogActions>
       </Modal>
 
       <AppBar
