@@ -19,13 +19,14 @@ import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import useStateWithStorage from '@eplant/util/useStateWithStorage'
 import {
   useGeneticElements,
+  usePanes,
+  panesAtom,
+  useUserViews,
   useViews,
-  viewsAtom,
-  useGenericViews,
-  useSetViews,
+  useSetPanes,
   ViewIDContext,
 } from './state'
-import { ViewContainer } from './views/ViewContainer'
+import { ViewContainer } from './UI/Layout/ViewContainer'
 import {
   Actions,
   BorderNode,
@@ -36,6 +37,7 @@ import {
 import GeneticElement from './GeneticElement'
 import { NoViewError } from './views/View'
 import NotSupportedView from './UI/Layout/ViewNotSupported'
+import FallbackView from './views/FallbackView'
 
 // TODO: Make this drawer support opening/closing on mobile
 
@@ -63,10 +65,10 @@ function ViewTab(props: {
   id: string
   node: FlexLayout.TabNode
 }) {
-  const [views, setViews] = useViews()
-  const genericViews = useGenericViews()
+  const [panes, setPanes] = usePanes()
+  const userViews = useViews()
   const genes = useGeneticElements()[0]
-  const view = views[props.id]
+  const view = panes[props.id]
   const gene = genes.find((g) => g.id == view.activeGene) ?? null
   if (!view) {
     // TODO: Better fallback
@@ -74,14 +76,12 @@ function ViewTab(props: {
   }
   // If there is no gene selected choose one
 
-  let v = (gene ? gene.views.concat(genericViews) : genericViews).find(
-    (v) => v.id == view.view
-  )
+  let v = userViews.find((v) => v.id == view.view) ?? FallbackView
 
   React.useEffect(() => {
     // Only include the gene name in the tab name if a gene is selected and this view belongs to that gene
     const targetName = `${
-      gene && gene.views.some((geneView) => geneView.id == view.view)
+      gene && userViews.some((geneView) => geneView.id == view.view)
         ? gene.id + ' - '
         : ''
     }${v ? v.name : 'No view'}`
@@ -110,7 +110,7 @@ function ViewTab(props: {
         view={v}
         gene={gene ?? null}
         setView={(newView) => {
-          setViews((views) => ({
+          setPanes((views) => ({
             ...views,
             [props.id]: {
               ...views[props.id],
@@ -162,7 +162,7 @@ export default function Eplant() {
     'eplant-active-id',
     ''
   )
-  const [views, setViews] = useViews()
+  const [views, setViews] = usePanes()
   const [darkMode, setDarkMode] = React.useState<boolean>(true)
 
   //TODO: Break into more components to prevent unnecessary rerendering
@@ -211,7 +211,7 @@ export default function Eplant() {
   )
 }
 function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
-  const [views, setViews] = useViews()
+  const [views, setViews] = usePanes()
   const layout = React.useRef<Layout>(null)
 
   const [model, setModel] = React.useState(

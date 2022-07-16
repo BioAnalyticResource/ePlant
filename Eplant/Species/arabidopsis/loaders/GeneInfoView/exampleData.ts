@@ -9,7 +9,6 @@ const a: ViewProps<GeneInfoViewData> = {
     annotation: 'AP2/B3-like transcriptional factor family protein',
     species: arabidopsis,
     aliases: ['ABI3', 'AtABI3', 'SIS10'],
-    views: [ArabidopsisGeneInfoView],
   },
   activeData: {
     name: 'ABA INSENSITIVE 3',

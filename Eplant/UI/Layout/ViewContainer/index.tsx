@@ -1,5 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { useGenericViews } from '@eplant/state'
+import { useGenericViews, useUserViews, useViews } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import downloadFile from '@eplant/util/downloadFile'
 import {
@@ -16,7 +16,7 @@ import {
 } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
 import * as React from 'react'
-import { useViewData, View } from '../View'
+import { useViewData, View } from '../../../views/View'
 import LoadingPage from './LoadingPage'
 
 /**
@@ -39,8 +39,9 @@ export function ViewContainer({
 } & BoxProps) {
   const { activeData, error, loading, loadingAmount } = useViewData(view, gene)
 
+  const userViews = useUserViews()
+  const views = useViews()
   const genericViews = useGenericViews()
-  const viewList = genericViews.concat(gene?.views ?? [])
 
   const idLabel = React.useId()
   const selectId = React.useId()
@@ -65,25 +66,23 @@ export function ViewContainer({
                 label={'View'}
                 id={selectId}
                 onChange={(e) => {
-                  const v = viewList.find((v) => v.id == e?.target?.value)
+                  const v = views.find((v) => v.id == e?.target?.value)
                   if (v) setView(v)
                 }}
               >
-                {viewList
-                  .map((v, i) => (
-                    <MenuItem key={v.id} value={v.id}>
-                      {v.name}
-                    </MenuItem>
-                  ))
-                  .concat([
-                    <MenuItem
-                      key="not-supported"
-                      value="not-supported"
-                      style={{ display: 'none' }}
-                    >
-                      Select a different view
-                    </MenuItem>,
-                  ])}
+                {views.map((v, i) => (
+                  <MenuItem
+                    key={v.id}
+                    value={v.id}
+                    style={{
+                      display: userViews.some((u) => u.id == v.id)
+                        ? 'block'
+                        : 'none',
+                    }}
+                  >
+                    {v.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -110,7 +109,7 @@ export function ViewContainer({
       >
         <Stack gap={4} direction="column">
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-          {gene && gene.views.some((geneView) => view.id == geneView.id) ? (
+          {gene && !genericViews.some((geneView) => view.id == geneView.id) ? (
             <GeneHeader geneticElement={gene} />
           ) : null}
           {loading || !activeData ? (

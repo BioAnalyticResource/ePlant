@@ -6,7 +6,6 @@ export type SerializedGeneticElement = {
   species: string
   annotation: string
   aliases: string[]
-  views: string[]
 }
 
 /**
@@ -17,19 +16,16 @@ export default class GeneticElement {
   id: string
   species: Species
   aliases: string[]
-  views: View<any>[]
   constructor(
     id: string,
     annotation: string,
     species: Species,
-    aliases: string[],
-    views: View<any>[]
+    aliases: string[]
   ) {
     this.id = id
     this.annotation = annotation
     this.species = species
     this.aliases = aliases
-    this.views = views
   }
   static serialize(element: GeneticElement): SerializedGeneticElement {
     return {
@@ -37,7 +33,6 @@ export default class GeneticElement {
       species: element.species.name,
       annotation: element.annotation,
       aliases: element.aliases,
-      views: element.views.map((view) => view.id),
     }
   }
   static deserialize(geneticElement: SerializedGeneticElement): GeneticElement {
@@ -47,8 +42,7 @@ export default class GeneticElement {
       geneticElement.id,
       geneticElement.annotation,
       Species.getSpecies(geneticElement.species) as Species,
-      geneticElement.aliases,
-      []
+      geneticElement.aliases
     )
   }
 }

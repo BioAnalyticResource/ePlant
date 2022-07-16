@@ -1,7 +1,7 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { Box, LinearProgress, Stack, Typography, useTheme } from '@mui/material'
 import React, { SVGProps } from 'react'
-import { View } from '../View'
+import { View } from '../../../views/View'
 
 /**
  * The svg shown while a genetic element is loading. It looks like a plant being watered by a watering can

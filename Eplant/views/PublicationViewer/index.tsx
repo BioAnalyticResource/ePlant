@@ -1,13 +1,15 @@
 import { Tab, Tabs } from '@mui/material'
 import * as React from 'react'
-import { ViewProps } from '../View'
+import { View, ViewDataError, ViewProps } from '../View'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
 import { DocumentScanner } from '@mui/icons-material'
+import arabidopsis from '@eplant/Species/arabidopsis'
+import Species from '@eplant/Species'
 
-export const PublicationViewer = {
+export const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication Viewer',
   id: 'publication-viewer',
   component({ geneticElement, activeData }: ViewProps<PublicationViewerData>) {
@@ -28,6 +30,12 @@ export const PublicationViewer = {
         </div>
       </div>
     )
+  },
+  async loadData(gene, loadEvent) {
+    if (!gene) throw ViewDataError.NO_GENE_PROVIDED
+    if (gene.species.api.loaders[this.id])
+      return await gene.species.api.loaders[this.id](gene, loadEvent)
+    else throw ViewDataError.UNSUPPORTED_GENE
   },
   icon: () => <DocumentScanner />,
 }

@@ -7,6 +7,9 @@ import { View } from '@eplant/views/View'
 export type SpeciesApi = {
   searchGene: (term: string) => Promise<GeneticElement | null>
   autocomplete: (term: string) => Promise<string[]>
+  loaders: {
+    [key: string]: View['loadData']
+  }
 }
 
 /**

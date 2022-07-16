@@ -9,6 +9,10 @@ import ArabidopsisPublicationViewer from './loaders/PublicationViewer'
 const arabidopsis: Species = new Species('Arabidopsis', {
   autocomplete,
   searchGene,
+  loaders: {
+    'gene-info': GeneInfoViewLoader,
+    'publication-viewer': ArabidopsisPublicationViewer,
+  },
 })
 async function autocomplete(s: string) {
   return (
@@ -31,8 +35,7 @@ async function searchGene(s: string) {
     data.id,
     data.annotation,
     arabidopsis,
-    data.aliases,
-    [ArabidopsisGeneInfoView, ArabidopsisPublicationViewer]
+    data.aliases
   )
   return gene
 }

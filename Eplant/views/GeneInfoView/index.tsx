@@ -2,6 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import component from './component'
 import { Info } from '@mui/icons-material'
+import { View, ViewDataError } from '../View'
 
 export type GeneFeature = {
   type:
@@ -39,11 +40,17 @@ export type GeneInfoViewData = {
 /**
  * Show information about a gene, including its sequence and features.
  */
-export const GeneInfoView = {
+export const GeneInfoView: View<GeneInfoViewData> = {
   name: 'Gene info',
   id: 'gene-info',
   //TODO: figure out how to make this a component lazy
   // component: React.lazy(() => import('./component')),
   component: component,
   icon: () => <Info />,
+  async loadData(gene, loadEvent) {
+    if (!gene) throw ViewDataError.NO_GENE_PROVIDED
+    if (gene.species.api.loaders[this.id])
+      return await gene.species.api.loaders[this.id](gene, loadEvent)
+    else throw ViewDataError.UNSUPPORTED_GENE
+  },
 }

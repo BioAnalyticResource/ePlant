@@ -6,7 +6,7 @@ import {
 } from '@eplant/views/GeneInfoView'
 import { View } from '@eplant/views/View'
 
-const out: View<GeneInfoViewData>['loadData'] = async (
+const loader: View<GeneInfoViewData>['loadData'] = async (
   geneticElement,
   loadEvent
 ) => {
@@ -102,9 +102,4 @@ const out: View<GeneInfoViewData>['loadData'] = async (
   }
 }
 
-const ArabidopsisGeneInfoView: View<GeneInfoViewData> = {
-  ...GeneInfoView,
-  loadData: out,
-}
-
-export default ArabidopsisGeneInfoView
+export default loader

@@ -25,7 +25,7 @@ export const Second: Story<{ search: string }> = ({
     ;(async () => {
       const x = await arabidopsis.api.searchGene(search ?? 'x')
       if (x) {
-        setData(await x.views[0].loadData(x, () => {}))
+        setData(await arabidopsis.api.loaders['gene-info'](x, () => {}))
         setGene(x)
       }
     })()

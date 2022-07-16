@@ -3,7 +3,10 @@ import GeneticElement, {
 } from '@eplant/GeneticElement'
 import Species from '@eplant/Species'
 import arabidopsis from '@eplant/Species/arabidopsis'
+import FallbackView from '@eplant/views/FallbackView'
+import { GeneInfoView as GeneInfoViewer } from '@eplant/views/GeneInfoView'
 import GetStartedView from '@eplant/views/GetStartedView'
+import { PublicationViewer } from '@eplant/views/PublicationViewer'
 import { View } from '@eplant/views/View'
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
@@ -38,13 +41,25 @@ export const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)
 export const useSetSpecies = () => useSetAtom(speciesAtom)
 
-// Views that aren't associated with genes
-const genericViews = [GetStartedView] as const
+// Views that aren't associated with individual genes
+const genericViews = [GetStartedView, FallbackView] as const
 export const genericViewsAtom = atom(genericViews)
 export const useGenericViews = () => useAtomValue(genericViewsAtom)
 
+// List of views that a user can select from
+// Can contain views from the genericViews list too
+const userViews = [GeneInfoViewer, PublicationViewer] as const
+export const userViewsAtom = atom(userViews)
+export const useUserViews = () => useAtomValue(userViewsAtom)
+
+// List of views that are used to lookup a view by id
+// Not guaranteed to be free of duplicate views
+const views = [...genericViews, ...userViews] as const
+export const viewsAtom = atom(views)
+export const useViews = () => useAtomValue(viewsAtom)
+
 // All open views, and genes if they are associated
-export const viewsAtom = atomWithStorage<{
+export const panesAtom = atomWithStorage<{
   [id: string]: {
     view: string
     activeGene: string | null
@@ -55,8 +70,8 @@ export const viewsAtom = atomWithStorage<{
     activeGene: null,
   },
 })
-export const useViews = () => useAtom(viewsAtom)
-export const useSetViews = () => useSetAtom(viewsAtom)
+export const usePanes = () => useAtom(panesAtom)
+export const useSetPanes = () => useSetAtom(panesAtom)
 
 export const ViewIDContext = React.createContext<string>('')
 export const useViewID = () => React.useContext(ViewIDContext)

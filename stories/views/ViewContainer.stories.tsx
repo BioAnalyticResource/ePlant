@@ -1,6 +1,6 @@
 import { View } from '@eplant/views/View'
 import exampleData from '@eplant/Species/arabidopsis/loaders/GeneInfoView/exampleData'
-import { ViewContainer } from '@eplant/views/ViewContainer'
+import { ViewContainer } from '@eplant/UI/Layout/ViewContainer'
 import { ComponentMeta, Story } from '@storybook/react'
 import React from 'react'
 import { GeneInfoView } from '@eplant/views/GeneInfoView'
@@ -24,7 +24,6 @@ const AlwaysLoadingView: View = {
 }
 
 const geneticElement = { ...(exampleData.geneticElement as GeneticElement) }
-geneticElement.views = [ArabidopsisGeneInfoView, AlwaysLoadingView]
 
 export default {
   title: 'View Container',

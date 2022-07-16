@@ -14,10 +14,10 @@ export type ViewProps<T> = {
 export type View<T = any> = {
   // loadEvent should be called to update the view's loading bar.
   // The input is a float between 0 and 1 which represents the fraction of the data
-  // that has currently loaded
+  // that has currently loaded.
   loadData: (
     gene: GeneticElement | null,
-    loadEvent: (amount: number) => void
+    loadEvent: (amount: number ) => void
   ) => Promise<any>
   // Validate props.activeData with the ZodType
   component: (props: ViewProps<T>) => JSX.Element | null
@@ -26,10 +26,16 @@ export type View<T = any> = {
   readonly id: string
 }
 
+export enum ViewDataError {
+  UNSUPPORTED_GENE = 'Unsupported gene',
+  FAILED_TO_LOAD = 'Failed to load',
+  NO_GENE_PROVIDED = 'No gene provided',
+}
+
 type ViewDataType = {
   activeData: any
   loading: boolean
-  error: Error | null
+  error: ViewDataError | null
   loadingAmount: number
 }
 const viewData: { [key: string]: ReturnType<typeof atomWithStorage<ViewDataType>> } = {}
@@ -75,12 +81,17 @@ export const useViewData = (view: View, gene: GeneticElement | null) => {
       if (viewData.loading || viewData.activeData) return
       setViewData((viewData) => ({ ...viewData, loading: true }))
       try {
-        const data = await view.loadData(gene, (amount) =>
+        const data = await view.loadData(gene, (amount) => {
           setViewData((viewData) => ({ ...viewData, loadingAmount: amount }))
-        )
+      })
         setViewData((viewData) => ({ ...viewData, activeData: data }))
       } catch (e) {
-        setViewData((viewData) => ({ ...viewData, error: e as Error }))
+        if (e instanceof Error) {
+          setViewData((viewData) => ({ ...viewData, error: ViewDataError.FAILED_TO_LOAD }))
+        }
+        else {
+          setViewData((viewData) => ({ ...viewData, error: e as ViewDataError }))
+        }
       }
       setViewData((viewData) => ({ ...viewData, loading: false }))
     })()
