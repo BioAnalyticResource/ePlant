@@ -25,6 +25,7 @@ import {
   useViews,
   useSetPanes,
   ViewIDContext,
+  usePrinting,
 } from './state'
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import {

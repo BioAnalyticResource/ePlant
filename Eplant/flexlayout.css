@@ -497,7 +497,7 @@
   background: var(--color-popup-unselected-background);
   border-radius: 3px;
   position: absolute;
-  z-index: 1e9;
+  z-index: 2000;
   max-height: 50%;
   min-width: 100px;
   overflow: auto;

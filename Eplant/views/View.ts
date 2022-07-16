@@ -24,6 +24,7 @@ export type View<T = any> = {
   icon?: () => JSX.Element
   readonly name: string
   readonly id: string
+  citation?: (props: {gene: GeneticElement|null}) => JSX.Element
 }
 
 export enum ViewDataError {

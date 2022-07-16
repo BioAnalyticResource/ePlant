@@ -1,18 +1,27 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { useGenericViews, useUserViews, useViews } from '@eplant/state'
+import {
+  useGenericViews,
+  usePrinting,
+  useUserViews,
+  useViewID,
+  useViews,
+} from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import downloadFile from '@eplant/util/downloadFile'
 import {
   AppBar,
   Button,
+  ButtonBase,
   Container,
   FormControl,
   InputLabel,
   MenuItem,
+  Modal,
   Select,
   Stack,
   TextField,
   Toolbar,
+  Typography,
 } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
 import * as React from 'react'
@@ -45,8 +54,58 @@ export function ViewContainer({
 
   const idLabel = React.useId()
   const selectId = React.useId()
+  const [printing, setPrinting] = usePrinting()
+
+  const [viewingCitations, setViewingCitations] = React.useState(false)
+
+  const viewId = useViewID()
+
+  React.useEffect(() => {
+    if (printing == viewId) {
+      setTimeout(() => {
+        window.print()
+        setPrinting(null)
+      }, 100)
+    }
+  }, [printing])
   return (
     <Box {...props}>
+      <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            bgcolor: 'background.paper',
+            width: ['100%', '80%', '60%'],
+            p: 4,
+            boxShadow: 24,
+            zIndex: 2500,
+            gap: '40px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            //alignItems: 'center',
+
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <Box>
+            <Typography variant="h6">
+              Citation and experiment information for "{view.name}"
+            </Typography>
+          </Box>
+          {view.citation ? (
+            <view.citation gene={gene} />
+          ) : (
+            <Box>No citations provided for this view</Box>
+          )}
+          <Box>
+            <Button onClick={() => setViewingCitations(false)}>Close</Button>
+          </Box>
+        </Box>
+      </Modal>
+
       <AppBar
         variant="elevation"
         sx={(theme) => ({
@@ -55,7 +114,7 @@ export function ViewContainer({
         position="sticky"
         elevation={0}
       >
-        <Toolbar>
+        <Toolbar style={{ gap: '8px' }}>
           {/* View selector dropdown */}
           <Box sx={{ flexGrow: 1 }}>
             <FormControl variant="standard">
@@ -91,6 +150,16 @@ export function ViewContainer({
             disabled={loading}
             color="secondary"
             onClick={() => {
+              setViewingCitations(true)
+            }}
+          >
+            Get citations
+          </Button>
+          <Button
+            variant="outlined"
+            disabled={loading}
+            color="secondary"
+            onClick={() => {
               downloadFile(
                 `${view.id}${gene ? '-' + gene.id : ''}.json`,
                 JSON.stringify(activeData, null, 2)
@@ -102,10 +171,25 @@ export function ViewContainer({
         </Toolbar>
       </AppBar>
       <Container
-        sx={{
+        sx={(theme) => ({
           padding: '2rem',
           overflow: 'scroll',
-        }}
+          ...(printing == viewId
+            ? {
+                display: 'block !important',
+                padding: 0,
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                margin: 0,
+                zIndex: 1e9,
+                background: theme.palette.background.paper,
+                width: '100%',
+                minHeight: '100%',
+                overflow: 'scroll',
+              }
+            : {}),
+        })}
       >
         <Stack gap={4} direction="column">
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}

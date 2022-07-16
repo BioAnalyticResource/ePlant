@@ -75,3 +75,7 @@ export const useSetPanes = () => useSetAtom(panesAtom)
 
 export const ViewIDContext = React.createContext<string>('')
 export const useViewID = () => React.useContext(ViewIDContext)
+
+export const printingAtom = atom<string | null>(null)
+export const usePrinting = () => useAtom(printingAtom)
+export const useSetPrinting = () => useSetAtom(printingAtom)

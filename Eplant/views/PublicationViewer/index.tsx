@@ -1,4 +1,4 @@
-import { Tab, Tabs } from '@mui/material'
+import { Link, Tab, Tabs } from '@mui/material'
 import * as React from 'react'
 import { View, ViewDataError, ViewProps } from '../View'
 import GeneHeader from '@eplant/UI/GeneHeader'
@@ -38,4 +38,18 @@ export const PublicationViewer: View<PublicationViewerData> = {
     else throw ViewDataError.UNSUPPORTED_GENE
   },
   icon: () => <DocumentScanner />,
+  citation({ gene }) {
+    return (
+      <div>
+        Data for this view comes from NCBI{' '}
+        <Link href="ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz">
+          Gene2Pubmed
+        </Link>
+        . Data for Gene RIFs comes from NCBI{' '}
+        <Link href="ftp://ftp.ncbi.nih.gov/gene/GeneRIF/generifs_basic.gz">
+          Gene RIFs
+        </Link>
+      </div>
+    )
+  },
 }
