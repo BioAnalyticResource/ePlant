@@ -29,7 +29,6 @@ export type View<T = any> = {
 export enum ViewDataError {
   UNSUPPORTED_GENE = 'Unsupported gene',
   FAILED_TO_LOAD = 'Failed to load',
-  NO_GENE_PROVIDED = 'No gene provided',
 }
 
 type ViewDataType = {

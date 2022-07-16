@@ -32,7 +32,7 @@ export const PublicationViewer: View<PublicationViewerData> = {
     )
   },
   async loadData(gene, loadEvent) {
-    if (!gene) throw ViewDataError.NO_GENE_PROVIDED
+    if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     if (gene.species.api.loaders[this.id])
       return await gene.species.api.loaders[this.id](gene, loadEvent)
     else throw ViewDataError.UNSUPPORTED_GENE

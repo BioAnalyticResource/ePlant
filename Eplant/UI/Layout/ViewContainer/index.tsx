@@ -117,6 +117,7 @@ export function ViewContainer({
               loadingAmount={loadingAmount}
               gene={gene}
               view={view}
+              error={error}
             />
           ) : (
             <view.component geneticElement={gene} activeData={activeData} />

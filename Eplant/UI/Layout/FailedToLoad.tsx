@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from '../../views/View'
 import { Add, Start } from '@mui/icons-material'
-import { Color, Stack, useTheme, Button, Typography } from '@mui/material'
+import { Color, Stack, useTheme, Button, Typography, Link } from '@mui/material'
 import Box from '@mui/material/Box'
 import { SVGProps } from 'react'
 import GeneticElement from '@eplant/GeneticElement'
@@ -27,7 +27,7 @@ const Illustration = ({
 /**
  * The view shown when a view is not supported. Shown when the user switches active genes to a gene that does not support this view
  */
-export default function NotSupported(props: {
+export default function FailedToLoad(props: {
   geneticElement: GeneticElement | null
   view: View
 }) {
@@ -36,10 +36,10 @@ export default function NotSupported(props: {
     <Stack gap={2} alignItems="center" direction="column" width="100%">
       <Typography variant="h5">
         {props.geneticElement
-          ? `Cannot view "${props.view.name.toLowerCase()}" for ${
+          ? `There was an error while trying to load "${props.view.name.toLowerCase()}" for ${
               props.geneticElement.id
             }`
-          : `Cannot view "${props.view.name.toLowerCase()}" without a selected gene.`}
+          : `There was an error while trying to load "${props.view.name.toLowerCase()}" without a selected gene.`}
       </Typography>
       <Typography
         variant="body1"
@@ -47,9 +47,10 @@ export default function NotSupported(props: {
           color: theme.palette.text.secondary,
         })}
       >
-        {props.geneticElement
-          ? 'This is usually because there is no data for this gene.'
-          : 'This is usually because you need to select a gene.'}
+        Please contact us by opening an issue on{' '}
+        <Link href="https://github.com/BioAnalyticResource/ePlant/issues">
+          GitHub
+        </Link>
       </Typography>
       <Illustration
         color={theme.palette.divider}
@@ -57,14 +58,6 @@ export default function NotSupported(props: {
           maxHeight: '250px',
         }}
       />
-      <Typography
-        variant="body1"
-        sx={(theme) => ({
-          color: theme.palette.text.secondary,
-        })}
-      >
-        Select gene or change views from the dropdown menu in the toolbar.
-      </Typography>
     </Stack>
   )
 }
