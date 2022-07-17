@@ -138,7 +138,7 @@ export default function Eplant() {
     <Routes>
       <Route path="/">
         <Route index element={<MainEplant />} />
-        <Route path="/direct">
+        <Route path="/view">
           <Route path=":gene" element={<DirectView />}>
             <Route path=":view" element={<DirectView />} />
           </Route>

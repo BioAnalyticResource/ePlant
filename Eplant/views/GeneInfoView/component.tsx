@@ -8,14 +8,15 @@ import {
 } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import { Info } from '@mui/icons-material'
-import Button from '@mui/material/Button'
+import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
+import Button, { ButtonProps } from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import _ from 'lodash'
 import React from 'react'
 import { GeneInfoViewData } from '.'
-import { View, ViewProps } from '../View'
+import { useViewData, View, ViewProps } from '../View'
 import { GeneModel } from './GeneModel'
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
@@ -229,7 +230,7 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
         <SecondaryText>Available views</SecondaryText>
       </div>
       {userViews.map((view) => (
-        <Button
+        <ViewButton
           color="secondary"
           sx={{
             textAlign: 'left',
@@ -237,10 +238,12 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
           }}
           startIcon={view.icon ? <view.icon /> : undefined}
           key={view.name}
+          view={view}
+          geneticElement={geneticElement}
           onClick={() => switchViews(view)}
         >
           {view.name}
-        </Button>
+        </ViewButton>
       ))}
     </Stack>
   )
@@ -254,4 +257,13 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
       },
     }))
   }
+}
+
+function ViewButton({
+  geneticElement,
+  view,
+  ...props
+}: { geneticElement: GeneticElement; view: View } & LoadingButtonProps) {
+  const { loading, error, loadingAmount } = useViewData(view, geneticElement)
+  return <LoadingButton {...props} loading={loading} disabled={!!error} />
 }
