@@ -1,4 +1,4 @@
-import { useSpecies } from '@eplant/state'
+import { useDarkMode, useSetDarkMode, useSpecies } from '@eplant/state'
 import Species from '@eplant/Species'
 import {
   Box,
@@ -30,10 +30,10 @@ import _ from 'lodash'
 export function LeftNav(props: {
   onSelectGene?: (gene: GeneticElement) => void
   selectedGene?: string
-  setTheme: (theme: 'light' | 'dark') => void
 }) {
   const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
+  const [darkMode, setDarkMode] = useDarkMode()
   return (
     <Stack gap={4} direction="column" height={'100%'}>
       <LogoWithText text="ePlant" />
@@ -61,9 +61,8 @@ export function LeftNav(props: {
         <FormControlLabel
           control={
             <Switch
-              onChange={(v) =>
-                props.setTheme(v.target.checked ? 'dark' : 'light')
-              }
+              onChange={(v) => setDarkMode(v.target.checked)}
+              checked={darkMode}
               defaultChecked
             />
           }

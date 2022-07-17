@@ -49,6 +49,7 @@ import {
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers'
 import OptionsButton from '../OptionsButton'
+import useStateWithStorage from '@eplant/util/useStateWithStorage'
 
 /**
  * A draggable/sortable version of {@link GeneticElementComponent}
@@ -333,11 +334,11 @@ export function Collections(props: {
   selectedGene?: string
 }) {
   const [genes, setGenes] = useGeneticElements()
-  const [collections, setCollections] = React.useState<
-    { genes: GeneticElement[]; name: string; open: boolean }[]
-  >([
+  const [collections, setCollections] = useStateWithStorage<
+    { genes: string[]; name: string; open: boolean }[]
+  >('collections', [
     {
-      genes: genes,
+      genes: genes.map((g) => g.id),
       name: 'Collection 1',
       open: true,
     },
@@ -357,7 +358,7 @@ export function Collections(props: {
   // If there are genes that aren't in a collection, put them in the first
   useEffect(() => {
     const unincluded = genes.map(
-      (g) => !collections.some((c) => c.genes.includes(g))
+      (g) => !collections.some((c) => c.genes.some((geneId) => geneId == g.id))
     )
 
     if (unincluded.some((x) => x)) {
@@ -372,7 +373,9 @@ export function Collections(props: {
         }
         cols[0] = {
           ...cols[0],
-          genes: cols[0].genes.concat(genes.filter((g, i) => unincluded[i])),
+          genes: cols[0].genes.concat(
+            genes.filter((g, i) => unincluded[i]).map((g) => g.id)
+          ),
         }
         return cols
       })
@@ -398,7 +401,13 @@ export function Collections(props: {
             selectedGene={props.selectedGene}
             onSelectGene={props.onSelectGene}
             id={i}
-            {...p}
+            genes={
+              p.genes
+                .map((id) => genes.find((g) => g.id == id))
+                .filter((g) => g) as GeneticElement[]
+            }
+            name={p.name}
+            open={p.open}
             onRemove={() => {
               deleteCollection(i)
             }}
@@ -483,10 +492,10 @@ export function Collections(props: {
       const activeGene = genes.find((g) => g.id == active.id)
       if (!activeGene) return collections
       const activeArrayIndex = cols.findIndex((col) =>
-        col.genes.includes(activeGene)
+        col.genes.includes(activeGene.id)
       )
       const activeArray = cols[activeArrayIndex].genes.slice()
-      const activeIndex = activeArray.indexOf(activeGene)
+      const activeIndex = activeArray.indexOf(activeGene.id)
 
       if (over.id.toString().startsWith('Collection-')) {
         const bottom = over.id.toString().includes('bottom')
@@ -507,8 +516,8 @@ export function Collections(props: {
           genes: cols[idx].genes,
           open: cols[idx].open || finished,
         }
-        if (bottom) cols[idx].genes.push(activeGene)
-        else cols[idx].genes.unshift(activeGene)
+        if (bottom) cols[idx].genes.push(activeGene.id)
+        else cols[idx].genes.unshift(activeGene.id)
         return cols
       } else if (swapWithinCollection) return collections
 
@@ -517,11 +526,11 @@ export function Collections(props: {
       if (!overGene) return collections
 
       const overArrayIndex = cols.findIndex((col) =>
-        col.genes.includes(overGene)
+        col.genes.includes(overGene.id)
       )
       const overArray = cols[overArrayIndex].genes.slice()
 
-      const overIndex = overArray.indexOf(overGene)
+      const overIndex = overArray.indexOf(overGene.id)
 
       if (activeArrayIndex == overArrayIndex) {
         const g = activeArray[activeIndex]
@@ -535,7 +544,7 @@ export function Collections(props: {
         }
       } else {
         activeArray.splice(activeIndex, 1)
-        overArray.splice(overIndex, 0, activeGene)
+        overArray.splice(overIndex, 0, activeGene.id)
         cols[activeArrayIndex] = {
           name: cols[activeArrayIndex].name,
           genes: activeArray,
@@ -554,10 +563,10 @@ export function Collections(props: {
   function deleteGene(gene: GeneticElement) {
     setCollections((collections) => {
       const cols = collections.slice()
-      const idx = cols.findIndex((c) => c.genes.includes(gene))
+      const idx = cols.findIndex((c) => c.genes.includes(gene.id))
       cols[idx] = {
         ...cols[idx],
-        genes: cols[idx].genes.filter((g) => g != gene),
+        genes: cols[idx].genes.filter((g) => g != gene.id),
       }
       return cols
     })
@@ -565,7 +574,7 @@ export function Collections(props: {
   }
 
   function deleteCollection(index: number) {
-    setGenes(genes.filter((g) => !collections[index].genes.includes(g)))
+    setGenes(genes.filter((g) => !collections[index].genes.includes(g.id)))
     setCollections(collections.filter((c, i) => i != index))
   }
 

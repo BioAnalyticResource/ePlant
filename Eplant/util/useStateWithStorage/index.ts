@@ -1,6 +1,6 @@
 import { type Dispatch, type SetStateAction, useState } from 'react'
 
-export default function useStateWithStorage<T>(key: string, initial: T): [T, Dispatch<T>] {
+export default function useStateWithStorage<T>(key: string, initial: T): [T, (a: SetStateAction<T>) => void] {
   const [val, setVal] = useState<T>(
     JSON.parse(localStorage.getItem(key) ?? 'null') ?? initial
   )

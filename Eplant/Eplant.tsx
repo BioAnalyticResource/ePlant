@@ -186,8 +186,6 @@ export function MainEplant() {
     ''
   )
   const [views, setViews] = usePanes()
-  const setDarkMode = useSetDarkMode()
-
   //TODO: Break into more components to prevent unnecessary rerendering
   return (
     <>
@@ -210,9 +208,6 @@ export function MainEplant() {
           }}
         >
           <LeftNav
-            setTheme={(theme) => {
-              setDarkMode(theme === 'dark')
-            }}
             onSelectGene={(gene: GeneticElement) =>
               setViews((views) => ({
                 ...views,
