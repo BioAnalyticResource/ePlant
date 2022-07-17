@@ -99,10 +99,3 @@ export const useViewData = (view: View, gene: GeneticElement | null) => {
 
   return viewData
 }
-
-export class NoViewError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'NoViewError'
-  }
-}

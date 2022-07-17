@@ -79,3 +79,7 @@ export const useViewID = () => React.useContext(ViewIDContext)
 export const printingAtom = atom<string | null>(null)
 export const usePrinting = () => useAtom(printingAtom)
 export const useSetPrinting = () => useSetAtom(printingAtom)
+
+export const darkModeAtom = atomWithStorage<boolean>('dark-mode', true)
+export const useDarkMode = () => useAtom(darkModeAtom)
+export const useSetDarkMode = () => useSetAtom(darkModeAtom)

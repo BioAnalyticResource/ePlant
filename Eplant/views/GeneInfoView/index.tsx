@@ -65,7 +65,7 @@ export const GeneInfoView: View<GeneInfoViewData> = {
         <Link href="http://www.arabidopsis.org/download_files/Genes/Araport11_genome_release/Araport11_blastsets/Araport11_genes.201606.pep.fasta.gz">
           Protein Sequences
         </Link>
-        , TAIR
+        , TAIR{' '}
         <Link href="https://www.arabidopsis.org/download_files/Public_Data_Releases/TAIR_Data_20190331/gene_aliases_20190402.txt.gz">
           Gene Aliases
         </Link>

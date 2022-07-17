@@ -28,4 +28,13 @@ export default class Species {
   static getSpecies(name: string): Species | null {
     return Species.registry.find((s) => s.name === name) ?? null
   }
+
+  static getGene(
+    speciesId: string,
+    geneId: string
+  ): Promise<GeneticElement | null> {
+    const species = Species.getSpecies(speciesId)
+    if (!species) return Promise.resolve(null)
+    return species.api.searchGene(geneId)
+  }
 }

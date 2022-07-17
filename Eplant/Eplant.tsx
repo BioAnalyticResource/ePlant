@@ -1,33 +1,8 @@
-import { ThemeProvider, useTheme } from '@mui/material/styles'
-import {
-  Box,
-  Container,
-  CssBaseline,
-  Drawer,
-  DrawerProps,
-  Icon,
-  IconButton,
-} from '@mui/material'
-import * as React from 'react'
-import arabidopsis from './Species/arabidopsis'
-import { dark, light } from './theme'
-import { LeftNav } from './UI/LeftNav'
-import { Add, ExpandMore } from '@mui/icons-material'
-import { Provider } from 'jotai'
-import * as FlexLayout from 'flexlayout-react'
-import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import {
-  useGeneticElements,
-  usePanes,
-  panesAtom,
-  useUserViews,
-  useViews,
-  useSetPanes,
-  ViewIDContext,
-  usePrinting,
-} from './state'
-import { ViewContainer } from './UI/Layout/ViewContainer'
+import { Add } from '@mui/icons-material'
+import { Box, Container, Drawer, DrawerProps, IconButton } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+import * as FlexLayout from 'flexlayout-react'
 import {
   Actions,
   BorderNode,
@@ -35,9 +10,20 @@ import {
   Layout,
   TabSetNode,
 } from 'flexlayout-react'
+import * as React from 'react'
+import { Route, Routes, useParams, useRoutes } from 'react-router-dom'
 import GeneticElement from './GeneticElement'
-import { NoViewError } from './views/View'
-import NotSupportedView from './UI/Layout/ViewNotSupported'
+import Species from './Species'
+import {
+  useGeneticElements,
+  usePanes,
+  useSetDarkMode,
+  useViews,
+  ViewIDContext,
+} from './state'
+import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
+import { ViewContainer } from './UI/Layout/ViewContainer'
+import { LeftNav } from './UI/LeftNav'
 import FallbackView from './views/FallbackView'
 
 // TODO: Make this drawer support opening/closing on mobile
@@ -62,9 +48,11 @@ export type EplantProps = {}
  * @returns The rendered tab
  */
 function ViewTab(props: {
-  model: FlexLayout.Model
+  layout?: {
+    node: FlexLayout.TabNode
+    model: FlexLayout.Model
+  }
   id: string
-  node: FlexLayout.TabNode
 }) {
   const [panes, setPanes] = usePanes()
   const userViews = useViews()
@@ -86,19 +74,12 @@ function ViewTab(props: {
         ? gene.id + ' - '
         : ''
     }${v ? v.name : 'No view'}`
-    if (props.node.getName() != targetName) {
-      props.model.doAction(Actions.renameTab(props.node.getId(), targetName))
+    if (props.layout && props.layout.node.getName() != targetName) {
+      props.layout.model.doAction(
+        Actions.renameTab(props.layout.node.getId(), targetName)
+      )
     }
   })
-
-  if (!v) {
-    if (view.activeGene) {
-      if (!gene) {
-        props.model.doAction(Actions.deleteTab(props.node.getId()))
-        return null
-      }
-    } else throw new NoViewError(`No ${view.view} found for ${view.activeGene}`)
-  }
 
   return (
     <ViewIDContext.Provider value={props.id}>
@@ -107,6 +88,7 @@ function ViewTab(props: {
           width: '100%',
           height: '100%',
           overflow: 'scroll',
+          bgcolor: 'background.paper',
         }}
         view={v}
         gene={gene ?? null}
@@ -146,69 +128,106 @@ const factory: (
         alignItems: 'center',
       }}
     >
-      <ViewTab model={model} id={id} node={node} />
+      <ViewTab layout={{ model, node }} id={id} />
     </div>
   )
 }
 
-// For some reason this is necessary to make the tabs work, maybe FlexLayout uses a Jotai provider?
-const eplantScope = Symbol('Eplant scope')
+export default function Eplant() {
+  return (
+    <Routes>
+      <Route path="/">
+        <Route index element={<MainEplant />} />
+        <Route path="/direct">
+          <Route path=":gene" element={<DirectView />}>
+            <Route path=":view" element={<DirectView />} />
+          </Route>
+        </Route>
+        {/* gene-id takes the form {species}.{gene} */}
+      </Route>
+    </Routes>
+  )
+}
+
+/**
+ * Directly render a ViewContainer
+ * @returns
+ */
+function DirectView() {
+  const params = useParams()
+  const [panes, setPanes] = usePanes()
+  const [genes, setGenes] = useGeneticElements()
+  React.useEffect(() => {
+    ;(async () => {
+      const view = params.view ?? 'get-started'
+      const [species, geneSearch] = (params.gene as string).split('.')
+      const gene = await Species.getGene(species, geneSearch)
+      if (gene && !genes.some((g) => g.id == gene.id))
+        setGenes([...genes, gene])
+      setPanes((views) => ({
+        ...views,
+        ['direct']: {
+          view,
+          activeGene: gene?.id ?? null,
+        },
+      }))
+    })()
+  }, [params.gene, params.view])
+  return <ViewTab id="direct" />
+}
 
 /**
  * The main Eplant component. This is the root of the application. It contains the left nav and the layout.
  * @returns {JSX.Element} The rendered Eplant component
  */
-export default function Eplant() {
+export function MainEplant() {
   const [activeId, setActiveId] = useStateWithStorage<string>(
     'eplant-active-id',
     ''
   )
   const [views, setViews] = usePanes()
-  const [darkMode, setDarkMode] = React.useState<boolean>(true)
+  const setDarkMode = useSetDarkMode()
 
   //TODO: Break into more components to prevent unnecessary rerendering
   return (
-    <Provider scope={eplantScope}>
-      <ThemeProvider theme={darkMode ? dark : light}>
-        <CssBaseline />
-        <ResponsiveDrawer
-          variant="persistent"
-          open={true}
-          PaperProps={{
-            sx: (theme) => ({
-              border: 'none',
-            }),
+    <>
+      <ResponsiveDrawer
+        variant="persistent"
+        open={true}
+        PaperProps={{
+          sx: (theme) => ({
+            border: 'none',
+          }),
+        }}
+      >
+        <Container
+          disableGutters
+          sx={{
+            height: '100%',
+            padding: '20px',
+            width: `${sideBarWidth}px`,
+            boxSizing: 'border-box',
           }}
         >
-          <Container
-            disableGutters
-            sx={{
-              height: '100%',
-              padding: '20px',
-              width: `${sideBarWidth}px`,
-              boxSizing: 'border-box',
+          <LeftNav
+            setTheme={(theme) => {
+              setDarkMode(theme === 'dark')
             }}
-          >
-            <LeftNav
-              setTheme={(theme) => {
-                setDarkMode(theme === 'dark')
-              }}
-              onSelectGene={(gene: GeneticElement) =>
-                setViews((views) => ({
-                  ...views,
-                  [activeId]: {
-                    ...views[activeId],
-                    activeGene: gene.id,
-                  },
-                }))
-              }
-              selectedGene={views[activeId ?? '']?.activeGene ?? undefined}
-            />
-          </Container>
-        </ResponsiveDrawer>
-        <EplantLayout setActiveId={setActiveId} />
-      </ThemeProvider>
-    </Provider>
+            onSelectGene={(gene: GeneticElement) =>
+              setViews((views) => ({
+                ...views,
+                [activeId]: {
+                  ...views[activeId],
+                  activeGene: gene.id,
+                },
+              }))
+            }
+            selectedGene={views[activeId ?? '']?.activeGene ?? undefined}
+          />
+        </Container>
+      </ResponsiveDrawer>
+      <EplantLayout setActiveId={setActiveId} />
+    </>
   )
 }
 function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
