@@ -71,7 +71,7 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
             // Subtract 1 because the rectangle has height 2
             y={height / 2 - 1}
             // Subtract a bit from width because there are arrows at the end
-            width={width - 2 * margin - 4}
+            width={Math.max(width - 2 * margin - 4, 0)}
             stroke="none"
             height={2}
             fill={theme.palette.grey[500]}
@@ -89,7 +89,10 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
                 drawOffset = 0.05 * (width - 2 * margin)
               const length = Math.abs(feature.end - feature.start)
               const x = ((sf.start - feature.start) / length) * drawWidth
-              const w = (Math.abs(sf.end - sf.start) / length) * drawWidth
+              const w = Math.max(
+                (Math.abs(sf.end - sf.start) / length) * drawWidth,
+                0
+              )
 
               let h = 4,
                 color = theme.palette.grey[600]
