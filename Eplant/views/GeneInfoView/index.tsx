@@ -48,12 +48,6 @@ export const GeneInfoView: View<GeneInfoViewData> = {
   // component: React.lazy(() => import('./component')),
   component: component,
   icon: () => <Info />,
-  async loadData(gene, loadEvent) {
-    if (!gene) throw ViewDataError.UNSUPPORTED_GENE
-    if (gene.species.api.loaders[this.id])
-      return await gene.species.api.loaders[this.id](gene, loadEvent)
-    else throw ViewDataError.UNSUPPORTED_GENE
-  },
   citation({ gene }) {
     return (
       <div>

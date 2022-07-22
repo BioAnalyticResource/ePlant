@@ -15,7 +15,7 @@ export type View<T = any> = {
   // loadEvent should be called to update the view's loading bar.
   // The input is a float between 0 and 1 which represents the fraction of the data
   // that has currently loaded.
-  loadData: (
+  loadData?: (
     gene: GeneticElement | null,
     loadEvent: (amount: number ) => void
   ) => Promise<any>
@@ -29,6 +29,7 @@ export type View<T = any> = {
 
 export enum ViewDataError {
   UNSUPPORTED_GENE = 'Unsupported gene',
+  NO_LOADER = 'No loader',
   FAILED_TO_LOAD = 'Failed to load',
 }
 
@@ -81,7 +82,11 @@ export const useViewData = (view: View, gene: GeneticElement | null) => {
       if (viewData.loading || viewData.activeData) return
       setViewData((viewData) => ({ ...viewData, loading: true }))
       try {
-        const data = await view.loadData(gene, (amount) => {
+        let loader =  gene?.species.api.loaders[view.id] ?? view.loadData
+        if (!loader) {
+          throw ViewDataError.NO_LOADER
+        }
+        const data = await loader(gene, (amount) => {
           setViewData((viewData) => ({ ...viewData, loadingAmount: amount }))
       })
         setViewData((viewData) => ({ ...viewData, activeData: data }))

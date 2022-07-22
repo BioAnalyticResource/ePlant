@@ -31,12 +31,6 @@ export const PublicationViewer: View<PublicationViewerData> = {
       </div>
     )
   },
-  async loadData(gene, loadEvent) {
-    if (!gene) throw ViewDataError.UNSUPPORTED_GENE
-    if (gene.species.api.loaders[this.id])
-      return await gene.species.api.loaders[this.id](gene, loadEvent)
-    else throw ViewDataError.UNSUPPORTED_GENE
-  },
   icon: () => <DocumentScanner />,
   citation({ gene }) {
     return (
