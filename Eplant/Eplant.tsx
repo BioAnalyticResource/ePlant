@@ -239,36 +239,35 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
   const [views, setViews] = usePanes()
   const layout = React.useRef<Layout>(null)
 
-  const [model, setModel] = React.useState(
-    localStorage.getItem('flexlayout-model')
-      ? FlexLayout.Model.fromJson(
-          JSON.parse(localStorage.getItem('flexlayout-model') as string)
-        )
-      : FlexLayout.Model.fromJson({
-          global: {
-            tabSetTabStripHeight: 48,
-            //TODO: Make tab popout work, currently styles are messed up when copied to the popout
-            tabEnableFloat: false,
-            tabEnableRename: false,
-          },
-          borders: [],
-          layout: {
-            type: 'row',
-            weight: 100,
+  const [model, setModel] = useStateWithStorage(
+    'flexlayout-model',
+    FlexLayout.Model.fromJson({
+      global: {
+        tabSetTabStripHeight: 48,
+        //TODO: Make tab popout work, currently styles are messed up when copied to the popout
+        tabEnableFloat: false,
+        tabEnableRename: false,
+      },
+      borders: [],
+      layout: {
+        type: 'row',
+        weight: 100,
+        children: [
+          {
+            type: 'tabset',
+            active: true,
             children: [
               {
-                type: 'tabset',
-                active: true,
-                children: [
-                  {
-                    type: 'tab',
-                    id: 'default',
-                  },
-                ],
+                type: 'tab',
+                id: 'default',
               },
             ],
           },
-        })
+        ],
+      },
+    }),
+    (m) => JSON.stringify(m.toJson()),
+    (s) => FlexLayout.Model.fromJson(JSON.parse(s))
   )
   const theme = useTheme()
 
