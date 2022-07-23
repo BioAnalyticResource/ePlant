@@ -37,22 +37,6 @@ describe('Collection', () => {
     const parent = await s.findByText(name)
     return { onNameChange, setOpen, deleteGene, onRemove, s, parent }
   }
-
-  it('should render correctly when closed', async () => {
-    const { s } = await setup({
-      name: 'name',
-      open: false,
-    })
-    expect(s).toMatchSnapshot()
-  })
-  it('should render correctly when open', async () => {
-    const { s } = await setup({
-      name: 'name',
-      open: true,
-    })
-    expect(s).toMatchSnapshot()
-  })
-
   it('should open when clicked while closed', async () => {
     const { parent, setOpen } = await setup({
       name: 'name',

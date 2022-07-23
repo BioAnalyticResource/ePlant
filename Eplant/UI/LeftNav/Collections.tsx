@@ -155,7 +155,6 @@ export function Collection({
     <Stack
       direction="column"
       spacing={1}
-      data-testid="collection"
       style={{
         justifyContent: 'center',
       }}

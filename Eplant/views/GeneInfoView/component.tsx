@@ -138,12 +138,7 @@ export default function ({
   return (
     <Stack direction="row" gap={'20px'}>
       <ViewSwitcher geneticElement={geneticElement} />
-      <Stack
-        direction="column"
-        gap={'16px'}
-        flex={4}
-        data-testid="gene-info-stack"
-      >
+      <Stack direction="column" gap={'16px'} flex={4}>
         <div>
           <Typography variant="body1">Gene</Typography>
           <SecondaryText>{geneticElement.id}</SecondaryText>

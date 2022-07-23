@@ -12,27 +12,62 @@ import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import * as React from 'react'
 
-export const baseGenesAtom = atom<GeneticElement[]>([])
-
-baseGenesAtom.onMount = (setAtom) => {
-  setAtom(
-    (
-      JSON.parse(
-        localStorage.getItem('geneticElements') || '[]'
-      ) as SerializedGeneticElement[]
-    ).map(GeneticElement.deserialize)
+const persistAtom = atom<boolean>(true)
+const useSetPersist = () => useSetAtom(persistAtom)
+const usePersist = () => useAtom(persistAtom)
+// Atom with storage that doesn't persist when persistence is set to false
+function atomWithOptionalStorage<T>(
+  key: string,
+  initialValue: T,
+  serialize: (value: T) => string = JSON.stringify,
+  deserialize: (value: string) => T = JSON.parse
+) {
+  const val = atom<T>(initialValue)
+  val.onMount = (setAtom) => {
+    const value = localStorage.getItem(key)
+    if (value) {
+      setAtom(deserialize(value))
+    }
+  }
+  const storedAtom = atomWithStorage<T>(key, initialValue, {
+    setItem(key: string, newValue: T) {
+      localStorage.setItem(key, serialize(newValue))
+    },
+    getItem(key: string): T {
+      const a = localStorage.getItem(key)
+      return a ? deserialize(a) : initialValue
+    },
+    removeItem(key: string) {
+      localStorage.removeItem(key)
+    },
+    subscribe(key, callback) {
+      const listener = (e: StorageEvent) => {
+        console.log(e.newValue)
+        if (e.key === key && e.newValue) {
+          callback(deserialize(e.newValue))
+        }
+      }
+      window.addEventListener('storage', listener)
+      return () => window.removeEventListener('storage', listener)
+    },
+  })
+  const a = atom(
+    (get) => get(val),
+    (get, set, x: T) => {
+      if (get(persistAtom)) {
+        set(storedAtom, x)
+      }
+      set(val, x)
+    }
   )
+  return a
 }
 
-export const genesAtom = atom(
-  (get) => get(baseGenesAtom),
-  (get, set, newValue: GeneticElement[]) => {
-    set(baseGenesAtom, newValue)
-    localStorage.setItem(
-      'geneticElements',
-      JSON.stringify(newValue.map(GeneticElement.serialize))
-    )
-  }
+export const genesAtom = atomWithOptionalStorage<GeneticElement[]>(
+  'genes',
+  [],
+  (genes) => JSON.stringify(genes.map(GeneticElement.serialize)),
+  (genes) => JSON.parse(genes).map(GeneticElement.deserialize)
 )
 export const useGeneticElements = () => useAtom(genesAtom)
 export const useSetGeneticElements = () => useSetAtom(genesAtom)
