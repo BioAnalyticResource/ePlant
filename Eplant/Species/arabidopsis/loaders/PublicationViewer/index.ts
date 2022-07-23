@@ -5,7 +5,6 @@ import {
   PublicationViewerData,
 } from '@eplant/views/PublicationViewer/types'
 import { View } from '@eplant/views/View'
-import { PublicationViewer } from '@eplant/views/PublicationViewer'
 
 const loader: View<PublicationViewerData>['loadData'] = async (
   geneticElement,

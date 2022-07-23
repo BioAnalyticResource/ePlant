@@ -1,19 +1,13 @@
-import GeneticElement, {
-  SerializedGeneticElement,
-} from '@eplant/GeneticElement'
+import GeneticElement from '@eplant/GeneticElement'
 import Species from '@eplant/Species'
 import arabidopsis from '@eplant/Species/arabidopsis'
-import FallbackView from '@eplant/views/FallbackView'
-import { GeneInfoView as GeneInfoViewer } from '@eplant/views/GeneInfoView'
-import GetStartedView from '@eplant/views/GetStartedView'
-import { PublicationViewer } from '@eplant/views/PublicationViewer'
-import { View } from '@eplant/views/View'
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { atom, useAtom, useSetAtom } from 'jotai'
 import * as React from 'react'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
 export const usePersist = () => useAtom(persistAtom)
+
 // Atom with storage that doesn't persist when persistAtom is set to false
 function atomWithOptionalStorage<T>(
   key: string,

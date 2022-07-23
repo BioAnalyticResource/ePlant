@@ -1,9 +1,5 @@
 import axios from 'axios'
-import {
-  GeneFeature,
-  GeneInfoView,
-  GeneInfoViewData,
-} from '@eplant/views/GeneInfoView'
+import { GeneFeature, GeneInfoViewData } from '@eplant/views/GeneInfoView'
 import { View } from '@eplant/views/View'
 
 const loader: View<GeneInfoViewData>['loadData'] = async (
