@@ -1,5 +1,5 @@
 import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import { Add } from '@mui/icons-material'
+import { Add, CallMade, Flight } from '@mui/icons-material'
 import { Box, Container, Drawer, DrawerProps, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as FlexLayout from 'flexlayout-react'
@@ -12,7 +12,7 @@ import {
 } from 'flexlayout-react'
 import * as React from 'react'
 import { Route, Routes, useParams, useRoutes } from 'react-router-dom'
-import { userViews } from './config'
+import { userViews, views } from './config'
 import GeneticElement from './GeneticElement'
 import Species from './Species'
 import {
@@ -62,7 +62,7 @@ function ViewTab(props: {
   const gene = genes.find((g) => g.id == view?.activeGene) ?? null
 
   // If there is no gene selected choose one
-  const v = userViews.find((v) => v.id == view?.view) ?? FallbackView
+  const v = views.find((v) => v.id == view?.view) ?? FallbackView
 
   React.useEffect(() => {
     // Only include the gene name in the tab name if a gene is selected and this view belongs to that gene
@@ -141,11 +141,14 @@ export default function Eplant() {
       <Route path="/">
         <Route index element={<MainEplant />} />
         <Route path="/view">
+          {/* gene-id takes the form {species}.{gene} */}
           <Route path=":gene" element={<DirectView />}>
             <Route path=":view" element={<DirectView />} />
           </Route>
         </Route>
-        {/* gene-id takes the form {species}.{gene} */}
+        <Route path="/pane">
+          <Route path=":id" element={<DirectPane />} />
+        </Route>
       </Route>
     </Routes>
   )
@@ -153,7 +156,6 @@ export default function Eplant() {
 
 /**
  * Directly render a ViewContainer
- * @returns
  */
 function DirectView() {
   const params = useParams()
@@ -186,13 +188,21 @@ function DirectView() {
 }
 
 /**
+ * Directly render a pane based on its id
+ */
+function DirectPane() {
+  const params = useParams()
+  return <ViewTab id={params.id as string} />
+}
+
+/**
  * The main Eplant component. This is the root of the application. It contains the left nav and the layout.
  * @returns {JSX.Element} The rendered Eplant component
  */
 export function MainEplant() {
   const [activeId, setActiveId] = useStateWithStorage<string>(
     'eplant-active-id',
-    ''
+    'default'
   )
   const [views, setViews] = usePanes()
   //TODO: Break into more components to prevent unnecessary rerendering
@@ -244,8 +254,6 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
     FlexLayout.Model.fromJson({
       global: {
         tabSetTabStripHeight: 48,
-        //TODO: Make tab popout work, currently styles are messed up when copied to the popout
-        tabEnableFloat: false,
         tabEnableRename: false,
       },
       borders: [],
@@ -374,6 +382,24 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
     renderValues.stickyButtons.push(
       <IconButton onClick={() => addTab(node.getId())} size="small">
         <Add />
+      </IconButton>
+    )
+    renderValues.buttons.push(
+      <IconButton
+        onClick={() => {
+          const id = node.getSelectedNode()?.getId()
+          if (id) {
+            window.open(
+              '/pane/' + node.getSelectedNode()?.getId() ?? '',
+              'winname',
+              'directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=800,height=600'
+            )
+            model.doAction(Actions.deleteTab(id))
+          }
+        }}
+        size="small"
+      >
+        <CallMade />
       </IconButton>
     )
   }

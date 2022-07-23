@@ -11,5 +11,4 @@ export const genericViews = [GetStartedView, FallbackView] as const
 export const userViews = [GeneInfoView, PublicationViewer] as const
 
 // List of views that are used to lookup a view by id
-// Not guaranteed to be free of duplicate views
 export const views = [...genericViews, ...userViews] as const
