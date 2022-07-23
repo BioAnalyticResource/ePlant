@@ -26,7 +26,7 @@ function atomWithOptionalStorage<T>(
     const value = localStorage.getItem(key)
     setAtom(value ? deserialize(value) : initialValue)
     const listener = (e: StorageEvent) => {
-      console.log(e.newValue)
+      console.log(e)
       if (e.key === key && e.newValue) {
         setAtom(deserialize(e.newValue))
       }

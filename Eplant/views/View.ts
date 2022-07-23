@@ -29,7 +29,6 @@ export type View<T = any> = {
 
 export enum ViewDataError {
   UNSUPPORTED_GENE = 'Unsupported gene',
-  NO_LOADER = 'No loader',
   FAILED_TO_LOAD = 'Failed to load',
 }
 
@@ -84,7 +83,7 @@ export const useViewData = (view: View, gene: GeneticElement | null) => {
       try {
         let loader =  gene?.species.api.loaders[view.id] ?? view.loadData
         if (!loader) {
-          throw ViewDataError.NO_LOADER
+          throw ViewDataError.UNSUPPORTED_GENE
         }
         const data = await loader(gene, (amount) => {
           setViewData((viewData) => ({ ...viewData, loadingAmount: amount }))

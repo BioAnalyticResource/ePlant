@@ -499,6 +499,7 @@ export function Collections(props: {
       const activeArray = activeArrayCollection.genes.slice()
       const activeIndex = activeArray.indexOf(activeGene.id)
 
+      // Handle the case where the active gene is dropped directly on to a collection, rather than on top of another gene
       if (over.id.toString().startsWith('Collection-')) {
         const bottom = over.id.toString().includes('bottom')
         const idx = parseInt(
@@ -506,9 +507,11 @@ export function Collections(props: {
             .toString()
             .replace('Collection-' + (bottom ? 'bottom' : 'top'), '')
         )
+        if (idx == activeArrayIndex) return collections
 
         const overCollection = cols[idx]
         if (!overCollection) return collections
+        const overArray = overCollection.genes.slice()
 
         activeArray.splice(activeIndex, 1)
         cols[activeArrayIndex] = {
@@ -516,13 +519,14 @@ export function Collections(props: {
           genes: activeArray,
           open: activeArrayCollection.open || finished,
         }
+
+        if (bottom) overArray.push(activeGene.id)
+        else overArray.unshift(activeGene.id)
         cols[idx] = {
           name: overCollection.name,
-          genes: overCollection.genes,
+          genes: overArray,
           open: overCollection.open || finished,
         }
-        if (bottom) overCollection.genes.push(activeGene.id)
-        else overCollection.genes.unshift(activeGene.id)
         return cols
       } else if (swapWithinCollection) return collections
 
@@ -539,10 +543,10 @@ export function Collections(props: {
 
       const overIndex = overArray.indexOf(overGene.id)
 
+      activeArray.splice(activeIndex, 1)
       // If the active gene is in the same collection as the over gene then move them
       if (activeArrayIndex == overArrayIndex) {
-        activeArray.splice(activeIndex, 1)
-        activeArray.splice(overIndex, 0, activeArray[activeIndex] as string)
+        activeArray.splice(overIndex, 0, activeGene.id)
         // Move activeGene to overGene's position
         cols[activeArrayIndex] = {
           name: activeArrayCollection.name,
@@ -550,7 +554,6 @@ export function Collections(props: {
           open: activeArrayCollection.open || finished,
         }
       } else {
-        activeArray.splice(activeIndex, 1)
         overArray.splice(overIndex, 0, activeGene.id)
         cols[activeArrayIndex] = {
           name: activeArrayCollection.name,
