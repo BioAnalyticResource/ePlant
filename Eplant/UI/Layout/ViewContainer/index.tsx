@@ -1,11 +1,6 @@
+import { userViews, views, genericViews } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  useGenericViews,
-  usePrinting,
-  useUserViews,
-  useViewID,
-  useViews,
-} from '@eplant/state'
+import { usePrinting, useViewID } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
@@ -51,10 +46,6 @@ export function ViewContainer({
   gene: GeneticElement | null
 } & BoxProps) {
   const { activeData, error, loading, loadingAmount } = useViewData(view, gene)
-
-  const userViews = useUserViews()
-  const views = useViews()
-  const genericViews = useGenericViews()
 
   const idLabel = React.useId()
   const selectId = React.useId()

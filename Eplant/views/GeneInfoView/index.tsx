@@ -41,7 +41,7 @@ export type GeneInfoViewData = {
 /**
  * Show information about a gene, including its sequence and features.
  */
-export const GeneInfoView: View<GeneInfoViewData> = {
+const GeneInfoView: View<GeneInfoViewData> = {
   name: 'Gene info',
   id: 'gene-info',
   //TODO: figure out how to make this a component lazy
@@ -72,3 +72,5 @@ export const GeneInfoView: View<GeneInfoViewData> = {
     )
   },
 }
+
+export default GeneInfoView

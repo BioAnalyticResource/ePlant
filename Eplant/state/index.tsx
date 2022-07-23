@@ -62,23 +62,6 @@ export const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)
 export const useSetSpecies = () => useSetAtom(speciesAtom)
 
-// Views that aren't associated with individual genes
-const genericViews = [GetStartedView, FallbackView] as const
-export const genericViewsAtom = atom(genericViews)
-export const useGenericViews = () => useAtomValue(genericViewsAtom)
-
-// List of views that a user can select from
-// Can contain views from the genericViews list too
-const userViews = [GeneInfoViewer, PublicationViewer] as const
-export const userViewsAtom = atom(userViews)
-export const useUserViews = () => useAtomValue(userViewsAtom)
-
-// List of views that are used to lookup a view by id
-// Not guaranteed to be free of duplicate views
-const views = [...genericViews, ...userViews] as const
-export const viewsAtom = atom(views)
-export const useViews = () => useAtomValue(viewsAtom)
-
 // All open views, and genes if they are associated
 export const panesAtom = atomWithOptionalStorage<{
   [id: string]: {

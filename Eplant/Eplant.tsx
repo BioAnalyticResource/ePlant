@@ -12,6 +12,7 @@ import {
 } from 'flexlayout-react'
 import * as React from 'react'
 import { Route, Routes, useParams, useRoutes } from 'react-router-dom'
+import { userViews } from './config'
 import GeneticElement from './GeneticElement'
 import Species from './Species'
 import {
@@ -19,7 +20,6 @@ import {
   usePanes,
   useSetPersist,
   useSetDarkMode,
-  useViews,
   ViewIDContext,
   useSetPanes,
 } from './state'
@@ -57,7 +57,6 @@ function ViewTab(props: {
   id: string
 }) {
   const [panes, setPanes] = usePanes()
-  const userViews = useViews()
   const genes = useGeneticElements()[0]
   const view = panes[props.id]
   const gene = genes.find((g) => g.id == view?.activeGene) ?? null
