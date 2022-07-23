@@ -9,12 +9,11 @@ import GetStartedView from '@eplant/views/GetStartedView'
 import { PublicationViewer } from '@eplant/views/PublicationViewer'
 import { View } from '@eplant/views/View'
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
 import * as React from 'react'
 
 const persistAtom = atom<boolean>(true)
-const useSetPersist = () => useSetAtom(persistAtom)
-const usePersist = () => useAtom(persistAtom)
+export const useSetPersist = () => useSetAtom(persistAtom)
+export const usePersist = () => useAtom(persistAtom)
 // Atom with storage that doesn't persist when persistence is set to false
 function atomWithOptionalStorage<T>(
   key: string,
@@ -25,37 +24,23 @@ function atomWithOptionalStorage<T>(
   const val = atom<T>(initialValue)
   val.onMount = (setAtom) => {
     const value = localStorage.getItem(key)
-    if (value) {
-      setAtom(deserialize(value))
-    }
-  }
-  const storedAtom = atomWithStorage<T>(key, initialValue, {
-    setItem(key: string, newValue: T) {
-      localStorage.setItem(key, serialize(newValue))
-    },
-    getItem(key: string): T {
-      const a = localStorage.getItem(key)
-      return a ? deserialize(a) : initialValue
-    },
-    removeItem(key: string) {
-      localStorage.removeItem(key)
-    },
-    subscribe(key, callback) {
-      const listener = (e: StorageEvent) => {
-        console.log(e.newValue)
-        if (e.key === key && e.newValue) {
-          callback(deserialize(e.newValue))
-        }
+    setAtom(value ? deserialize(value) : initialValue)
+    const listener = (e: StorageEvent) => {
+      console.log(e.newValue)
+      if (e.key === key && e.newValue) {
+        setAtom(deserialize(e.newValue))
       }
-      window.addEventListener('storage', listener)
-      return () => window.removeEventListener('storage', listener)
-    },
-  })
+    }
+    window.addEventListener('storage', listener)
+    return () => window.removeEventListener('storage', listener)
+  }
   const a = atom(
-    (get) => get(val),
+    (get) => {
+      return get(val)
+    },
     (get, set, x: T) => {
       if (get(persistAtom)) {
-        set(storedAtom, x)
+        localStorage.setItem(key, serialize(x))
       }
       set(val, x)
     }
@@ -94,7 +79,7 @@ export const viewsAtom = atom(views)
 export const useViews = () => useAtomValue(viewsAtom)
 
 // All open views, and genes if they are associated
-export const panesAtom = atomWithStorage<{
+export const panesAtom = atomWithOptionalStorage<{
   [id: string]: {
     view: string
     activeGene: string | null
@@ -115,6 +100,6 @@ export const printingAtom = atom<string | null>(null)
 export const usePrinting = () => useAtom(printingAtom)
 export const useSetPrinting = () => useSetAtom(printingAtom)
 
-export const darkModeAtom = atomWithStorage<boolean>('dark-mode', true)
+export const darkModeAtom = atomWithOptionalStorage<boolean>('dark-mode', true)
 export const useDarkMode = () => useAtom(darkModeAtom)
 export const useSetDarkMode = () => useSetAtom(darkModeAtom)

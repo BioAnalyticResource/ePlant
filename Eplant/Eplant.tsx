@@ -17,6 +17,7 @@ import Species from './Species'
 import {
   useGeneticElements,
   usePanes,
+  useSetPersist,
   useSetDarkMode,
   useViews,
   ViewIDContext,
@@ -157,6 +158,11 @@ function DirectView() {
   const params = useParams()
   const [panes, setPanes] = usePanes()
   const [genes, setGenes] = useGeneticElements()
+  const setPersist = useSetPersist()
+  React.useEffect(() => {
+    setPersist(false)
+  })
+  setPersist(false)
   React.useEffect(() => {
     ;(async () => {
       const view = params.view ?? 'get-started'
