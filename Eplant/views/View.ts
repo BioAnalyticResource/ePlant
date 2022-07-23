@@ -1,4 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
+import { IconProps } from '@mui/material'
 import { atom, Atom, useAtom } from 'jotai'
 import { atomFamily, atomWithStorage } from 'jotai/utils'
 
@@ -13,21 +14,28 @@ export type ViewProps<T> = {
 export type View<T = any> = {
   // loadEvent should be called to update the view's loading bar.
   // The input is a float between 0 and 1 which represents the fraction of the data
-  // that has currently loaded
-  loadData: (
+  // that has currently loaded.
+  loadData?: (
     gene: GeneticElement | null,
-    loadEvent: (amount: number) => void
+    loadEvent: (amount: number ) => void
   ) => Promise<any>
   // Validate props.activeData with the ZodType
   component: (props: ViewProps<T>) => JSX.Element | null
+  icon?: () => JSX.Element
   readonly name: string
   readonly id: string
+  citation?: (props: {gene: GeneticElement|null}) => JSX.Element
+}
+
+export enum ViewDataError {
+  UNSUPPORTED_GENE = 'Unsupported gene',
+  FAILED_TO_LOAD = 'Failed to load',
 }
 
 type ViewDataType = {
   activeData: any
   loading: boolean
-  error: Error | null
+  error: ViewDataError | null
   loadingAmount: number
 }
 const viewData: { [key: string]: ReturnType<typeof atomWithStorage<ViewDataType>> } = {}
@@ -50,7 +58,7 @@ const viewDataStorage = {
 }
 
 const getViewDataAtom = (view: View<any>, gene: GeneticElement | null) => {
-  const key = `${view.id}-${gene?.id ?? 'free-view'}`
+  const key = `${view.id}-${gene?.id ?? 'generic-view'}`
   if (!viewData[key])
     viewData[key] = atomWithStorage<ViewDataType>(
       'view-data-' + key,
@@ -62,7 +70,7 @@ const getViewDataAtom = (view: View<any>, gene: GeneticElement | null) => {
       },
       viewDataStorage
     )
-  return viewData[key]
+  return viewData[key] as typeof viewData[string]
 }
 
 export const useViewData = (view: View, gene: GeneticElement | null) => {
@@ -73,23 +81,25 @@ export const useViewData = (view: View, gene: GeneticElement | null) => {
       if (viewData.loading || viewData.activeData) return
       setViewData((viewData) => ({ ...viewData, loading: true }))
       try {
-        const data = await view.loadData(gene, (amount) =>
+        let loader =  gene?.species.api.loaders[view.id] ?? view.loadData
+        if (!loader) {
+          throw ViewDataError.UNSUPPORTED_GENE
+        }
+        const data = await loader(gene, (amount) => {
           setViewData((viewData) => ({ ...viewData, loadingAmount: amount }))
-        )
+      })
         setViewData((viewData) => ({ ...viewData, activeData: data }))
       } catch (e) {
-        setViewData((viewData) => ({ ...viewData, error: e as Error }))
+        if (e instanceof Error) {
+          setViewData((viewData) => ({ ...viewData, error: ViewDataError.FAILED_TO_LOAD }))
+        }
+        else {
+          setViewData((viewData) => ({ ...viewData, error: e as ViewDataError }))
+        }
       }
       setViewData((viewData) => ({ ...viewData, loading: false }))
     })()
   }, [view, gene])
 
   return viewData
-}
-
-export class NoViewError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'NoViewError'
-  }
 }

@@ -17,7 +17,12 @@ const columns: GridColDef[] = [
     width: 130,
     headerClassName: 'select-none',
     renderCell: (params: GridRenderCellParams<string>) => (
-      <Button href={params.value} variant="outlined" size="small">
+      <Button
+        href={params.value}
+        variant="outlined"
+        color="secondary"
+        size="small"
+      >
         VIEW PAPER
       </Button>
     ),

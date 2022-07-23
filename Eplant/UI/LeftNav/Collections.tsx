@@ -49,6 +49,7 @@ import {
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers'
 import OptionsButton from '../OptionsButton'
+import useStateWithStorage from '@eplant/util/useStateWithStorage'
 
 /**
  * A draggable/sortable version of {@link GeneticElementComponent}
@@ -154,69 +155,76 @@ export function Collection({
     <Stack
       direction="column"
       spacing={1}
-      data-testid="collection"
       style={{
         justifyContent: 'center',
       }}
     >
-      <Stack
-        onClick={() => setOpen(!open)}
-        onMouseOver={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        direction="row"
-        gap={1}
-        ref={setTopRef}
+      <Card
+        elevation={0}
         sx={(theme) => ({
-          userSelect: 'none',
-          cursor: 'pointer',
-          background: hover ? theme.palette.secondary.main : 'transparent',
           borderRadius: theme.shape.borderRadius,
           color: theme.palette.text.secondary,
-          alignItems: 'center',
+          ':hover': {
+            backgroundColor: theme.palette.background.active,
+          },
         })}
       >
-        <ExpandMore
+        <Stack
+          onClick={() => setOpen(!open)}
+          onMouseOver={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          direction="row"
+          gap={1}
+          ref={setTopRef}
           sx={(theme) => ({
-            transform: `rotate(${open ? 0 : -90}deg)`,
-            transition: 'all 0.5s ease',
+            userSelect: 'none',
+            cursor: 'pointer',
+            alignItems: 'center',
           })}
-        />
-        <TextField
-          style={{
-            display: renaming ? undefined : 'none',
-            maxHeight: '100%',
-          }}
-          size="small"
-          inputRef={inputRef}
-          onSubmit={(e) => console.log(e)}
-          onKeyPress={(e) => {
-            if (e.key == 'Enter') rename()
-          }}
-          onBlur={() => rename()}
-        ></TextField>
-        <Typography
-          style={{
-            display: !renaming ? undefined : 'none',
-          }}
         >
-          {name}
-        </Typography>
-        <div style={{ flex: 1 }} />
-        {renaming ? (
-          <IconButton color="primary" onClick={rename}>
-            <Check></Check>
-          </IconButton>
-        ) : (
-          <OptionsButton
-            onClick={(e) => (openMenu(e), e.stopPropagation())}
+          <ExpandMore
             sx={(theme) => ({
-              width: '24px',
-              height: '24px',
-              color: theme.palette.text.secondary,
+              transform: `rotate(${open ? 0 : -90}deg)`,
+              transition: 'all 0.5s ease',
             })}
-          ></OptionsButton>
-        )}
-      </Stack>
+          />
+          <TextField
+            style={{
+              display: renaming ? undefined : 'none',
+              maxHeight: '100%',
+            }}
+            size="small"
+            inputRef={inputRef}
+            onSubmit={(e) => console.log(e)}
+            onKeyPress={(e) => {
+              if (e.key == 'Enter') rename()
+            }}
+            onBlur={() => rename()}
+          ></TextField>
+          <Typography
+            style={{
+              display: !renaming ? undefined : 'none',
+            }}
+          >
+            {name}
+          </Typography>
+          <div style={{ flex: 1 }} />
+          {renaming ? (
+            <IconButton color="primary" onClick={rename}>
+              <Check></Check>
+            </IconButton>
+          ) : (
+            <OptionsButton
+              onClick={(e) => (openMenu(e), e.stopPropagation())}
+              sx={(theme) => ({
+                width: '24px',
+                height: '24px',
+                color: theme.palette.text.secondary,
+              })}
+            ></OptionsButton>
+          )}
+        </Stack>
+      </Card>
       <Collapse in={open}>
         <SortableContext items={genes} strategy={verticalListSortingStrategy}>
           <Stack
@@ -231,7 +239,6 @@ export function Collection({
                   active={g.id == activeId}
                   key={g.id}
                   geneticElement={g}
-                  // TODO: select the gene that is in the currently focused view
                   selected={g.id == selectedGene}
                   onRemove={() => deleteGene(g)}
                   onClick={() => onSelectGene?.(g)}
@@ -326,11 +333,11 @@ export function Collections(props: {
   selectedGene?: string
 }) {
   const [genes, setGenes] = useGeneticElements()
-  const [collections, setCollections] = React.useState<
-    { genes: GeneticElement[]; name: string; open: boolean }[]
-  >([
+  const [collections, setCollections] = useStateWithStorage<
+    { genes: string[]; name: string; open: boolean }[]
+  >('collections', [
     {
-      genes: genes,
+      genes: genes.map((g) => g.id),
       name: 'Collection 1',
       open: true,
     },
@@ -350,7 +357,7 @@ export function Collections(props: {
   // If there are genes that aren't in a collection, put them in the first
   useEffect(() => {
     const unincluded = genes.map(
-      (g) => !collections.some((c) => c.genes.includes(g))
+      (g) => !collections.some((c) => c.genes.some((geneId) => geneId == g.id))
     )
 
     if (unincluded.some((x) => x)) {
@@ -364,8 +371,12 @@ export function Collections(props: {
           })
         }
         cols[0] = {
+          name: 'Collection 1',
+          open: true,
           ...cols[0],
-          genes: cols[0].genes.concat(genes.filter((g, i) => unincluded[i])),
+          genes: (cols[0]?.genes ?? []).concat(
+            genes.filter((g, i) => unincluded[i]).map((g) => g.id)
+          ),
         }
         return cols
       })
@@ -391,7 +402,13 @@ export function Collections(props: {
             selectedGene={props.selectedGene}
             onSelectGene={props.onSelectGene}
             id={i}
-            {...p}
+            genes={
+              p.genes
+                .map((id) => genes.find((g) => g.id == id))
+                .filter((g) => g) as GeneticElement[]
+            }
+            name={p.name}
+            open={p.open}
             onRemove={() => {
               deleteCollection(i)
             }}
@@ -399,7 +416,7 @@ export function Collections(props: {
               setCollections((collections) => {
                 const cols = collections.slice()
                 cols[i] = {
-                  ...cols[i],
+                  ...p,
                   name: newName,
                 }
                 return cols
@@ -410,9 +427,8 @@ export function Collections(props: {
               setCollections((collections) => {
                 const cols = collections.slice()
                 cols[i] = {
-                  open: !cols[i].open,
-                  genes: cols[i].genes,
-                  name: cols[i].name,
+                  ...p,
+                  open: !p.open,
                 }
                 return cols
               })
@@ -423,13 +439,10 @@ export function Collections(props: {
         <Button
           startIcon={<Add />}
           variant="text"
+          color="secondary"
           size="small"
           sx={(theme) => ({
-            color: theme.palette.text.secondary,
             alignSelf: 'start',
-            ':hover': {
-              backgroundColor: theme.palette.secondary.main,
-            },
           })}
           onClick={addCollection}
         >
@@ -440,7 +453,6 @@ export function Collections(props: {
         {activeId ? (
           <GeneticElementComponent
             hovered={true}
-            // TODO: Make this follow the selected gene
             selected={activeId == props.selectedGene}
             geneticElement={
               genes.find((g) => g.id == activeId) as GeneticElement
@@ -480,11 +492,14 @@ export function Collections(props: {
       const activeGene = genes.find((g) => g.id == active.id)
       if (!activeGene) return collections
       const activeArrayIndex = cols.findIndex((col) =>
-        col.genes.includes(activeGene)
+        col.genes.includes(activeGene.id)
       )
-      const activeArray = cols[activeArrayIndex].genes.slice()
-      const activeIndex = activeArray.indexOf(activeGene)
+      const activeArrayCollection = cols[activeArrayIndex]
+      if (!activeArrayCollection) return collections
+      const activeArray = activeArrayCollection.genes.slice()
+      const activeIndex = activeArray.indexOf(activeGene.id)
 
+      // Handle the case where the active gene is dropped directly on to a collection, rather than on top of another gene
       if (over.id.toString().startsWith('Collection-')) {
         const bottom = over.id.toString().includes('bottom')
         const idx = parseInt(
@@ -492,20 +507,26 @@ export function Collections(props: {
             .toString()
             .replace('Collection-' + (bottom ? 'bottom' : 'top'), '')
         )
+        if (idx == activeArrayIndex) return collections
+
+        const overCollection = cols[idx]
+        if (!overCollection) return collections
+        const overArray = overCollection.genes.slice()
 
         activeArray.splice(activeIndex, 1)
         cols[activeArrayIndex] = {
-          name: cols[activeArrayIndex].name,
+          name: activeArrayCollection.name,
           genes: activeArray,
-          open: cols[activeArrayIndex].open || finished,
+          open: activeArrayCollection.open || finished,
         }
+
+        if (bottom) overArray.push(activeGene.id)
+        else overArray.unshift(activeGene.id)
         cols[idx] = {
-          name: cols[idx].name,
-          genes: cols[idx].genes,
-          open: cols[idx].open || finished,
+          name: overCollection.name,
+          genes: overArray,
+          open: overCollection.open || finished,
         }
-        if (bottom) cols[idx].genes.push(activeGene)
-        else cols[idx].genes.unshift(activeGene)
         return cols
       } else if (swapWithinCollection) return collections
 
@@ -514,34 +535,35 @@ export function Collections(props: {
       if (!overGene) return collections
 
       const overArrayIndex = cols.findIndex((col) =>
-        col.genes.includes(overGene)
+        col.genes.includes(overGene.id)
       )
-      const overArray = cols[overArrayIndex].genes.slice()
+      const overArrayCollection = cols[overArrayIndex]
+      if (!overArrayCollection) return collections
+      const overArray = overArrayCollection.genes.slice()
 
-      const overIndex = overArray.indexOf(overGene)
+      const overIndex = overArray.indexOf(overGene.id)
 
+      activeArray.splice(activeIndex, 1)
+      // If the active gene is in the same collection as the over gene then move them
       if (activeArrayIndex == overArrayIndex) {
-        const g = activeArray[activeIndex]
-        activeArray.splice(activeIndex, 1)
-        activeArray.splice(overIndex, 0, g)
+        activeArray.splice(overIndex, 0, activeGene.id)
         // Move activeGene to overGene's position
         cols[activeArrayIndex] = {
-          name: cols[activeArrayIndex].name,
+          name: activeArrayCollection.name,
           genes: activeArray,
-          open: cols[activeArrayIndex].open || finished,
+          open: activeArrayCollection.open || finished,
         }
       } else {
-        activeArray.splice(activeIndex, 1)
-        overArray.splice(overIndex, 0, activeGene)
+        overArray.splice(overIndex, 0, activeGene.id)
         cols[activeArrayIndex] = {
-          name: cols[activeArrayIndex].name,
+          name: activeArrayCollection.name,
           genes: activeArray,
-          open: cols[activeArrayIndex].open || finished,
+          open: activeArrayCollection.open || finished,
         }
         cols[overArrayIndex] = {
-          name: cols[overArrayIndex].name,
+          name: overArrayCollection.name,
           genes: overArray,
-          open: cols[overArrayIndex].open || finished,
+          open: overArrayCollection.open || finished,
         }
       }
       return cols
@@ -551,10 +573,12 @@ export function Collections(props: {
   function deleteGene(gene: GeneticElement) {
     setCollections((collections) => {
       const cols = collections.slice()
-      const idx = cols.findIndex((c) => c.genes.includes(gene))
+      const idx = cols.findIndex((c) => c.genes.includes(gene.id))
+      const collection = cols[idx]
+      if (!collection) return collections
       cols[idx] = {
-        ...cols[idx],
-        genes: cols[idx].genes.filter((g) => g != gene),
+        ...collection,
+        genes: collection.genes.filter((g) => g != gene.id),
       }
       return cols
     })
@@ -562,7 +586,7 @@ export function Collections(props: {
   }
 
   function deleteCollection(index: number) {
-    setGenes(genes.filter((g) => !collections[index].genes.includes(g)))
+    setGenes(genes.filter((g) => !collections[index]?.genes.includes(g.id)))
     setCollections(collections.filter((c, i) => i != index))
   }
 

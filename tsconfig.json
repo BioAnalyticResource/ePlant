@@ -3,22 +3,14 @@
     "baseUrl": ".",
     "jsx": "react",
     "paths": {
-      "@eplant/*": [
-        "Eplant/*"
-      ],
-      "@stories/*": [
-        "stories/*"
-      ]
+      "@eplant/*": ["Eplant/*"],
+      "@stories/*": ["stories/*"]
     },
     "strict": true,
     "sourceMap": true,
     "moduleResolution": "node",
     "target": "ES2018",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -26,14 +18,9 @@
     "esModuleInterop": true,
     "module": "esnext",
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "noUncheckedIndexedAccess": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

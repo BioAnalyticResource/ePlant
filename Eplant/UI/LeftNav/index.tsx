@@ -1,6 +1,15 @@
-import { useSpecies } from '@eplant/state'
+import { useDarkMode, useSetDarkMode, useSpecies } from '@eplant/state'
 import Species from '@eplant/Species'
-import { Divider, FormControl, InputLabel, styled } from '@mui/material'
+import {
+  Box,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  InputLabel,
+  styled,
+  Switch,
+} from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
@@ -24,8 +33,9 @@ export function LeftNav(props: {
 }) {
   const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
+  const [darkMode, setDarkMode] = useDarkMode()
   return (
-    <Stack gap={4} direction="column">
+    <Stack gap={4} direction="column" height={'100%'}>
       <LogoWithText text="ePlant" />
       <SearchGroup
         addGeneticElements={(s) => {
@@ -46,6 +56,19 @@ export function LeftNav(props: {
         onSelectGene={props.onSelectGene}
         selectedGene={props.selectedGene}
       />
+      <Box flexGrow={1} />
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Switch
+              onChange={(v) => setDarkMode(v.target.checked)}
+              checked={darkMode}
+              defaultChecked
+            />
+          }
+          label="Dark Mode"
+        />
+      </FormGroup>
     </Stack>
   )
 }

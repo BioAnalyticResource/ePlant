@@ -63,9 +63,7 @@ describe('search bar', () => {
       expect(rows).toContain('abc')
     })
   })
-  // Unnecessary if we decide to use a multiselect box
-  // TODO: decide whether or not we are using a multiselect box
-  /*it('should submit when the user presses enter', async () => {
+  it('should submit when the user presses enter', async () => {
     const onSubmit = jest.fn((x: string) => x)
     const { s, input } = await setup({
       props: {
@@ -76,9 +74,11 @@ describe('search bar', () => {
     await userEvent.type(input, 'test')
     expect(onSubmit).toHaveBeenCalledTimes(0)
     await userEvent.type(input, '{enter}')
+    expect(onSubmit).toHaveBeenCalledTimes(0)
+    await userEvent.type(input, '{enter}')
     expect(onSubmit).toHaveBeenCalledTimes(1)
-    expect(onSubmit).toHaveBeenCalledWith('test')
-  })*/
+    expect(onSubmit).toHaveBeenCalledWith(['test'])
+  })
   it('should display its label', async () => {
     const { s, input } = await setup({
       props: {

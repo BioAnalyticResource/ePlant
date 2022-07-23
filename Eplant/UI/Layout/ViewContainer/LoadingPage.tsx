@@ -1,7 +1,9 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { Box, LinearProgress, Stack, Typography, useTheme } from '@mui/material'
 import React, { SVGProps } from 'react'
-import { View } from '../View'
+import { View, ViewDataError } from '../../../views/View'
+import FailedToLoad from '../FailedToLoad'
+import NotSupported from '../ViewNotSupported'
 
 /**
  * The svg shown while a genetic element is loading. It looks like a plant being watered by a watering can
@@ -51,12 +53,15 @@ export default function LoadingPage(props: {
   loadingAmount: number
   gene: GeneticElement | null
   view: View
+  error: ViewDataError | null
 }) {
   const theme = useTheme()
+  if (props.error == ViewDataError.UNSUPPORTED_GENE)
+    return <NotSupported geneticElement={props.gene} view={props.view} />
+  if (props.error == ViewDataError.FAILED_TO_LOAD)
+    return <FailedToLoad geneticElement={props.gene} view={props.view} />
   return (
     <Stack gap={4}>
-      {/* TODO: Use gene name and variants component for this */}
-      <Typography variant="h4">{props.gene?.id ?? props.view.name}</Typography>
       <Typography variant="body2">
         Loading data for {props.view.name}...
       </Typography>
@@ -65,9 +70,9 @@ export default function LoadingPage(props: {
         <LoadingImage
           style={{
             maxWidth: '100%',
-            maxHeight: '550px',
+            maxHeight: '450px',
           }}
-          fill={theme.palette.secondary.main}
+          fill={theme.palette.divider}
         />
       </Box>
     </Stack>

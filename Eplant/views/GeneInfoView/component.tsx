@@ -1,11 +1,22 @@
 import GeneticElement from '@eplant/GeneticElement'
+import {
+  useSetPanes,
+  useViewID,
+  usePanes,
+  useViews,
+  useUserViews,
+} from '@eplant/state'
+import GeneHeader from '@eplant/UI/GeneHeader'
+import { Info } from '@mui/icons-material'
+import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
+import Button, { ButtonProps } from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import _ from 'lodash'
 import React from 'react'
 import { GeneInfoViewData } from '.'
-import { ViewProps } from '../View'
+import { useViewData, View, ViewProps } from '../View'
 import { GeneModel } from './GeneModel'
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
@@ -35,8 +46,8 @@ const GeneSequence = ({
     i < activeData.geneSequence.length;
     i++
   ) {
-    let char = activeData.geneSequence[i].toUpperCase()
-    const currentStyle: React.CSSProperties = {}
+    let char = (activeData.geneSequence[i] as string).toUpperCase()
+    let currentStyle: React.CSSProperties = {}
 
     // Add regions around the three prime utr and five prime utr
     const features: {
@@ -70,22 +81,31 @@ const GeneSequence = ({
 
     // Add styles for each feature that includes this char
     const pos = i + activeData.chromosome_start
+    let found = false
     for (const sf of features) {
       if (sf.start <= pos && pos <= sf.end) {
         if (sf.type.endsWith('UTR')) {
           char = char.toLowerCase()
-          currentStyle.color = theme.palette.text.disabled
+          currentStyle = { color: theme.palette.error.main }
+          found = true
         }
         if (sf.type == 'exon') {
-          currentStyle.color = theme.palette.primary.dark
-        }
-        if (sf.type == 'CDS') {
-          currentStyle.backgroundColor = theme.palette.secondary.main
+          currentStyle = { color: theme.palette.warning.main }
+          found = true
         }
         if (sf.type == 'end-cap') {
-          currentStyle.backgroundColor = theme.palette.primary.main
-          currentStyle.color = theme.palette.primary.contrastText
+          currentStyle = {
+            backgroundColor: theme.palette.info.main,
+            color: theme.palette.info.contrastText,
+          }
+          found = true
         }
+      }
+    }
+    if (!found) {
+      char = char.toLowerCase()
+      currentStyle = {
+        color: theme.palette.info.main,
       }
     }
 
@@ -114,23 +134,11 @@ export default function ({
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
+
   return (
     <Stack direction="row" gap={'20px'}>
-      <Stack direction="column" gap={'16px'} flex={1}>
-        <div style={{ whiteSpace: 'nowrap' }}>
-          <Typography variant="body1">Available views</Typography>
-        </div>
-        {geneticElement.views.map((view) => (
-          <div key={view.name}>{view.name}</div>
-        ))}
-      </Stack>
-
-      <Stack
-        direction="column"
-        gap={'16px'}
-        flex={4}
-        data-testid="gene-info-stack"
-      >
+      <ViewSwitcher geneticElement={geneticElement} />
+      <Stack direction="column" gap={'16px'} flex={4}>
         <div>
           <Typography variant="body1">Gene</Typography>
           <SecondaryText>{geneticElement.id}</SecondaryText>
@@ -205,4 +213,52 @@ export default function ({
       </Stack>
     </Stack>
   )
+}
+function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
+  const id = useViewID()
+  const setPanes = useSetPanes()
+  const views = useViews()
+  const userViews = useUserViews()
+  return (
+    <Stack direction="column" gap={'16px'} flex={1}>
+      <div style={{ whiteSpace: 'nowrap' }}>
+        <SecondaryText>Available views</SecondaryText>
+      </div>
+      {userViews.map((view) => (
+        <ViewButton
+          color="secondary"
+          sx={{
+            textAlign: 'left',
+            justifyContent: 'flex-start',
+          }}
+          startIcon={view.icon ? <view.icon /> : undefined}
+          key={view.name}
+          view={view}
+          geneticElement={geneticElement}
+          onClick={() => switchViews(view)}
+        >
+          {view.name}
+        </ViewButton>
+      ))}
+    </Stack>
+  )
+
+  function switchViews(view: View) {
+    setPanes((views) => ({
+      ...views,
+      [id]: {
+        activeGene: geneticElement.id,
+        view: view.id,
+      },
+    }))
+  }
+}
+
+function ViewButton({
+  geneticElement,
+  view,
+  ...props
+}: { geneticElement: GeneticElement; view: View } & LoadingButtonProps) {
+  const { loading, error, loadingAmount } = useViewData(view, geneticElement)
+  return <LoadingButton {...props} loading={loading} disabled={!!error} />
 }

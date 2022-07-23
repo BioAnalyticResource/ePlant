@@ -112,10 +112,7 @@ export default function GeneticElementComponent({
 
   const theme = useTheme()
 
-  const backgroundColor =
-    hover || selected
-      ? theme.palette.secondary.main
-      : theme.palette.background.paper
+  const backgroundColor = theme.palette.background.paper
 
   const iconSx = (theme: Theme) => ({
     cursor: 'pointer',
@@ -123,7 +120,6 @@ export default function GeneticElementComponent({
     transition: '0.1s ease all',
     color: hover ? theme.palette.text.primary : backgroundColor,
   })
-  // TODO: Create an animation that morphs between the handle and the indicator
   const indicator = <SelectedIndicator hover={hover} />
   const Handle = (
     <DragIndicator
@@ -149,8 +145,10 @@ export default function GeneticElementComponent({
         setHover(false)
       }}
       sx={(theme) => ({
-        background: backgroundColor,
         transition: '0.1s ease all',
+        ':hover': {
+          background: theme.palette.background.active,
+        },
       })}
       elevation={0}
       onClick={onClick}
@@ -178,7 +176,7 @@ export default function GeneticElementComponent({
             position: 'relative',
             ':before': {
               content: '""',
-              background: `linear-gradient(to right, transparent 80%, ${backgroundColor})`,
+              background: `linear-gradient(to right, transparent 80%, inherit})`,
               width: '100%',
               height: '100%',
               position: 'absolute',
