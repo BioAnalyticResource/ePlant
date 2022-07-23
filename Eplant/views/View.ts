@@ -71,7 +71,7 @@ const getViewDataAtom = (view: View<any>, gene: GeneticElement | null) => {
       },
       viewDataStorage
     )
-  return viewData[key]
+  return viewData[key] as typeof viewData[string]
 }
 
 export const useViewData = (view: View, gene: GeneticElement | null) => {

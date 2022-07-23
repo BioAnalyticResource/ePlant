@@ -21,6 +21,7 @@ import {
   useSetDarkMode,
   useViews,
   ViewIDContext,
+  useSetPanes,
 } from './state'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
@@ -59,19 +60,15 @@ function ViewTab(props: {
   const userViews = useViews()
   const genes = useGeneticElements()[0]
   const view = panes[props.id]
-  const gene = genes.find((g) => g.id == view.activeGene) ?? null
-  if (!view) {
-    // TODO: Better fallback
-    return <div>Uh oh</div>
-  }
-  // If there is no gene selected choose one
+  const gene = genes.find((g) => g.id == view?.activeGene) ?? null
 
-  let v = userViews.find((v) => v.id == view.view) ?? FallbackView
+  // If there is no gene selected choose one
+  const v = userViews.find((v) => v.id == view?.view) ?? FallbackView
 
   React.useEffect(() => {
     // Only include the gene name in the tab name if a gene is selected and this view belongs to that gene
     const targetName = `${
-      gene && userViews.some((geneView) => geneView.id == view.view)
+      gene && userViews.some((geneView) => geneView.id == view?.view)
         ? gene.id + ' - '
         : ''
     }${v ? v.name : 'No view'}`
@@ -82,6 +79,10 @@ function ViewTab(props: {
     }
   })
 
+  if (!view) {
+    // TODO: Better fallback
+    return <div>Uh oh</div>
+  }
   return (
     <ViewIDContext.Provider value={props.id}>
       <ViewContainer
@@ -97,6 +98,7 @@ function ViewTab(props: {
           setPanes((views) => ({
             ...views,
             [props.id]: {
+              activeGene: null,
               ...views[props.id],
               view: newView.id,
             },
@@ -156,17 +158,19 @@ export default function Eplant() {
  */
 function DirectView() {
   const params = useParams()
-  const [panes, setPanes] = usePanes()
+  const setPanes = useSetPanes()
   const [genes, setGenes] = useGeneticElements()
   const setPersist = useSetPersist()
   React.useEffect(() => {
     setPersist(false)
   })
-  setPersist(false)
   React.useEffect(() => {
     ;(async () => {
       const view = params.view ?? 'get-started'
-      const [species, geneSearch] = (params.gene as string).split('.')
+      const [species, geneSearch] = (params.gene as string).split('.') as [
+        string,
+        string
+      ]
       const gene = await Species.getGene(species, geneSearch)
       if (gene && !genes.some((g) => g.id == gene.id))
         setGenes([...genes, gene])
@@ -218,6 +222,7 @@ export function MainEplant() {
               setViews((views) => ({
                 ...views,
                 [activeId]: {
+                  view: 'get-started',
                   ...views[activeId],
                   activeGene: gene.id,
                 },
@@ -314,9 +319,9 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
   )
   function addTab(tabsetId?: string) {
     if (!layout.current) return
-    const id = Math.random().toString(16).split('.')[1]
+    const id = Math.random().toString(16).split('.')[1] as string
     const activeTab = model.getActiveTabset()?.getSelectedNode?.()?.getId?.()
-    const activeGene = activeTab ? views[activeTab].activeGene : null
+    const activeGene = activeTab ? views[activeTab]?.activeGene ?? null : null
     console.log(model.toJson())
     setViews({
       ...views,

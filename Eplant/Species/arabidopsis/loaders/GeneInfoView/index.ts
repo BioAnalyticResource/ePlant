@@ -55,8 +55,7 @@ const loader: View<GeneInfoViewData>['loadData'] = async (
     childFeatType
 
   // Find the subfeatures for this genetic element
-  for (let i = 0; i < features.length; i++) {
-    const feature = features[i]
+  for (const feature of features) {
     if (feature.uniqueID === geneticElement.id) {
       geneModelFeatures = feature.subfeatures
       parentFeatType = feature.type

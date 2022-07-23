@@ -14,7 +14,7 @@ import * as React from 'react'
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
 export const usePersist = () => useAtom(persistAtom)
-// Atom with storage that doesn't persist when persistence is set to false
+// Atom with storage that doesn't persist when persistAtom is set to false
 function atomWithOptionalStorage<T>(
   key: string,
   initialValue: T,
@@ -38,11 +38,12 @@ function atomWithOptionalStorage<T>(
     (get) => {
       return get(val)
     },
-    (get, set, x: T) => {
+    (get, set, x: React.SetStateAction<T>) => {
+      const newValue = typeof x == 'function' ? (x as any)(get(val)) : x
       if (get(persistAtom)) {
-        localStorage.setItem(key, serialize(x))
+        localStorage.setItem(key, serialize(newValue))
       }
-      set(val, x)
+      set(val, newValue)
     }
   )
   return a
@@ -84,12 +85,7 @@ export const panesAtom = atomWithOptionalStorage<{
     view: string
     activeGene: string | null
   }
-}>('open-views', {
-  default: {
-    view: 'get-started',
-    activeGene: null,
-  },
-})
+}>('open-views', {})
 export const usePanes = () => useAtom(panesAtom)
 export const useSetPanes = () => useSetAtom(panesAtom)
 

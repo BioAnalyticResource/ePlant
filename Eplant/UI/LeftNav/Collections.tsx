@@ -371,8 +371,10 @@ export function Collections(props: {
           })
         }
         cols[0] = {
+          name: 'Collection 1',
+          open: true,
           ...cols[0],
-          genes: cols[0].genes.concat(
+          genes: (cols[0]?.genes ?? []).concat(
             genes.filter((g, i) => unincluded[i]).map((g) => g.id)
           ),
         }
@@ -414,7 +416,7 @@ export function Collections(props: {
               setCollections((collections) => {
                 const cols = collections.slice()
                 cols[i] = {
-                  ...cols[i],
+                  ...p,
                   name: newName,
                 }
                 return cols
@@ -425,9 +427,8 @@ export function Collections(props: {
               setCollections((collections) => {
                 const cols = collections.slice()
                 cols[i] = {
-                  open: !cols[i].open,
-                  genes: cols[i].genes,
-                  name: cols[i].name,
+                  ...p,
+                  open: !p.open,
                 }
                 return cols
               })
@@ -493,7 +494,9 @@ export function Collections(props: {
       const activeArrayIndex = cols.findIndex((col) =>
         col.genes.includes(activeGene.id)
       )
-      const activeArray = cols[activeArrayIndex].genes.slice()
+      const activeArrayCollection = cols[activeArrayIndex]
+      if (!activeArrayCollection) return collections
+      const activeArray = activeArrayCollection.genes.slice()
       const activeIndex = activeArray.indexOf(activeGene.id)
 
       if (over.id.toString().startsWith('Collection-')) {
@@ -504,19 +507,22 @@ export function Collections(props: {
             .replace('Collection-' + (bottom ? 'bottom' : 'top'), '')
         )
 
+        const overCollection = cols[idx]
+        if (!overCollection) return collections
+
         activeArray.splice(activeIndex, 1)
         cols[activeArrayIndex] = {
-          name: cols[activeArrayIndex].name,
+          name: activeArrayCollection.name,
           genes: activeArray,
-          open: cols[activeArrayIndex].open || finished,
+          open: activeArrayCollection.open || finished,
         }
         cols[idx] = {
-          name: cols[idx].name,
-          genes: cols[idx].genes,
-          open: cols[idx].open || finished,
+          name: overCollection.name,
+          genes: overCollection.genes,
+          open: overCollection.open || finished,
         }
-        if (bottom) cols[idx].genes.push(activeGene.id)
-        else cols[idx].genes.unshift(activeGene.id)
+        if (bottom) overCollection.genes.push(activeGene.id)
+        else overCollection.genes.unshift(activeGene.id)
         return cols
       } else if (swapWithinCollection) return collections
 
@@ -527,32 +533,34 @@ export function Collections(props: {
       const overArrayIndex = cols.findIndex((col) =>
         col.genes.includes(overGene.id)
       )
-      const overArray = cols[overArrayIndex].genes.slice()
+      const overArrayCollection = cols[overArrayIndex]
+      if (!overArrayCollection) return collections
+      const overArray = overArrayCollection.genes.slice()
 
       const overIndex = overArray.indexOf(overGene.id)
 
+      // If the active gene is in the same collection as the over gene then move them
       if (activeArrayIndex == overArrayIndex) {
-        const g = activeArray[activeIndex]
         activeArray.splice(activeIndex, 1)
-        activeArray.splice(overIndex, 0, g)
+        activeArray.splice(overIndex, 0, activeArray[activeIndex] as string)
         // Move activeGene to overGene's position
         cols[activeArrayIndex] = {
-          name: cols[activeArrayIndex].name,
+          name: activeArrayCollection.name,
           genes: activeArray,
-          open: cols[activeArrayIndex].open || finished,
+          open: activeArrayCollection.open || finished,
         }
       } else {
         activeArray.splice(activeIndex, 1)
         overArray.splice(overIndex, 0, activeGene.id)
         cols[activeArrayIndex] = {
-          name: cols[activeArrayIndex].name,
+          name: activeArrayCollection.name,
           genes: activeArray,
-          open: cols[activeArrayIndex].open || finished,
+          open: activeArrayCollection.open || finished,
         }
         cols[overArrayIndex] = {
-          name: cols[overArrayIndex].name,
+          name: overArrayCollection.name,
           genes: overArray,
-          open: cols[overArrayIndex].open || finished,
+          open: overArrayCollection.open || finished,
         }
       }
       return cols
@@ -563,9 +571,11 @@ export function Collections(props: {
     setCollections((collections) => {
       const cols = collections.slice()
       const idx = cols.findIndex((c) => c.genes.includes(gene.id))
+      const collection = cols[idx]
+      if (!collection) return collections
       cols[idx] = {
-        ...cols[idx],
-        genes: cols[idx].genes.filter((g) => g != gene.id),
+        ...collection,
+        genes: collection.genes.filter((g) => g != gene.id),
       }
       return cols
     })
@@ -573,7 +583,7 @@ export function Collections(props: {
   }
 
   function deleteCollection(index: number) {
-    setGenes(genes.filter((g) => !collections[index].genes.includes(g.id)))
+    setGenes(genes.filter((g) => !collections[index]?.genes.includes(g.id)))
     setCollections(collections.filter((c, i) => i != index))
   }
 

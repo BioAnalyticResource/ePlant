@@ -46,7 +46,7 @@ const GeneSequence = ({
     i < activeData.geneSequence.length;
     i++
   ) {
-    let char = activeData.geneSequence[i].toUpperCase()
+    let char = (activeData.geneSequence[i] as string).toUpperCase()
     let currentStyle: React.CSSProperties = {}
 
     // Add regions around the three prime utr and five prime utr
@@ -247,7 +247,7 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
     setPanes((views) => ({
       ...views,
       [id]: {
-        ...views[id],
+        activeGene: geneticElement.id,
         view: view.id,
       },
     }))
