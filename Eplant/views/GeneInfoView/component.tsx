@@ -1,6 +1,6 @@
 import { userViews } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import { useSetPanes, useViewID, usePanes } from '@eplant/state'
+import { usePanesDispatch, useViewID, usePanes } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import { Info } from '@mui/icons-material'
 import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
@@ -211,7 +211,7 @@ export default function ({
 }
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   const id = useViewID()
-  const setPanes = useSetPanes()
+  const panesDispatch = usePanesDispatch()
   return (
     <Stack direction="column" gap={'16px'} flex={1}>
       <div style={{ whiteSpace: 'nowrap' }}>
@@ -237,13 +237,11 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   )
 
   function switchViews(view: View) {
-    setPanes((views) => ({
-      ...views,
-      [id]: {
-        activeGene: geneticElement.id,
-        view: view.id,
-      },
-    }))
+    panesDispatch({
+      type: 'set-view',
+      id: id,
+      view: view.id,
+    })
   }
 }
 
