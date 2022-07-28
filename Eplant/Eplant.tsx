@@ -1,5 +1,5 @@
 import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import { Add, CallMade } from '@mui/icons-material'
+import { Add, CallMade, Close } from '@mui/icons-material'
 import { Box, Container, Drawer, DrawerProps, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as FlexLayout from 'flexlayout-react'
@@ -19,6 +19,7 @@ import {
   usePanes,
   ViewIDContext,
   useActiveId,
+  getPaneName,
 } from './state'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
@@ -63,8 +64,6 @@ function ViewTab(props: {
   // If there is no gene selected choose one
   const v = views.find((v) => v.id == view?.view) ?? FallbackView
 
-  const [popout, setPopout] = React.useState<Window | undefined>()
-
   React.useEffect(() => {
     // Only include the gene name in the tab name if a gene is selected and this view belongs to that gene
     const targetName = `${
@@ -79,38 +78,6 @@ function ViewTab(props: {
     }
   })
 
-  React.useEffect(() => {
-    if (view?.popout && props.layout && !popout) {
-      const pane = window.open('/pane/', props.id, 'popup,width=800,height=600')
-      setPopout(pane ?? undefined)
-      if (pane) {
-        ;(pane as unknown as { id: string }).id = props.id
-        pane.onload = () => {
-          pane.onbeforeunload = () => {
-            panesDispatch({ type: 'close-popout', id: props.id })
-            setPopout(undefined)
-          }
-        }
-      }
-    }
-    if (!view || (view && !view.popout && !props.layout)) {
-      window.close()
-    }
-  }, [view?.popout, props.layout, popout])
-
-  if (view?.popout && props.layout) {
-    return (
-      <PopoutPlaceholder
-        focus={() => popout && popout.focus()}
-        dock={() =>
-          panesDispatch({
-            type: 'close-popout',
-            id: props.id,
-          })
-        }
-      />
-    )
-  }
   if (!view) {
     // TODO: Better fallback
     return <div>Uh oh</div>
@@ -181,8 +148,10 @@ export default function Eplant() {
  * Directly render a pane based on its id
  */
 function DirectPane() {
+  const [panes] = usePanes()
   const id = (window as unknown as { id: string }).id
   const theme = useTheme()
+  const [activeId] = useActiveId()
   React.useEffect(() => {
     updateColors(theme)
   }, [theme])
@@ -190,13 +159,19 @@ function DirectPane() {
     <div className="flexlayout__layout">
       <Box
         sx={{
+          display: 'flex',
+          flexDirection: 'row',
           width: '100%',
           bgcolor: 'background.main',
           height: `${tabHeight}px`,
         }}
+        className={id == activeId ? 'flexlayout__tabset-selected' : ''}
       >
         <div className="flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected">
-          <div className="flexlayout__tab-content">test</div>
+          <div className="flexlayout__tab-content">
+            {panes[id]?.activeGene ? panes[id]?.activeGene + ' - ' : ''}
+            {views.find((v) => v.id == panes[id]?.view)?.name}
+          </div>
         </div>
       </Box>
       <ViewTab id={id} />
@@ -259,6 +234,7 @@ function EplantLayout() {
       global: {
         tabSetTabStripHeight: tabHeight,
         tabEnableRename: false,
+        tabEnableClose: false,
       },
       borders: [],
       layout: {
@@ -289,8 +265,46 @@ function EplantLayout() {
 
   // Update the model when the activeId changes
   React.useEffect(() => {
-    model.doAction(Actions.selectTab(activeId))
+    if (model.getNodeById(activeId)) model.doAction(Actions.selectTab(activeId))
+    else model.doAction(Actions.deselectTabset())
   }, [activeId, model])
+
+  const [popouts, setPopouts] = React.useState<Record<string, Window>>({})
+
+  // Open popouts for panes that are not visible and have the popout flag
+  React.useEffect(() => {
+    for (const id in panes) {
+      if (panes[id]?.popout && !popouts[id]) {
+        const pane = window.open('/pane/', id, 'popup,width=800,height=600')
+        if (pane) {
+          setPopouts((popouts) => {
+            return { ...popouts, [id]: pane }
+          })
+          model.doAction(Actions.deleteTab(id))
+          ;(pane as unknown as { id: string }).id = id
+          pane.onload = () => {
+            pane.onbeforeunload = () => {
+              console.log('adding')
+              panesDispatch({ type: 'close-popout', id: id })
+              setPopouts((popouts) => {
+                const { [id]: _, ...rest } = popouts
+                return rest
+              })
+            }
+          }
+        }
+      }
+    }
+  }, [popouts, panes])
+
+  // Open tabs for panes that are not visible and do not have the popout flag
+  React.useEffect(() => {
+    for (const id in panes) {
+      if (!panes[id]?.popout && !model.getNodeById(id)) {
+        addTab({ tabId: id })
+      }
+    }
+  }, [panes, model])
 
   return (
     <Box
@@ -315,7 +329,7 @@ function EplantLayout() {
         model={model}
         factory={(node) => factory(node, model)}
         onTabSetPlaceHolder={() => (
-          <TabsetPlaceholder addTab={() => addTab()} />
+          <TabsetPlaceholder addTab={() => addTab({})} />
         )}
         onModelChange={(newModel) => {
           // Update the selected tab
@@ -323,40 +337,64 @@ function EplantLayout() {
             .getActiveTabset()
             ?.getSelectedNode?.()
             ?.getId?.()
-          setActiveId(newId ?? '__none__')
+          if (newId) setActiveId(newId)
           localStorage.setItem(
             'flexlayout-model',
             JSON.stringify(newModel.toJson())
           )
-          // Close any tabs that aren't in the new model
-          for (const id in panes) {
-            if (!newModel.getNodeById(id)) {
-              panesDispatch({
-                type: 'close',
-                id,
-              })
-            }
-          }
         }}
         onRenderTabSet={onRenderTabSet}
+        onRenderTab={(node, renderValues) => {
+          renderValues.buttons = [
+            <IconButton
+              key="close"
+              // Why is this necessary?
+              // Idk, but flexlayout-react uses it for their close buttons
+              // And they don't work without it
+              onMouseDown={(e) => {
+                e.stopPropagation()
+              }}
+              onTouchStart={(e) => {
+                e.stopPropagation()
+              }}
+              onMouseUp={(e) => {
+                panesDispatch({ type: 'close', id: node.getId() })
+                model.doAction(Actions.deleteTab(node.getId()))
+              }}
+              size="small"
+            >
+              <Close />
+            </IconButton>,
+          ]
+        }}
       ></FlexLayout.Layout>
     </Box>
   )
-  function addTab(tabsetId?: string) {
+  function addTab({ tabsetId, tabId }: { tabsetId?: string; tabId?: string }) {
     if (!layout.current) return
-    const id = Math.random().toString(16).split('.')[1] as string
+
+    const id = tabId ?? (Math.random().toString(16).split('.')[1] as string)
     const activeTab = model.getActiveTabset()?.getSelectedNode?.()?.getId?.()
     const activeGene = activeTab ? panes[activeTab]?.activeGene ?? null : null
-    panesDispatch({
-      type: 'new',
-      id,
-      activeGene,
-    })
+    // Make a pane if a new id needs to be generated
+    // If the id is provided then assume that there already is a pane
+    if (!tabId) {
+      panesDispatch({
+        type: 'new',
+        id,
+        activeGene,
+      })
+    }
+
+    const name = panes[id] ? getPaneName(panes[id]) : 'Get started'
 
     layout.current.addTabToTabSet(
-      tabsetId ?? model.getActiveTabset()?.getId?.() ?? '',
+      tabsetId ??
+        model.getActiveTabset()?.getId?.() ??
+        model.getRoot().getChildren()[0]?.getId() ??
+        '',
       {
-        name: 'Get Started',
+        name: name,
         component: 'view',
         id,
         type: 'tab',
@@ -377,7 +415,10 @@ function EplantLayout() {
   ) {
     if (node.getChildren().length == 0) return
     renderValues.stickyButtons.push(
-      <IconButton onClick={() => addTab(node.getId())} size="small">
+      <IconButton
+        onClick={() => addTab({ tabsetId: node.getId() })}
+        size="small"
+      >
         <Add />
       </IconButton>
     )

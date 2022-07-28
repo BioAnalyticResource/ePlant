@@ -61,7 +61,6 @@ export function SearchGroup({
         }}
         complete={species?.api?.autocomplete}
         onSubmit={(terms: string[]) => {
-          console.log(terms)
           if (!species) return
           Promise.all(terms.map(species.api.searchGene)).then((a) =>
             addGeneticElements(a.filter((x) => x != null) as GeneticElement[])

@@ -195,7 +195,6 @@ export function Collection({
             }}
             size="small"
             inputRef={inputRef}
-            onSubmit={(e) => console.log(e)}
             onKeyPress={(e) => {
               if (e.key == 'Enter') rename()
             }}

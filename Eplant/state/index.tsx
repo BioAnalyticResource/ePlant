@@ -19,7 +19,6 @@ function atomWithOptionalStorage<T>(
   const val = atom<T>(value ? deserialize(value) : initialValue)
   val.onMount = (setAtom) => {
     const listener = (e: StorageEvent) => {
-      console.log(e)
       if (e.key === key && e.newValue) {
         setAtom(deserialize(e.newValue))
       }
@@ -169,3 +168,7 @@ export const useSetDarkMode = () => useSetAtom(darkModeAtom)
 
 export const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
 export const useActiveId = () => useAtom(activeIdAtom)
+
+export function getPaneName(pane: Panes[string]) {
+  return `${pane.activeGene ? pane.activeGene + ' - ' : ''}${pane.view}`
+}
