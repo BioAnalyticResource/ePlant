@@ -12,3 +12,5 @@ export const userViews = [GeneInfoView, PublicationViewer] as const
 
 // List of views that are used to lookup a view by id
 export const views = [...genericViews, ...userViews] as const
+
+export const tabHeight = 48

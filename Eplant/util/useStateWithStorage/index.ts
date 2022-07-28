@@ -31,7 +31,7 @@ export default function useStateWithStorage<T>(
   return [
     val,
     async (upd: SetStateAction<T>) => {
-      let newVal = typeof upd === 'function' ? (upd as (p: T) => T)(val) : upd
+      const newVal = typeof upd === 'function' ? (upd as (p: T) => T)(val) : upd
       if (!newVal) return
       if (persist) localStorage.setItem(key, serialize(newVal))
       setVal(newVal)

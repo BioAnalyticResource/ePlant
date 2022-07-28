@@ -1,7 +1,6 @@
 import IconButton from '@mui/material/IconButton'
 import SearchIcon from '@mui/icons-material/Search'
 import Autocomplete from '@mui/material/Autocomplete'
-import Stack from '@mui/material/Stack'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { debounce } from 'lodash'
 import * as React from 'react'
@@ -30,7 +29,7 @@ export default function SearchBar(props: {
   const [inputValue, setInputValue] = React.useState<string>('')
   const [options, setOptions] = React.useState<string[]>([])
   const [focused, setFocused] = React.useState<boolean>(false)
-  const updateOptions = React.useRef((text: string) => {})
+  const updateOptions = React.useRef<(text: string) => void>()
 
   React.useEffect(() => {
     updateOptions.current = debounce(async (newValue) => {
@@ -40,7 +39,7 @@ export default function SearchBar(props: {
   const id = React.useId()
 
   React.useEffect(() => {
-    updateOptions.current(inputValue)
+    updateOptions.current?.(inputValue)
   }, [inputValue])
 
   return (
@@ -59,7 +58,12 @@ export default function SearchBar(props: {
       onFocus={() => setFocused(true)}
       renderTags={(value: readonly string[], getTagProps) =>
         value.map((option: string, index: number) => (
-          <Chip label={option} size="small" {...getTagProps({ index })} />
+          <Chip
+            label={option}
+            size="small"
+            {...getTagProps({ index })}
+            key={index}
+          />
         ))
       }
       renderInput={({ InputProps, ...params }) => (

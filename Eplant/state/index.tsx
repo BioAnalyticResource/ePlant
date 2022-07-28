@@ -1,14 +1,7 @@
 import GeneticElement from '@eplant/GeneticElement'
 import Species from '@eplant/Species'
 import arabidopsis from '@eplant/Species/arabidopsis'
-import {
-  Atom,
-  atom,
-  useAtom,
-  useAtomValue,
-  useSetAtom,
-  WritableAtom,
-} from 'jotai'
+import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
 
 const persistAtom = atom<boolean>(true)
@@ -39,7 +32,8 @@ function atomWithOptionalStorage<T>(
       return get(val)
     },
     (get, set, x: React.SetStateAction<T>) => {
-      const newValue = typeof x == 'function' ? (x as any)(get(val)) : x
+      const newValue =
+        typeof x == 'function' ? (x as (prev: T) => T)(get(val)) : x
       if (get(persistAtom)) {
         localStorage.setItem(key, serialize(newValue))
       }
@@ -104,6 +98,7 @@ export const panesReducer: (prev: Panes, action: PanesAction) => Panes = (
     activeGene: null,
     popout: false,
   }
+  const { [action.id]: _, ...rest } = prev
   switch (action.type) {
     case 'set-view':
       return {
@@ -150,7 +145,6 @@ export const panesReducer: (prev: Panes, action: PanesAction) => Panes = (
         },
       }
     case 'close':
-      const { [action.id]: _, ...rest } = prev
       return rest
   }
 }

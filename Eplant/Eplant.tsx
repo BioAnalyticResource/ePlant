@@ -1,5 +1,5 @@
 import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import { Add, CallMade, Flight } from '@mui/icons-material'
+import { Add, CallMade } from '@mui/icons-material'
 import { Box, Container, Drawer, DrawerProps, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as FlexLayout from 'flexlayout-react'
@@ -11,17 +11,13 @@ import {
   TabSetNode,
 } from 'flexlayout-react'
 import * as React from 'react'
-import { Route, Routes, useParams, useRoutes } from 'react-router-dom'
-import { userViews, views } from './config'
+import { Route, Routes } from 'react-router-dom'
+import { userViews, views, tabHeight } from './config'
 import GeneticElement from './GeneticElement'
-import Species from './Species'
 import {
   useGeneticElements,
   usePanes,
-  useSetPersist,
-  useSetDarkMode,
   ViewIDContext,
-  usePanesDispatch,
   useActiveId,
 } from './state'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
@@ -29,6 +25,7 @@ import { ViewContainer } from './UI/Layout/ViewContainer'
 import { LeftNav } from './UI/LeftNav'
 import PopoutPlaceholder from './UI/Layout/PopoutPlaceholder'
 import FallbackView from './views/FallbackView'
+import { Theme } from '@mui/system'
 
 // TODO: Make this drawer support opening/closing on mobile
 
@@ -44,7 +41,7 @@ function ResponsiveDrawer(props: DrawerProps) {
   )
 }
 
-export type EplantProps = {}
+export type EplantProps = Record<string, never>
 
 /**
  * Rendered in each tab. Contains a view container.
@@ -58,7 +55,7 @@ function ViewTab(props: {
   }
   id: string
 }) {
-  const [activeId, setActiveId] = useActiveId()
+  const [, setActiveId] = useActiveId()
   const [panes, panesDispatch] = usePanes()
   const genes = useGeneticElements()[0]
   const view = panes[props.id]
@@ -85,9 +82,9 @@ function ViewTab(props: {
   React.useEffect(() => {
     if (view?.popout && props.layout && !popout) {
       const pane = window.open('/pane/', props.id, 'popup,width=800,height=600')
+      setPopout(pane ?? undefined)
       if (pane) {
-        setPopout(pane)
-        ;(pane as any).id = props.id
+        ;(pane as unknown as { id: string }).id = props.id
         pane.onload = () => {
           pane.onbeforeunload = () => {
             panesDispatch({ type: 'close-popout', id: props.id })
@@ -184,7 +181,27 @@ export default function Eplant() {
  * Directly render a pane based on its id
  */
 function DirectPane() {
-  return <ViewTab id={(window as any).id as string} />
+  const id = (window as unknown as { id: string }).id
+  const theme = useTheme()
+  React.useEffect(() => {
+    updateColors(theme)
+  }, [theme])
+  return (
+    <div className="flexlayout__layout">
+      <Box
+        sx={{
+          width: '100%',
+          bgcolor: 'background.main',
+          height: `${tabHeight}px`,
+        }}
+      >
+        <div className="flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected">
+          <div className="flexlayout__tab-content">test</div>
+        </div>
+      </Box>
+      <ViewTab id={id} />
+    </div>
+  )
 }
 
 /**
@@ -192,7 +209,7 @@ function DirectPane() {
  * @returns {JSX.Element} The rendered Eplant component
  */
 export function MainEplant() {
-  const [activeId, setActiveId] = useActiveId()
+  const [activeId] = useActiveId()
   const [panes, panesDispatch] = usePanes()
   //TODO: Break into more components to prevent unnecessary rerendering
   return (
@@ -201,9 +218,9 @@ export function MainEplant() {
         variant="persistent"
         open={true}
         PaperProps={{
-          sx: (theme) => ({
+          sx: {
             border: 'none',
-          }),
+          },
         }}
       >
         <Container
@@ -231,16 +248,16 @@ export function MainEplant() {
     </>
   )
 }
-function EplantLayout(props: {}) {
+function EplantLayout() {
   const [panes, panesDispatch] = usePanes()
   const layout = React.useRef<Layout>(null)
 
   const [activeId, setActiveId] = useActiveId()
-  const [model, setModel] = useStateWithStorage(
+  const [model] = useStateWithStorage(
     'flexlayout-model',
     FlexLayout.Model.fromJson({
       global: {
-        tabSetTabStripHeight: 48,
+        tabSetTabStripHeight: tabHeight,
         tabEnableRename: false,
       },
       borders: [],
@@ -267,8 +284,8 @@ function EplantLayout(props: {}) {
   const theme = useTheme()
 
   React.useEffect(() => {
-    updateColors()
-  }, [theme, layout.current])
+    updateColors(theme)
+  }, [theme])
 
   // Update the model when the activeId changes
   React.useEffect(() => {
@@ -347,32 +364,6 @@ function EplantLayout(props: {}) {
     )
   }
 
-  function updateColors() {
-    if (!layout.current) return
-    ;(
-      Array.from(
-        document.getElementsByClassName('flexlayout__layout')
-      ) as HTMLDivElement[]
-    ).map((el) => {
-      el.style.setProperty('--color-text', theme.palette.text.primary)
-      el.style.setProperty(
-        '--color-background',
-        theme.palette.background.default
-      )
-      el.style.setProperty('--color-base', theme.palette.background.default)
-      el.style.setProperty('--color-primary', theme.palette.primary.main)
-      el.style.setProperty(
-        '--color-primary-light',
-        theme.palette.primary.pale ?? theme.palette.primary.main
-      )
-      el.style.setProperty('--color-1', theme.palette.background.default)
-      el.style.setProperty('--color-2', theme.palette.background.paper)
-      el.style.setProperty('--color-active', theme.palette.background.active)
-      el.style.setProperty('--color-6', theme.palette.background.active)
-      el.style.setProperty('--color-divider', theme.palette.divider)
-    })
-  }
-
   function makePopout(id: string) {
     panesDispatch({
       type: 'make-popout',
@@ -402,4 +393,26 @@ function EplantLayout(props: {}) {
       </IconButton>
     )
   }
+}
+
+function updateColors(theme: Theme) {
+  ;(
+    Array.from(
+      document.getElementsByClassName('flexlayout__layout')
+    ) as HTMLDivElement[]
+  ).map((el) => {
+    el.style.setProperty('--color-text', theme.palette.text.primary)
+    el.style.setProperty('--color-background', theme.palette.background.default)
+    el.style.setProperty('--color-base', theme.palette.background.default)
+    el.style.setProperty('--color-primary', theme.palette.primary.main)
+    el.style.setProperty(
+      '--color-primary-light',
+      theme.palette.primary.pale ?? theme.palette.primary.main
+    )
+    el.style.setProperty('--color-1', theme.palette.background.default)
+    el.style.setProperty('--color-2', theme.palette.background.paper)
+    el.style.setProperty('--color-active', theme.palette.background.active)
+    el.style.setProperty('--color-6', theme.palette.background.active)
+    el.style.setProperty('--color-divider', theme.palette.divider)
+  })
 }

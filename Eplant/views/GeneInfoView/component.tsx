@@ -122,7 +122,7 @@ const GeneSequence = ({
   return <CodeBody variant="caption">{spans}</CodeBody>
 }
 
-export default function ({
+export default function GeneInfoViewer({
   geneticElement,
   activeData,
 }: ViewProps<GeneInfoViewData>) {

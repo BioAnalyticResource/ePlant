@@ -7,9 +7,7 @@ import downloadFile from '@eplant/util/downloadFile'
 import {
   AppBar,
   Button,
-  ButtonBase,
   Container,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -18,7 +16,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  TextField,
   Toolbar,
   Typography,
 } from '@mui/material'
@@ -68,7 +65,7 @@ export function ViewContainer({
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
         <DialogTitle>
           <Typography variant="h6">
-            Citation and experiment information for "{view.name}"
+            Citation and experiment information for $quot;{view.name}$quot;
           </Typography>
         </DialogTitle>
         <DialogContent>

@@ -81,7 +81,7 @@ export const useViewData = (view: View, gene: GeneticElement | null) => {
       if (viewData.loading || viewData.activeData) return
       setViewData((viewData) => ({ ...viewData, loading: true }))
       try {
-        let loader =  gene?.species.api.loaders[view.id] ?? view.loadData
+        const loader =  gene?.species.api.loaders[view.id] ?? view.loadData
         if (!loader) {
           throw ViewDataError.UNSUPPORTED_GENE
         }
