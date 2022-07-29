@@ -24,7 +24,6 @@ import {
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import { LeftNav } from './UI/LeftNav'
-import PopoutPlaceholder from './UI/Layout/PopoutPlaceholder'
 import FallbackView from './views/FallbackView'
 import { Theme } from '@mui/system'
 
