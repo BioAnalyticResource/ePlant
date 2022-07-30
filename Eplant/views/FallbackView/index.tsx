@@ -4,7 +4,7 @@ import { View } from '../View'
 const FallbackView: View<void> = {
   name: 'Unknown view',
   component: () => <div>Unknown view</div>,
-  loadData: async () => {},
+  getInitialData: async () => {},
   id: 'fallback',
 }
 

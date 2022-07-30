@@ -1,4 +1,4 @@
-import { userViews, views, genericViews } from '@eplant/config'
+import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { usePrinting, useViewID } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
@@ -51,6 +51,8 @@ export function ViewContainer({
   const [viewingCitations, setViewingCitations] = React.useState(false)
 
   const viewId = useViewID()
+
+  const { userViews, views, genericViews } = useConfig()
 
   React.useEffect(() => {
     if (printing == viewId) {

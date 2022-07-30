@@ -1,7 +1,6 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { IconProps } from '@mui/material'
-import { atom, Atom, useAtom } from 'jotai'
-import { atomFamily, atomWithStorage } from 'jotai/utils'
+import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 
 import * as React from 'react'
 
@@ -10,15 +9,23 @@ export type ViewProps<T> = {
   geneticElement: GeneticElement | null
 }
 
+type ViewAction<T, Action> = {
+  label: string
+  type: 'toggle' | 'button'
+  action: Action
+}
+
 // T must be serializable/deserializable with JSON.stringify/JSON.parse
-export type View<T = any> = {
+export type View<T = any, Action = any> = {
   // loadEvent should be called to update the view's loading bar.
   // The input is a float between 0 and 1 which represents the fraction of the data
   // that has currently loaded.
-  loadData?: (
+  getInitialData?: (
     gene: GeneticElement | null,
-    loadEvent: (amount: number ) => void
+    loadEvent: (amount: number) => void
   ) => Promise<any>
+  reducer?: (state: T, action: Action) => T
+  actions?: ViewAction<T, Action>[]
   // Validate props.activeData with the ZodType
   component: (props: ViewProps<T>) => JSX.Element | null
   icon?: () => JSX.Element
@@ -81,7 +88,7 @@ export const useViewData = (view: View, gene: GeneticElement | null) => {
       if (viewData.loading || viewData.activeData) return
       setViewData((viewData) => ({ ...viewData, loading: true }))
       try {
-        const loader =  gene?.species.api.loaders[view.id] ?? view.loadData
+        const loader =  gene?.species.api.loaders[view.id] ?? view.getInitialData
         if (!loader) {
           throw ViewDataError.UNSUPPORTED_GENE
         }
