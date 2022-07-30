@@ -13,7 +13,7 @@ const loader: View<GeneInfoViewData>['loadData'] = async (
   const [data, features, sequence] = await Promise.all([
     axios
       .get(
-        `http://bar.utoronto.ca/webservices/bar_araport/` +
+        `https://bar.utoronto.ca/webservices/bar_araport/` +
           `gene_summary_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {
@@ -24,7 +24,7 @@ const loader: View<GeneInfoViewData>['loadData'] = async (
     // Get features of the gene (used for gene model and sequence highlighting)
     axios
       .get<{ features: GeneFeature[] }>(
-        `http://bar.utoronto.ca/webservices/bar_araport/` +
+        `https://bar.utoronto.ca/webservices/bar_araport/` +
           `gene_structure_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {
@@ -36,7 +36,7 @@ const loader: View<GeneInfoViewData>['loadData'] = async (
     // Get gene sequence
     axios
       .get(
-        `http://bar.utoronto.ca/webservices/bar_araport/` +
+        `https://bar.utoronto.ca/webservices/bar_araport/` +
           `get_sequence_by_identifier.php?locus=${geneticElement.id}`
       )
       .then((d) => {
@@ -74,7 +74,7 @@ const loader: View<GeneInfoViewData>['loadData'] = async (
   if (geneticElementType == 'protein_coding') {
     proteinSequence = (
       await axios.get(
-        `http://bar.utoronto.ca/webservices/bar_araport/` +
+        `https://bar.utoronto.ca/webservices/bar_araport/` +
           `get_protein_sequence_by_identifier.php?locus=${geneticElement.id}.1`
       )
     ).data.result[0].sequence

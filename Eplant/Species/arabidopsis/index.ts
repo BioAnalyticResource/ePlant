@@ -17,7 +17,7 @@ const arabidopsis: Species = new Species('Arabidopsis', {
 async function autocomplete(s: string) {
   return (
     await axios.get(
-      'http://bar.utoronto.ca/eplant/cgi-bin/idautocomplete.cgi?species=Arabidopsis_thaliana&term=' +
+      'https://bar.utoronto.ca/eplant/cgi-bin/idautocomplete.cgi?species=Arabidopsis_thaliana&term=' +
         s
     )
   ).data
@@ -26,7 +26,7 @@ async function autocomplete(s: string) {
 async function searchGene(s: string) {
   const data = (
     await axios.get(
-      'http://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=' +
+      'https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=' +
         s
     )
   ).data
