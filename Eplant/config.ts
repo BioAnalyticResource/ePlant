@@ -14,3 +14,4 @@ export const userViews = [GeneInfoView, PublicationViewer] as const
 export const views = [...genericViews, ...userViews] as const
 
 export const tabHeight = 48
+export const rootPath = ''

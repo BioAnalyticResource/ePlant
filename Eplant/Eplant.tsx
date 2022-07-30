@@ -12,7 +12,7 @@ import {
 } from 'flexlayout-react'
 import * as React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { userViews, views, tabHeight } from './config'
+import { userViews, views, tabHeight, rootPath } from './config'
 import GeneticElement from './GeneticElement'
 import {
   useGeneticElements,
@@ -135,7 +135,7 @@ const factory: (
 export default function Eplant() {
   return (
     <Routes>
-      <Route path="/">
+      <Route path={rootPath}>
         <Route index element={<MainEplant />} />
         <Route path="/pane" element={<DirectPane />} />
       </Route>
