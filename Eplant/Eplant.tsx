@@ -274,7 +274,11 @@ function EplantLayout() {
   React.useEffect(() => {
     for (const id in panes) {
       if (panes[id]?.popout && !popouts[id]) {
-        const pane = window.open('/pane/', id, 'popup,width=800,height=600')
+        const pane = window.open(
+          (window.location.pathname + '/pane').replace('//', '/'),
+          id,
+          'popup,width=800,height=600'
+        )
         if (pane) {
           setPopouts((popouts) => {
             return { ...popouts, [id]: pane }
