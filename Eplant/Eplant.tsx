@@ -137,7 +137,7 @@ export default function Eplant() {
     <Routes>
       <Route path={rootPath}>
         <Route index element={<MainEplant />} />
-        <Route path="/pane" element={<DirectPane />} />
+        <Route path="pane" element={<DirectPane />} />
       </Route>
     </Routes>
   )
