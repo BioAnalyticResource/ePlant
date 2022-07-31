@@ -1,11 +1,10 @@
-import { Start } from '@mui/icons-material'
 import React from 'react'
 import { View } from '../View'
 
-const GetStartedView: View<{}> = {
+const GetStartedView: View = {
   name: 'Get started',
   component: () => <div>Get started</div>,
-  loadData: async () => ({}),
+  getInitialData: async () => ({}),
   id: 'get-started',
 }
 

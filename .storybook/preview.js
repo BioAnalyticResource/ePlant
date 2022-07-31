@@ -1,13 +1,10 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { light, dark } from '../Eplant/theme'
-import Container from '@mui/material/Container'
 import '@fontsource/roboto-mono'
 import { useEffect, useState } from 'react'
-import { speciesAtom, genesAtom } from '../Eplant/state'
-import arabidopsis from '../Eplant/Species/arabidopsis'
+import { genesAtom } from '../Eplant/state'
 import geneticElements from '../Eplant/__mocks__/geneticElements'
 import { Box } from '@mui/material'
-import { DndContext } from '@dnd-kit/core'
 import { Provider } from 'jotai'
 export const decorators = [
   (Story) => {

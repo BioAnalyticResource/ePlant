@@ -1,4 +1,5 @@
-export default {
+// eslint-disable-next-line no-undef
+module.exports = {
   env: {
     browser: true,
     es2021: true,
@@ -18,5 +19,8 @@ export default {
     sourceType: 'module',
   },
   plugins: ['react', '@typescript-eslint', 'react-hooks'],
-  rules: {},
+  rules: {
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+  },
 }

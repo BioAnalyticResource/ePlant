@@ -1,21 +1,24 @@
+import GeneInfoView from '@eplant/views/GeneInfoView'
+import { defaultConfig } from '@eplant/main'
 import { View, ViewDataError } from '@eplant/views/View'
 import exampleData from '@eplant/Species/arabidopsis/loaders/GeneInfoView/exampleData'
 import { ViewContainer } from '@eplant/UI/Layout/ViewContainer'
-import { ComponentMeta, Story } from '@storybook/react'
+import { ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { GeneInfoView } from '@eplant/views/GeneInfoView'
-
-import ArabidopsisGeneInfoView from '@eplant/Species/arabidopsis/loaders/GeneInfoView'
 import GeneticElement from '@eplant/GeneticElement'
 import { HourglassFull } from '@mui/icons-material'
-import { Provider } from 'jotai'
-import { viewsAtom } from '@eplant/state'
 import delayed from '@eplant/util/delayed'
+import { Config } from '@eplant/config'
+
+export default {
+  title: 'View Container',
+  component: ViewContainer,
+} as ComponentMeta<typeof ViewContainer>
 
 const AlwaysLoadingView: View = {
   component: () => <div></div>,
   id: 'always-loading',
-  loadData(gene, loadState) {
+  getInitialData(gene, loadState) {
     setInterval(() => {
       loadState((Date.now() % 100000) / 100000)
     }, 10)
@@ -27,7 +30,7 @@ const AlwaysLoadingView: View = {
 const UnsupportedView: View = {
   component: () => <div></div>,
   id: 'always-unsupported',
-  async loadData(gene, loadState) {
+  async getInitialData(gene, loadState) {
     setInterval(() => {
       loadState((Date.now() % 100000) / 100000)
     }, 10)
@@ -42,7 +45,7 @@ const UnsupportedView: View = {
 const ErrorView: View = {
   component: () => <div></div>,
   id: 'always-crashes',
-  async loadData(gene, loadState) {
+  async getInitialData(gene, loadState) {
     setInterval(() => {
       loadState((Date.now() % 100000) / 100000)
     }, 10)
@@ -57,68 +60,65 @@ const ErrorView: View = {
 
 const geneticElement = { ...(exampleData.geneticElement as GeneticElement) }
 
-export default {
-  title: 'View Container',
-  component: ViewContainer,
-} as ComponentMeta<typeof ViewContainer>
-
 export const Loading = () => {
   return (
-    <Provider initialValues={[[viewsAtom, [AlwaysLoadingView]]]}>
+    <Config.Provider value={{ ...defaultConfig, views: [AlwaysLoadingView] }}>
       <ViewContainer
         view={AlwaysLoadingView}
         setView={() => {}}
         gene={geneticElement}
       ></ViewContainer>
-    </Provider>
+    </Config.Provider>
   )
 }
 export const UnsupportedGene = () => {
   return (
-    <Provider initialValues={[[viewsAtom, [UnsupportedView]]]}>
+    <Config.Provider value={{ ...defaultConfig, views: [UnsupportedView] }}>
       <ViewContainer
         view={UnsupportedView}
         setView={() => {}}
         gene={geneticElement}
       ></ViewContainer>
-    </Provider>
+    </Config.Provider>
   )
 }
 export const Default = () => {
   return (
-    <ViewContainer
-      view={
-        {
-          ...GeneInfoView,
-          loadData: async () => exampleData.activeData,
-        } as View<typeof exampleData.activeData>
-      }
-      setView={() => {}}
-      gene={geneticElement}
-    ></ViewContainer>
+    <Config.Provider value={defaultConfig}>
+      <ViewContainer
+        view={
+          {
+            ...GeneInfoView,
+            getInitialData: async () => exampleData.activeData,
+          } as View<typeof exampleData.activeData>
+        }
+        setView={() => {}}
+        gene={geneticElement}
+      ></ViewContainer>
+    </Config.Provider>
   )
 }
 
 export const NoGeneProvided = () => {
   return (
-    <Provider initialValues={[[viewsAtom, [GeneInfoView]]]}>
+    <Config.Provider value={{ ...defaultConfig, views: [GeneInfoView] }}>
       <ViewContainer
         view={GeneInfoView}
         setView={() => {}}
         gene={null}
       ></ViewContainer>
-    </Provider>
+    </Config.Provider>
   )
 }
 
 export const BrokenLoader = () => {
   return (
-    <Provider initialValues={[[viewsAtom, [ErrorView]]]}>
+    <Config.Provider value={{ ...defaultConfig, views: [ErrorView] }}>
       <ViewContainer
         view={ErrorView}
         setView={() => {}}
         gene={geneticElement}
       ></ViewContainer>
-    </Provider>
+    </Config.Provider>
   )
 }

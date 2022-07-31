@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ComponentMeta, Story } from '@storybook/react'
 import data from '@eplant/Species/arabidopsis/loaders/PublicationViewer/exampleData'
-import { PublicationViewer } from '@eplant/views/PublicationViewer'
+import PublicationViewer from '@eplant/views/PublicationViewer'
 
 export default {
   title: 'Publication Viewer',

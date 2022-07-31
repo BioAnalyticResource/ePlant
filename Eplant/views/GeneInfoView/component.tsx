@@ -1,21 +1,13 @@
+import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  useSetPanes,
-  useViewID,
-  usePanes,
-  useViews,
-  useUserViews,
-} from '@eplant/state'
-import GeneHeader from '@eplant/UI/GeneHeader'
-import { Info } from '@mui/icons-material'
+import { usePanesDispatch, useViewID } from '@eplant/state'
 import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
-import Button, { ButtonProps } from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import _ from 'lodash'
 import React from 'react'
-import { GeneInfoViewData } from '.'
+import { GeneInfoViewData } from './data'
 import { useViewData, View, ViewProps } from '../View'
 import { GeneModel } from './GeneModel'
 
@@ -127,7 +119,7 @@ const GeneSequence = ({
   return <CodeBody variant="caption">{spans}</CodeBody>
 }
 
-export default function ({
+export default function GeneInfoViewer({
   geneticElement,
   activeData,
 }: ViewProps<GeneInfoViewData>) {
@@ -216,13 +208,14 @@ export default function ({
 }
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   const id = useViewID()
-  const setPanes = useSetPanes()
-  const views = useViews()
-  const userViews = useUserViews()
+  const panesDispatch = usePanesDispatch()
+  const { userViews } = useConfig()
   return (
     <Stack direction="column" gap={'16px'} flex={1}>
       <div style={{ whiteSpace: 'nowrap' }}>
-        <SecondaryText>Available views</SecondaryText>
+        <Typography variant="body2" color="secondary">
+          Available views
+        </Typography>
       </div>
       {userViews.map((view) => (
         <ViewButton
@@ -230,8 +223,23 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
           sx={{
             textAlign: 'left',
             justifyContent: 'flex-start',
+            color: 'secondary.contrastText',
+            textTransform: 'none',
           }}
-          startIcon={view.icon ? <view.icon /> : undefined}
+          startIcon={
+            view.icon ? (
+              <div
+                style={{
+                  transform: 'scale(1.2)',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  display: 'flex',
+                }}
+              >
+                <view.icon />
+              </div>
+            ) : undefined
+          }
           key={view.name}
           view={view}
           geneticElement={geneticElement}
@@ -244,13 +252,11 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   )
 
   function switchViews(view: View) {
-    setPanes((views) => ({
-      ...views,
-      [id]: {
-        activeGene: geneticElement.id,
-        view: view.id,
-      },
-    }))
+    panesDispatch({
+      type: 'set-view',
+      id: id,
+      view: view.id,
+    })
   }
 }
 

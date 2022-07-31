@@ -9,7 +9,6 @@ import { SVGProps } from 'react'
  */
 export function Logo(props: SVGProps<SVGSVGElement>) {
   const theme = useTheme()
-  console.log(theme)
   return (
     <svg
       {...props}

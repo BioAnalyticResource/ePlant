@@ -1,13 +1,9 @@
-import { useDarkMode, useSetDarkMode, useSpecies } from '@eplant/state'
-import Species from '@eplant/Species'
+import { useDarkMode, useSpecies } from '@eplant/state'
 import {
   Box,
   Divider,
-  FormControl,
   FormControlLabel,
   FormGroup,
-  InputLabel,
-  styled,
   Switch,
 } from '@mui/material'
 import Button from '@mui/material/Button'

@@ -1,20 +1,13 @@
+import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  useGenericViews,
-  usePrinting,
-  useUserViews,
-  useViewID,
-  useViews,
-} from '@eplant/state'
+import { usePrinting, useViewID } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
 import {
   AppBar,
   Button,
-  ButtonBase,
   Container,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -23,7 +16,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  TextField,
   Toolbar,
   Typography,
 } from '@mui/material'
@@ -31,6 +23,7 @@ import Box, { BoxProps } from '@mui/material/Box'
 import * as React from 'react'
 import { useViewData, View } from '../../../views/View'
 import LoadingPage from './LoadingPage'
+import ViewOptions from './ViewOptions'
 
 /**
  * Wraps a view in a container that provides a toolbar and a download button. It also manages loading the view's data.
@@ -52,10 +45,6 @@ export function ViewContainer({
 } & BoxProps) {
   const { activeData, error, loading, loadingAmount } = useViewData(view, gene)
 
-  const userViews = useUserViews()
-  const views = useViews()
-  const genericViews = useGenericViews()
-
   const idLabel = React.useId()
   const selectId = React.useId()
   const [printing, setPrinting] = usePrinting()
@@ -63,6 +52,8 @@ export function ViewContainer({
   const [viewingCitations, setViewingCitations] = React.useState(false)
 
   const viewId = useViewID()
+
+  const { userViews, views, genericViews } = useConfig()
 
   React.useEffect(() => {
     if (printing == viewId) {
@@ -77,7 +68,7 @@ export function ViewContainer({
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
         <DialogTitle>
           <Typography variant="h6">
-            Citation and experiment information for "{view.name}"
+            Citation and experiment information for &quot;{view.name}&quot;
           </Typography>
         </DialogTitle>
         <DialogContent>
@@ -102,7 +93,11 @@ export function ViewContainer({
       >
         <Toolbar style={{ gap: '8px' }}>
           {/* View selector dropdown */}
-          <Box sx={{ flexGrow: 1 }}>
+          <Stack
+            direction="row"
+            gap={2}
+            sx={{ flexGrow: 1, height: '100%', alignItems: 'center' }}
+          >
             <FormControl variant="standard">
               <InputLabel id={idLabel}>View</InputLabel>
               <Select
@@ -113,6 +108,13 @@ export function ViewContainer({
                 onChange={(e) => {
                   const v = views.find((v) => v.id == e?.target?.value)
                   if (v) setView(v)
+                }}
+                inputProps={{
+                  sx: {
+                    ':focus': {
+                      backgroundColor: 'transparent',
+                    },
+                  },
                 }}
               >
                 {views.map((v, i) => (
@@ -130,9 +132,13 @@ export function ViewContainer({
                 ))}
               </Select>
             </FormControl>
-          </Box>
+            <ViewOptions gene={gene} view={view} />
+          </Stack>
           <Button
-            variant="outlined"
+            variant="text"
+            sx={{
+              color: 'secondary.contrastText',
+            }}
             disabled={loading}
             color="secondary"
             onClick={() => {
@@ -142,7 +148,10 @@ export function ViewContainer({
             Get citations
           </Button>
           <Button
-            variant="outlined"
+            variant="text"
+            sx={{
+              color: 'secondary.contrastText',
+            }}
             disabled={loading}
             color="secondary"
             onClick={() => {
