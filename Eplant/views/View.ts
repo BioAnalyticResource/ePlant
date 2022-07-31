@@ -10,8 +10,7 @@ export type ViewProps<T> = {
 }
 
 type ViewAction<T, Action> = {
-  label: string
-  type: 'toggle' | 'button'
+  render: (props: ViewProps<T>) => JSX.Element
   action: Action
 }
 
@@ -23,7 +22,7 @@ export type View<T = any, Action = any> = {
   getInitialData?: (
     gene: GeneticElement | null,
     loadEvent: (amount: number) => void
-  ) => Promise<any>
+  ) => Promise<T>
   reducer?: (state: T, action: Action) => T
   actions?: ViewAction<T, Action>[]
   // Validate props.activeData with the ZodType
@@ -39,13 +38,13 @@ export enum ViewDataError {
   FAILED_TO_LOAD = 'Failed to load',
 }
 
-type ViewDataType = {
-  activeData: any
+type ViewDataType<T> = {
+  activeData: T | undefined
   loading: boolean
   error: ViewDataError | null
   loadingAmount: number
 }
-const viewData: { [key: string]: ReturnType<typeof atomWithStorage<ViewDataType>> } = {}
+const viewData: { [key: string]: ReturnType<typeof atomWithStorage<ViewDataType<any>>> } = {}
 
 const viewDataStorage = {
   getItem(key: string) {
@@ -55,7 +54,7 @@ const viewDataStorage = {
     }
     return JSON.parse(storedValue)
   },
-  setItem(key: string, value: ViewDataType) {
+  setItem(key: string, value: ViewDataType<any>) {
     if (value.loading) localStorage.removeItem(key)
     else localStorage.setItem(key, JSON.stringify(value))
   },
@@ -64,10 +63,10 @@ const viewDataStorage = {
   },
 }
 
-const getViewDataAtom = (view: View<any>, gene: GeneticElement | null) => {
+function getViewDataAtom<T, A>(view: View<T, A>, gene: GeneticElement | null): ReturnType<typeof atomWithStorage<ViewDataType<T>>> {
   const key = `${view.id}-${gene?.id ?? 'generic-view'}`
   if (!viewData[key])
-    viewData[key] = atomWithStorage<ViewDataType>(
+    viewData[key] = atomWithStorage<ViewDataType<T>>(
       'view-data-' + key,
       {
         activeData: undefined,
@@ -77,22 +76,23 @@ const getViewDataAtom = (view: View<any>, gene: GeneticElement | null) => {
       },
       viewDataStorage
     )
-  return viewData[key] as typeof viewData[string]
+  return viewData[key]
 }
 
-export const useViewData = (view: View, gene: GeneticElement | null) => {
-  const [viewData, setViewData] = useAtom(getViewDataAtom(view, gene))
+export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticElement | null) {
+  const [viewData, setViewData] = useAtom(getViewDataAtom<T, Action>(view, gene))
 
   React.useEffect(() => {
     ;(async () => {
       if (viewData.loading || viewData.activeData) return
       setViewData((viewData) => ({ ...viewData, loading: true }))
       try {
-        const loader =  gene?.species.api.loaders[view.id] ?? view.getInitialData
+        const loader = gene?.species.api.loaders[view.id] ?? view.getInitialData
         if (!loader) {
           throw ViewDataError.UNSUPPORTED_GENE
         }
-        const data = await loader(gene, (amount) => {
+        // Guaranteed to work even though types are broken because if gene is null then view.getInitialData is always used
+        const data = await loader(gene as GeneticElement, (amount) => {
           setViewData((viewData) => ({ ...viewData, loadingAmount: amount }))
       })
         setViewData((viewData) => ({ ...viewData, activeData: data }))
@@ -108,5 +108,13 @@ export const useViewData = (view: View, gene: GeneticElement | null) => {
     })()
   }, [view, gene])
 
-  return viewData
+  return {
+    ...viewData, 
+    dispatch(action: Action) { 
+        setViewData(data => (data.activeData ? {
+          ...data, 
+          activeData: view.reducer ? view.reducer(data.activeData, action) : viewData.activeData
+        } : data))
+    }
+  }
 }

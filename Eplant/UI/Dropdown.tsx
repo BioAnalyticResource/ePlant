@@ -11,7 +11,7 @@ import { KeyboardArrowDown } from '@mui/icons-material'
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
-    elevation={0}
+    elevation={1}
     anchorOrigin={{
       vertical: 'bottom',
       horizontal: 'right',
@@ -75,9 +75,7 @@ export default function Dropdown({
         onClick={handleClick}
         endIcon={<KeyboardArrowDown />}
         {...buttonProps}
-      >
-        Options
-      </Button>
+      ></Button>
       <StyledMenu
         id={menuId}
         MenuListProps={{

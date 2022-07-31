@@ -84,16 +84,18 @@ export const UnsupportedGene = () => {
 }
 export const Default = () => {
   return (
-    <ViewContainer
-      view={
-        {
-          ...GeneInfoView,
-          getInitialData: async () => exampleData.activeData,
-        } as View<typeof exampleData.activeData>
-      }
-      setView={() => {}}
-      gene={geneticElement}
-    ></ViewContainer>
+    <Config.Provider value={defaultConfig}>
+      <ViewContainer
+        view={
+          {
+            ...GeneInfoView,
+            getInitialData: async () => exampleData.activeData,
+          } as View<typeof exampleData.activeData>
+        }
+        setView={() => {}}
+        gene={geneticElement}
+      ></ViewContainer>
+    </Config.Provider>
   )
 }
 
