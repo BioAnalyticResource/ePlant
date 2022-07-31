@@ -1,17 +1,20 @@
-import FallbackView from './views/FallbackView'
-import GeneInfoView from './views/GeneInfoView'
-import GetStartedView from './views/GetStartedView'
-import PublicationViewer from './views/PublicationViewer'
+import React from 'react'
+import { type View } from './views/View'
 
-// Views that aren't associated with individual genes
-export const genericViews = [GetStartedView, FallbackView] as const
+export type EplantConfig = {
+  readonly genericViews: View[]
+  readonly userViews: View[]
+  readonly views: View[]
+  readonly tabHeight: number
+  readonly rootPath: string
+}
 
-// List of views that a user can select from
-// Can contain views from the genericViews list too
-export const userViews = [GeneInfoView, PublicationViewer] as const
+export const Config = React.createContext<EplantConfig>({
+  genericViews: [],
+  userViews: [],
+  views: [],
+  tabHeight: 48,
+  rootPath: ''
+})
 
-// List of views that are used to lookup a view by id
-export const views = [...genericViews, ...userViews] as const
-
-export const tabHeight = 48
-export const rootPath = ''
+export const useConfig = () => React.useContext(Config)

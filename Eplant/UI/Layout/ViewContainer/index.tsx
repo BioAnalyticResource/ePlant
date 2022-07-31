@@ -1,4 +1,4 @@
-import { userViews, views, genericViews } from '@eplant/config'
+import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { usePrinting, useViewID } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
@@ -23,6 +23,7 @@ import Box, { BoxProps } from '@mui/material/Box'
 import * as React from 'react'
 import { useViewData, View } from '../../../views/View'
 import LoadingPage from './LoadingPage'
+import ViewOptions from './ViewOptions'
 
 /**
  * Wraps a view in a container that provides a toolbar and a download button. It also manages loading the view's data.
@@ -51,6 +52,8 @@ export function ViewContainer({
   const [viewingCitations, setViewingCitations] = React.useState(false)
 
   const viewId = useViewID()
+
+  const { userViews, views, genericViews } = useConfig()
 
   React.useEffect(() => {
     if (printing == viewId) {
@@ -90,7 +93,11 @@ export function ViewContainer({
       >
         <Toolbar style={{ gap: '8px' }}>
           {/* View selector dropdown */}
-          <Box sx={{ flexGrow: 1 }}>
+          <Stack
+            direction="row"
+            gap={2}
+            sx={{ flexGrow: 1, height: '100%', alignItems: 'center' }}
+          >
             <FormControl variant="standard">
               <InputLabel id={idLabel}>View</InputLabel>
               <Select
@@ -118,7 +125,8 @@ export function ViewContainer({
                 ))}
               </Select>
             </FormControl>
-          </Box>
+            <ViewOptions gene={gene} view={view} />
+          </Stack>
           <Button
             variant="outlined"
             disabled={loading}

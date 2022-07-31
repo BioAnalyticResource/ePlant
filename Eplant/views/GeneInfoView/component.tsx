@@ -1,16 +1,13 @@
-import { userViews } from '@eplant/config'
+import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import { usePanesDispatch, useViewID, usePanes } from '@eplant/state'
-import GeneHeader from '@eplant/UI/GeneHeader'
-import { Info } from '@mui/icons-material'
+import { usePanesDispatch, useViewID } from '@eplant/state'
 import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
-import Button, { ButtonProps } from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import _ from 'lodash'
 import React from 'react'
-import { GeneInfoViewData } from '.'
+import { GeneInfoViewData } from './data'
 import { useViewData, View, ViewProps } from '../View'
 import { GeneModel } from './GeneModel'
 
@@ -212,6 +209,7 @@ export default function GeneInfoViewer({
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   const id = useViewID()
   const panesDispatch = usePanesDispatch()
+  const { userViews } = useConfig()
   return (
     <Stack direction="column" gap={'16px'} flex={1}>
       <div style={{ whiteSpace: 'nowrap' }}>

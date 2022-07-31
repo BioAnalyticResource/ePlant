@@ -19,14 +19,12 @@ module.exports = {
   },
   // Add tsconfig-paths to the webpack config
   webpackFinal: (config) => {
-    config.resolve.modules.push(process.cwd() + '/node_modules')
-    config.resolve.modules.push(process.cwd() + '/src')
-
     config.resolve.plugins = [
       new TsconfigPathsPlugin({
         configFile: path.resolve(__dirname, '../tsconfig.json'),
       }),
     ]
+    console.log(config)
 
     config.resolve.symlinks = false
     return config

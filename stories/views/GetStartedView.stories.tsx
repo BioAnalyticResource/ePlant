@@ -8,5 +8,5 @@ export default {
 } as ComponentMeta<typeof GetStartedView.component>
 
 export const Default = () => (
-  <GetStartedView.component activeData={{}} geneticElement={null} />
+  <GetStartedView.component activeData={undefined} geneticElement={null} />
 )

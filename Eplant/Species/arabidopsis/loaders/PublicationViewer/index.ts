@@ -6,7 +6,7 @@ import {
 } from '@eplant/views/PublicationViewer/types'
 import { View } from '@eplant/views/View'
 
-const loader: View<PublicationViewerData>['loadData'] = async (
+const loader: View<PublicationViewerData>['getInitialData'] = async (
   geneticElement,
   loadEvent
 ) => {

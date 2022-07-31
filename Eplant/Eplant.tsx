@@ -12,7 +12,7 @@ import {
 } from 'flexlayout-react'
 import * as React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { userViews, views, tabHeight, rootPath } from './config'
+import { useConfig } from './config'
 import GeneticElement from './GeneticElement'
 import {
   useGeneticElements,
@@ -61,6 +61,7 @@ function ViewTab(props: {
   const view = panes[props.id]
   const gene = genes.find((g) => g.id == view?.activeGene) ?? null
   // If there is no gene selected choose one
+  const { userViews, views } = useConfig()
   const v = views.find((v) => v.id == view?.view) ?? FallbackView
 
   React.useEffect(() => {
@@ -133,6 +134,7 @@ const factory: (
 }
 
 export default function Eplant() {
+  const { rootPath } = useConfig()
   return (
     <Routes>
       <Route path={rootPath}>
@@ -151,6 +153,7 @@ function DirectPane() {
   const id = (window as unknown as { id: string }).id
   const theme = useTheme()
   const [activeId] = useActiveId()
+  const { tabHeight, views } = useConfig()
   React.useEffect(() => {
     updateColors(theme)
   }, [theme])
@@ -227,6 +230,7 @@ function EplantLayout() {
   const layout = React.useRef<Layout>(null)
 
   const [activeId, setActiveId] = useActiveId()
+  const { tabHeight } = useConfig()
   const [model] = useStateWithStorage(
     'flexlayout-model',
     FlexLayout.Model.fromJson({

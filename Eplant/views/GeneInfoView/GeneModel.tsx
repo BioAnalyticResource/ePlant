@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useTheme } from '@mui/material/styles'
 import { Stack, Tooltip, Typography } from '@mui/material'
-import { GeneFeature } from './'
+import { GeneFeature } from './data'
 
 type GeneModelProps = {
   feature: GeneFeature & { subfeatures: GeneFeature[] }
