@@ -1,5 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
-import Species from '@eplant/Species'
+import { Species } from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
