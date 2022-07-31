@@ -9,7 +9,7 @@ import { GeneInfoViewData } from './data'
  * Show information about a gene, including its sequence and features.
  */
 const GeneInfoView: View<GeneInfoViewData> = {
-  name: 'Gene info',
+  name: 'Gene info viewer',
   id: 'gene-info',
   //TODO: figure out how to make this a component lazy
   // component: React.lazy(() => import('./component')),

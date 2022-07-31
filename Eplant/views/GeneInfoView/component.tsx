@@ -213,7 +213,9 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   return (
     <Stack direction="column" gap={'16px'} flex={1}>
       <div style={{ whiteSpace: 'nowrap' }}>
-        <SecondaryText>Available views</SecondaryText>
+        <Typography variant="body2" color="secondary">
+          Available views
+        </Typography>
       </div>
       {userViews.map((view) => (
         <ViewButton
@@ -221,8 +223,23 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
           sx={{
             textAlign: 'left',
             justifyContent: 'flex-start',
+            color: 'secondary.contrastText',
+            textTransform: 'none',
           }}
-          startIcon={view.icon ? <view.icon /> : undefined}
+          startIcon={
+            view.icon ? (
+              <div
+                style={{
+                  transform: 'scale(1.2)',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  display: 'flex',
+                }}
+              >
+                <view.icon />
+              </div>
+            ) : undefined
+          }
           key={view.name}
           view={view}
           geneticElement={geneticElement}

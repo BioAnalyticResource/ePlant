@@ -218,7 +218,8 @@ export function Collection({
               sx={(theme) => ({
                 width: '24px',
                 height: '24px',
-                color: theme.palette.text.secondary,
+                opacity: hover ? '1' : '0',
+                //color: theme.palette.text.secondary,
               })}
             ></OptionsButton>
           )}

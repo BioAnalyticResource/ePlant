@@ -39,7 +39,7 @@ export default function NotSupported(props: {
           ? `Cannot view "${props.view.name.toLowerCase()}" for ${
               props.geneticElement.id
             }`
-          : `Cannot view "${props.view.name.toLowerCase()}" without a selected gene.`}
+          : `The "${props.view.name.toLowerCase()}" requires a gene to be selected`}
       </Typography>
       <Typography
         variant="body1"
@@ -49,7 +49,7 @@ export default function NotSupported(props: {
       >
         {props.geneticElement
           ? 'This is usually because there is no data for this gene.'
-          : 'This is usually because you need to select a gene.'}
+          : ''}
       </Typography>
       <Illustration
         color={theme.palette.divider}

@@ -68,7 +68,7 @@ export function ViewContainer({
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
         <DialogTitle>
           <Typography variant="h6">
-            Citation and experiment information for $quot;{view.name}$quot;
+            Citation and experiment information for &quot;{view.name}&quot;
           </Typography>
         </DialogTitle>
         <DialogContent>
@@ -109,6 +109,13 @@ export function ViewContainer({
                   const v = views.find((v) => v.id == e?.target?.value)
                   if (v) setView(v)
                 }}
+                inputProps={{
+                  sx: {
+                    ':focus': {
+                      backgroundColor: 'transparent',
+                    },
+                  },
+                }}
               >
                 {views.map((v, i) => (
                   <MenuItem
@@ -128,7 +135,10 @@ export function ViewContainer({
             <ViewOptions gene={gene} view={view} />
           </Stack>
           <Button
-            variant="outlined"
+            variant="text"
+            sx={{
+              color: 'secondary.contrastText',
+            }}
             disabled={loading}
             color="secondary"
             onClick={() => {
@@ -138,7 +148,10 @@ export function ViewContainer({
             Get citations
           </Button>
           <Button
-            variant="outlined"
+            variant="text"
+            sx={{
+              color: 'secondary.contrastText',
+            }}
             disabled={loading}
             color="secondary"
             onClick={() => {

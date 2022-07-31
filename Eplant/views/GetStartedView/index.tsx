@@ -1,10 +1,10 @@
 import React from 'react'
 import { View } from '../View'
 
-const GetStartedView: View<void> = {
+const GetStartedView: View = {
   name: 'Get started',
   component: () => <div>Get started</div>,
-  getInitialData: async () => {},
+  getInitialData: async () => ({}),
   id: 'get-started',
 }
 

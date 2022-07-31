@@ -15,8 +15,11 @@ export default function ViewOptions<T, A>({
   if (!view.actions) return <></>
   return (
     <Dropdown
-      variant="outlined"
+      variant="text"
       color="secondary"
+      sx={{
+        color: 'secondary.contrastText',
+      }}
       disabled={loading}
       options={
         activeData

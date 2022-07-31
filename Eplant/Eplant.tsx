@@ -1,5 +1,5 @@
 import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import { Add, CallMade, Close } from '@mui/icons-material'
+import { Add, CallMade, CallReceived, Close } from '@mui/icons-material'
 import { Box, Container, Drawer, DrawerProps, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as FlexLayout from 'flexlayout-react'
@@ -55,7 +55,7 @@ function ViewTab(props: {
   }
   id: string
 }) {
-  const [, setActiveId] = useActiveId()
+  const [activeId, setActiveId] = useActiveId()
   const [panes, panesDispatch] = usePanes()
   const genes = useGeneticElements()[0]
   const view = panes[props.id]
@@ -77,6 +77,17 @@ function ViewTab(props: {
       )
     }
   })
+
+  // If no gene is selected and there are available genes, select one
+  React.useEffect(() => {
+    if (props.id == activeId && !gene && genes.length > 0) {
+      panesDispatch({
+        type: 'set-active-gene',
+        id: props.id,
+        activeGene: genes[0].id,
+      })
+    }
+  }, [gene, genes, activeId])
 
   if (!view) {
     // TODO: Better fallback
@@ -149,7 +160,7 @@ export default function Eplant() {
  * Directly render a pane based on its id
  */
 function DirectPane() {
-  const [panes] = usePanes()
+  const [panes, panesDispatch] = usePanes()
   const id = (window as unknown as { id: string }).id
   const theme = useTheme()
   const [activeId] = useActiveId()
@@ -157,6 +168,11 @@ function DirectPane() {
   React.useEffect(() => {
     updateColors(theme)
   }, [theme])
+
+  React.useEffect(() => {
+    if (!panes[id].popout) window.close()
+  }, [panes])
+
   return (
     <div className="flexlayout__layout">
       <Box
@@ -175,6 +191,14 @@ function DirectPane() {
             {views.find((v) => v.id == panes[id]?.view)?.name}
           </div>
         </div>
+        <div style={{ flexGrow: 1 }}></div>
+        <IconButton
+          onClick={() => {
+            panesDispatch({ type: 'close-popout', id })
+          }}
+        >
+          <CallReceived />
+        </IconButton>
       </Box>
       <ViewTab id={id} />
     </div>
@@ -238,6 +262,7 @@ function EplantLayout() {
         tabSetTabStripHeight: tabHeight,
         tabEnableRename: false,
         tabEnableClose: false,
+        tabSetEnableMaximize: false,
       },
       borders: [],
       layout: {
