@@ -8,7 +8,8 @@
     "storybook": "start-storybook -p 6006",
     "start": "vite serve",
     "build": "vite build",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "postinstall": "cd ./node_modules/flexlayout-react && npm install --legacy-peer-deps && npm run build:commonjs"
   },
   "author": "Alex Waese-Perlman",
   "license": "undecided",
