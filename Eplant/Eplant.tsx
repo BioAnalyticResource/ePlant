@@ -11,7 +11,7 @@ import {
   TabSetNode,
 } from 'flexlayout-react'
 import * as React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useParams, useSearchParams } from 'react-router-dom'
 import { useConfig } from './config'
 import GeneticElement from './GeneticElement'
 import {
@@ -161,7 +161,8 @@ export default function Eplant() {
  */
 function DirectPane() {
   const [panes, panesDispatch] = usePanes()
-  const id = (window as unknown as { id: string }).id
+  const params = useSearchParams()[0]
+  const id = params.get('id') as string
   const theme = useTheme()
   const [activeId] = useActiveId()
   const { tabHeight, views } = useConfig()
@@ -303,20 +304,16 @@ function EplantLayout() {
   React.useEffect(() => {
     for (const id in panes) {
       if (panes[id]?.popout && !popouts[id]) {
-        const pane = window.open(
-          (window.location.pathname + '/pane').replace('//', '/'),
-          id,
-          'popup,width=800,height=600'
-        )
+        const url =
+          (window.location.pathname + '/pane').replace('//', '/') + '?id=' + id
+        const pane = window.open(url, id, 'popup,width=800,height=600')
         if (pane) {
           setPopouts((popouts) => {
             return { ...popouts, [id]: pane }
           })
           model.doAction(Actions.deleteTab(id))
-          ;(pane as unknown as { id: string }).id = id
-          pane.onload = () => {
-            pane.onbeforeunload = () => {
-              console.log('adding')
+          const listener = () => {
+            pane.onunload = () => {
               panesDispatch({ type: 'close-popout', id: id })
               setPopouts((popouts) => {
                 const { [id]: _, ...rest } = popouts
@@ -324,6 +321,7 @@ function EplantLayout() {
               })
             }
           }
+          pane.onload = listener
         }
       }
     }

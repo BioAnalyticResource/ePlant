@@ -371,8 +371,6 @@ export function Collections(props: {
           })
         }
         cols[0] = {
-          name: 'Collection 1',
-          open: true,
           ...cols[0],
           genes: (cols[0]?.genes ?? []).concat(
             genes.filter((g, i) => unincluded[i]).map((g) => g.id)

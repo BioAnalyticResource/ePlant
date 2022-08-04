@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableHead } from '@mui/material'
+import { Button, Table, TableBody, TableCell, TableHead } from '@mui/material'
 import React from 'react'
 import { View } from '../View'
 
@@ -24,6 +24,7 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
           </TableCell>
         </TableBody>
       </Table>
+      <Button onClick={() => localStorage.clear()}>Wipe localstorage</Button>
     </div>
   ),
   getInitialData: async () => ({
