@@ -15,7 +15,17 @@ type ViewAction<T, Action> = {
 }
 
 // T must be serializable/deserializable with JSON.stringify/JSON.parse
-export type View<T = any, Action = any> = {
+export class View<T = any, Action = any> {
+  constructor({ getInitialData, reducer, actions, component, icon, name, id, citation }: View<T, Action>) {
+    this.getInitialData = getInitialData
+    this.reducer = reducer
+    this.actions = actions
+    this.component = component
+    this.icon = icon
+    this.name = name
+    this.id = id
+    this.citation = citation
+  }
   // loadEvent should be called to update the view's loading bar.
   // The input is a float between 0 and 1 which represents the fraction of the data
   // that has currently loaded.

@@ -78,7 +78,13 @@ export function getColor(
     Math.log2(group.max / group.control)
   )
   const norm = Math.log2(value / group.control) / extremum
-  return mix(theme.palette.secondary.main, theme.palette.primary.main, norm)
+  return norm < 0
+    ? mix(
+        theme.palette.background.active,
+        theme.palette.cold.main,
+        Math.abs(norm)
+      )
+    : mix(theme.palette.background.active, theme.palette.hot.main, norm)
 }
 
 export function useStyles(id: string, data: EFPData['groups']) {

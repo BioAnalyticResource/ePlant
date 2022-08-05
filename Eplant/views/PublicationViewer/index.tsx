@@ -6,7 +6,7 @@ import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
 import { DocumentScanner } from '@mui/icons-material'
 
-const PublicationViewer: View<PublicationViewerData> = {
+const PublicationViewer: View<PublicationViewerData> = new View({
   name: 'Publication Viewer',
   id: 'publication-viewer',
   component({ geneticElement, activeData }: ViewProps<PublicationViewerData>) {
@@ -43,6 +43,6 @@ const PublicationViewer: View<PublicationViewerData> = {
       </div>
     )
   },
-}
+})
 
 export default PublicationViewer
