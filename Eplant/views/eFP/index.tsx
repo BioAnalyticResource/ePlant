@@ -7,21 +7,13 @@ import { EFPData, EFPAction, EFPId } from './types'
 import DOMPurify from 'dompurify'
 import _ from 'lodash'
 import { useViewID } from '@eplant/state'
-export default class EFP {
+export default class EFP implements View {
   constructor(
     public name: string,
     public id: EFPId,
     public svgURL: string,
     public xmlURL: string
   ) {}
-  getView(): View<EFPData, EFPAction> {
-    return {
-      id: this.id,
-      name: this.name,
-      component: this.component.bind(this),
-      getInitialData: this.getInitialData.bind(this),
-    }
-  }
   //TODO: Reimplement this once the new BAR API is ready
   async getInitialData(
     gene: GeneticElement | null,
