@@ -10,6 +10,7 @@ export type EFPData = {
     mean: number
     std: number
   }[]
+  renderAsThumbnail: boolean
 }
 
 export type EFPSVG = { svg: string; xml: string; id: EFPId }

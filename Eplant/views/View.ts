@@ -61,6 +61,24 @@ const viewDataStorage = {
   removeItem(key: string) {
     localStorage.removeItem(key)
   },
+  subscribe(key: string, change: (value: ViewDataType<any>) => void) {
+    const callback = (event: StorageEvent) => {
+      console.log(event)
+      if (event.key === key && event.newValue) {
+        change(JSON.parse(event.newValue))
+      }
+      else if (event.key == key) {
+        change({
+          activeData: undefined,
+          loading: false,
+          error: null,
+          loadingAmount: 0,
+        })
+      }
+    }
+    window.addEventListener('storage', callback)
+    return () => window.removeEventListener('storage', callback)
+  }
 }
 
 function getViewDataAtom<T, A>(view: View<T, A>, gene: GeneticElement | null): ReturnType<typeof atomWithStorage<ViewDataType<T>>> {
@@ -98,6 +116,7 @@ export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticEleme
         setViewData((viewData) => ({ ...viewData, activeData: data }))
       } catch (e) {
         if (e instanceof Error) {
+          console.log(e)
           setViewData((viewData) => ({ ...viewData, error: ViewDataError.FAILED_TO_LOAD }))
         }
         else {
@@ -106,7 +125,7 @@ export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticEleme
       }
       setViewData((viewData) => ({ ...viewData, loading: false }))
     })()
-  }, [view, gene])
+  }, [view, gene, viewData])
 
   return {
     ...viewData, 

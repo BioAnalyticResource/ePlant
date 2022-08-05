@@ -2,9 +2,8 @@ import GeneticElement from '@eplant/GeneticElement'
 import { CircularProgress } from '@mui/material'
 import React from 'react'
 import { View, ViewDataError, ViewProps } from '../View'
-import { useEFPSVG, getColor, useStyles } from './svg'
-import { EFPData, EFPAction, EFPId } from './types'
-import DOMPurify from 'dompurify'
+import { useEFPSVG, useStyles } from './svg'
+import { EFPData, EFPId } from './types'
 import _ from 'lodash'
 import { useViewID } from '@eplant/state'
 export default class EFP implements View {
@@ -15,12 +14,13 @@ export default class EFP implements View {
     public xmlURL: string
   ) {}
   //TODO: Reimplement this once the new BAR API is ready
-  async getInitialData(
+  getInitialData = async (
     gene: GeneticElement | null,
     loadEvent: (val: number) => void
-  ): Promise<EFPData> {
+  ): Promise<EFPData> => {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     const parser = new DOMParser()
+    console.log(this)
     const xml = await fetch(this.xmlURL).then(async (res) =>
       parser.parseFromString(await res.text(), 'text/xml')
     )
@@ -79,6 +79,7 @@ export default class EFP implements View {
     loadEvent(1)
     console.log(groups, data)
     const out: EFPData = {
+      renderAsThumbnail: false,
       groups: groups.map((group) => {
         const tissues = group.tissues.map((tissue) => ({
           name: tissue.name,
@@ -103,12 +104,17 @@ export default class EFP implements View {
     }
     return out
   }
-  component(props: ViewProps<EFPData>): JSX.Element {
-    const { view, loading } = useEFPSVG({
-      svgURL: this.svgURL,
-      xmlURL: this.xmlURL,
-      id: this.id,
-    })
+  component = (props: ViewProps<EFPData>): JSX.Element => {
+    const { view, loading } = useEFPSVG(
+      {
+        svgURL: this.svgURL,
+        xmlURL: this.xmlURL,
+        id: this.id,
+      },
+      {
+        showText: !props.activeData.renderAsThumbnail,
+      }
+    )
 
     const { svg } = view ?? {}
     const id = useViewID()
@@ -124,16 +130,14 @@ export default class EFP implements View {
 
     if (!svg) return <CircularProgress />
     return (
-      <div>
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-          }}
-          className={`svg-container-${id}`}
-          dangerouslySetInnerHTML={{ __html: svg }}
-        />
-      </div>
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+        }}
+        className={`svg-container-${id}`}
+        dangerouslySetInnerHTML={{ __html: svg }}
+      />
     )
   }
 }

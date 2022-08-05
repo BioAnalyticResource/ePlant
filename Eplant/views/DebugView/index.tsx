@@ -8,6 +8,8 @@ import {
   TableRow,
 } from '@mui/material'
 import React from 'react'
+import EFPPreview from '../eFP/EFPPreview'
+import { AtGenExpress } from '../TissueEFP'
 import { View } from '../View'
 
 type DebugViewData = {
@@ -42,7 +44,27 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
             </TableRow>
           </TableBody>
         </Table>
-        <Button onClick={() => localStorage.clear()}>Wipe localstorage</Button>
+        <Button
+          onClick={() =>
+            Object.keys(localStorage).map(
+              (k) =>
+                k.startsWith('view-data-') &&
+                (localStorage.removeItem(k),
+                window.dispatchEvent(
+                  new StorageEvent('storage', { key: k, newValue: undefined })
+                ))
+            )
+          }
+        >
+          Wipe view data
+        </Button>
+        {props.geneticElement && (
+          <EFPPreview
+            gene={props.geneticElement}
+            view={AtGenExpress}
+            selected={false}
+          />
+        )}
       </div>
     )
   },

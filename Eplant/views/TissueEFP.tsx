@@ -1,6 +1,6 @@
 import EFP from './eFP/'
 
-export default new EFP(
+export const AtGenExpress = new EFP(
   'AtGenExpress',
   'atgenexpress',
   'https://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.svg',

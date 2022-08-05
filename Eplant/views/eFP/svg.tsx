@@ -13,11 +13,14 @@ const promises: {
   [key: EFPId]: Promise<[string, string]>
 } = {}
 
-export const useEFPSVG = (view: {
-  svgURL: string
-  xmlURL: string
-  id: string
-}): { view: { svg: string; xml: string } | null; loading: boolean } => {
+export const useEFPSVG = (
+  view: {
+    svgURL: string
+    xmlURL: string
+    id: string
+  },
+  options: { showText: boolean }
+): { view: { svg: string; xml: string } | null; loading: boolean } => {
   const [cache, setCache] = useAtom(cacheAtom)
   // If the svg is not cached the fetch it
   if (!cache[view.id] && !promises[view.id]) {
@@ -40,6 +43,9 @@ export const useEFPSVG = (view: {
     if (!cache[view.id]) return { view: null, loading: true }
     const parser = new DOMParser()
     const svg = parser.parseFromString(cache[view.id].svg, 'text/xml')
+    ;['width', 'height', 'x', 'y', 'id'].map((s) =>
+      svg.documentElement.removeAttribute(s)
+    )
     // Remove styling from all of the text tags
     for (const text of svg.getElementsByTagName('text')) {
       ;[
@@ -48,7 +54,9 @@ export const useEFPSVG = (view: {
         'stroke-width',
         'font-family',
         'stroke-miterlimit',
+        'display',
       ].map((s) => text.removeAttribute(s))
+      if (!options.showText) text.style.display = 'none'
     }
 
     // Replace all group ids with classes
