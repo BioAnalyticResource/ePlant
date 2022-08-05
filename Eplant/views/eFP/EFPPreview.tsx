@@ -24,7 +24,10 @@ export default function EFPPreview({
         border: `${selected ? 2 : 1}px solid`,
         padding: `${selected ? 3 : 4}px`,
         boxSizing: 'border-box',
-        alignItems: 'center',
+        position: 'relative',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        justifyContent: 'center',
         display: 'flex',
       }}
     >
@@ -37,10 +40,20 @@ export default function EFPPreview({
           variant="query"
         />
       ) : (
-        <view.component
-          activeData={{ ...activeData, renderAsThumbnail: true }}
-          geneticElement={gene}
-        />
+        <>
+          <view.component
+            activeData={{ ...activeData, renderAsThumbnail: true }}
+            geneticElement={gene}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+            }}
+          >
+            Max: {Math.round(Math.max(...activeData.groups.map((g) => g.max)))}
+          </div>
+        </>
       )}
     </Box>
   )

@@ -298,35 +298,6 @@ function EplantLayout() {
     else model.doAction(Actions.deselectTabset())
   }, [activeId, model])
 
-  const [popouts, setPopouts] = React.useState<Record<string, Window>>({})
-
-  // Open popouts for panes that are not visible and have the popout flag
-  React.useEffect(() => {
-    for (const id in panes) {
-      if (panes[id]?.popout && !popouts[id]) {
-        const url =
-          (window.location.pathname + '/pane').replace('//', '/') + '?id=' + id
-        const pane = window.open(url, id, 'popup,width=800,height=600')
-        if (pane) {
-          setPopouts((popouts) => {
-            return { ...popouts, [id]: pane }
-          })
-          model.doAction(Actions.deleteTab(id))
-          const listener = () => {
-            pane.onunload = () => {
-              panesDispatch({ type: 'close-popout', id: id })
-              setPopouts((popouts) => {
-                const { [id]: _, ...rest } = popouts
-                return rest
-              })
-            }
-          }
-          pane.onload = listener
-        }
-      }
-    }
-  }, [popouts, panes])
-
   // Open tabs for panes that are not visible and do not have the popout flag
   React.useEffect(() => {
     for (const id in panes) {
@@ -437,6 +408,12 @@ function EplantLayout() {
       type: 'make-popout',
       id,
     })
+    const url =
+      (window.location.pathname + '/pane').replace('//', '/') + '?id=' + id
+    const pane = window.open(url, id, 'popup,width=800,height=600')
+    if (pane) {
+      model.doAction(Actions.deleteTab(id))
+    }
   }
 
   function onRenderTabSet(
