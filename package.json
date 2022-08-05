@@ -8,7 +8,8 @@
     "storybook": "start-storybook -p 6006",
     "start": "vite serve",
     "build": "vite build",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "postinstall": "cd ./node_modules/flexlayout-react && npm install --legacy-peer-deps && npm run build:commonjs"
   },
   "author": "Alex Waese-Perlman",
   "license": "undecided",
@@ -36,6 +37,7 @@
     "babel-loader": "^8.2.5",
     "chromatic": "^6.5.6",
     "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest": "^28.1.1",
@@ -46,6 +48,7 @@
     "tsconfig-paths": "^4.0.0",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typescript": "^4.7.3",
+    "vite-plugin-eslint": "^1.7.0",
     "vite-tsconfig-paths": "^3.5.0"
   },
   "dependencies": {
@@ -60,7 +63,7 @@
     "@mui/material": "^5.8.4",
     "@mui/x-data-grid": "^5.12.3",
     "axios": "^0.27.2",
-    "flexlayout-react": "^0.7.3",
+    "flexlayout-react": "https://github.com/alexwaeseperlman/FlexLayout/tarball/master",
     "jotai": "^1.7.2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",

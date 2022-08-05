@@ -61,7 +61,7 @@
 }
 @media (hover: hover) {
   .flexlayout__splitter:hover {
-    background-color: var(--color-splitter-hover);
+    /*background-color: var(--color-splitter-hover);*/
     transition: background-color ease-in 0.1s;
     transition-delay: 0.05s;
   }

@@ -1,15 +1,12 @@
 import { Link, Tab, Tabs } from '@mui/material'
 import * as React from 'react'
-import { View, ViewDataError, ViewProps } from '../View'
-import GeneHeader from '@eplant/UI/GeneHeader'
+import { View, ViewProps } from '../View'
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
 import { DocumentScanner } from '@mui/icons-material'
-import arabidopsis from '@eplant/Species/arabidopsis'
-import Species from '@eplant/Species'
 
-export const PublicationViewer: View<PublicationViewerData> = {
+const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication Viewer',
   id: 'publication-viewer',
   component({ geneticElement, activeData }: ViewProps<PublicationViewerData>) {
@@ -47,3 +44,5 @@ export const PublicationViewer: View<PublicationViewerData> = {
     )
   },
 }
+
+export default PublicationViewer

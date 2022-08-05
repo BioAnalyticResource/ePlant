@@ -1,5 +1,5 @@
 import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import { Add } from '@mui/icons-material'
+import { Add, CallMade, CallReceived, Close } from '@mui/icons-material'
 import { Box, Container, Drawer, DrawerProps, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as FlexLayout from 'flexlayout-react'
@@ -11,22 +11,21 @@ import {
   TabSetNode,
 } from 'flexlayout-react'
 import * as React from 'react'
-import { Route, Routes, useParams, useRoutes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
+import { useConfig } from './config'
 import GeneticElement from './GeneticElement'
-import Species from './Species'
 import {
   useGeneticElements,
   usePanes,
-  useSetPersist,
-  useSetDarkMode,
-  useViews,
   ViewIDContext,
-  useSetPanes,
+  useActiveId,
+  getPaneName,
 } from './state'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import { LeftNav } from './UI/LeftNav'
 import FallbackView from './views/FallbackView'
+import { Theme } from '@mui/system'
 
 // TODO: Make this drawer support opening/closing on mobile
 
@@ -42,7 +41,7 @@ function ResponsiveDrawer(props: DrawerProps) {
   )
 }
 
-export type EplantProps = {}
+export type EplantProps = Record<string, never>
 
 /**
  * Rendered in each tab. Contains a view container.
@@ -56,14 +55,14 @@ function ViewTab(props: {
   }
   id: string
 }) {
-  const [panes, setPanes] = usePanes()
-  const userViews = useViews()
+  const [activeId, setActiveId] = useActiveId()
+  const [panes, panesDispatch] = usePanes()
   const genes = useGeneticElements()[0]
   const view = panes[props.id]
   const gene = genes.find((g) => g.id == view?.activeGene) ?? null
-
   // If there is no gene selected choose one
-  const v = userViews.find((v) => v.id == view?.view) ?? FallbackView
+  const { userViews, views } = useConfig()
+  const v = views.find((v) => v.id == view?.view) ?? FallbackView
 
   React.useEffect(() => {
     // Only include the gene name in the tab name if a gene is selected and this view belongs to that gene
@@ -79,6 +78,17 @@ function ViewTab(props: {
     }
   })
 
+  // If no gene is selected and there are available genes, select one
+  React.useEffect(() => {
+    if (props.id == activeId && !gene && genes.length > 0) {
+      panesDispatch({
+        type: 'set-active-gene',
+        id: props.id,
+        activeGene: genes[0].id,
+      })
+    }
+  }, [gene, genes, activeId])
+
   if (!view) {
     // TODO: Better fallback
     return <div>Uh oh</div>
@@ -86,6 +96,7 @@ function ViewTab(props: {
   return (
     <ViewIDContext.Provider value={props.id}>
       <ViewContainer
+        onClick={() => setActiveId(props.id)}
         sx={{
           width: '100%',
           height: '100%',
@@ -95,14 +106,11 @@ function ViewTab(props: {
         view={v}
         gene={gene ?? null}
         setView={(newView) => {
-          setPanes((views) => ({
-            ...views,
-            [props.id]: {
-              activeGene: null,
-              ...views[props.id],
-              view: newView.id,
-            },
-          }))
+          panesDispatch({
+            type: 'set-view',
+            id: props.id,
+            view: newView.id,
+          })
         }}
       />
     </ViewIDContext.Provider>
@@ -137,53 +145,64 @@ const factory: (
 }
 
 export default function Eplant() {
+  const { rootPath } = useConfig()
   return (
     <Routes>
-      <Route path="/">
+      <Route path={rootPath}>
         <Route index element={<MainEplant />} />
-        <Route path="/view">
-          <Route path=":gene" element={<DirectView />}>
-            <Route path=":view" element={<DirectView />} />
-          </Route>
-        </Route>
-        {/* gene-id takes the form {species}.{gene} */}
+        <Route path="pane" element={<DirectPane />} />
       </Route>
     </Routes>
   )
 }
 
 /**
- * Directly render a ViewContainer
- * @returns
+ * Directly render a pane based on its id
  */
-function DirectView() {
-  const params = useParams()
-  const setPanes = useSetPanes()
-  const [genes, setGenes] = useGeneticElements()
-  const setPersist = useSetPersist()
+function DirectPane() {
+  const [panes, panesDispatch] = usePanes()
+  const id = (window as unknown as { id: string }).id
+  const theme = useTheme()
+  const [activeId] = useActiveId()
+  const { tabHeight, views } = useConfig()
   React.useEffect(() => {
-    setPersist(false)
-  })
+    updateColors(theme)
+  }, [theme])
+
   React.useEffect(() => {
-    ;(async () => {
-      const view = params.view ?? 'get-started'
-      const [species, geneSearch] = (params.gene as string).split('.') as [
-        string,
-        string
-      ]
-      const gene = await Species.getGene(species, geneSearch)
-      if (gene && !genes.some((g) => g.id == gene.id))
-        setGenes([...genes, gene])
-      setPanes((views) => ({
-        ...views,
-        ['direct']: {
-          view,
-          activeGene: gene?.id ?? null,
-        },
-      }))
-    })()
-  }, [params.gene, params.view])
-  return <ViewTab id="direct" />
+    if (!panes[id].popout) window.close()
+  }, [panes])
+
+  return (
+    <div className="flexlayout__layout">
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          bgcolor: 'background.main',
+          height: `${tabHeight}px`,
+        }}
+        className={id == activeId ? 'flexlayout__tabset-selected' : ''}
+      >
+        <div className="flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected">
+          <div className="flexlayout__tab-content">
+            {panes[id]?.activeGene ? panes[id]?.activeGene + ' - ' : ''}
+            {views.find((v) => v.id == panes[id]?.view)?.name}
+          </div>
+        </div>
+        <div style={{ flexGrow: 1 }}></div>
+        <IconButton
+          onClick={() => {
+            panesDispatch({ type: 'close-popout', id })
+          }}
+        >
+          <CallReceived />
+        </IconButton>
+      </Box>
+      <ViewTab id={id} />
+    </div>
+  )
 }
 
 /**
@@ -191,11 +210,8 @@ function DirectView() {
  * @returns {JSX.Element} The rendered Eplant component
  */
 export function MainEplant() {
-  const [activeId, setActiveId] = useStateWithStorage<string>(
-    'eplant-active-id',
-    ''
-  )
-  const [views, setViews] = usePanes()
+  const [activeId] = useActiveId()
+  const [panes, panesDispatch] = usePanes()
   //TODO: Break into more components to prevent unnecessary rerendering
   return (
     <>
@@ -203,9 +219,9 @@ export function MainEplant() {
         variant="persistent"
         open={true}
         PaperProps={{
-          sx: (theme) => ({
+          sx: {
             border: 'none',
-          }),
+          },
         }}
       >
         <Container
@@ -219,63 +235,108 @@ export function MainEplant() {
         >
           <LeftNav
             onSelectGene={(gene: GeneticElement) =>
-              setViews((views) => ({
-                ...views,
-                [activeId]: {
-                  view: 'get-started',
-                  ...views[activeId],
-                  activeGene: gene.id,
-                },
-              }))
+              panesDispatch({
+                type: 'set-active-gene',
+                id: activeId,
+                activeGene: gene.id,
+              })
             }
-            selectedGene={views[activeId ?? '']?.activeGene ?? undefined}
+            selectedGene={panes[activeId ?? '']?.activeGene ?? undefined}
           />
         </Container>
       </ResponsiveDrawer>
-      <EplantLayout setActiveId={setActiveId} />
+      <EplantLayout />
     </>
   )
 }
-function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
-  const [views, setViews] = usePanes()
+function EplantLayout() {
+  const [panes, panesDispatch] = usePanes()
   const layout = React.useRef<Layout>(null)
 
-  const [model, setModel] = React.useState(
-    localStorage.getItem('flexlayout-model')
-      ? FlexLayout.Model.fromJson(
-          JSON.parse(localStorage.getItem('flexlayout-model') as string)
-        )
-      : FlexLayout.Model.fromJson({
-          global: {
-            tabSetTabStripHeight: 48,
-            //TODO: Make tab popout work, currently styles are messed up when copied to the popout
-            tabEnableFloat: false,
-            tabEnableRename: false,
-          },
-          borders: [],
-          layout: {
-            type: 'row',
-            weight: 100,
+  const [activeId, setActiveId] = useActiveId()
+  const { tabHeight } = useConfig()
+  const [model] = useStateWithStorage(
+    'flexlayout-model',
+    FlexLayout.Model.fromJson({
+      global: {
+        tabSetTabStripHeight: tabHeight,
+        tabEnableRename: false,
+        tabEnableClose: false,
+        tabSetEnableMaximize: false,
+      },
+      borders: [],
+      layout: {
+        type: 'row',
+        weight: 100,
+        children: [
+          {
+            type: 'tabset',
+            active: true,
             children: [
               {
-                type: 'tabset',
-                active: true,
-                children: [
-                  {
-                    type: 'tab',
-                    id: 'default',
-                  },
-                ],
+                type: 'tab',
+                id: 'default',
               },
             ],
           },
-        })
+        ],
+      },
+    }),
+    (m) => JSON.stringify(m.toJson()),
+    (s) => FlexLayout.Model.fromJson(JSON.parse(s))
   )
   const theme = useTheme()
 
   React.useEffect(() => {
-    updateColors()
-  }, [theme, layout.current])
+    updateColors(theme)
+  }, [theme])
+
+  // Update the model when the activeId changes
+  React.useEffect(() => {
+    if (model.getNodeById(activeId)) model.doAction(Actions.selectTab(activeId))
+    else model.doAction(Actions.deselectTabset())
+  }, [activeId, model])
+
+  const [popouts, setPopouts] = React.useState<Record<string, Window>>({})
+
+  // Open popouts for panes that are not visible and have the popout flag
+  React.useEffect(() => {
+    for (const id in panes) {
+      if (panes[id]?.popout && !popouts[id]) {
+        const pane = window.open(
+          (window.location.pathname + '/pane').replace('//', '/'),
+          id,
+          'popup,width=800,height=600'
+        )
+        if (pane) {
+          setPopouts((popouts) => {
+            return { ...popouts, [id]: pane }
+          })
+          model.doAction(Actions.deleteTab(id))
+          ;(pane as unknown as { id: string }).id = id
+          pane.onload = () => {
+            pane.onbeforeunload = () => {
+              console.log('adding')
+              panesDispatch({ type: 'close-popout', id: id })
+              setPopouts((popouts) => {
+                const { [id]: _, ...rest } = popouts
+                return rest
+              })
+            }
+          }
+        }
+      }
+    }
+  }, [popouts, panes])
+
+  // Open tabs for panes that are not visible and do not have the popout flag
+  React.useEffect(() => {
+    for (const id in panes) {
+      if (!panes[id]?.popout && !model.getNodeById(id)) {
+        addTab({ tabId: id })
+      }
+    }
+  }, [panes, model])
 
   return (
     <Box
@@ -300,40 +361,72 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
         model={model}
         factory={(node) => factory(node, model)}
         onTabSetPlaceHolder={() => (
-          <TabsetPlaceholder addTab={() => addTab()} />
+          <TabsetPlaceholder addTab={() => addTab({})} />
         )}
         onModelChange={(newModel) => {
+          // Update the selected tab
           const newId = newModel
             .getActiveTabset()
             ?.getSelectedNode?.()
             ?.getId?.()
-          setActiveId(newId ?? '__none__')
+          if (newId) setActiveId(newId)
           localStorage.setItem(
             'flexlayout-model',
             JSON.stringify(newModel.toJson())
           )
         }}
         onRenderTabSet={onRenderTabSet}
+        onRenderTab={(node, renderValues) => {
+          renderValues.buttons = [
+            <IconButton
+              key="close"
+              // Why is this necessary?
+              // Idk, but flexlayout-react uses it for their close buttons
+              // And they don't work without it
+              onMouseDown={(e) => {
+                e.stopPropagation()
+              }}
+              onTouchStart={(e) => {
+                e.stopPropagation()
+              }}
+              onMouseUp={(e) => {
+                panesDispatch({ type: 'close', id: node.getId() })
+                model.doAction(Actions.deleteTab(node.getId()))
+              }}
+              size="small"
+            >
+              <Close />
+            </IconButton>,
+          ]
+        }}
       ></FlexLayout.Layout>
     </Box>
   )
-  function addTab(tabsetId?: string) {
+  function addTab({ tabsetId, tabId }: { tabsetId?: string; tabId?: string }) {
     if (!layout.current) return
-    const id = Math.random().toString(16).split('.')[1] as string
+
+    const id = tabId ?? (Math.random().toString(16).split('.')[1] as string)
     const activeTab = model.getActiveTabset()?.getSelectedNode?.()?.getId?.()
-    const activeGene = activeTab ? views[activeTab]?.activeGene ?? null : null
-    console.log(model.toJson())
-    setViews({
-      ...views,
-      [id]: {
-        activeGene: activeGene,
-        view: 'get-started',
-      },
-    })
+    const activeGene = activeTab ? panes[activeTab]?.activeGene ?? null : null
+    // Make a pane if a new id needs to be generated
+    // If the id is provided then assume that there already is a pane
+    if (!tabId) {
+      panesDispatch({
+        type: 'new',
+        id,
+        activeGene,
+      })
+    }
+
+    const name = panes[id] ? getPaneName(panes[id]) : 'Get started'
+
     layout.current.addTabToTabSet(
-      tabsetId ?? model.getActiveTabset()?.getId?.() ?? '',
+      tabsetId ??
+        model.getActiveTabset()?.getId?.() ??
+        model.getRoot().getChildren()[0]?.getId() ??
+        '',
       {
-        name: 'Get Started',
+        name: name,
         component: 'view',
         id,
         type: 'tab',
@@ -341,30 +434,10 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
     )
   }
 
-  function updateColors() {
-    if (!layout.current) return
-    console.log(theme)
-    ;(
-      Array.from(
-        document.getElementsByClassName('flexlayout__layout')
-      ) as HTMLDivElement[]
-    ).map((el) => {
-      el.style.setProperty('--color-text', theme.palette.text.primary)
-      el.style.setProperty(
-        '--color-background',
-        theme.palette.background.default
-      )
-      el.style.setProperty('--color-base', theme.palette.background.default)
-      el.style.setProperty('--color-primary', theme.palette.primary.main)
-      el.style.setProperty(
-        '--color-primary-light',
-        theme.palette.primary.pale ?? theme.palette.primary.main
-      )
-      el.style.setProperty('--color-1', theme.palette.background.default)
-      el.style.setProperty('--color-2', theme.palette.background.paper)
-      el.style.setProperty('--color-active', theme.palette.background.active)
-      el.style.setProperty('--color-6', theme.palette.background.active)
-      el.style.setProperty('--color-divider', theme.palette.divider)
+  function makePopout(id: string) {
+    panesDispatch({
+      type: 'make-popout',
+      id,
     })
   }
 
@@ -374,9 +447,45 @@ function EplantLayout({ setActiveId }: { setActiveId: (id: string) => void }) {
   ) {
     if (node.getChildren().length == 0) return
     renderValues.stickyButtons.push(
-      <IconButton onClick={() => addTab(node.getId())} size="small">
+      <IconButton
+        onClick={() => addTab({ tabsetId: node.getId() })}
+        size="small"
+      >
         <Add />
       </IconButton>
     )
+    renderValues.buttons.push(
+      <IconButton
+        onClick={() => {
+          const id = node.getSelectedNode()?.getId()
+          if (id) makePopout(id)
+        }}
+        size="small"
+      >
+        <CallMade />
+      </IconButton>
+    )
   }
+}
+
+function updateColors(theme: Theme) {
+  ;(
+    Array.from(
+      document.getElementsByClassName('flexlayout__layout')
+    ) as HTMLDivElement[]
+  ).map((el) => {
+    el.style.setProperty('--color-text', theme.palette.text.primary)
+    el.style.setProperty('--color-background', theme.palette.background.default)
+    el.style.setProperty('--color-base', theme.palette.background.default)
+    el.style.setProperty('--color-primary', theme.palette.primary.main)
+    el.style.setProperty(
+      '--color-primary-light',
+      theme.palette.primary.pale ?? theme.palette.primary.main
+    )
+    el.style.setProperty('--color-1', theme.palette.background.default)
+    el.style.setProperty('--color-2', theme.palette.background.paper)
+    el.style.setProperty('--color-active', theme.palette.background.active)
+    el.style.setProperty('--color-6', theme.palette.background.active)
+    el.style.setProperty('--color-divider', theme.palette.divider)
+  })
 }

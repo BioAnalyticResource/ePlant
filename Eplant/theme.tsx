@@ -18,6 +18,7 @@ export const light = createTheme({
     },
     secondary: {
       main: '#888',
+      contrastText: '#000',
     },
     background: {
       default: '#e0e0e0',
@@ -39,6 +40,7 @@ export const dark = createTheme({
     },
     secondary: {
       main: '#9e9e9e',
+      contrastText: '#fff',
     },
     background: {
       default: '#121212',
