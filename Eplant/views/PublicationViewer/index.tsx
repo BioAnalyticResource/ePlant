@@ -9,7 +9,10 @@ import { DocumentScanner } from '@mui/icons-material'
 const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication Viewer',
   id: 'publication-viewer',
-  component({ geneticElement, activeData }: ViewProps<PublicationViewerData>) {
+  component({
+    geneticElement,
+    activeData,
+  }: ViewProps<PublicationViewerData, never>) {
     const [tab, setTab] = React.useState<TabValues>('publications')
     return (
       <div>

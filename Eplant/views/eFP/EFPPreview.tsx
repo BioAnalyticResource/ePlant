@@ -1,5 +1,6 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { Box, LinearProgress } from '@mui/material'
+import { BoxProps } from '@mui/system'
 import * as React from 'react'
 import EFP from '.'
 import { useViewData } from '../View'
@@ -8,15 +9,17 @@ export default function EFPPreview({
   gene,
   view,
   selected,
+  ...boxProps
 }: {
   gene: GeneticElement
   view: EFP
   selected: boolean
-}) {
+} & BoxProps) {
   console.log(gene, view)
   const { activeData, loading, loadingAmount } = useViewData(view, gene)
   return (
     <Box
+      {...boxProps}
       sx={{
         width: '108px',
         height: '75px',
@@ -37,7 +40,7 @@ export default function EFPPreview({
             width: '100%',
           }}
           value={loadingAmount * 100}
-          variant="query"
+          variant="determinate"
         />
       ) : (
         <>

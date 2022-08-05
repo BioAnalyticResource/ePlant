@@ -122,7 +122,7 @@ const GeneSequence = ({
 export default function GeneInfoViewer({
   geneticElement,
   activeData,
-}: ViewProps<GeneInfoViewData>) {
+}: ViewProps<GeneInfoViewData, never>) {
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }

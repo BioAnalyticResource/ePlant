@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import React from 'react'
 import EFPPreview from '../eFP/EFPPreview'
-import { AtGenExpress } from '../TissueEFP'
+import { AtGenExpress } from '../PlantEFP'
 import { View } from '../View'
 
 type DebugViewData = {

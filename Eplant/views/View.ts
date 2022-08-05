@@ -4,13 +4,14 @@ import { atomWithStorage } from 'jotai/utils'
 
 import * as React from 'react'
 
-export type ViewProps<T> = {
+export type ViewProps<T, A> = {
   activeData: T
+  dispatch: (a: A) => void
   geneticElement: GeneticElement | null
 }
 
 type ViewAction<T, Action> = {
-  render: (props: ViewProps<T>) => JSX.Element
+  render: (props: ViewProps<T, Action>) => JSX.Element
   action: Action
 }
 
@@ -26,7 +27,7 @@ export interface View<T = any, Action = any> {
   reducer?: (state: T, action: Action) => T
   actions?: ViewAction<T, Action>[]
   // Validate props.activeData with the ZodType
-  component: (props: ViewProps<T>) => JSX.Element | null
+  component: (props: ViewProps<T, Action>) => JSX.Element | null
   icon?: () => JSX.Element
   readonly name: string
   readonly id: string

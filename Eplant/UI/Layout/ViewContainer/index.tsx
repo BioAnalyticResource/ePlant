@@ -43,7 +43,10 @@ export function ViewContainer({
   setView: (view: View) => void
   gene: GeneticElement | null
 } & BoxProps) {
-  const { activeData, error, loading, loadingAmount } = useViewData(view, gene)
+  const { activeData, error, loading, loadingAmount, dispatch } = useViewData(
+    view,
+    gene
+  )
 
   const idLabel = React.useId()
   const selectId = React.useId()
@@ -199,7 +202,11 @@ export function ViewContainer({
               error={error}
             />
           ) : (
-            <view.component geneticElement={gene} activeData={activeData} />
+            <view.component
+              geneticElement={gene}
+              activeData={activeData}
+              dispatch={dispatch}
+            />
           )}
         </Stack>
       </Container>
