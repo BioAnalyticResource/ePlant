@@ -64,6 +64,7 @@
     "@mui/material": "^5.8.4",
     "@mui/x-data-grid": "^5.12.3",
     "axios": "^0.27.2",
+    "color2k": "^2.0.0",
     "dompurify": "^2.3.10",
     "flexlayout-react": "https://github.com/alexwaeseperlman/FlexLayout/tarball/master",
     "jotai": "^1.7.2",

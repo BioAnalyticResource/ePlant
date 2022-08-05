@@ -5,6 +5,10 @@ export type EFPData = {
     name: string
     tissues: { name: string; id: string; value: number }[]
     control: number
+    min: number
+    max: number
+    mean: number
+    std: number
   }[]
 }
 

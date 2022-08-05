@@ -6,6 +6,7 @@ import { useEFPSVG, getColor, useStyles } from './svg'
 import { EFPData, EFPAction, EFPId } from './types'
 import DOMPurify from 'dompurify'
 import _ from 'lodash'
+import { useViewID } from '@eplant/state'
 export default class EFP {
   constructor(
     public name: string,
@@ -31,8 +32,6 @@ export default class EFP {
     const xml = await fetch(this.xmlURL).then(async (res) =>
       parser.parseFromString(await res.text(), 'text/xml')
     )
-    console.log(xml)
-    loadEvent(0.5)
     // Get the url for the api request
     const database = xml.getElementsByTagName('view')[0]?.getAttribute('db')
     let webservice = xml.getElementsByTagName('webservice')[0]?.textContent
@@ -70,6 +69,7 @@ export default class EFP {
       }
     )
 
+    loadEvent(0.5)
     const samples: { [key: string]: number } = {}
     const data = (
       await (
@@ -87,15 +87,27 @@ export default class EFP {
     loadEvent(1)
     console.log(groups, data)
     const out: EFPData = {
-      groups: groups.map((group) => ({
-        name: group.name,
-        control: _.mean(group.controls.map((control) => samples[control])),
-        tissues: group.tissues.map((tissue) => ({
+      groups: groups.map((group) => {
+        const tissues = group.tissues.map((tissue) => ({
           name: tissue.name,
           id: tissue.id,
           value: _.mean(tissue.samples.map((sample) => samples[sample])),
-        })),
-      })),
+        }))
+        const tissueValues = tissues.map((tissue) => tissue.value)
+        const mean = _.mean(tissueValues)
+        return {
+          name: group.name,
+          control: _.mean(group.controls.map((control) => samples[control])),
+          tissues,
+          mean: mean,
+          max: Math.max(...tissueValues),
+          min: Math.min(...tissueValues),
+          std: Math.sqrt(
+            _.sumBy(tissueValues, (v) => Math.pow(v - mean, 2)) /
+              tissueValues.length
+          ),
+        }
+      }),
     }
     return out
   }
@@ -107,7 +119,8 @@ export default class EFP {
     })
 
     const { svg } = view ?? {}
-    const styles = useStyles(this.id, props.activeData.groups)
+    const id = useViewID()
+    const styles = useStyles('svg-container-' + id, props.activeData.groups)
     React.useInsertionEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
@@ -125,6 +138,7 @@ export default class EFP {
             width: '100%',
             height: '100%',
           }}
+          className={`svg-container-${id}`}
           dangerouslySetInnerHTML={{ __html: svg }}
         />
       </div>

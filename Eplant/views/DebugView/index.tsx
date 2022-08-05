@@ -1,4 +1,12 @@
-import { Button, Table, TableBody, TableCell, TableHead } from '@mui/material'
+import { useViewID } from '@eplant/state'
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@mui/material'
 import React from 'react'
 import { View } from '../View'
 
@@ -10,23 +18,34 @@ type DebugViewAction = { type: 'test-toggle' }
 
 const DebugView: View<DebugViewData, DebugViewAction> = {
   name: 'Debug view',
-  component: (props) => (
-    <div>
-      <Table>
-        <TableHead>
-          <TableCell>Key</TableCell>
-          <TableCell>Value</TableCell>
-        </TableHead>
-        <TableBody>
-          <TableCell>Toggle value</TableCell>
-          <TableCell>
-            {props.activeData.testToggle ? 'true' : 'false'}
-          </TableCell>
-        </TableBody>
-      </Table>
-      <Button onClick={() => localStorage.clear()}>Wipe localstorage</Button>
-    </div>
-  ),
+  component: (props) => {
+    const viewID = useViewID()
+    return (
+      <div>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Key</TableCell>
+              <TableCell>Value</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>Toggle value</TableCell>
+              <TableCell>
+                {props.activeData.testToggle ? 'true' : 'false'}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>View ID</TableCell>
+              <TableCell>{viewID}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        <Button onClick={() => localStorage.clear()}>Wipe localstorage</Button>
+      </div>
+    )
+  },
   getInitialData: async () => ({
     testToggle: false,
   }),
