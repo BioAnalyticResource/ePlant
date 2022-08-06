@@ -33,7 +33,7 @@ export default function PanZoom({ children, ...props }: BoxProps) {
         const { clientX, clientY } = e
         setOffset(({ offset, zoom }) => {
           // Adjust offset so that the mouse stays at the same position
-          const newZoom = zoom * (1 - e.deltaY / 100)
+          const newZoom = zoom * (1 - e.deltaY / 200)
           const mouseX = clientX - x - width / 2,
             mouseY = clientY - y - height / 2
           const updateX = mouseX / newZoom - mouseX / zoom,
@@ -101,6 +101,8 @@ export default function PanZoom({ children, ...props }: BoxProps) {
         sx={{
           userSelect: 'none',
           transform: `scale(${zoom}) translate(${offset.x}px, ${offset.y}px)`,
+          width: '100%',
+          height: '100%',
         }}
       >
         {children}

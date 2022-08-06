@@ -1,4 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
+import PanZoom from '@eplant/util/PanZoom'
 import { useViewData, View, ViewProps } from '@eplant/views/View'
 import { Box, Drawer, LinearProgress } from '@mui/material'
 import React from 'react'
@@ -78,11 +79,18 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
           {loading || !activeData ? (
             <LinearProgress value={loadingAmount * 100} variant="determinate" />
           ) : (
-            <activeView.component
-              activeData={activeData}
-              geneticElement={props.geneticElement}
-              dispatch={dispatch}
-            />
+            <PanZoom
+              sx={{
+                width: '100%',
+                height: '100%',
+              }}
+            >
+              <activeView.component
+                activeData={activeData}
+                geneticElement={props.geneticElement}
+                dispatch={dispatch}
+              />
+            </PanZoom>
           )}
         </Box>
       </Box>
