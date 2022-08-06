@@ -68,9 +68,11 @@ export const useEFPSVG = (
 
     const out = {
       ...cache[view.id],
-      svg: DOMPurify.sanitize(
-        `<div id=${view.id}>${new XMLSerializer().serializeToString(svg)}</div>`
-      ),
+      //DOMPurify.sanitize(
+      svg: `<div id=${view.id}>${new XMLSerializer().serializeToString(
+        svg
+      )}</div>`,
+      //),
     }
 
     return { view: out, loading: false }

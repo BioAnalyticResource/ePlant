@@ -16,6 +16,10 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
   getInitialData = async () => ({
     activeView: this.views[0].id,
     views: this.views,
+    transform: {
+      offset: { x: 0, y: 0 },
+      zoom: 1,
+    },
   })
   reducer = (state: EFPViewerData, action: EFPViewerAction) => {
     switch (action.type) {
@@ -23,6 +27,19 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         return {
           ...state,
           activeView: action.id,
+        }
+      case 'reset-transform':
+        return {
+          ...state,
+          transform: {
+            offset: { x: 0, y: 0 },
+            zoom: 1,
+          },
+        }
+      case 'set-transform':
+        return {
+          ...state,
+          transform: action.transform,
         }
       default:
         return state
@@ -46,6 +63,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
     )
 
     if (!props.geneticElement) return <></>
+    console.log(props.activeData.transform)
     return (
       <Box
         sx={{
@@ -57,9 +75,16 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
           height: '100%',
         }}
       >
-        <Box>
+        <Box
+          sx={(theme) => ({
+            overflow: 'scroll',
+          })}
+        >
           {EFPViews.map((view) => (
             <EFPPreview
+              sx={(theme) => ({
+                margin: theme.spacing(1),
+              })}
               key={view.id}
               // Why is this an error? It is guarded by the above check.
               gene={props.geneticElement}
@@ -84,6 +109,16 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
                 width: '100%',
                 height: '100%',
               }}
+              transform={props.activeData.transform}
+              setTransform={(transform) => {
+                props.dispatch((data) => ({
+                  type: 'set-transform',
+                  transform:
+                    typeof transform == 'function'
+                      ? transform(data.transform)
+                      : transform,
+                }))
+              }}
             >
               <activeView.component
                 activeData={activeData}
@@ -96,4 +131,10 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       </Box>
     )
   }
+  actions = [
+    {
+      action: { type: 'reset-transform' } as EFPViewerAction,
+      render: () => <>Reset pan/zoom</>,
+    },
+  ]
 }

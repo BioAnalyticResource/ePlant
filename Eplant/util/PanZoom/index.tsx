@@ -1,20 +1,23 @@
 import { Box, BoxProps } from '@mui/material'
+import _ from 'lodash'
 import React from 'react'
 
 type Point = { x: number; y: number }
+export type Transform = {
+  offset: Point
+  zoom: number
+}
 
-export default function PanZoom({ children, ...props }: BoxProps) {
-  const [{ offset, zoom }, setOffset] = React.useState<{
-    offset: Point
-    zoom: number
-  }>({
-    offset: {
-      x: 0,
-      y: 0,
-    },
-    zoom: 1,
-  })
-
+export default function PanZoom({
+  children,
+  setTransform,
+  transform,
+  ...props
+}: BoxProps & {
+  transform: Transform
+  setTransform: (transform: Transform | ((p: Transform) => Transform)) => void
+}) {
+  const { offset, zoom } = transform
   const [dragStart, setDragStart] =
     React.useState<{
       click: Point
@@ -31,9 +34,10 @@ export default function PanZoom({ children, ...props }: BoxProps) {
         const { x, y, width, height } =
           containerRef.current.getBoundingClientRect()
         const { clientX, clientY } = e
-        setOffset(({ offset, zoom }) => {
+        setTransform(({ offset, zoom }) => {
           // Adjust offset so that the mouse stays at the same position
           const newZoom = zoom * (1 - e.deltaY / 200)
+          if (newZoom < 0.5 || newZoom > 2) return { offset, zoom }
           const mouseX = clientX - x - width / 2,
             mouseY = clientY - y - height / 2
           const updateX = mouseX / newZoom - mouseX / zoom,
@@ -87,7 +91,7 @@ export default function PanZoom({ children, ...props }: BoxProps) {
           const { clientX, clientY } = e
           const mouseX = clientX - x,
             mouseY = clientY - y
-          setOffset({
+          setTransform({
             offset: {
               x: dragStart.offset.x + (mouseX - dragStart.click.x) / zoom,
               y: dragStart.offset.y + (mouseY - dragStart.click.y) / zoom,

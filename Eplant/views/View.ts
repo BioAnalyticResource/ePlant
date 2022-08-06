@@ -6,7 +6,7 @@ import * as React from 'react'
 
 export type ViewProps<T, A> = {
   activeData: T
-  dispatch: (a: A) => void
+  dispatch: (a: A | ((a: T) => A)) => void
   geneticElement: GeneticElement | null
 }
 
@@ -130,10 +130,12 @@ export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticEleme
 
   return {
     ...viewData, 
-    dispatch(action: Action) { 
+    dispatch(action: Action | ((a: T) => Action)) { 
         setViewData(data => (data.activeData ? {
           ...data, 
-          activeData: view.reducer ? view.reducer(data.activeData, action) : viewData.activeData
+          activeData: view.reducer ? 
+            view.reducer(data.activeData, typeof action == 'function' ? 
+              (action as (t: T) => Action)(data.activeData) : action) : viewData.activeData
         } : data))
     }
   }

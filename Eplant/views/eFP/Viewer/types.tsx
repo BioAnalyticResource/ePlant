@@ -1,3 +1,4 @@
+import { Transform } from '@eplant/util/PanZoom'
 import { EFPId } from '@eplant/views/eFP/types'
 
 export type EFPViewerData = {
@@ -8,5 +9,9 @@ export type EFPViewerData = {
     id: EFPId
     name: string
   }[]
+  transform: Transform
 }
-export type EFPViewerAction = { type: 'set-view'; id: EFPId }
+export type EFPViewerAction =
+  | { type: 'set-view'; id: EFPId }
+  | { type: 'reset-transform' }
+  | { type: 'set-transform'; transform: Transform }
