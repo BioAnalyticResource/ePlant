@@ -25,22 +25,25 @@ const EFPPreviewContainer = styled(
   display: 'flex',
 }))
 
-export default function EFPPreview({
-  gene,
-  view,
-  selected,
-  ...boxProps
-}: {
-  gene: GeneticElement
-  view: EFP
-  selected: boolean
-} & BoxProps) {
+export default React.forwardRef(function EFPPreview(
+  {
+    gene,
+    view,
+    selected,
+    ...boxProps
+  }: {
+    gene: GeneticElement
+    view: EFP
+    selected: boolean
+  } & BoxProps,
+  ref
+) {
   const { activeData, loading, loadingAmount, dispatch } = useViewData(
     view,
     gene
   )
   return (
-    <EFPPreviewContainer selected={selected} {...boxProps}>
+    <EFPPreviewContainer ref={ref} selected={selected} {...boxProps}>
       {loading || !activeData ? (
         <LinearProgress
           sx={{
@@ -74,4 +77,4 @@ export default function EFPPreview({
       )}
     </EFPPreviewContainer>
   )
-}
+})

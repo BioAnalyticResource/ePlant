@@ -1,7 +1,7 @@
 import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { useViewData, View, ViewProps } from '@eplant/views/View'
-import { Box, Drawer, LinearProgress, useTheme } from '@mui/material'
+import { Box, Drawer, LinearProgress, Tooltip, useTheme } from '@mui/material'
 import React from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
@@ -26,20 +26,28 @@ export const EFPListMemoized = React.memo(
       >
         {({ index: i, style }) => (
           <div style={style}>
-            <EFPPreview
-              sx={(theme) => ({
-                width: '108px',
-                height: '75px',
-              })}
-              key={props.views[i].id}
-              // Why is this an error? It is guarded by the above check.
-              gene={props.geneticElement}
-              selected={props.views[i].id == props.activeView.id}
-              view={props.views[i]}
-              onClick={() => {
-                props.dispatch({ type: 'set-view', id: props.views[i].id })
-              }}
-            />
+            <Tooltip
+              placement="right"
+              arrow
+              title={<div>{props.views[i].name}</div>}
+            >
+              <div>
+                <EFPPreview
+                  sx={(theme) => ({
+                    width: '108px',
+                    height: '75px',
+                  })}
+                  key={props.views[i].id}
+                  // Why is this an error? It is guarded by the above check.
+                  gene={props.geneticElement}
+                  selected={props.views[i].id == props.activeView.id}
+                  view={props.views[i]}
+                  onClick={() => {
+                    props.dispatch({ type: 'set-view', id: props.views[i].id })
+                  }}
+                />
+              </div>
+            </Tooltip>
           </div>
         )}
       </List>
