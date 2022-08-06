@@ -128,15 +128,17 @@ export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticEleme
     })()
   }, [view, gene, viewData])
 
+  const dispatch = React.useMemo(() => (action: Action | ((a: T) => Action)) => {
+    setViewData((viewData) => ({ 
+      ...viewData, 
+      activeData: viewData.activeData ? (view.reducer ? 
+        view.reducer(viewData.activeData, typeof action == 'function' ? 
+          (action as any)(viewData.activeData) : action) : 
+          viewData.activeData) : viewData.activeData}))
+  }, [setViewData, view.id])
+
   return {
     ...viewData, 
-    dispatch(action: Action | ((a: T) => Action)) { 
-        setViewData(data => (data.activeData ? {
-          ...data, 
-          activeData: view.reducer ? 
-            view.reducer(data.activeData, typeof action == 'function' ? 
-              (action as (t: T) => Action)(data.activeData) : action) : viewData.activeData
-        } : data))
-    }
+    dispatch
   }
 }

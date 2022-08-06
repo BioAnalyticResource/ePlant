@@ -93,7 +93,6 @@ export default class EFP implements View {
     ).flat()
     for (const { name, value } of data) samples[name] = value
     loadEvent(1)
-    console.log(groups, data)
     const out: EFPData = {
       renderAsThumbnail: false,
       groups: groups.map((group) => {
@@ -136,11 +135,9 @@ export default class EFP implements View {
     const id = useViewID()
     const styles = useStyles('svg-container-' + id, props.activeData.groups)
     React.useInsertionEffect(() => {
-      console.time('adding styles')
       const el = document.createElement('style')
       el.innerHTML = styles
       document.head.appendChild(el)
-      console.timeEnd('adding styles')
       return () => {
         document.head.removeChild(el)
       }

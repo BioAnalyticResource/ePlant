@@ -76,7 +76,7 @@ export const useEFPSVG = (
     }
 
     return { view: out, loading: false }
-  }, [cache[view.id]])
+  }, [...Object.values(cache[view.id])])
 }
 
 export function getColor(

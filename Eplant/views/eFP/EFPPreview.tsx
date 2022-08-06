@@ -13,8 +13,6 @@ import { useViewData } from '../View'
 const EFPPreviewContainer = styled(
   (props: BoxProps & { selected: boolean }) => <Box {...props} />
 )(({ theme, selected }) => ({
-  width: '108px',
-  height: '75px',
   border: selected ? `2px solid ${theme.palette.secondary.main}` : ``,
   background: theme.palette.background.active,
   borderRadius: theme.shape.borderRadius,

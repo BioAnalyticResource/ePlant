@@ -66,26 +66,8 @@ export function ViewContainer({
       }, 100)
     }
   }, [printing])
-  return (
-    <Box {...props} display="flex" flexDirection="column">
-      <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
-        <DialogTitle>
-          <Typography variant="h6">
-            Citation and experiment information for &quot;{view.name}&quot;
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          {view.citation ? (
-            <view.citation gene={gene} />
-          ) : (
-            <Box>No citations provided for this view</Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setViewingCitations(false)}>Close</Button>
-        </DialogActions>
-      </Modal>
-
+  const topBar = React.useMemo(
+    () => (
       <AppBar
         variant="elevation"
         sx={(theme) => ({
@@ -160,7 +142,7 @@ export function ViewContainer({
             onClick={() => {
               downloadFile(
                 `${view.id}${gene ? '-' + gene.id : ''}.json`,
-                JSON.stringify(activeData, null, 2)
+                '' //JSON.stringify(activeData, null, 2)
               )
             }}
           >
@@ -168,6 +150,30 @@ export function ViewContainer({
           </Button>
         </Toolbar>
       </AppBar>
+    ),
+    [view.id, gene?.id, loading]
+  )
+  return (
+    <Box {...props} display="flex" flexDirection="column">
+      <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
+        <DialogTitle>
+          <Typography variant="h6">
+            Citation and experiment information for &quot;{view.name}&quot;
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          {view.citation ? (
+            <view.citation gene={gene} />
+          ) : (
+            <Box>No citations provided for this view</Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewingCitations(false)}>Close</Button>
+        </DialogActions>
+      </Modal>
+
+      {topBar}
       <Container
         sx={(theme) => ({
           padding: '2rem',

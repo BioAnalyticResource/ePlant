@@ -1,12 +1,62 @@
 import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { useViewData, View, ViewProps } from '@eplant/views/View'
-import { Box, Drawer, LinearProgress } from '@mui/material'
+import { Box, Drawer, LinearProgress, useTheme } from '@mui/material'
 import React from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
 import { EFPViewerAction, EFPViewerData } from './types'
+import { FixedSizeList as List } from 'react-window'
+import _ from 'lodash'
 
+export const EFPListMemoized = React.memo(
+  function EFPList(props: {
+    geneticElement: GeneticElement
+    views: EFP[]
+    activeView: EFP
+    dispatch: ViewProps<EFPViewerData, EFPViewerAction>['dispatch']
+  }) {
+    return (
+      <List
+        height={400}
+        itemCount={props.views.length}
+        itemSize={75 + 8}
+        width={108}
+      >
+        {({ index: i, style }) => (
+          <div style={style}>
+            <EFPPreview
+              sx={(theme) => ({
+                width: '108px',
+                height: '75px',
+              })}
+              key={props.views[i].id}
+              // Why is this an error? It is guarded by the above check.
+              gene={props.geneticElement}
+              selected={props.views[i].id == props.activeView.id}
+              view={props.views[i]}
+              onClick={() => {
+                props.dispatch({ type: 'set-view', id: props.views[i].id })
+              }}
+            />
+          </div>
+        )}
+      </List>
+    )
+  },
+  (prev, next) => {
+    const a = [
+      prev.geneticElement.id == next.geneticElement.id,
+      _.isEqual(
+        prev.views.map((v) => v.id),
+        next.views.map((v) => v.id)
+      ),
+      prev.activeView.id == next.activeView.id,
+      prev.dispatch == next.dispatch,
+    ]
+    return a.every((v) => v)
+  }
+)
 export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
   constructor(
     public id: string,
@@ -51,19 +101,32 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         props.activeData.views.map(
           (view) => new EFP(view.name, view.id, view.svgURL, view.xmlURL)
         ),
-      [props.activeData.views]
+      [...props.activeData.views.map((v) => v.id)]
     )
-    console.log(EFPViews, props.activeData.activeView)
-    const activeView = EFPViews.find((v) => v.id == props.activeData.activeView)
-    if (!activeView) throw new Error('active view does not exist')
 
+    const activeView = React.useMemo(
+      () => EFPViews.find((v) => v.id == props.activeData.activeView),
+      [props.activeData.activeView, ...EFPViews.map((v) => v.id)]
+    )
+    if (!activeView) throw new Error('active view does not exist')
     const { activeData, loading, loadingAmount, dispatch } = useViewData(
       activeView,
       props.geneticElement
     )
-
     if (!props.geneticElement) return <></>
-    console.log(props.activeData.transform)
+    const efp = React.useMemo(
+      () =>
+        activeData ? (
+          <activeView.component
+            activeData={activeData}
+            geneticElement={props.geneticElement}
+            dispatch={dispatch}
+          />
+        ) : (
+          <></>
+        ),
+      [activeView.id, props.geneticElement.id, dispatch, activeData]
+    )
     return (
       <Box
         sx={{
@@ -73,6 +136,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
           justifyContent: 'stretch',
           width: '100%',
           height: '100%',
+          overflow: 'hidden',
         }}
       >
         <Box
@@ -80,21 +144,12 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
             overflow: 'scroll',
           })}
         >
-          {EFPViews.map((view) => (
-            <EFPPreview
-              sx={(theme) => ({
-                margin: theme.spacing(1),
-              })}
-              key={view.id}
-              // Why is this an error? It is guarded by the above check.
-              gene={props.geneticElement}
-              selected={view.id == props.activeData.activeView}
-              view={view}
-              onClick={() => {
-                props.dispatch({ type: 'set-view', id: view.id })
-              }}
-            />
-          ))}
+          <EFPListMemoized
+            activeView={activeView}
+            dispatch={props.dispatch}
+            geneticElement={props.geneticElement}
+            views={EFPViews}
+          />
         </Box>
         <Box
           sx={{
@@ -120,11 +175,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
                 }))
               }}
             >
-              <activeView.component
-                activeData={activeData}
-                geneticElement={props.geneticElement}
-                dispatch={dispatch}
-              />
+              {efp}
             </PanZoom>
           )}
         </Box>
