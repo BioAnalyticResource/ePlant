@@ -39,7 +39,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
     const activeView = EFPViews.find((v) => v.id == props.activeData.activeView)
     if (!activeView) throw new Error('active view does not exist')
 
-    const { activeData, loading, loadingAmount } = useViewData(
+    const { activeData, loading, loadingAmount, dispatch } = useViewData(
       activeView,
       props.geneticElement
     )
@@ -60,6 +60,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
           {EFPViews.map((view) => (
             <EFPPreview
               key={view.id}
+              // Why is this an error? It is guarded by the above check.
               gene={props.geneticElement}
               selected={view.id == props.activeData.activeView}
               view={view}
@@ -80,6 +81,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
             <activeView.component
               activeData={activeData}
               geneticElement={props.geneticElement}
+              dispatch={dispatch}
             />
           )}
         </Box>

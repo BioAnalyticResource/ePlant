@@ -3,7 +3,7 @@ import { CircularProgress } from '@mui/material'
 import React from 'react'
 import { View, ViewDataError, ViewProps } from '../View'
 import { useEFPSVG, useStyles } from './svg'
-import { EFPData, EFPId } from './types'
+import { EFPAction, EFPData, EFPId } from './types'
 import _ from 'lodash'
 import { useViewID } from '@eplant/state'
 export default class EFP implements View {
@@ -61,20 +61,36 @@ export default class EFP implements View {
       }
     )
 
-    loadEvent(0.5)
+    loadEvent(0.2)
     const samples: { [key: string]: number } = {}
+    // Fetch the sample names in chunks to give a more accurate progress bar
+    const chunks = _.chunk(sampleNames, 5)
+    let loaded = 0.2
+    const loadStep = (1 - loaded) / chunks.length
     const data = (
-      await (
-        await fetch(
-          webservice + `id=${gene.id}&samples=${JSON.stringify(sampleNames)}`
+      await Promise.all(
+        chunks.map((names) =>
+          fetch(webservice + `id=${gene.id}&samples=${JSON.stringify(names)}`)
+            .then((res) => res.json())
+            .then(
+              (samples) =>
+                samples
+                  .filter(
+                    (sample: any) => sample && !isNaN(parseFloat(sample.value))
+                  )
+                  .map((sample: any) => ({
+                    name: sample.name,
+                    value: parseFloat(sample.value),
+                  })) as { value: number; name: string }[]
+            )
+            .then((samples) => {
+              loaded += loadStep
+              loadEvent(loaded)
+              return samples
+            })
         )
-      ).json()
-    )
-      .filter((sample: any) => sample && !isNaN(parseFloat(sample.value)))
-      .map((sample: any) => ({
-        name: sample.name,
-        value: parseFloat(sample.value),
-      })) as { value: number; name: string }[]
+      )
+    ).flat()
     for (const { name, value } of data) samples[name] = value
     loadEvent(1)
     console.log(groups, data)
@@ -104,7 +120,7 @@ export default class EFP implements View {
     }
     return out
   }
-  component = (props: ViewProps<EFPData>): JSX.Element => {
+  component = (props: ViewProps<EFPData, EFPAction>): JSX.Element => {
     const { view, loading } = useEFPSVG(
       {
         svgURL: this.svgURL,
@@ -134,6 +150,7 @@ export default class EFP implements View {
         style={{
           width: '100%',
           height: '100%',
+          position: 'relative',
         }}
         className={`svg-container-${id}`}
         dangerouslySetInnerHTML={{ __html: svg }}

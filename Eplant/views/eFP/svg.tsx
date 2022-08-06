@@ -46,6 +46,7 @@ export const useEFPSVG = (
     ;['width', 'height', 'x', 'y', 'id'].map((s) =>
       svg.documentElement.removeAttribute(s)
     )
+    svg.documentElement.setAttribute('class', 'eFP-svg')
     // Remove styling from all of the text tags
     for (const text of svg.getElementsByTagName('text')) {
       ;[

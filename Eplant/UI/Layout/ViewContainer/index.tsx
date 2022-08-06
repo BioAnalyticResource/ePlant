@@ -67,7 +67,7 @@ export function ViewContainer({
     }
   }, [printing])
   return (
-    <Box {...props}>
+    <Box {...props} display="flex" flexDirection="column">
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
         <DialogTitle>
           <Typography variant="h6">
@@ -172,6 +172,10 @@ export function ViewContainer({
         sx={(theme) => ({
           padding: '2rem',
           overflow: 'scroll',
+          flexGrow: 1,
+          display: 'flex',
+          gap: theme.spacing(4),
+          flexDirection: 'column',
           ...(printing == viewId
             ? {
                 display: 'block !important',
@@ -189,26 +193,24 @@ export function ViewContainer({
             : {}),
         })}
       >
-        <Stack gap={4} direction="column">
-          {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-          {gene && !genericViews.some((geneView) => view.id == geneView.id) ? (
-            <GeneHeader geneticElement={gene} />
-          ) : null}
-          {loading || !activeData ? (
-            <LoadingPage
-              loadingAmount={loadingAmount}
-              gene={gene}
-              view={view}
-              error={error}
-            />
-          ) : (
-            <view.component
-              geneticElement={gene}
-              activeData={activeData}
-              dispatch={dispatch}
-            />
-          )}
-        </Stack>
+        {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
+        {gene && !genericViews.some((geneView) => view.id == geneView.id) ? (
+          <GeneHeader geneticElement={gene} />
+        ) : null}
+        {loading || !activeData ? (
+          <LoadingPage
+            loadingAmount={loadingAmount}
+            gene={gene}
+            view={view}
+            error={error}
+          />
+        ) : (
+          <view.component
+            geneticElement={gene}
+            activeData={activeData}
+            dispatch={dispatch}
+          />
+        )}
       </Container>
     </Box>
   )
