@@ -15,16 +15,17 @@ export default function EFPPreview({
   view: EFP
   selected: boolean
 } & BoxProps) {
-  console.log(gene, view)
-  const { activeData, loading, loadingAmount } = useViewData(view, gene)
+  const { activeData, loading, loadingAmount, dispatch } = useViewData(
+    view,
+    gene
+  )
   return (
     <Box
       {...boxProps}
-      sx={{
+      sx={(theme) => ({
         width: '108px',
         height: '75px',
-        borderColor: 'divider',
-        border: `${selected ? 2 : 1}px solid`,
+        border: `${selected ? 2 : 1}px solid ${theme.palette.secondary.main}`,
         padding: `${selected ? 3 : 4}px`,
         boxSizing: 'border-box',
         position: 'relative',
@@ -32,7 +33,7 @@ export default function EFPPreview({
         overflow: 'hidden',
         justifyContent: 'center',
         display: 'flex',
-      }}
+      })}
     >
       {loading || !activeData ? (
         <LinearProgress
@@ -47,6 +48,7 @@ export default function EFPPreview({
           <view.component
             activeData={{ ...activeData, renderAsThumbnail: true }}
             geneticElement={gene}
+            dispatch={dispatch}
           />
           <div
             style={{
