@@ -8,7 +8,7 @@ export const AtGenExpress = new EFP(
   'https://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.xml'
 )
 
-export default new EFPViewer('tissue', 'Tissue & Experiment EFP', [
+export default new EFPViewer('plant', 'Plant EFP', [
   {
     name: 'AtGenExpress',
     id: 'atgenexpress',

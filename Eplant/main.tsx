@@ -16,13 +16,20 @@ import PublicationViewer from './views/PublicationViewer'
 import { Config } from './config'
 import DebugView from './views/DebugView'
 import PlantEFP from './views/PlantEFP'
+import ExperimentEFP from './views/ExperimentEFP'
 
 // Views that aren't associated with individual genes
 const genericViews = [GetStartedView, FallbackView]
 
 // List of views that a user can select from
 // Can contain views from the genericViews list too
-const userViews = [GeneInfoView, PublicationViewer, DebugView, PlantEFP]
+const userViews = [
+  GeneInfoView,
+  PublicationViewer,
+  DebugView,
+  PlantEFP,
+  ExperimentEFP,
+]
 
 // List of views that are used to lookup a view by id
 const views = [...genericViews, ...userViews]
