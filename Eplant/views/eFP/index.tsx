@@ -20,7 +20,6 @@ export default class EFP implements View {
   ): Promise<EFPData> => {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     const parser = new DOMParser()
-    console.log(this)
     const xml = await fetch(this.xmlURL).then(async (res) =>
       parser.parseFromString(await res.text(), 'text/xml')
     )
@@ -64,13 +63,18 @@ export default class EFP implements View {
     loadEvent(0.2)
     const samples: { [key: string]: number } = {}
     // Fetch the sample names in chunks to give a more accurate progress bar
-    const chunks = _.chunk(sampleNames, 5)
+    const chunks = _.chunk(sampleNames, 20)
     let loaded = 0.2
     const loadStep = (1 - loaded) / chunks.length
     const data = (
       await Promise.all(
         chunks.map((names) =>
-          fetch(webservice + `id=${gene.id}&samples=${JSON.stringify(names)}`)
+          fetch(
+            webservice +
+              `id=${gene.id}&samples=${encodeURIComponent(
+                JSON.stringify(names)
+              )}`
+          )
             .then((res) => res.json())
             .then(
               (samples) =>
@@ -91,6 +95,9 @@ export default class EFP implements View {
         )
       )
     ).flat()
+    if (this.name.includes('Erysiphe')) {
+      console.log(this.name, data, samples, sampleNames, groups)
+    }
     for (const { name, value } of data) samples[name] = value
     loadEvent(1)
     const out: EFPData = {

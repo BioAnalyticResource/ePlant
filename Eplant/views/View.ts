@@ -64,7 +64,6 @@ const viewDataStorage = {
   },
   subscribe(key: string, change: (value: ViewDataType<any>) => void) {
     const callback = (event: StorageEvent) => {
-      console.log(event)
       if (event.key === key && event.newValue) {
         change(JSON.parse(event.newValue))
       }

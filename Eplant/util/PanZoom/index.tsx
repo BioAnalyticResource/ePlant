@@ -42,11 +42,6 @@ export default function PanZoom({
             mouseY = clientY - y - height / 2
           const updateX = mouseX / newZoom - mouseX / zoom,
             updateY = mouseY / newZoom - mouseY / zoom
-          console.log({
-            x: mouseX / zoom - offset.x,
-            y: mouseY / zoom - offset.y,
-            offset,
-          })
           return {
             offset: {
               x: offset.x + updateX,
