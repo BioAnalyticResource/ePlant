@@ -15,10 +15,11 @@ export const EFPListMemoized = React.memo(
     views: EFP[]
     activeView: EFP
     dispatch: ViewProps<EFPViewerData, EFPViewerAction>['dispatch']
+    height: number
   }) {
     return (
       <List
-        height={400}
+        height={props.height}
         itemCount={props.views.length}
         itemSize={75 + 8}
         width={108}
@@ -53,6 +54,7 @@ export const EFPListMemoized = React.memo(
       ),
       prev.activeView.id == next.activeView.id,
       prev.dispatch == next.dispatch,
+      prev.height == next.height,
     ]
     return a.every((v) => v)
   }
@@ -127,6 +129,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         ),
       [activeView.id, props.geneticElement.id, dispatch, activeData]
     )
+    const ref = React.useRef<HTMLDivElement>(null)
     return (
       <Box
         sx={{
@@ -138,6 +141,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
           height: '100%',
           overflow: 'hidden',
         }}
+        ref={ref}
       >
         <Box
           sx={(theme) => ({
@@ -145,6 +149,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
           })}
         >
           <EFPListMemoized
+            height={ref.current?.clientHeight ?? 300}
             activeView={activeView}
             dispatch={props.dispatch}
             geneticElement={props.geneticElement}
