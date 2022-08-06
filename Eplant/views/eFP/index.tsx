@@ -132,8 +132,9 @@ export default class EFP implements View {
     )
 
     const { svg } = view ?? {}
-    const id = useViewID()
-    const styles = useStyles('svg-container-' + id, props.activeData.groups)
+    const id =
+      'svg-container-' + this.id + '-' + (props.geneticElement?.id ?? 'no-gene')
+    const styles = useStyles(id, props.activeData.groups)
     React.useInsertionEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
@@ -151,7 +152,7 @@ export default class EFP implements View {
           height: '100%',
           position: 'relative',
         }}
-        className={`svg-container-${id}`}
+        className={id}
         dangerouslySetInnerHTML={{ __html: svg }}
       />
     )
