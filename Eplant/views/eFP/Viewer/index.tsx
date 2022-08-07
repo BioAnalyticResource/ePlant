@@ -1,6 +1,6 @@
 import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
-import { useViewData, View, ViewProps } from '@eplant/views/View'
+import { useViewData, View, ViewDataError, ViewProps } from '@eplant/views/View'
 import { Box, Drawer, LinearProgress, Tooltip, useTheme } from '@mui/material'
 import React from 'react'
 import EFP from '..'
@@ -78,15 +78,18 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
     public name: string,
     private views: EFPViewerData['views']
   ) {}
-  getInitialData = async () => ({
-    activeView: this.views[0].id,
-    views: this.views,
-    transform: {
-      offset: { x: 0, y: 0 },
-      zoom: 1,
-    },
-    colorMode: 'absolute' as const,
-  })
+  getInitialData = async (gene: GeneticElement | null) => {
+    if (!gene) throw ViewDataError.UNSUPPORTED_GENE
+    return {
+      activeView: this.views[0].id,
+      views: this.views,
+      transform: {
+        offset: { x: 0, y: 0 },
+        zoom: 1,
+      },
+      colorMode: 'absolute' as const,
+    }
+  }
   reducer = (state: EFPViewerData, action: EFPViewerAction) => {
     switch (action.type) {
       case 'set-view':
@@ -129,14 +132,20 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
     )
 
     const activeView = React.useMemo(
-      () => EFPViews.find((v) => v.id == props.activeData.activeView),
+      () =>
+        EFPViews.find((v) => v.id == props.activeData.activeView) ??
+        EFPViews[0],
       [props.activeData.activeView, ...EFPViews.map((v) => v.id)]
     )
-    if (!activeView) throw new Error('active view does not exist')
+    //console.log(3, activeView)
+    if (!activeView) {
+      throw new Error('active view does not exist')
+    }
     const { activeData, loading, loadingAmount, dispatch } = useViewData(
       activeView,
       props.geneticElement
     )
+    //console.log(4, activeData)
     if (!props.geneticElement) return <></>
     const efp = React.useMemo(
       () =>

@@ -102,7 +102,7 @@ export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticEleme
 
   React.useEffect(() => {
     ;(async () => {
-      if (viewData.loading || viewData.activeData) return
+      if (viewData.loading || viewData.activeData || viewData.error) return
       setViewData((viewData) => ({ ...viewData, loading: true }))
       try {
         const loader = gene?.species.api.loaders[view.id] ?? view.getInitialData
