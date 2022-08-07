@@ -95,9 +95,7 @@ export default class EFP implements View {
         )
       )
     ).flat()
-    if (this.name.includes('Erysiphe')) {
-      console.log(this.name, data, samples, sampleNames, groups)
-    }
+
     for (const { name, value } of data) samples[name] = value
     loadEvent(1)
     const out: EFPData = {

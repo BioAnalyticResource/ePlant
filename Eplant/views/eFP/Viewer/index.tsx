@@ -8,6 +8,7 @@ import EFPPreview from '../EFPPreview'
 import { EFPViewerAction, EFPViewerData } from './types'
 import { FixedSizeList as List } from 'react-window'
 import _ from 'lodash'
+import useDimensions from '@eplant/util/useDimensions'
 
 export const EFPListMemoized = React.memo(
   function EFPList(props: {
@@ -138,6 +139,8 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       [activeView.id, props.geneticElement.id, dispatch, activeData]
     )
     const ref = React.useRef<HTMLDivElement>(null)
+    const dimensions = useDimensions(ref)
+
     return (
       <Box
         sx={{
@@ -157,7 +160,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
           })}
         >
           <EFPListMemoized
-            height={ref.current?.clientHeight ?? 300}
+            height={dimensions.height}
             activeView={activeView}
             dispatch={props.dispatch}
             geneticElement={props.geneticElement}
