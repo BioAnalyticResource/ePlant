@@ -46,6 +46,13 @@ export function SearchGroup({
         }
         label="Species"
         variant="standard"
+        inputProps={{
+          sx: {
+            ':focus': {
+              backgroundColor: 'transparent',
+            },
+          },
+        }}
       >
         {speciesList.map((s, idx) => (
           <MenuItem key={s.name} value={s.name}>
