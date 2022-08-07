@@ -177,7 +177,6 @@ export function ViewContainer({
       <Container
         sx={(theme) => ({
           padding: '2rem',
-          overflow: 'scroll',
           flexGrow: 1,
           display: 'flex',
           gap: theme.spacing(4),
@@ -194,7 +193,6 @@ export function ViewContainer({
                 background: theme.palette.background.paper,
                 width: '100%',
                 minHeight: '100%',
-                overflow: 'scroll',
               }
             : {}),
         })}

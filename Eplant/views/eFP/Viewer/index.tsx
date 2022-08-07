@@ -176,11 +176,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         }}
         ref={ref}
       >
-        <Box
-          sx={(theme) => ({
-            overflow: 'scroll',
-          })}
-        >
+        <Box>
           <EFPListMemoized
             height={dimensions.height}
             activeView={activeView}
