@@ -35,14 +35,13 @@ const userViews = [
 const views = [...genericViews, ...userViews]
 
 const tabHeight = 48
-const rootPath = ''
 
 export const defaultConfig = {
   genericViews,
   userViews,
   views,
   tabHeight,
-  rootPath,
+  rootPath: import.meta.env.BASE_URL,
 }
 // For some reason this is necessary to make the tabs work, maybe FlexLayout uses a Jotai provider?
 const eplantScope = Symbol('Eplant scope')
