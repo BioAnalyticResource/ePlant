@@ -1,16 +1,24 @@
 export type EFPId = string
 
+export type EFPSampleData = {
+  mean: number
+  min: number
+  max: number
+  std: number
+  samples: number
+}
+
+export type EFPTissue = { name: string; id: string } & EFPSampleData
+
+export type EFPGroup = EFPSampleData & {
+  name: string
+  tissues: EFPTissue[]
+  control: number
+}
 export type EFPData = {
-  groups: {
-    name: string
-    tissues: { name: string; id: string; value: number }[]
-    control: number
-    min: number
-    max: number
-    mean: number
-    std: number
-  }[]
   renderAsThumbnail: boolean
+  groups: EFPGroup[]
+  control: number
   colorMode: 'absolute' | 'relative'
 }
 

@@ -1,11 +1,101 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { CircularProgress } from '@mui/material'
-import React, { useId, useMemo } from 'react'
+import {
+  Box,
+  CircularProgress,
+  Fade,
+  Grow,
+  Popper,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Tooltip,
+} from '@mui/material'
+import React, { ReactPropTypes, useId, useMemo } from 'react'
 import { View, ViewDataError, ViewProps } from '../View'
 import { useEFPSVG, useStyles } from './svg'
-import { EFPAction, EFPData, EFPId } from './types'
+import {
+  EFPAction,
+  EFPData,
+  EFPGroup,
+  EFPId,
+  EFPSampleData,
+  EFPTissue,
+} from './types'
 import _ from 'lodash'
 import { useViewID } from '@eplant/state'
+
+function SVGTooltip(props: {
+  el: SVGElement | null
+  group: EFPGroup
+  tissue: EFPTissue
+  data: EFPData
+}) {
+  const [open, setOpen] = React.useState(false)
+  React.useEffect(() => {
+    const enterListener = () => {
+      setOpen(true)
+    }
+    const leaveListener = () => {
+      setOpen(false)
+    }
+    if (props.el) {
+      props.el.addEventListener('mouseenter', enterListener)
+      props.el.addEventListener('mouseleave', leaveListener)
+      console.log('adding listeners', props.el)
+      return () => {
+        if (props.el) {
+          props.el.removeEventListener('mouseenter', enterListener)
+          props.el.removeEventListener('mouseleave', leaveListener)
+          setOpen(false)
+        }
+      }
+    }
+  }, [props.el])
+  return (
+    <Popper transition anchorEl={props.el} open={open}>
+      {({ TransitionProps }) => (
+        <Grow {...TransitionProps} timeout={350}>
+          <Box
+            sx={(theme) => ({
+              backgroundColor: theme.palette.background.active,
+              padding: theme.spacing(1),
+              boxShadow: theme.shadows[2],
+            })}
+          >
+            <Table size="small">
+              <TableBody>
+                <TableRow>
+                  <TableCell>Sample name</TableCell>
+                  <TableCell>{props.tissue.name}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Level</TableCell>
+                  <TableCell>
+                    {props.tissue.mean.toFixed(2)}±{props.tissue.std.toFixed(2)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Samples</TableCell>
+                  <TableCell>{props.tissue.samples}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Log2 of fold change vs control</TableCell>
+                  <TableCell>
+                    {Math.log2(props.tissue.mean / props.data.control).toFixed(
+                      2
+                    )}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Box>
+        </Grow>
+      )}
+    </Popper>
+  )
+}
+
 export default class EFP implements View {
   constructor(
     public name: string,
@@ -98,30 +188,35 @@ export default class EFP implements View {
 
     for (const { name, value } of data) samples[name] = value
     loadEvent(1)
+    const groupsData = groups.map((group) => {
+      const tissues: EFPTissue[] = group.tissues.map((tissue) => ({
+        name: tissue.name,
+        id: tissue.id,
+        ...getEFPSampleData(
+          tissue.samples
+            .map((name) => samples[name])
+            .filter((n) => Number.isFinite(n))
+        ),
+      }))
+      const tissueValues = tissues.map((tissue) => tissue.mean)
+      return {
+        name: group.name,
+        control: _.mean(
+          group.controls
+            .map((control) => samples[control])
+            .filter((n) => Number.isFinite(n))
+        ),
+        tissues: tissues.filter((t) => t.samples > 0),
+        ...getEFPSampleData(tissueValues),
+      }
+    })
     const out: EFPData = {
       renderAsThumbnail: false,
       colorMode: 'absolute',
-      groups: groups.map((group) => {
-        const tissues = group.tissues.map((tissue) => ({
-          name: tissue.name,
-          id: tissue.id,
-          value: _.mean(tissue.samples.map((sample) => samples[sample])),
-        }))
-        const tissueValues = tissues.map((tissue) => tissue.value)
-        const mean = _.mean(tissueValues)
-        return {
-          name: group.name,
-          control: _.mean(group.controls.map((control) => samples[control])),
-          tissues,
-          mean: mean,
-          max: Math.max(...tissueValues),
-          min: Math.min(...tissueValues),
-          std: Math.sqrt(
-            _.sumBy(tissueValues, (v) => Math.pow(v - mean, 2)) /
-              tissueValues.length
-          ),
-        }
-      }),
+      groups: groupsData,
+      control: _.mean(
+        groupsData.map((g) => g.control).filter((g) => Number.isFinite(g))
+      ),
     }
     return out
   }
@@ -145,8 +240,9 @@ export default class EFP implements View {
       (props.geneticElement?.id ?? 'no-gene') +
       '-' +
       React.useMemo(() => Math.random().toString(16).slice(3), [])
+    console.log(id)
     const styles = useStyles(id, props.activeData)
-    React.useInsertionEffect(() => {
+    React.useLayoutEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
       document.head.appendChild(el)
@@ -155,17 +251,63 @@ export default class EFP implements View {
       }
     }, [props.activeData.groups, styles])
 
+    // Add tooltips to svg
+    const [svgElements, setSvgElements] = React.useState<
+      {
+        el: SVGElement
+        group: EFPGroup
+        tissue: EFPTissue
+      }[]
+    >([])
+
+    React.useLayoutEffect(() => {
+      const elements = Array.from(
+        props.activeData.groups.flatMap((group) =>
+          group.tissues.map((t) => ({
+            el: document.querySelector(`#${id} .efp-group-${t.id}`),
+            group,
+            tissue: t,
+          }))
+        )
+      )
+      setSvgElements(elements as any)
+    }, [props.activeData.groups, id])
     if (!svg) return <CircularProgress />
     return (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          position: 'relative',
-        }}
-        className={id}
-        dangerouslySetInnerHTML={{ __html: svg }}
-      />
+      <>
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+          }}
+          id={id}
+          dangerouslySetInnerHTML={{ __html: svg }}
+        />
+        {!props.activeData.renderAsThumbnail &&
+          svgElements.map(({ el, group, tissue }) => (
+            <SVGTooltip
+              data={props.activeData}
+              key={tissue.id}
+              el={el}
+              group={group}
+              tissue={tissue}
+            />
+          ))}
+      </>
     )
+  }
+}
+
+function getEFPSampleData(samples: number[]): EFPSampleData {
+  const mean = _.mean(samples)
+  return {
+    max: Math.max(...samples),
+    min: Math.min(...samples),
+    mean: mean,
+    std: Math.sqrt(
+      _.sumBy(samples, (v) => Math.pow(v - mean, 2)) / samples.length
+    ),
+    samples: samples.length,
   }
 }

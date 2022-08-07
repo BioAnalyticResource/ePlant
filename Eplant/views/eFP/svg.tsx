@@ -4,7 +4,7 @@ import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import * as React from 'react'
 import { ViewProps } from '../View'
-import { EFPAction, EFPData, EFPId, EFPSVGCache } from './types'
+import { EFPAction, EFPData, EFPGroup, EFPId, EFPSVGCache } from './types'
 import { mix } from 'color2k'
 
 const cacheAtom = atomWithStorage<EFPSVGCache>('eFP_cache', {})
@@ -82,17 +82,20 @@ export const useEFPSVG = (
 
 export function getColor(
   value: number,
-  group: EFPData['groups'][number],
+  group: EFPGroup,
+  control: number,
   theme: Theme,
-  colorMode: 'relative' | 'absolute',
-  id: string
+  colorMode: 'relative' | 'absolute'
 ): string {
   const extremum = Math.max(
-    Math.abs(Math.log2(group.min / group.control)),
-    Math.log2(group.max / group.control)
+    Math.abs(Math.log2(group.min / control)),
+    Math.log2(group.max / control),
+    1
   )
-  const norm = Math.log2(value / group.control) / extremum
-  if (id.includes('GuardCellDroughtView')) console.log(group, extremum, norm)
+  const norm = Math.log2(value / control) / extremum
+  // eslint-disable-next-line no-debugger
+  //if (control == null) debugger
+  if (isNaN(norm)) console.log(group)
   if (colorMode === 'relative')
     return norm < 0
       ? mix(
@@ -113,30 +116,30 @@ export function getColor(
     )
 }
 
-export function useStyles(id: string, { colorMode, groups }: EFPData) {
+export function useStyles(id: string, { colorMode, groups, control }: EFPData) {
   const theme = useTheme()
   const samples = groups
     .flatMap((group) =>
       group.tissues.map(
         (tissue) =>
           `
-          .${id} .efp-group-${tissue.id} *, .${id} .efp-group-${
+          #${id} .efp-group-${tissue.id} *, #${id} .efp-group-${
             tissue.id
           } { fill: ${getColor(
-            tissue.value,
+            tissue.mean,
             group,
+            control,
             theme,
-            colorMode,
-            id
+            colorMode
           )} !important; }`
       )
     )
     .join('\n')
   return `${samples}
-  .${id} text, .${id} tspan {
+  #${id} text, .${id} tspan {
     fill: ${theme.palette.text.primary} !important;
   }
-  .${id} #outlines path {
+  #${id} #outlines path {
     stroke: ${theme.palette.text.primary};
   }
   `
