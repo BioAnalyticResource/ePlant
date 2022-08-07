@@ -1,6 +1,5 @@
 import { useSpecies } from '@eplant/state'
-import GeneticElement from '@eplant/GeneticElement'
-import Species from '@eplant/Species'
+import GeneticElement, { Species } from '@eplant/GeneticElement'
 import { Button, MenuItem, styled, TextField } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
