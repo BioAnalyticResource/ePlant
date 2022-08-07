@@ -50,16 +50,18 @@ const eplantScope = Symbol('Eplant scope')
 function RootApp() {
   const [darkMode, setDarkMode] = useDarkMode()
   return (
-    <Provider scope={eplantScope}>
-      <ThemeProvider theme={darkMode ? dark : light}>
-        <CssBaseline />
-        <BrowserRouter>
-          <Config.Provider value={defaultConfig}>
-            <Eplant />
-          </Config.Provider>
-        </BrowserRouter>
-      </ThemeProvider>
-    </Provider>
+    <React.StrictMode>
+      <Provider scope={eplantScope}>
+        <ThemeProvider theme={darkMode ? dark : light}>
+          <CssBaseline />
+          <BrowserRouter>
+            <Config.Provider value={defaultConfig}>
+              <Eplant />
+            </Config.Provider>
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
+    </React.StrictMode>
   )
 }
 
