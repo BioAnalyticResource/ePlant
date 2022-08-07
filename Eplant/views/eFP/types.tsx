@@ -11,6 +11,7 @@ export type EFPData = {
     std: number
   }[]
   renderAsThumbnail: boolean
+  colorMode: 'absolute' | 'relative'
 }
 
 export type EFPSVG = { svg: string; xml: string; id: EFPId }

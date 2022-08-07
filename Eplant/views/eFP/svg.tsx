@@ -84,13 +84,15 @@ export function getColor(
   value: number,
   group: EFPData['groups'][number],
   theme: Theme,
-  colorMode: 'relative' | 'absolute'
+  colorMode: 'relative' | 'absolute',
+  id: string
 ): string {
   const extremum = Math.max(
     Math.abs(Math.log2(group.min / group.control)),
     Math.log2(group.max / group.control)
   )
   const norm = Math.log2(value / group.control) / extremum
+  if (id.includes('GuardCellDroughtView')) console.log(group, extremum, norm)
   if (colorMode === 'relative')
     return norm < 0
       ? mix(
@@ -98,7 +100,11 @@ export function getColor(
           theme.palette.cold.main,
           Math.abs(norm)
         )
-      : mix(theme.palette.background.active, theme.palette.hot.main, norm)
+      : mix(
+          theme.palette.background.active,
+          theme.palette.hot.main,
+          Math.abs(norm)
+        )
   else
     return mix(
       theme.palette.background.active,
@@ -107,9 +113,9 @@ export function getColor(
     )
 }
 
-export function useStyles(id: string, data: EFPData['groups']) {
+export function useStyles(id: string, { colorMode, groups }: EFPData) {
   const theme = useTheme()
-  const samples = data
+  const samples = groups
     .flatMap((group) =>
       group.tissues.map(
         (tissue) =>
@@ -120,7 +126,8 @@ export function useStyles(id: string, data: EFPData['groups']) {
             tissue.value,
             group,
             theme,
-            'absolute'
+            colorMode,
+            id
           )} !important; }`
       )
     )

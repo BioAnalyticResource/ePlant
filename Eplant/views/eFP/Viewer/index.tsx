@@ -9,6 +9,7 @@ import { EFPViewerAction, EFPViewerData } from './types'
 import { FixedSizeList as List } from 'react-window'
 import _ from 'lodash'
 import useDimensions from '@eplant/util/useDimensions'
+import { EFPData } from '../types'
 
 export const EFPListMemoized = React.memo(
   function EFPList(props: {
@@ -17,6 +18,7 @@ export const EFPListMemoized = React.memo(
     activeView: EFP
     dispatch: ViewProps<EFPViewerData, EFPViewerAction>['dispatch']
     height: number
+    colorMode: 'absolute' | 'relative'
   }) {
     return (
       <List
@@ -46,6 +48,7 @@ export const EFPListMemoized = React.memo(
                   onClick={() => {
                     props.dispatch({ type: 'set-view', id: props.views[i].id })
                   }}
+                  colorMode={props.colorMode}
                 />
               </div>
             </Tooltip>
@@ -64,6 +67,7 @@ export const EFPListMemoized = React.memo(
       prev.activeView.id == next.activeView.id,
       prev.dispatch == next.dispatch,
       prev.height == next.height,
+      prev.colorMode == next.colorMode,
     ]
     return a.every((v) => v)
   }
@@ -81,6 +85,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       offset: { x: 0, y: 0 },
       zoom: 1,
     },
+    colorMode: 'absolute' as const,
   })
   reducer = (state: EFPViewerData, action: EFPViewerAction) => {
     switch (action.type) {
@@ -101,6 +106,14 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         return {
           ...state,
           transform: action.transform,
+        }
+      case 'toggle-color-mode':
+        return {
+          ...state,
+          colorMode:
+            state.colorMode == 'absolute'
+              ? ('relative' as const)
+              : ('absolute' as const),
         }
       default:
         return state
@@ -129,14 +142,23 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       () =>
         activeData ? (
           <activeView.component
-            activeData={activeData}
+            activeData={{
+              ...activeData,
+              colorMode: props.activeData.colorMode,
+            }}
             geneticElement={props.geneticElement}
             dispatch={dispatch}
           />
         ) : (
           <></>
         ),
-      [activeView.id, props.geneticElement.id, dispatch, activeData]
+      [
+        activeView.id,
+        props.geneticElement.id,
+        dispatch,
+        activeData,
+        props.activeData.colorMode,
+      ]
     )
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
@@ -165,6 +187,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
             dispatch={props.dispatch}
             geneticElement={props.geneticElement}
             views={EFPViews}
+            colorMode={props.activeData.colorMode}
           />
         </Box>
         <Box
@@ -198,10 +221,14 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       </Box>
     )
   }
-  actions = [
+  actions: View<EFPViewerData, EFPViewerAction>['actions'] = [
     {
-      action: { type: 'reset-transform' } as EFPViewerAction,
+      action: { type: 'reset-transform' },
       render: () => <>Reset pan/zoom</>,
+    },
+    {
+      action: { type: 'toggle-color-mode' },
+      render: (props) => <>Toggle data mode: {props.activeData.colorMode}</>,
     },
   ]
 }

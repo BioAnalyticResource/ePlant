@@ -10,8 +10,10 @@ export type EFPViewerData = {
     name: string
   }[]
   transform: Transform
+  colorMode: 'absolute' | 'relative'
 }
 export type EFPViewerAction =
   | { type: 'set-view'; id: EFPId }
   | { type: 'reset-transform' }
   | { type: 'set-transform'; transform: Transform }
+  | { type: 'toggle-color-mode' }

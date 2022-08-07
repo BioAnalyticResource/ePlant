@@ -1,6 +1,6 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { CircularProgress } from '@mui/material'
-import React from 'react'
+import React, { useId, useMemo } from 'react'
 import { View, ViewDataError, ViewProps } from '../View'
 import { useEFPSVG, useStyles } from './svg'
 import { EFPAction, EFPData, EFPId } from './types'
@@ -100,6 +100,7 @@ export default class EFP implements View {
     loadEvent(1)
     const out: EFPData = {
       renderAsThumbnail: false,
+      colorMode: 'absolute',
       groups: groups.map((group) => {
         const tissues = group.tissues.map((tissue) => ({
           name: tissue.name,
@@ -138,8 +139,13 @@ export default class EFP implements View {
 
     const { svg } = view ?? {}
     const id =
-      'svg-container-' + this.id + '-' + (props.geneticElement?.id ?? 'no-gene')
-    const styles = useStyles(id, props.activeData.groups)
+      'svg-container-' +
+      this.id +
+      '-' +
+      (props.geneticElement?.id ?? 'no-gene') +
+      '-' +
+      React.useMemo(() => Math.random().toString(16).slice(3), [])
+    const styles = useStyles(id, props.activeData)
     React.useInsertionEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles

@@ -9,6 +9,7 @@ import {
 import * as React from 'react'
 import EFP from '.'
 import { useViewData } from '../View'
+import { EFPData } from './types'
 
 const EFPPreviewContainer = styled(
   (props: BoxProps & { selected: boolean }) => <Box {...props} />
@@ -30,11 +31,13 @@ export default React.forwardRef(function EFPPreview(
     gene,
     view,
     selected,
+    colorMode,
     ...boxProps
   }: {
     gene: GeneticElement
     view: EFP
     selected: boolean
+    colorMode: 'absolute' | 'relative'
   } & BoxProps,
   ref
 ) {
@@ -55,7 +58,7 @@ export default React.forwardRef(function EFPPreview(
       ) : (
         <>
           <view.component
-            activeData={{ ...activeData, renderAsThumbnail: true }}
+            activeData={{ ...activeData, colorMode, renderAsThumbnail: true }}
             geneticElement={gene}
             dispatch={dispatch}
           />
