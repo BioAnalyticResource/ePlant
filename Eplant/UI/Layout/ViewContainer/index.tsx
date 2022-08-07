@@ -4,6 +4,7 @@ import { usePrinting, useViewID } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
+import ErrorBoundary from '@eplant/util/ErrorBoundary'
 import {
   AppBar,
   Button,
@@ -197,24 +198,26 @@ export function ViewContainer({
             : {}),
         })}
       >
-        {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-        {gene && !genericViews.some((geneView) => view.id == geneView.id) ? (
-          <GeneHeader geneticElement={gene} />
-        ) : null}
-        {loading || !activeData ? (
-          <LoadingPage
-            loadingAmount={loadingAmount}
-            gene={gene}
-            view={view}
-            error={error}
-          />
-        ) : (
-          <view.component
-            geneticElement={gene}
-            activeData={activeData}
-            dispatch={dispatch}
-          />
-        )}
+        <ErrorBoundary>
+          {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
+          {gene && !genericViews.some((geneView) => view.id == geneView.id) ? (
+            <GeneHeader geneticElement={gene} />
+          ) : null}
+          {loading || !activeData ? (
+            <LoadingPage
+              loadingAmount={loadingAmount}
+              gene={gene}
+              view={view}
+              error={error}
+            />
+          ) : (
+            <view.component
+              geneticElement={gene}
+              activeData={activeData}
+              dispatch={dispatch}
+            />
+          )}
+        </ErrorBoundary>
       </Container>
     </Box>
   )
