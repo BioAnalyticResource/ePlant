@@ -128,7 +128,7 @@ export function useStyles(id: string, { colorMode, groups, control }: EFPData) {
           } { fill: ${getColor(
             tissue.mean,
             group,
-            control,
+            control ?? 1,
             theme,
             colorMode
           )} !important; }`

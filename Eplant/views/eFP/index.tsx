@@ -42,7 +42,6 @@ function SVGTooltip(props: {
     if (props.el) {
       props.el.addEventListener('mouseenter', enterListener)
       props.el.addEventListener('mouseleave', leaveListener)
-      console.log('adding listeners', props.el)
       return () => {
         if (props.el) {
           props.el.removeEventListener('mouseenter', enterListener)
@@ -82,9 +81,9 @@ function SVGTooltip(props: {
                 <TableRow>
                   <TableCell>Log2 of fold change vs control</TableCell>
                   <TableCell>
-                    {Math.log2(props.tissue.mean / props.data.control).toFixed(
-                      2
-                    )}
+                    {Math.log2(
+                      props.tissue.mean / (props.data.control ?? 1)
+                    ).toFixed(2)}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -240,7 +239,6 @@ export default class EFP implements View {
       (props.geneticElement?.id ?? 'no-gene') +
       '-' +
       React.useMemo(() => Math.random().toString(16).slice(3), [])
-    console.log(id)
     const styles = useStyles(id, props.activeData)
     React.useLayoutEffect(() => {
       const el = document.createElement('style')

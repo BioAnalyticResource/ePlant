@@ -13,12 +13,12 @@ export type EFPTissue = { name: string; id: string } & EFPSampleData
 export type EFPGroup = EFPSampleData & {
   name: string
   tissues: EFPTissue[]
-  control: number
+  control?: number
 }
 export type EFPData = {
   renderAsThumbnail: boolean
   groups: EFPGroup[]
-  control: number
+  control?: number
   colorMode: 'absolute' | 'relative'
 }
 
