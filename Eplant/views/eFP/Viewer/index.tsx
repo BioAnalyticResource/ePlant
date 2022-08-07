@@ -166,17 +166,24 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
     return (
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'stretch',
-          justifyContent: 'stretch',
           width: '100%',
           height: '100%',
-          overflow: 'hidden',
+          position: 'relative',
         }}
         ref={ref}
       >
-        <Box>
+        <Box
+          sx={{
+            zIndex: 0,
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'stretch',
+            justifyContent: 'stretch',
+          }}
+        >
           <EFPListMemoized
             height={dimensions.height}
             activeView={activeView}
@@ -185,34 +192,37 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
             views={EFPViews}
             colorMode={props.activeData.colorMode}
           />
-        </Box>
-        <Box
-          sx={{
-            flexGrow: 1,
-          }}
-        >
-          {loading || !activeData ? (
-            <LinearProgress value={loadingAmount * 100} variant="determinate" />
-          ) : (
-            <PanZoom
-              sx={{
-                width: '100%',
-                height: '100%',
-              }}
-              transform={props.activeData.transform}
-              setTransform={(transform) => {
-                props.dispatch((data) => ({
-                  type: 'set-transform',
-                  transform:
-                    typeof transform == 'function'
-                      ? transform(data.transform)
-                      : transform,
-                }))
-              }}
-            >
-              {efp}
-            </PanZoom>
-          )}
+          <Box
+            sx={{
+              flexGrow: 1,
+            }}
+          >
+            {loading || !activeData ? (
+              <LinearProgress
+                value={loadingAmount * 100}
+                variant="determinate"
+              />
+            ) : (
+              <PanZoom
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                }}
+                transform={props.activeData.transform}
+                setTransform={(transform) => {
+                  props.dispatch((data) => ({
+                    type: 'set-transform',
+                    transform:
+                      typeof transform == 'function'
+                        ? transform(data.transform)
+                        : transform,
+                  }))
+                }}
+              >
+                {efp}
+              </PanZoom>
+            )}
+          </Box>
         </Box>
       </Box>
     )

@@ -25,7 +25,11 @@ export default function ViewOptions<T, A>({
         activeData
           ? view.actions.map((a, i) => (
               <MenuItem key={i} onClick={() => dispatch(a.action)}>
-                <a.render activeData={activeData} geneticElement={gene} />
+                <a.render
+                  dispatch={dispatch}
+                  activeData={activeData}
+                  geneticElement={gene}
+                />
               </MenuItem>
             ))
           : []
