@@ -270,7 +270,21 @@ export default class EFP implements View {
       )
       setSvgElements(elements as any)
     }, [props.activeData.groups, id])
-    if (!svg) return <CircularProgress />
+    if (!svg) {
+      return (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            alignSelf: 'center',
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )
+    }
     return (
       <>
         <div
