@@ -59,7 +59,6 @@ export function LeftNav(props: {
             <Switch
               onChange={(v) => setDarkMode(v.target.checked)}
               checked={darkMode}
-              defaultChecked
             />
           }
           label="Dark Mode"
