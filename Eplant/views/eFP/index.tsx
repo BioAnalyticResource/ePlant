@@ -187,28 +187,30 @@ export default class EFP implements View {
 
     for (const { name, value } of data) samples[name] = value
     loadEvent(1)
-    const groupsData = groups.map((group) => {
-      const tissues: EFPTissue[] = group.tissues.map((tissue) => ({
-        name: tissue.name,
-        id: tissue.id,
-        ...getEFPSampleData(
-          tissue.samples
-            .map((name) => samples[name])
-            .filter((n) => Number.isFinite(n))
-        ),
-      }))
-      const tissueValues = tissues.map((tissue) => tissue.mean)
-      return {
-        name: group.name,
-        control: _.mean(
-          group.controls
-            .map((control) => samples[control])
-            .filter((n) => Number.isFinite(n))
-        ),
-        tissues: tissues.filter((t) => t.samples > 0),
-        ...getEFPSampleData(tissueValues),
-      }
-    })
+    const groupsData = groups
+      .map((group) => {
+        const tissues: EFPTissue[] = group.tissues.map((tissue) => ({
+          name: tissue.name,
+          id: tissue.id,
+          ...getEFPSampleData(
+            tissue.samples
+              .map((name) => samples[name])
+              .filter((n) => Number.isFinite(n))
+          ),
+        }))
+        const tissueValues = tissues.map((tissue) => tissue.mean)
+        return {
+          name: group.name,
+          control: _.mean(
+            group.controls
+              .map((control) => samples[control])
+              .filter((n) => Number.isFinite(n))
+          ),
+          tissues: tissues.filter((t) => t.samples > 0),
+          ...getEFPSampleData(tissueValues),
+        }
+      })
+      .filter((g) => Number.isFinite(g.mean))
     const out: EFPData = {
       renderAsThumbnail: false,
       colorMode: 'absolute',
