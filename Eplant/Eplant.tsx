@@ -424,6 +424,7 @@ function EplantLayout() {
       <IconButton
         onClick={() => addTab({ tabsetId: node.getId() })}
         size="small"
+        key="add-tab"
       >
         <Add />
       </IconButton>
@@ -435,6 +436,7 @@ function EplantLayout() {
           if (id) makePopout(id)
         }}
         size="small"
+        key="make-popout"
       >
         <CallMade />
       </IconButton>
