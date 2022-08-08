@@ -144,7 +144,6 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       activeView,
       props.geneticElement
     )
-    if (!props.geneticElement) return <></>
     const efp = React.useMemo(
       () =>
         activeData ? (
@@ -161,7 +160,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         ),
       [
         activeView.id,
-        props.geneticElement.id,
+        props.geneticElement?.id,
         dispatch,
         activeData,
         props.activeData.colorMode,
@@ -170,6 +169,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
 
+    if (!props.geneticElement) return <></>
     return (
       <Box
         sx={{

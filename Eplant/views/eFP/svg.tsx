@@ -95,7 +95,6 @@ export function getColor(
   const norm = Math.log2(value / control) / extremum
   // eslint-disable-next-line no-debugger
   //if (control == null) debugger
-  if (isNaN(norm)) console.log(group, value, control)
   if (colorMode === 'relative')
     return norm < 0
       ? mix(

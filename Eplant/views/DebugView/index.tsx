@@ -63,6 +63,11 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
             gene={props.geneticElement}
             view={AtGenExpress}
             selected={false}
+            colorMode={'relative'}
+            style={{
+              width: '100px',
+              height: '100px',
+            }}
           />
         )}
       </div>

@@ -4,9 +4,10 @@ import { atomWithStorage } from 'jotai/utils'
 
 import * as React from 'react'
 
+export type ViewDispatch<A> = (a: A | ((a: T) => A)) => void
 export type ViewProps<T, A> = {
   activeData: T
-  dispatch: (a: A | ((a: T) => A)) => void
+  dispatch: ViewDispatch<A>
   geneticElement: GeneticElement | null
 }
 
@@ -98,12 +99,17 @@ function getViewDataAtom<T, A>(view: View<T, A>, gene: GeneticElement | null): R
 }
 
 export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticElement | null) {
-  const [viewData, setViewData] = useAtom(getViewDataAtom<T, Action>(view, gene))
+  const [initialViewData, setInitialViewData] = useAtom(getViewDataAtom<T, Action>(view, gene))
+  // viewData can be incorrect if the inputs to useViewData change because it waits for the effect that syncs them to complete
+  // We sync them here to prevent this from happening
+  const [prevKey, setPrevKey] = React.useState('')
+  const key = `${view.id}-${gene?.id ?? 'generic-view'}`
+  const [viewData, setViewData] = React.useState<T | undefined>(initialViewData.activeData)
 
   React.useEffect(() => {
     ;(async () => {
-      if (viewData.loading || viewData.activeData || viewData.error) return
-      setViewData((viewData) => ({ ...viewData, loading: true }))
+      if (initialViewData.loading || initialViewData.activeData || initialViewData.error) return
+      setInitialViewData((viewData) => ({ ...viewData, loading: true }))
       try {
         const loader = gene?.species.api.loaders[view.id] ?? view.getInitialData
         if (!loader) {
@@ -111,33 +117,40 @@ export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticEleme
         }
         // Guaranteed to work even though types are broken because if gene is null then view.getInitialData is always used
         const data = await loader(gene as GeneticElement, (amount) => {
-          setViewData((viewData) => ({ ...viewData, loadingAmount: amount }))
+          setInitialViewData((viewData) => ({ ...viewData, loadingAmount: amount }))
       })
-        setViewData((viewData) => ({ ...viewData, activeData: data }))
+        setInitialViewData((viewData) => ({ ...viewData, activeData: data }))
       } catch (e) {
         if (e instanceof Error) {
           console.log(e)
-          setViewData((viewData) => ({ ...viewData, error: ViewDataError.FAILED_TO_LOAD }))
+          setInitialViewData((viewData) => ({ ...viewData, error: ViewDataError.FAILED_TO_LOAD }))
         }
         else {
-          setViewData((viewData) => ({ ...viewData, error: e as ViewDataError }))
+          setInitialViewData((viewData) => ({ ...viewData, error: e as ViewDataError }))
         }
       }
-      setViewData((viewData) => ({ ...viewData, loading: false }))
+      setInitialViewData((viewData) => ({ ...viewData, loading: false }))
     })()
-  }, [view, gene, viewData])
+  }, [view.id, gene?.id, initialViewData.loading, initialViewData.error, !!initialViewData.activeData, setInitialViewData])
+
+  React.useEffect(() => {
+    if (initialViewData.activeData) {
+      setViewData(initialViewData.activeData)
+      setPrevKey(key)
+    }
+  }, [initialViewData.activeData, key])
 
   const dispatch = React.useMemo(() => (action: Action | ((a: T) => Action)) => {
-    setViewData((viewData) => ({ 
-      ...viewData, 
-      activeData: viewData.activeData ? (view.reducer ? 
-        view.reducer(viewData.activeData, typeof action == 'function' ? 
-          (action as any)(viewData.activeData) : action) : 
-          viewData.activeData) : viewData.activeData}))
-  }, [setViewData, view.id])
+    setViewData((viewData) => ( 
+      viewData ? (view.reducer ? 
+        view.reducer(viewData, typeof action == 'function' ? 
+          (action as any)(viewData) : action) : 
+          viewData) : viewData))
+  }, [setViewData, view.id, key])
 
   return {
-    ...viewData, 
+    ...initialViewData,
+    activeData: key == prevKey ? viewData : initialViewData.activeData,
     dispatch
   }
 }

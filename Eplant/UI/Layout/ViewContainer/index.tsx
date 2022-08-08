@@ -34,13 +34,13 @@ import ViewOptions from './ViewOptions'
  * @param props The remaining props are passed directly to the container
  * @returns
  */
-export function ViewContainer({
+export function ViewContainer<T, A>({
   view,
   setView,
   gene,
   ...props
 }: {
-  view: View
+  view: View<T, A>
   setView: (view: View) => void
   gene: GeneticElement | null
 } & BoxProps) {
@@ -118,7 +118,13 @@ export function ViewContainer({
                 ))}
               </Select>
             </FormControl>
-            <ViewOptions gene={gene} view={view} />
+            <ViewOptions
+              gene={gene}
+              view={view}
+              loading={loading}
+              activeData={activeData}
+              dispatch={dispatch}
+            />
           </Stack>
           <Button
             variant="text"
@@ -152,7 +158,7 @@ export function ViewContainer({
         </Toolbar>
       </AppBar>
     ),
-    [view.id, gene?.id, loading]
+    [view.id, gene?.id, loading, activeData, dispatch]
   )
   return (
     <Box {...props} display="flex" flexDirection="column">
