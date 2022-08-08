@@ -137,7 +137,6 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         EFPViews[0],
       [props.activeData.activeView, ...EFPViews.map((v) => v.id)]
     )
-    //console.log(3, activeView)
     if (!activeView) {
       throw new Error('active view does not exist')
     }
@@ -145,7 +144,6 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       activeView,
       props.geneticElement
     )
-    //console.log(4, activeData)
     if (!props.geneticElement) return <></>
     const efp = React.useMemo(
       () =>

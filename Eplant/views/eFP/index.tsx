@@ -199,13 +199,14 @@ export default class EFP implements View {
           ),
         }))
         const tissueValues = tissues.map((tissue) => tissue.mean)
+        const control = _.mean(
+          group.controls
+            .map((control) => samples[control])
+            .filter((n) => Number.isFinite(n))
+        )
         return {
           name: group.name,
-          control: _.mean(
-            group.controls
-              .map((control) => samples[control])
-              .filter((n) => Number.isFinite(n))
-          ),
+          control: Number.isFinite(control) ? control : undefined,
           tissues: tissues.filter((t) => t.samples > 0),
           ...getEFPSampleData(tissueValues),
         }
