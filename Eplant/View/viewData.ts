@@ -43,6 +43,7 @@ const viewAtoms: {
 
 function getViewAtom(key: string) {
   if (viewAtoms[key]) return viewAtoms[key]
+  console.log('creating new')
   const a = atom<ViewDataType<unknown>>(defaultViewData)
   // Check if there is cached data on mount
   a.onMount = (setAtom) => {
@@ -59,31 +60,33 @@ function getViewAtom(key: string) {
     return viewDataStorage.watch(key, listener)
   }
   viewAtoms[key] = a
-  return a
+  return viewAtoms[key]
 }
 
 export function useViewData<T, A>(
   view: View<T, A>,
   gene: GeneticElement | null
-) {
+): UseViewDataType<T, A> {
   const key = `${view.id}-${gene?.id ?? 'generic-view'}`
   const id = key + '-' + useViewID()
   const [initialViewData, setInitialViewData] = useAtom(getViewAtom(key))
   // viewData can be incorrect if the inputs to useViewData change because it waits for the effect that syncs them to complete
-  // Storing the previous key allows us to give a loading screen when this happens
+  // Storing the previous key allows us to throw an error when this happens
   const [prevID, setPrevID] = React.useState('')
   const [viewData, setViewData] =
     React.useState<ViewDataType<T>>(defaultViewData)
 
   // Reset viewData when the key changes
-  React.useEffect(() => {
+  if (prevID != id) {
     setViewData(defaultViewData)
     setPrevID(id)
-  }, [id])
+  }
 
   // When the initialViewData is loaded from cache, set the viewData
   // if there is no cached initialViewData then load it using the view's loader
   React.useEffect(() => {
+    // Don't load data if the view data and they key aren't synced
+    if (id != prevID) return
     if (initialViewData && initialViewData.activeData) {
       setViewData(initialViewData as ViewDataType<T>)
     } else if (!initialViewData.loading && !initialViewData.error) {
@@ -109,7 +112,6 @@ export function useViewData<T, A>(
             activeData: data,
             loading: false,
           }
-          setViewData(newData)
           setInitialViewData(newData)
           viewDataStorage.set(key, newData)
         } catch (e) {
@@ -122,11 +124,16 @@ export function useViewData<T, A>(
             loading: false,
           }
           setInitialViewData(newData)
-          setViewData(newData)
         }
       })()
     }
   }, [initialViewData, key])
+
+  React.useEffect(() => {
+    if (initialViewData.activeData && id == prevID) {
+      setViewData(initialViewData as ViewDataType<T>)
+    }
+  }, [initialViewData, id, prevID])
 
   const dispatch = React.useMemo(
     () => (action: A) => {
@@ -138,14 +145,17 @@ export function useViewData<T, A>(
             : viewData.activeData,
       }))
     },
-    [setViewData, view.id, key]
+    [setViewData, view.id, id]
   )
 
-  if (viewData.loading || initialViewData.loading || id != prevID)
+  console.log(viewData, initialViewData, id, prevID)
+  if (viewData.loading || initialViewData.loading || id != prevID) {
     return {
       ...initialViewData,
+      activeData: initialViewData.activeData as T | undefined,
       dispatch,
     }
+  }
   return {
     ...viewData,
     dispatch,
