@@ -10,20 +10,21 @@ export type Transform = {
 
 export default function PanZoom({
   children,
-  setTransform,
-  transform,
+  onTransformChange,
+  initialTransform,
   ...props
 }: BoxProps & {
-  transform: Transform
-  setTransform: (transform: Transform | ((p: Transform) => Transform)) => void
+  initialTransform: Transform
+  onTransformChange: (transform: Transform) => void
 }) {
-  const { offset, zoom } = transform
   const [dragStart, setDragStart] =
     React.useState<{
       click: Point
       offset: Point
     } | null>(null)
 
+  const [transform, setTransform] = React.useState<Transform>(initialTransform)
+  const { offset, zoom } = transform
   const containerRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
@@ -42,13 +43,14 @@ export default function PanZoom({
             mouseY = clientY - y - height / 2
           const updateX = mouseX / newZoom - mouseX / zoom,
             updateY = mouseY / newZoom - mouseY / zoom
-          return {
+          const out = {
             offset: {
               x: offset.x + updateX,
               y: offset.y + updateY,
             },
             zoom: newZoom,
           }
+          return out
         })
       }
     }
@@ -62,6 +64,10 @@ export default function PanZoom({
       }
     }
   }, [containerRef.current, offset, zoom])
+
+  React.useEffect(() => {
+    onTransformChange(transform)
+  }, [transform])
 
   return (
     <Box

@@ -4,10 +4,10 @@ import { atomWithStorage } from 'jotai/utils'
 
 import * as React from 'react'
 
-export type ViewDispatch<T, A> = (a: A | ((a: T) => A)) => void
+export type ViewDispatch<A> = (a: A) => void
 export type ViewProps<T, A> = {
   activeData: T
-  dispatch: ViewDispatch<T, A>
+  dispatch: ViewDispatch<A>
   geneticElement: GeneticElement | null
 }
 

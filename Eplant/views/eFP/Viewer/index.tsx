@@ -239,15 +239,12 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
                 width: '100%',
                 height: '100%',
               }}
-              transform={props.activeData.transform}
-              setTransform={(transform) => {
-                props.dispatch((data) => ({
+              initialTransform={props.activeData.transform}
+              onTransformChange={(transform) => {
+                props.dispatch({
                   type: 'set-transform',
-                  transform:
-                    typeof transform == 'function'
-                      ? transform(data.transform)
-                      : transform,
-                }))
+                  transform,
+                })
               }}
             >
               {efp}
