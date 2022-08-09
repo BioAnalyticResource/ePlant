@@ -54,7 +54,9 @@ const viewDataStorage = {
     if (storedValue === null) {
       throw new Error('no value stored')
     }
-    return JSON.parse(storedValue)
+    const val = JSON.parse(storedValue)
+    if (val.loading || val.error || !val.activeData) throw new Error('invalid value')
+    return val
   },
   setItem(key: string, value: ViewDataType<any>) {
     if (value.loading) localStorage.removeItem(key)
@@ -109,7 +111,6 @@ export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticEleme
   React.useEffect(() => {
     ;(async () => {
       if (initialViewData.loading || initialViewData.activeData || initialViewData.error) return
-      console.log(initialViewData, key)
       setInitialViewData((viewData) => ({ ...viewData, loading: true, loadingAmount: 0 }))
       try {
         const loader = gene?.species.api.loaders[view.id] ?? view.getInitialData
