@@ -37,7 +37,7 @@ export default function PanZoom({
         setTransform(({ offset, zoom }) => {
           // Adjust offset so that the mouse stays at the same position
           const newZoom = zoom * (1 - e.deltaY / 200)
-          if (newZoom < 0.5 || newZoom > 2) return { offset, zoom }
+          if (newZoom < 0.25 || newZoom > 4) return { offset, zoom }
           const mouseX = clientX - x - width / 2,
             mouseY = clientY - y - height / 2
           const updateX = mouseX / newZoom - mouseX / zoom,
