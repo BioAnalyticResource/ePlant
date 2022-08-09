@@ -1,4 +1,4 @@
-import { Link, Tab, Tabs } from '@mui/material'
+import { Link, Tab, Tabs, Typography } from '@mui/material'
 import * as React from 'react'
 import { View, ViewProps } from '../View'
 import { GeneRIFs } from './GeneRIFs'
@@ -46,6 +46,11 @@ const PublicationViewer: View<PublicationViewerData> = {
       </div>
     )
   },
+  header: ({ geneticElement }) => (
+    <Typography variant="h6">
+      Publications related to {geneticElement?.id}
+    </Typography>
+  ),
 }
 
 export default PublicationViewer

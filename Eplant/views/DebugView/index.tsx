@@ -6,6 +6,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material'
 import React from 'react'
 import EFPPreview from '../eFP/EFPPreview'
@@ -84,6 +85,9 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
     },
   ],
   id: 'debug-view',
+  header: ({ geneticElement }) => (
+    <Typography variant="h6">Debug view for {geneticElement?.id}</Typography>
+  ),
 }
 
 export default DebugView

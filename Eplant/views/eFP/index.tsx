@@ -10,6 +10,8 @@ import {
   TableCell,
   TableRow,
   Tooltip,
+  Typography,
+  useTheme,
 } from '@mui/material'
 import React, { ReactPropTypes, useId, useMemo } from 'react'
 import { View, ViewDataError, ViewProps } from '../View'
@@ -32,6 +34,7 @@ function SVGTooltip(props: {
   data: EFPData
 }) {
   const [open, setOpen] = React.useState(false)
+  const theme = useTheme()
   React.useEffect(() => {
     const enterListener = () => {
       setOpen(true)
@@ -289,7 +292,16 @@ export default class EFP implements View {
       )
     }
     return (
-      <>
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          alignSelf: 'center',
+          flexDirection: 'column',
+        }}
+      >
         <div
           style={{
             width: '100%',
@@ -309,7 +321,16 @@ export default class EFP implements View {
               tissue={tissue}
             />
           ))}
-      </>
+      </div>
+    )
+  }
+  header: (props: { geneticElement: GeneticElement | null }) => JSX.Element = ({
+    geneticElement,
+  }) => {
+    return (
+      <Typography variant="h6">
+        {this.name} for {geneticElement?.id}
+      </Typography>
     )
   }
 }

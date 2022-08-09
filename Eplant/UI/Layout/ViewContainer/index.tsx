@@ -206,9 +206,6 @@ export function ViewContainer<T, A>({
       >
         <ErrorBoundary>
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-          {gene && !genericViews.some((geneView) => view.id == geneView.id) ? (
-            <GeneHeader geneticElement={gene} />
-          ) : null}
           {loading || !activeData ? (
             <LoadingPage
               loadingAmount={loadingAmount}
@@ -217,11 +214,18 @@ export function ViewContainer<T, A>({
               error={error}
             />
           ) : (
-            <view.component
-              geneticElement={gene}
-              activeData={activeData}
-              dispatch={dispatch}
-            />
+            <>
+              <view.header
+                activeData={activeData}
+                dispatch={dispatch}
+                geneticElement={gene}
+              />
+              <view.component
+                geneticElement={gene}
+                activeData={activeData}
+                dispatch={dispatch}
+              />
+            </>
           )}
         </ErrorBoundary>
       </Container>

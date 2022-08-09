@@ -2,7 +2,7 @@ import * as React from 'react'
 import component from './component'
 import { Info } from '@mui/icons-material'
 import { View } from '../View'
-import { Link } from '@mui/material'
+import { Link, Typography } from '@mui/material'
 import { GeneInfoViewData } from './data'
 
 /**
@@ -38,6 +38,9 @@ const GeneInfoView: View<GeneInfoViewData> = {
       </div>
     )
   },
+  header: ({ geneticElement }) => (
+    <Typography variant="h6">Information on {geneticElement?.id}</Typography>
+  ),
 }
 
 export default GeneInfoView

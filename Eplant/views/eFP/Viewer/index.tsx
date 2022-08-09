@@ -1,7 +1,14 @@
 import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { useViewData, View, ViewDataError, ViewProps } from '@eplant/views/View'
-import { Box, Drawer, LinearProgress, Tooltip, useTheme } from '@mui/material'
+import {
+  Box,
+  Drawer,
+  LinearProgress,
+  Tooltip,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import React from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
@@ -177,7 +184,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
             colorMode: props.activeData.colorMode,
           }}
           geneticElement={props.geneticElement}
-          dispatch={props.dispatch}
+          dispatch={() => {}}
         />
       )
     }, [
@@ -259,4 +266,14 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       render: (props) => <>Toggle data mode: {props.activeData.colorMode}</>,
     },
   ]
+  header: View<EFPViewerData, EFPViewerAction>['header'] = (props) => (
+    <Typography variant="h6">
+      {
+        props.activeData.views.find((v) => v.id == props.activeData.activeView)
+          ?.name
+      }
+      {': '}
+      {props.geneticElement?.id}
+    </Typography>
+  )
 }

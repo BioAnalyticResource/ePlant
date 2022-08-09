@@ -33,6 +33,7 @@ export interface View<T = any, Action = any> {
   readonly name: string
   readonly id: string
   citation?: (props: {gene: GeneticElement|null}) => JSX.Element
+  header: (props: ViewProps<T, Action>) => JSX.Element
 }
 
 export enum ViewDataError {
