@@ -86,7 +86,8 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
   constructor(
     public id: string,
     public name: string,
-    private views: EFPViewerData['views']
+    private views: EFPViewerData['views'],
+    public icon: () => JSX.Element
   ) {}
   getInitialData = async (
     gene: GeneticElement | null,

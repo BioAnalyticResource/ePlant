@@ -4,7 +4,8 @@ import { View, ViewProps } from '../View'
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
-import { DocumentScanner } from '@mui/icons-material'
+import { DocumentScanner, DocumentScannerOutlined } from '@mui/icons-material'
+import PublicationViewerIcon from './icon'
 
 const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication Viewer',
@@ -31,7 +32,7 @@ const PublicationViewer: View<PublicationViewerData> = {
       </div>
     )
   },
-  icon: () => <DocumentScanner />,
+  icon: () => <PublicationViewerIcon />,
   citation({ gene }) {
     return (
       <div>

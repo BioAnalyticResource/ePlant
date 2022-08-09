@@ -1,9 +1,10 @@
 import * as React from 'react'
 import component from './component'
-import { Info } from '@mui/icons-material'
+import { Info, InfoOutlined } from '@mui/icons-material'
 import { View } from '../View'
 import { Link, Typography } from '@mui/material'
 import { GeneInfoViewData } from './data'
+import GeneInfoViewIcon from './icon'
 
 /**
  * Show information about a gene, including its sequence and features.
@@ -14,7 +15,7 @@ const GeneInfoView: View<GeneInfoViewData> = {
   //TODO: figure out how to make this a component lazy
   // component: React.lazy(() => import('./component')),
   component: component,
-  icon: () => <Info />,
+  icon: () => <GeneInfoViewIcon />,
   citation({ gene }) {
     return (
       <div>

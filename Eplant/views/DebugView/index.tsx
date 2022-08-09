@@ -1,4 +1,5 @@
 import { useViewID } from '@eplant/state'
+import { BugReport, BugReportOutlined } from '@mui/icons-material'
 import {
   Button,
   Table,
@@ -88,6 +89,7 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
   header: ({ geneticElement }) => (
     <Typography variant="h6">Debug view for {geneticElement?.id}</Typography>
   ),
+  icon: () => <BugReportOutlined />,
 }
 
 export default DebugView
