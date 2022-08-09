@@ -62,8 +62,10 @@ export const useEFPSVG = (
 
     // Replace all group ids with classes
     for (const g of svg.querySelectorAll('g, path')) {
-      g.setAttribute('class', 'efp-group-' + g.getAttribute('id') ?? '')
-      g.removeAttribute('id')
+      if (g.getAttribute('id')) {
+        g.setAttribute('class', 'efp-group-' + g.getAttribute('id') ?? '')
+        g.removeAttribute('id')
+      }
       //g.removeAttribute('fill')
     }
 
@@ -138,8 +140,8 @@ export function useStyles(id: string, { colorMode, groups, control }: EFPData) {
   #${id} text, .${id} tspan {
     fill: ${theme.palette.text.primary} !important;
   }
-  #${id} #outlines path {
-    stroke: ${theme.palette.text.primary};
-  }
+  /*#${id} .efp-group-outlines path, #${id} .efp-group-Outlines path {
+    stroke: ${theme.palette.secondary.main};
+  }*/
   `
 }
