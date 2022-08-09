@@ -1,5 +1,5 @@
 import { Transform } from '@eplant/util/PanZoom'
-import { EFPId } from '@eplant/views/eFP/types'
+import { EFPData, EFPId } from '@eplant/views/eFP/types'
 
 export type EFPViewerData = {
   activeView: EFPId
@@ -9,6 +9,7 @@ export type EFPViewerData = {
     id: EFPId
     name: string
   }[]
+  viewData: EFPData[]
   transform: Transform
   colorMode: 'absolute' | 'relative'
 }

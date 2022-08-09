@@ -25,59 +25,43 @@ const EFPPreviewContainer = styled(
   justifyContent: 'center',
   display: 'flex',
 }))
-
 export default React.forwardRef(function EFPPreview(
   {
     gene,
     view,
     selected,
     colorMode,
+    data,
     ...boxProps
   }: {
     gene: GeneticElement
     view: EFP
     selected: boolean
     colorMode: 'absolute' | 'relative'
+    data: EFPData
   } & BoxProps,
   ref
 ) {
-  const { activeData, loading, loadingAmount, dispatch } = useViewData(
-    view,
-    gene
-  )
   return (
     <EFPPreviewContainer ref={ref} selected={selected} {...boxProps}>
-      {loading || !activeData ? (
-        <LinearProgress
-          sx={{
-            width: '100%',
-          }}
-          value={loadingAmount * 100}
-          variant="determinate"
-        />
-      ) : (
-        <>
-          <view.component
-            activeData={{ ...activeData, colorMode, renderAsThumbnail: true }}
-            geneticElement={gene}
-            dispatch={dispatch}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              width: '100%',
-              left: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.2)',
-            }}
-          >
-            <Typography variant="caption">
-              MAX:{' '}
-              {Math.round(Math.max(...activeData.groups.map((g) => g.max)))}
-            </Typography>
-          </div>
-        </>
-      )}
+      <view.component
+        activeData={{ ...data, colorMode, renderAsThumbnail: true }}
+        geneticElement={gene}
+        dispatch={() => {}}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          width: '100%',
+          left: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        }}
+      >
+        <Typography variant="caption">
+          MAX: {Math.round(Math.max(...data.groups.map((g) => g.max)))}
+        </Typography>
+      </div>
     </EFPPreviewContainer>
   )
 })

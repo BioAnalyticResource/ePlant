@@ -15,6 +15,7 @@ export const EFPListMemoized = React.memo(
   function EFPList(props: {
     geneticElement: GeneticElement
     views: EFP[]
+    viewData: EFPData[]
     activeView: EFP
     dispatch: ViewProps<EFPViewerData, EFPViewerAction>['dispatch']
     height: number
@@ -40,6 +41,7 @@ export const EFPListMemoized = React.memo(
                     width: '108px',
                     height: '75px',
                   })}
+                  data={props.viewData[i]}
                   key={props.views[i].id}
                   // Why is this an error? It is guarded by the above check.
                   gene={props.geneticElement}
@@ -68,6 +70,7 @@ export const EFPListMemoized = React.memo(
       prev.dispatch == next.dispatch,
       prev.height == next.height,
       prev.colorMode == next.colorMode,
+      _.isEqual(prev.viewData, next.viewData),
     ]
     return a.every((v) => v)
   }
@@ -78,8 +81,32 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
     public name: string,
     private views: EFPViewerData['views']
   ) {}
-  getInitialData = async (gene: GeneticElement | null) => {
+  getInitialData = async (
+    gene: GeneticElement | null,
+    loadEvent: (progress: number) => void
+  ) => {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
+    // Load all the views
+    const loadingProgress = Array(this.views.length).fill(0)
+    let totalLoaded = 0
+    const viewData = await Promise.all(
+      this.views.map(async (view, i) => {
+        const data = await new EFP(
+          view.name,
+          view.id,
+          view.svgURL,
+          view.xmlURL
+        ).getInitialData(gene, (progress) => {
+          totalLoaded -= loadingProgress[i]
+          loadingProgress[i] = progress
+          totalLoaded += loadingProgress[i]
+          loadEvent(totalLoaded / loadingProgress.length)
+        })
+        loadingProgress[i] = 1
+        return data
+      })
+    )
+
     return {
       activeView: this.views[0].id,
       views: this.views,
@@ -87,6 +114,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         offset: { x: 0, y: 0 },
         zoom: 1,
       },
+      viewData,
       colorMode: 'absolute' as const,
     }
   }
@@ -131,41 +159,34 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       [...props.activeData.views.map((v) => v.id)]
     )
 
-    const activeView = React.useMemo(
+    const activeViewIndex = React.useMemo(
       () =>
-        EFPViews.find((v) => v.id == props.activeData.activeView) ??
+        EFPViews.findIndex((v) => v.id == props.activeData.activeView) ??
         EFPViews[0],
       [props.activeData.activeView, ...EFPViews.map((v) => v.id)]
     )
-    if (!activeView) {
+    if (activeViewIndex == -1) {
       throw new Error('active view does not exist')
     }
-    const { activeData, loading, loadingAmount, dispatch } = useViewData(
-      activeView,
-      props.geneticElement
-    )
-    const efp = React.useMemo(
-      () =>
-        activeData ? (
-          <activeView.component
-            activeData={{
-              ...activeData,
-              colorMode: props.activeData.colorMode,
-            }}
-            geneticElement={props.geneticElement}
-            dispatch={dispatch}
-          />
-        ) : (
-          <></>
-        ),
-      [
-        activeView.id,
-        props.geneticElement?.id,
-        dispatch,
-        activeData,
-        props.activeData.colorMode,
-      ]
-    )
+    const efp = React.useMemo(() => {
+      const Component = EFPViews[activeViewIndex].component
+      return (
+        <Component
+          activeData={{
+            ...props.activeData.viewData[activeViewIndex],
+            colorMode: props.activeData.colorMode,
+          }}
+          geneticElement={props.geneticElement}
+          dispatch={props.dispatch}
+        />
+      )
+    }, [
+      activeViewIndex,
+      props.geneticElement?.id,
+      props.dispatch,
+      props.activeData.viewData[activeViewIndex],
+      props.activeData.colorMode,
+    ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
 
@@ -193,8 +214,9 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         >
           <EFPListMemoized
             height={dimensions.height}
-            activeView={activeView}
+            activeView={EFPViews[activeViewIndex]}
             dispatch={props.dispatch}
+            viewData={props.activeData.viewData}
             geneticElement={props.geneticElement}
             views={EFPViews}
             colorMode={props.activeData.colorMode}
@@ -204,31 +226,24 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
               flexGrow: 1,
             }}
           >
-            {loading || !activeData ? (
-              <LinearProgress
-                value={loadingAmount * 100}
-                variant="determinate"
-              />
-            ) : (
-              <PanZoom
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                transform={props.activeData.transform}
-                setTransform={(transform) => {
-                  props.dispatch((data) => ({
-                    type: 'set-transform',
-                    transform:
-                      typeof transform == 'function'
-                        ? transform(data.transform)
-                        : transform,
-                  }))
-                }}
-              >
-                {efp}
-              </PanZoom>
-            )}
+            <PanZoom
+              sx={{
+                width: '100%',
+                height: '100%',
+              }}
+              transform={props.activeData.transform}
+              setTransform={(transform) => {
+                props.dispatch((data) => ({
+                  type: 'set-transform',
+                  transform:
+                    typeof transform == 'function'
+                      ? transform(data.transform)
+                      : transform,
+                }))
+              }}
+            >
+              {efp}
+            </PanZoom>
           </Box>
         </Box>
       </Box>
