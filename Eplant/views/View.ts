@@ -4,10 +4,10 @@ import { atomWithStorage } from 'jotai/utils'
 
 import * as React from 'react'
 
-export type ViewDispatch<A> = (a: A | ((a: T) => A)) => void
+export type ViewDispatch<T, A> = (a: A | ((a: T) => A)) => void
 export type ViewProps<T, A> = {
   activeData: T
-  dispatch: ViewDispatch<A>
+  dispatch: ViewDispatch<T, A>
   geneticElement: GeneticElement | null
 }
 
@@ -109,7 +109,8 @@ export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticEleme
   React.useEffect(() => {
     ;(async () => {
       if (initialViewData.loading || initialViewData.activeData || initialViewData.error) return
-      setInitialViewData((viewData) => ({ ...viewData, loading: true }))
+      console.log(initialViewData, key)
+      setInitialViewData((viewData) => ({ ...viewData, loading: true, loadingAmount: 0 }))
       try {
         const loader = gene?.species.api.loaders[view.id] ?? view.getInitialData
         if (!loader) {
@@ -117,8 +118,9 @@ export function useViewData<T, Action>(view: View<T, Action>, gene: GeneticEleme
         }
         // Guaranteed to work even though types are broken because if gene is null then view.getInitialData is always used
         const data = await loader(gene as GeneticElement, (amount) => {
-          setInitialViewData((viewData) => ({ ...viewData, loadingAmount: amount }))
-      })
+          setInitialViewData((viewData) => ({ ...viewData, loadingAmount: Math.max(amount, viewData.loadingAmount) }))
+        })
+        console.log('done')
         setInitialViewData((viewData) => ({ ...viewData, activeData: data }))
       } catch (e) {
         if (e instanceof Error) {

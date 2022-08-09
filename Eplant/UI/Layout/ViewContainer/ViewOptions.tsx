@@ -15,7 +15,7 @@ export default function ViewOptions<T, A>({
   gene: GeneticElement | null
   loading: boolean
   activeData?: T
-  dispatch: ViewDispatch<A>
+  dispatch: ViewDispatch<T, A>
 }) {
   if (!view.actions) return <></>
   return (

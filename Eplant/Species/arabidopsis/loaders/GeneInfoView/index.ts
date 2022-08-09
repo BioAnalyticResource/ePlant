@@ -78,7 +78,7 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
           `get_protein_sequence_by_identifier.php?locus=${geneticElement.id}.1`
       )
     ).data.result[0].sequence
-    loadEvent(0.75)
+    loadEvent(1)
   }
 
   return {
