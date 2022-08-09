@@ -14,7 +14,7 @@ import {
   useTheme,
 } from '@mui/material'
 import React, { ReactPropTypes, useId, useMemo } from 'react'
-import { View, ViewDataError, ViewProps } from '../View'
+import { View, ViewProps } from '@eplant/View'
 import { useEFPSVG, useStyles } from './svg'
 import {
   EFPAction,
@@ -26,6 +26,7 @@ import {
 } from './types'
 import _ from 'lodash'
 import { useViewID } from '@eplant/state'
+import { ViewDataError } from '@eplant/View/viewData'
 
 function SVGTooltip(props: {
   el: SVGElement | null

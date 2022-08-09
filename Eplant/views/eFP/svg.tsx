@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import * as React from 'react'
-import { ViewProps } from '../View'
+import { ViewProps } from '../../View'
 import { EFPAction, EFPData, EFPGroup, EFPId, EFPSVGCache } from './types'
 import { mix } from 'color2k'
 

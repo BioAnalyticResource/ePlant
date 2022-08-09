@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import React from 'react'
-import { View } from '../View'
+import { View } from '../../View'
 
 const GetStartedView: View = {
   name: 'Get started',

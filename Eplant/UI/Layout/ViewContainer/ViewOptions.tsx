@@ -1,5 +1,6 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { useViewData, View, ViewProps, ViewDispatch } from '@eplant/views/View'
+import { View, ViewProps, ViewDispatch } from '@eplant/View'
+import { useViewData } from '@eplant/View/viewData'
 import { MenuItem } from '@mui/material'
 import React from 'react'
 import Dropdown from '@eplant/UI/Dropdown'
@@ -26,19 +27,19 @@ export default function ViewOptions<T, A>({
         color: 'secondary.contrastText',
       }}
       disabled={loading}
-      options={view.actions.map((a, i) =>
-        activeData ? (
-          <MenuItem key={i} onClick={() => dispatch(a.action)}>
+      options={view.actions.map((a, i) => (
+        <MenuItem key={i} onClick={() => dispatch(a.action)}>
+          {activeData ? (
             <a.render
               dispatch={dispatch}
               activeData={activeData}
               geneticElement={gene}
             />
-          </MenuItem>
-        ) : (
-          <></>
-        )
-      )}
+          ) : (
+            '...'
+          )}
+        </MenuItem>
+      ))}
     >
       View options
     </Dropdown>

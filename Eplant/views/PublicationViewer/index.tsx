@@ -1,6 +1,6 @@
 import { Link, Tab, Tabs, Typography } from '@mui/material'
 import * as React from 'react'
-import { View, ViewProps } from '../View'
+import { View, ViewProps } from '../../View'
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'

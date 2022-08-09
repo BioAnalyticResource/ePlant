@@ -1,6 +1,6 @@
 import arabidopsis from '@eplant/Species/arabidopsis'
 import { GeneInfoViewData } from '@eplant/views/GeneInfoView/data'
-import { ViewProps } from '@eplant/views/View'
+import { ViewProps } from '@eplant/View'
 
 const a: ViewProps<GeneInfoViewData> = {
   geneticElement: {

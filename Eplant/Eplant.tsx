@@ -20,6 +20,7 @@ import {
   ViewIDContext,
   useActiveId,
   getPaneName,
+  storage,
 } from './state'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
@@ -170,7 +171,7 @@ function DirectPane() {
   }, [theme])
 
   React.useEffect(() => {
-    if (!panes[id].popout) window.close()
+    if (panes[id] && !panes[id].popout) window.close()
   }, [panes])
 
   return (
@@ -297,15 +298,6 @@ function EplantLayout() {
     else model.doAction(Actions.deselectTabset())
   }, [activeId, model])
 
-  // Open tabs for panes that are not visible and do not have the popout flag
-  React.useEffect(() => {
-    for (const id in panes) {
-      if (!panes[id]?.popout && !model.getNodeById(id)) {
-        addTab({ tabId: id })
-      }
-    }
-  }, [panes, model])
-
   return (
     <Box
       sx={(theme) => ({
@@ -338,10 +330,9 @@ function EplantLayout() {
             ?.getSelectedNode?.()
             ?.getId?.()
           if (newId) setActiveId(newId)
-          localStorage.setItem(
-            'flexlayout-model',
-            JSON.stringify(newModel.toJson())
-          )
+          storage
+            .set('flexlayout-model', JSON.stringify(newModel.toJson()))
+            .then(() => console.log('done'))
         }}
         onRenderTabSet={onRenderTabSet}
         onRenderTab={(node, renderValues) => {

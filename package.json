@@ -68,6 +68,7 @@
     "color2k": "^2.0.0",
     "dompurify": "^2.3.10",
     "flexlayout-react": "https://github.com/alexwaeseperlman/FlexLayout/tarball/master",
+    "idb": "^7.0.2",
     "jotai": "^1.7.2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",

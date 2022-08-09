@@ -17,7 +17,7 @@ export default function usePromise<T>(
   const [err, setErr] = React.useState<Error | null>(null)
 
   React.useEffect(() => {
-    let listening: boolean = true
+    let listening = true
     setValue(null)
     setLoading(true)
     setErr(null)

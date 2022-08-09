@@ -4,7 +4,7 @@ import {
   GeneRIFsData,
   PublicationViewerData,
 } from '@eplant/views/PublicationViewer/types'
-import { View } from '@eplant/views/View'
+import { View } from '@eplant/View'
 
 const loader: View<PublicationViewerData>['getInitialData'] = async (
   geneticElement,

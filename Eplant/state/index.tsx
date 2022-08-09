@@ -1,12 +1,18 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
+import Storage from '@eplant/util/Storage'
 import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
 export const usePersist = () => useAtom(persistAtom)
+
+export const storage = new Storage<string, string>('ePlant')
+
+let waitingCount = 0
+export const loadingAtom = atom<number>(0)
 
 // Atom with storage that doesn't persist when persistAtom is set to false
 function atomWithOptionalStorage<T>(
@@ -15,16 +21,20 @@ function atomWithOptionalStorage<T>(
   serialize: (value: T) => string = JSON.stringify,
   deserialize: (value: string) => T = JSON.parse
 ) {
-  const value = localStorage.getItem(key)
-  const val = atom<T>(value ? deserialize(value) : initialValue)
+  const val = atom<T>(initialValue)
+  waitingCount++
   val.onMount = (setAtom) => {
-    const listener = (e: StorageEvent) => {
-      if (e.key === key && e.newValue) {
-        setAtom(deserialize(e.newValue))
-      }
+    const listener = (e: string | undefined) => {
+      if (e) setAtom(deserialize(e))
+      else setAtom(initialValue)
     }
-    window.addEventListener('storage', listener)
-    return () => window.removeEventListener('storage', listener)
+    ;(async () => {
+      const val = await storage.get(key)
+      if (val) {
+        setAtom(deserialize(val))
+      }
+    })()
+    return storage.watch(key, listener)
   }
   const a = atom(
     (get) => {
@@ -34,7 +44,7 @@ function atomWithOptionalStorage<T>(
       const newValue =
         typeof x == 'function' ? (x as (prev: T) => T)(get(val)) : x
       if (get(persistAtom)) {
-        localStorage.setItem(key, serialize(newValue))
+        storage.set(key, serialize(newValue))
       }
       set(val, newValue)
     }

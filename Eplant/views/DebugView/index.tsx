@@ -12,7 +12,8 @@ import {
 import React from 'react'
 import EFPPreview from '../eFP/EFPPreview'
 import { AtGenExpress } from '../PlantEFP'
-import { View } from '../View'
+import { View } from '../../View'
+import { viewDataStorage } from '@eplant/View/viewData'
 
 type DebugViewData = {
   testToggle: boolean
@@ -46,20 +47,7 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
             </TableRow>
           </TableBody>
         </Table>
-        <Button
-          onClick={() =>
-            Object.keys(localStorage).map(
-              (k) =>
-                k.startsWith('view-data-') &&
-                (localStorage.removeItem(k),
-                window.dispatchEvent(
-                  new StorageEvent('storage', { key: k, newValue: undefined })
-                ))
-            )
-          }
-        >
-          Wipe view data
-        </Button>
+        <Button onClick={() => viewDataStorage.clear()}>Wipe view data</Button>
       </div>
     )
   },

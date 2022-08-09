@@ -1,6 +1,7 @@
 import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
-import { useViewData, View, ViewDataError, ViewProps } from '@eplant/views/View'
+import { View, ViewProps } from '@eplant/View'
+import { useViewData, ViewDataError } from '@eplant/View/viewData'
 import {
   Box,
   Drawer,

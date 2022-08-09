@@ -22,7 +22,8 @@ import {
 } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
 import * as React from 'react'
-import { useViewData, View } from '../../../views/View'
+import { View } from '../../../View'
+import { useViewData } from '@eplant/View/viewData'
 import LoadingPage from './LoadingPage'
 import ViewOptions from './ViewOptions'
 
