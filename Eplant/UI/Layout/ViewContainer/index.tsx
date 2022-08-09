@@ -149,7 +149,7 @@ export function ViewContainer<T, A>({
             onClick={() => {
               downloadFile(
                 `${view.id}${gene ? '-' + gene.id : ''}.json`,
-                '' //JSON.stringify(activeData, null, 2)
+                JSON.stringify(activeData, null, 2)
               )
             }}
           >
