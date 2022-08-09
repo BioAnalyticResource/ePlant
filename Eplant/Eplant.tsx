@@ -256,7 +256,7 @@ function EplantLayout() {
 
   const [activeId, setActiveId] = useActiveId()
   const { tabHeight } = useConfig()
-  const [model] = useStateWithStorage(
+  const [model, setModel, loaded] = useStateWithStorage(
     'flexlayout-model',
     FlexLayout.Model.fromJson({
       global: {
@@ -286,6 +286,7 @@ function EplantLayout() {
     (m) => JSON.stringify(m.toJson()),
     (s) => FlexLayout.Model.fromJson(JSON.parse(s))
   )
+  const initialModel = React.useMemo(() => model, [loaded])
   const theme = useTheme()
 
   React.useEffect(() => {
@@ -297,6 +298,15 @@ function EplantLayout() {
     if (model.getNodeById(activeId)) model.doAction(Actions.selectTab(activeId))
     else model.doAction(Actions.deselectTabset())
   }, [activeId, model])
+
+  // Add a new tab when there is a non-popout pane
+  React.useEffect(() => {
+    console.log(panes)
+    for (const id in panes) {
+      if (panes[id].popout) continue
+      if (!model.getNodeById(id)) addTab({ tabId: id })
+    }
+  }, [panes, model])
 
   return (
     <Box
@@ -318,7 +328,7 @@ function EplantLayout() {
       ></Box>
       <FlexLayout.Layout
         ref={layout}
-        model={model}
+        model={initialModel}
         factory={(node) => factory(node, model)}
         onTabSetPlaceHolder={() => (
           <TabsetPlaceholder addTab={() => addTab({})} />
@@ -330,9 +340,7 @@ function EplantLayout() {
             ?.getSelectedNode?.()
             ?.getId?.()
           if (newId) setActiveId(newId)
-          storage
-            .set('flexlayout-model', JSON.stringify(newModel.toJson()))
-            .then(() => console.log('done'))
+          setModel(newModel)
         }}
         onRenderTabSet={onRenderTabSet}
         onRenderTab={(node, renderValues) => {
