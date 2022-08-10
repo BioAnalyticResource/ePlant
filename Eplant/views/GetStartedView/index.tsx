@@ -1,10 +1,9 @@
-import * as React from 'react'
+import React from 'react'
 import { View } from '../View'
-import component from './component'
 
 const GetStartedView: View = {
   name: 'Get started',
-  component: component,
+  component: () => <div>Get started</div>,
   getInitialData: async () => ({}),
   id: 'get-started',
 }
