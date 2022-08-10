@@ -42,28 +42,25 @@ const initialViewAtoms: {
   >
 } = {}
 
-// View data is stored in memory to prevent load times
-const viewDataCache: {
-  [key: string]: ViewDataType<unknown>
-} = {}
-
-function getInitialViewAtom(key: string) {
+function getViewAtom(key: string, persist: boolean) {
   if (initialViewAtoms[key]) return initialViewAtoms[key]
   const a = atom<ViewDataType<unknown>>({
     ...defaultViewData,
     loading: true,
   })
-  // Check if there is cached data on mount
-  a.onMount = (setAtom) => {
-    viewDataStorage.get(key).then((v) => {
-      if (v) setAtom(v)
-      else setAtom(defaultViewData)
-    })
-    const listener = (e: ViewDataType<unknown> | undefined) => {
-      if (e) setAtom(e)
-      else setAtom(defaultViewData)
+  if (persist) {
+    // Check if there is cached data on mount
+    a.onMount = (setAtom) => {
+      viewDataStorage.get(key).then((v) => {
+        if (v) setAtom(v)
+        else setAtom(defaultViewData)
+      })
+      const listener = (e: ViewDataType<unknown> | undefined) => {
+        if (e) setAtom(e)
+        else setAtom(defaultViewData)
+      }
+      return viewDataStorage.watch(key, listener)
     }
-    return viewDataStorage.watch(key, listener)
   }
   initialViewAtoms[key] = a
   return initialViewAtoms[key]
@@ -75,18 +72,13 @@ export function useViewData<T, A>(
 ): UseViewDataType<T, A> {
   const key = `${view.id}-${gene?.id ?? 'generic-view'}`
   const id = key + '-' + useViewID()
-  const [initialViewData, setInitialViewData] = useAtom(getInitialViewAtom(key))
-  // viewData can be incorrect if the inputs to useViewData change because it waits for the effect that syncs them to complete
-  // Storing the previous key allows us to throw an error when this happens
-  const [prevID, setPrevID] = React.useState('')
-  const [viewData, setViewData] =
-    React.useState<ViewDataType<T>>(defaultViewData)
+  const [initialViewData, setInitialViewData] = useAtom(getViewAtom(key, true))
+  const [viewData, setViewData] = useAtom(getViewAtom(id, false))
 
   // When the initialViewData is loaded from cache, set the viewData
   // if there is no cached initialViewData then load it using the view's loader
   React.useEffect(() => {
     // Don't load data if the view data and they key aren't synced
-    if (id != prevID) return
     if (!initialViewData.loading && !initialViewData.error) {
       const loader = gene?.species.api.loaders[view.id] ?? view.getInitialData
       ;(async () => {
@@ -127,17 +119,13 @@ export function useViewData<T, A>(
         }
       })()
     }
-  }, [initialViewData, id, prevID])
+  }, [initialViewData, id])
 
   React.useEffect(() => {
-    if (initialViewData.activeData && id == prevID) {
+    if (initialViewData.activeData && !viewData.activeData) {
       setViewData(initialViewData as ViewDataType<T>)
-    } else {
-      // Pray that react batches these updates
-      setViewData((viewDataCache[id] ?? initialViewData) as ViewDataType<T>)
-      setPrevID(id)
     }
-  }, [initialViewData, id, prevID])
+  }, [initialViewData, viewData])
 
   const dispatch = React.useMemo(
     () => (action: A) => {
@@ -145,7 +133,7 @@ export function useViewData<T, A>(
         ...viewData,
         activeData:
           view.reducer && viewData.activeData
-            ? view.reducer(viewData.activeData, action)
+            ? view.reducer(viewData.activeData as T, action)
             : viewData.activeData,
       }))
     },
@@ -153,15 +141,6 @@ export function useViewData<T, A>(
   )
 
   // Reset viewData when the key changes
-  if (prevID != id) {
-    return {
-      ...((viewDataCache[id] ?? initialViewData) as ViewDataType<T>),
-      dispatch: () => {},
-    }
-  }
-  if (viewData.activeData) {
-    viewDataCache[key] = viewData
-  }
   if (viewData.loading || initialViewData.loading) {
     return {
       ...(initialViewData as ViewDataType<T>),
@@ -169,7 +148,7 @@ export function useViewData<T, A>(
     }
   }
   return {
-    ...viewData,
+    ...(viewData as ViewDataType<T>),
     dispatch,
   }
 }
