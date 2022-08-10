@@ -177,16 +177,18 @@ function DirectPane() {
   const id = params.get('id') as string
   const theme = useTheme()
   const [activeId] = useActiveId()
+  const [model] = useModel()
   const { tabHeight, views } = useConfig()
+  const [globalProgress, loaded] = usePageLoad()
   React.useEffect(() => {
     updateColors(theme)
-  }, [theme])
+  }, [theme, loaded])
 
   React.useEffect(() => {
-    if (panes[id] && !panes[id].popout) window.close()
-  }, [panes])
+    if (loaded && panes[id] && model.getNodeById(id)) window.close()
+  }, [panes, loaded, model])
 
-  return (
+  return loaded ? (
     <div className="flexlayout__layout">
       <Box
         sx={{
@@ -214,6 +216,18 @@ function DirectPane() {
         </IconButton>
       </Box>
       <ViewTab id={id} />
+    </div>
+  ) : (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <CircularProgress />
     </div>
   )
 }
