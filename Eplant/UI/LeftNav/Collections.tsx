@@ -1,4 +1,4 @@
-import { useGeneticElements } from '@eplant/state'
+import { useCollections, useGeneticElements } from '@eplant/state'
 import GeneticElement from '@eplant/GeneticElement'
 import {
   Add,
@@ -333,15 +333,7 @@ export function Collections(props: {
   selectedGene?: string
 }) {
   const [genes, setGenes] = useGeneticElements()
-  const [collections, setCollections] = useStateWithStorage<
-    { genes: string[]; name: string; open: boolean }[]
-  >('collections', [
-    {
-      genes: genes.map((g) => g.id),
-      name: 'Collection 1',
-      open: true,
-    },
-  ])
+  const [collections, setCollections] = useCollections()
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

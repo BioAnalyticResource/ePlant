@@ -4,6 +4,7 @@ import arabidopsis from '@eplant/Species/arabidopsis'
 import Storage from '@eplant/util/Storage'
 import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
+import * as FlexLayout from 'flexlayout-react'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
@@ -11,8 +12,36 @@ export const usePersist = () => useAtom(persistAtom)
 
 export const storage = new Storage<string, string>('ePlant')
 
-let waitingCount = 0
 export const loadingAtom = atom<number>(0)
+
+export const pageLoad = (() => {
+  let waiting = 1
+  let finished = 1
+  const watchers = new Set<(prog: number) => void>()
+  return {
+    start() {
+      waiting++
+      watchers.forEach((w) => w(finished / waiting))
+    },
+    done() {
+      finished++
+      console.log(finished / waiting)
+      watchers.forEach((w) => w(finished / waiting))
+    },
+    watch(cb: (progress: number) => void) {
+      watchers.add(cb)
+      return () => {
+        watchers.delete(cb)
+      }
+    },
+  }
+})()
+
+export const usePageLoad = () => {
+  const [progress, setProgress] = React.useState(0)
+  React.useEffect(() => pageLoad.watch(setProgress), [])
+  return [progress, progress == 1] as [number, boolean]
+}
 
 // Atom with storage that doesn't persist when persistAtom is set to false
 function atomWithOptionalStorage<T>(
@@ -22,22 +51,28 @@ function atomWithOptionalStorage<T>(
   deserialize: (value: string) => T = JSON.parse
 ) {
   const val = atom<T>(initialValue)
-  waitingCount++
+  const loadedValue = storage.get(key)
   val.onMount = (setAtom) => {
     const listener = (e: string | undefined) => {
       if (e) setAtom(deserialize(e))
       else setAtom(initialValue)
     }
     ;(async () => {
-      const val = await storage.get(key)
-      if (val) {
-        setAtom(deserialize(val))
+      pageLoad.start()
+      try {
+        const val = await loadedValue
+        if (val) {
+          setAtom(deserialize(val))
+        }
+      } finally {
+        pageLoad.done()
       }
     })()
     return storage.watch(key, listener)
   }
   const a = atom(
     (get) => {
+      //throw loadedValue
       return get(val)
     },
     (get, set, x: React.SetStateAction<T>) => {
@@ -68,6 +103,23 @@ export const genesAtom = atomWithOptionalStorage<GeneticElement[]>(
 )
 export const useGeneticElements = () => useAtom(genesAtom)
 export const useSetGeneticElements = () => useSetAtom(genesAtom)
+
+export const collectionsAtom = atomWithOptionalStorage<
+  { genes: string[]; name: string; open: boolean }[]
+>(
+  'collections',
+  [
+    {
+      genes: [],
+      name: 'Collection 1',
+      open: true,
+    },
+  ],
+  (collections) => JSON.stringify(collections),
+  (collections) => JSON.parse(collections)
+)
+export const useCollections = () => useAtom(collectionsAtom)
+export const useSetCollections = () => useSetAtom(collectionsAtom)
 
 export const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)
@@ -182,3 +234,36 @@ export const useActiveId = () => useAtom(activeIdAtom)
 export function getPaneName(pane: Panes[string]) {
   return `${pane.activeGene ? pane.activeGene + ' - ' : ''}${pane.view}`
 }
+
+export const modelAtom = atomWithOptionalStorage<FlexLayout.Model>(
+  'flexlayout-model',
+  FlexLayout.Model.fromJson({
+    global: {
+      tabSetTabStripHeight: 48,
+      tabEnableRename: false,
+      tabEnableClose: false,
+      tabSetEnableMaximize: false,
+    },
+    borders: [],
+    layout: {
+      type: 'row',
+      weight: 100,
+      children: [
+        {
+          type: 'tabset',
+          active: true,
+          children: [
+            {
+              type: 'tab',
+              id: 'default',
+            },
+          ],
+        },
+      ],
+    },
+  }),
+  (model) => JSON.stringify(model.toJson()),
+  (model) => FlexLayout.Model.fromJson(JSON.parse(model))
+)
+export const useModel = () => useAtom(modelAtom)
+export const useSetModel = () => useSetAtom(modelAtom)

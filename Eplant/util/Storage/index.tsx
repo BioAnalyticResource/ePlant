@@ -8,6 +8,12 @@ class TypedBroadcastChannel<T> extends BroadcastChannel {
   }
 }
 
+/**
+ * A key-value store that can be used to share and cache data between different tabs.
+ *
+ * There is a memory leak because the broadcast channel is never closed, so it cannot be garbage collected.
+ * This is fine as long as you don't make too many stores (e.g. generating large amounts in a loop)
+ */
 export default class KeyValDB<K extends string, V> {
   private dbPromise: Promise<
     IDBPDatabase<

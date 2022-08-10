@@ -1,6 +1,14 @@
 import useStateWithStorage from '@eplant/util/useStateWithStorage'
 import { Add, CallMade, CallReceived, Close } from '@mui/icons-material'
-import { Box, Container, Drawer, DrawerProps, IconButton } from '@mui/material'
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Drawer,
+  DrawerProps,
+  IconButton,
+  LinearProgress,
+} from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as FlexLayout from 'flexlayout-react'
 import {
@@ -21,12 +29,16 @@ import {
   useActiveId,
   getPaneName,
   storage,
+  useModel,
+  pageLoad,
+  usePageLoad,
 } from './state'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import { LeftNav } from './UI/LeftNav'
 import FallbackView from './views/FallbackView'
 import { Theme } from '@mui/system'
+import ErrorBoundary from './util/ErrorBoundary'
 
 // TODO: Make this drawer support opening/closing on mobile
 
@@ -256,42 +268,15 @@ function EplantLayout() {
 
   const [activeId, setActiveId] = useActiveId()
   const { tabHeight } = useConfig()
-  const [model, setModel, loaded] = useStateWithStorage(
-    'flexlayout-model',
-    FlexLayout.Model.fromJson({
-      global: {
-        tabSetTabStripHeight: tabHeight,
-        tabEnableRename: false,
-        tabEnableClose: false,
-        tabSetEnableMaximize: false,
-      },
-      borders: [],
-      layout: {
-        type: 'row',
-        weight: 100,
-        children: [
-          {
-            type: 'tabset',
-            active: true,
-            children: [
-              {
-                type: 'tab',
-                id: 'default',
-              },
-            ],
-          },
-        ],
-      },
-    }),
-    (m) => JSON.stringify(m.toJson()),
-    (s) => FlexLayout.Model.fromJson(JSON.parse(s))
-  )
-  const initialModel = React.useMemo(() => model, [loaded])
+  const [model, setModel] = useModel()
   const theme = useTheme()
+  const [globalProgress, loaded] = usePageLoad()
 
   React.useEffect(() => {
-    updateColors(theme)
-  }, [theme])
+    if (loaded) {
+      updateColors(theme)
+    }
+  }, [theme, loaded])
 
   // Update the model when the activeId changes
   React.useEffect(() => {
@@ -301,12 +286,21 @@ function EplantLayout() {
 
   // Add a new tab when there is a non-popout pane
   React.useEffect(() => {
-    console.log(panes)
-    for (const id in panes) {
-      if (panes[id].popout) continue
-      if (!model.getNodeById(id)) addTab({ tabId: id })
+    if (loaded) {
+      for (const id in panes) {
+        if (panes[id].popout) continue
+        if (!model.getNodeById(id)) addTab({ tabId: id })
+      }
     }
-  }, [panes, model])
+  }, [panes, model, loaded])
+
+  React.useEffect(() => {
+    if (!loaded) return
+    const json = model.toJson()
+    if (!json.global) json.global = {}
+    json.global.tabSetTabStripHeight = tabHeight
+    setModel(FlexLayout.Model.fromJson(json))
+  }, [tabHeight, loaded])
 
   return (
     <Box
@@ -321,52 +315,64 @@ function EplantLayout() {
     >
       <Box
         sx={{
-          background: '#fff',
           width: '100%',
           height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-      ></Box>
-      <FlexLayout.Layout
-        ref={layout}
-        model={initialModel}
-        factory={(node) => factory(node, model)}
-        onTabSetPlaceHolder={() => (
-          <TabsetPlaceholder addTab={() => addTab({})} />
+      >
+        {loaded ? (
+          <FlexLayout.Layout
+            ref={layout}
+            model={model}
+            factory={(node) => factory(node, model)}
+            onTabSetPlaceHolder={() => (
+              <TabsetPlaceholder addTab={() => addTab({})} />
+            )}
+            onModelChange={(newModel) => {
+              // Update the selected tab
+              const newId = newModel
+                .getActiveTabset()
+                ?.getSelectedNode?.()
+                ?.getId?.()
+              if (newId) setActiveId(newId)
+              storage.set('flexlayout-model', JSON.stringify(model.toJson()))
+            }}
+            onRenderTabSet={onRenderTabSet}
+            onRenderTab={(node, renderValues) => {
+              renderValues.buttons = [
+                <IconButton
+                  key="close"
+                  // Why is this necessary?
+                  // Idk, but flexlayout-react uses it for their close buttons
+                  // And they don't work without it
+                  onMouseDown={(e) => {
+                    e.stopPropagation()
+                  }}
+                  onTouchStart={(e) => {
+                    e.stopPropagation()
+                  }}
+                  onMouseUp={(e) => {
+                    panesDispatch({ type: 'close', id: node.getId() })
+                    model.doAction(Actions.deleteTab(node.getId()))
+                  }}
+                  size="small"
+                >
+                  <Close />
+                </IconButton>,
+              ]
+            }}
+          ></FlexLayout.Layout>
+        ) : (
+          <div>
+            <CircularProgress
+              variant="indeterminate"
+              value={globalProgress * 100}
+            />
+          </div>
         )}
-        onModelChange={(newModel) => {
-          // Update the selected tab
-          const newId = newModel
-            .getActiveTabset()
-            ?.getSelectedNode?.()
-            ?.getId?.()
-          if (newId) setActiveId(newId)
-          setModel(newModel)
-        }}
-        onRenderTabSet={onRenderTabSet}
-        onRenderTab={(node, renderValues) => {
-          renderValues.buttons = [
-            <IconButton
-              key="close"
-              // Why is this necessary?
-              // Idk, but flexlayout-react uses it for their close buttons
-              // And they don't work without it
-              onMouseDown={(e) => {
-                e.stopPropagation()
-              }}
-              onTouchStart={(e) => {
-                e.stopPropagation()
-              }}
-              onMouseUp={(e) => {
-                panesDispatch({ type: 'close', id: node.getId() })
-                model.doAction(Actions.deleteTab(node.getId()))
-              }}
-              size="small"
-            >
-              <Close />
-            </IconButton>,
-          ]
-        }}
-      ></FlexLayout.Layout>
+      </Box>
     </Box>
   )
   function addTab({ tabsetId, tabId }: { tabsetId?: string; tabId?: string }) {
