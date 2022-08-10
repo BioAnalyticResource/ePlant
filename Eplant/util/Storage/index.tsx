@@ -1,4 +1,5 @@
 import { openDB, deleteDB, wrap, unwrap, IDBPDatabase, DBSchema } from 'idb'
+import delayed from '../delayed'
 
 type UpdateEvent<T> = { type: 'update'; key: T }
 
@@ -41,7 +42,7 @@ export default class KeyValDB<K extends string, V> {
   async set(key: K, value: V) {
     const db = await this.dbPromise
     return db.put('keyval', value, key).then(() => {
-      this.channel.postMessage({ type: 'update', key })
+      delayed.call(() => this.channel.postMessage({ type: 'update', key }), 20)
     })
   }
 
@@ -53,7 +54,7 @@ export default class KeyValDB<K extends string, V> {
   async delete(key: K) {
     const db = await this.dbPromise
     return db.delete('keyval', key).then(() => {
-      this.channel.postMessage({ type: 'update', key })
+      delayed.call(() => this.channel.postMessage({ type: 'update', key }), 20)
     })
   }
 
