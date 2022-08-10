@@ -188,6 +188,7 @@ export function ViewContainer<T, A>({
           flexGrow: 1,
           display: 'flex',
           gap: theme.spacing(4),
+          overflow: 'auto',
           flexDirection: 'column',
           ...(printing == viewId
             ? {

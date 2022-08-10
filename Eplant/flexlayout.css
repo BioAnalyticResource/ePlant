@@ -500,7 +500,7 @@
   z-index: 2000;
   max-height: 50%;
   min-width: 100px;
-  overflow: auto;
+  overflow: hidden;
   padding: 2px;
 }
 .flexlayout__floating_window _body {
@@ -514,7 +514,7 @@
   position: absolute;
 }
 .flexlayout__floating_window_tab {
-  overflow: auto;
+  overflow: hidden;
   left: 0;
   top: 0;
   right: 0;

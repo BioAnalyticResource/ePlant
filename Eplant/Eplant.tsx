@@ -189,7 +189,13 @@ function DirectPane() {
   }, [panes, loaded, model])
 
   return loaded ? (
-    <div className="flexlayout__layout">
+    <div
+      className="flexlayout__layout"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Box
         sx={{
           display: 'flex',
@@ -215,7 +221,9 @@ function DirectPane() {
           <CallReceived />
         </IconButton>
       </Box>
-      <ViewTab id={id} />
+      <Box flexGrow={1}>
+        <ViewTab id={id} />
+      </Box>
     </div>
   ) : (
     <div
