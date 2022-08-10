@@ -4,7 +4,14 @@ import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import * as React from 'react'
 import { ViewProps } from '../../View'
-import { EFPAction, EFPData, EFPGroup, EFPId, EFPSVGCache } from './types'
+import {
+  EFPAction,
+  EFPData,
+  EFPGroup,
+  EFPId,
+  EFPSampleData,
+  EFPSVGCache,
+} from './types'
 import { mix } from 'color2k'
 
 const cacheAtom = atomWithStorage<EFPSVGCache>('eFP_cache', {})
@@ -72,9 +79,7 @@ export const useEFPSVG = (
     const out = {
       ...cache[view.id],
       //DOMPurify.sanitize(
-      svg: `<div id=${view.id}>${new XMLSerializer().serializeToString(
-        svg
-      )}</div>`,
+      svg: `${new XMLSerializer().serializeToString(svg)}`,
       //),
     }
 
@@ -84,7 +89,7 @@ export const useEFPSVG = (
 
 export function getColor(
   value: number,
-  group: EFPGroup,
+  group: EFPSampleData,
   control: number,
   theme: Theme,
   colorMode: 'relative' | 'absolute'
@@ -95,8 +100,6 @@ export function getColor(
     1
   )
   const norm = Math.log2(value / control) / extremum
-  // eslint-disable-next-line no-debugger
-  //if (control == null) debugger
   if (colorMode === 'relative')
     return norm < 0
       ? mix(

@@ -15,7 +15,7 @@ import { useGeneticElements } from '@eplant/state'
 import GeneticElementComponent from '../GeneticElementComponent'
 import { Collections } from './Collections'
 import GeneticElement from '@eplant/GeneticElement'
-import _ from 'lodash'
+import _, { uniq } from 'lodash'
 
 /**
  * The left nav bar in ePlant. Contains a search bar, and list of collections of genes.
@@ -30,6 +30,10 @@ export function LeftNav(props: {
   const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
+  React.useEffect(() => {
+    const uniq = _.uniqBy(geneticElements, (g) => g.id)
+    if (uniq.length != geneticElements.length) setGeneticElements(uniq)
+  }, [geneticElements])
   return (
     <Stack gap={4} direction="column" height={'100%'}>
       <LogoWithText text="ePlant" />
@@ -37,11 +41,11 @@ export function LeftNav(props: {
         addGeneticElements={(s) => {
           setGeneticElements(
             geneticElements.concat(
-              _.uniqWith(
+              _.uniqBy(
                 s.filter(
                   (g) => !geneticElements.find((gene) => g.id == gene.id)
                 ),
-                (a, b) => a.id == b.id
+                (a) => a.id
               )
             )
           )

@@ -223,6 +223,13 @@ export default class EFP implements View {
       control: _.mean(
         groupsData.map((g) => g.control).filter((g) => Number.isFinite(g))
       ),
+      min: Math.min(...groupsData.map((g) => g.min)),
+      max: Math.max(...groupsData.map((g) => g.max)),
+      mean: _.mean(groupsData.map((g) => g.mean)),
+      std:
+        _.sum(groupsData.map((g) => g.std ** 2 * g.samples)) /
+        _.sum(groupsData.map((g) => g.samples)),
+      samples: _.sum(groupsData.map((g) => g.samples)),
     }
     return out
   }
@@ -308,6 +315,9 @@ export default class EFP implements View {
             width: '100%',
             height: '100%',
             position: 'relative',
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'flex',
           }}
           id={id}
           dangerouslySetInnerHTML={{ __html: svg }}

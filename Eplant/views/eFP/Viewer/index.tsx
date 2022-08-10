@@ -18,6 +18,7 @@ import { FixedSizeList as List } from 'react-window'
 import _ from 'lodash'
 import useDimensions from '@eplant/util/useDimensions'
 import { EFPData } from '../types'
+import Legend from './legend'
 
 export const EFPListMemoized = React.memo(
   function EFPList(props: {
@@ -35,6 +36,9 @@ export const EFPListMemoized = React.memo(
         itemCount={props.views.length}
         itemSize={75 + 8}
         width={108}
+        style={{
+          zIndex: 10,
+        }}
       >
         {({ index: i, style }) => (
           <div style={style}>
@@ -48,6 +52,7 @@ export const EFPListMemoized = React.memo(
                   sx={(theme) => ({
                     width: '108px',
                     height: '75px',
+                    zIndex: 100,
                   })}
                   data={props.viewData[i]}
                   key={props.views[i].id}
@@ -211,7 +216,6 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       >
         <Box
           sx={{
-            zIndex: 0,
             width: '100%',
             height: '100%',
             position: 'absolute',
@@ -222,7 +226,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
           }}
         >
           <EFPListMemoized
-            height={dimensions.height}
+            height={dimensions.height - 5}
             activeView={EFPViews[activeViewIndex]}
             dispatch={props.dispatch}
             viewData={props.activeData.viewData}
@@ -233,13 +237,30 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
           <Box
             sx={{
               flexGrow: 1,
+              position: 'relative',
             }}
           >
+            <Legend
+              sx={(theme) => ({
+                position: 'absolute',
+                left: theme.spacing(2),
+                top: 0,
+                zIndex: 10,
+              })}
+              data={{
+                ...props.activeData.viewData[activeViewIndex],
+                colorMode: props.activeData.colorMode,
+              }}
+            />
             <PanZoom
-              sx={{
+              sx={(theme) => ({
+                position: 'absolute',
+                top: theme.spacing(4),
+                left: theme.spacing(2),
                 width: '100%',
                 height: '100%',
-              }}
+                zIndex: 0,
+              })}
               initialTransform={props.activeData.transform}
               onTransformChange={(transform) => {
                 props.dispatch({

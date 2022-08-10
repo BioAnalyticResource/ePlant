@@ -15,7 +15,7 @@ export type EFPGroup = EFPSampleData & {
   tissues: EFPTissue[]
   control?: number
 }
-export type EFPData = {
+export type EFPData = EFPSampleData & {
   renderAsThumbnail: boolean
   groups: EFPGroup[]
   control?: number
