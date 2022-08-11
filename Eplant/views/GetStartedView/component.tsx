@@ -2,6 +2,8 @@ import { Grid, Link, Stack, Typography, useTheme } from '@mui/material'
 import { Filter1, Filter2, Filter3 } from '@mui/icons-material'
 import { ViewProps } from '../View'
 import React from 'react'
+import views from './views'
+import Tile from './Tile'
 
 export default function GetStartedView({
   geneticElement,
@@ -60,6 +62,13 @@ export default function GetStartedView({
           .
         </Typography>
       </Stack>
+      <Grid container spacing={2} columns={4}>
+        {views.map((view) => (
+          <Grid item key={view.title}>
+            <Tile {...view} />
+          </Grid>
+        ))}
+      </Grid>
     </Stack>
   )
 }
