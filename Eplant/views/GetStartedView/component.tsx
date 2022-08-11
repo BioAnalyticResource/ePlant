@@ -1,4 +1,4 @@
-import { Stack, Typography, useTheme } from '@mui/material'
+import { Grid, Link, Stack, Typography, useTheme } from '@mui/material'
 import { Filter1, Filter2, Filter3 } from '@mui/icons-material'
 import { ViewProps } from '../View'
 import React from 'react'
@@ -9,10 +9,12 @@ export default function GetStartedView({
   const theme = useTheme()
   return (
     <Stack spacing={2}>
-      <Typography variant="h2">ePlant 3</Typography>
-      <Typography variant="h4" color={theme.palette.secondary.main}>
-        Bioinformatics evolved
-      </Typography>
+      <div>
+        <Typography variant="h2">ePlant 3</Typography>
+        <Typography variant="h4" color={theme.palette.secondary.main}>
+          Bioinformatics evolved
+        </Typography>
+      </div>
       <Stack spacing={1}>
         <Typography variant="h5">Start</Typography>
         <Stack direction="row" spacing={1}>
@@ -33,6 +35,30 @@ export default function GetStartedView({
             Use the view selector to navigate between views
           </Typography>
         </Stack>
+      </Stack>
+      <Stack>
+        <Typography variant="body2" color={theme.palette.secondary.main}>
+          Built by students in the{' '}
+          <Link href="https://bar.utoronto.ca/" target="_blank">
+            Provart Lab
+          </Link>{' '}
+          at the University of Toronto. If you&apos;re interested in
+          contributing to the project, visit our{' '}
+          <Link
+            href="https://github.com/BioAnalyticResource/ePlant"
+            target="_blank"
+          >
+            GitHub
+          </Link>{' '}
+          page and reach out to us{' '}
+          <Link
+            href="https://github.com/BioAnalyticResource/ePlant/issues"
+            target="_blank"
+          >
+            here
+          </Link>
+          .
+        </Typography>
       </Stack>
     </Stack>
   )
