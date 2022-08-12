@@ -5,6 +5,7 @@ import {
   styled,
   BoxProps,
   Typography,
+  Skeleton,
 } from '@mui/material'
 import * as React from 'react'
 import EFP from '.'
@@ -41,8 +42,14 @@ export default function EFPPreview({
   ...boxProps
 }: EFPPreviewProps) {
   const colorModeDeferred = React.useDeferredValue(colorMode)
-  console.log(colorModeDeferred, colorMode)
   const dataDeferred = React.useDeferredValue(data)
+  const [draw, setDraw] = React.useState(false)
+  React.useEffect(() => {
+    if (!draw)
+      React.startTransition(() => {
+        setDraw(true)
+      })
+  }, [draw])
   const component = React.useMemo(() => {
     return (
       <EFPPreviewContainer selected={selected} {...boxProps}>
@@ -72,5 +79,11 @@ export default function EFPPreview({
       </EFPPreviewContainer>
     )
   }, [gene, view.id, colorModeDeferred, dataDeferred, selected])
-  return component
+  return draw ? (
+    component
+  ) : (
+    <EFPPreviewContainer selected={selected} {...boxProps}>
+      <Skeleton variant="rectangular" width="100%" height="100%" />
+    </EFPPreviewContainer>
+  )
 }

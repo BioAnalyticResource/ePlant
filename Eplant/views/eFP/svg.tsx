@@ -102,19 +102,11 @@ export function getColor(
   const norm = Math.log2(value / control) / extremum
   if (colorMode === 'relative')
     return norm < 0
-      ? mix(
-          theme.palette.background.active,
-          theme.palette.cold.main,
-          Math.abs(norm)
-        )
-      : mix(
-          theme.palette.background.active,
-          theme.palette.hot.main,
-          Math.abs(norm)
-        )
+      ? mix(theme.palette.neutral.main, theme.palette.cold.main, Math.abs(norm))
+      : mix(theme.palette.neutral.main, theme.palette.hot.main, Math.abs(norm))
   else
     return mix(
-      theme.palette.background.active,
+      theme.palette.neutral.main,
       theme.palette.hot.main,
       value / group.max
     )

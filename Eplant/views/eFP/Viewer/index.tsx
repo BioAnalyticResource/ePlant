@@ -52,7 +52,9 @@ const EFPListItem = React.memo(
             selected={data.views[i].id == data.activeView.id}
             view={data.views[i]}
             onClick={() => {
-              data.dispatch({ type: 'set-view', id: data.views[i].id })
+              startTransition(() => {
+                data.dispatch({ type: 'set-view', id: data.views[i].id })
+              })
             }}
             colorMode={data.colorMode}
           />
@@ -275,11 +277,9 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
               })}
               initialTransform={props.activeData.transform}
               onTransformChange={(transform) => {
-                startTransition(() => {
-                  props.dispatch({
-                    type: 'set-transform',
-                    transform,
-                  })
+                props.dispatch({
+                  type: 'set-transform',
+                  transform,
                 })
               }}
             >
