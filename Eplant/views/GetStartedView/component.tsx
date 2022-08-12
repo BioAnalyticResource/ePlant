@@ -64,7 +64,7 @@ export default function GetStartedView({
       </Stack>
       <Grid container spacing={2} columns={4}>
         {views.map((view) => (
-          <Grid item key={view.title}>
+          <Grid item key={view.title} xs={1}>
             <Tile {...view} />
           </Grid>
         ))}

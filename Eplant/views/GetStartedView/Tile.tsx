@@ -26,8 +26,6 @@ export default function Tile({ title, description, thumbnail }: TileProps) {
         component="img"
         image={thumbnail}
         alt={title}
-        width={258}
-        height={146}
       />
       <CardActions></CardActions>
     </Card>
