@@ -20,6 +20,7 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     hot: PaletteColorOptions
     cold: PaletteColorOptions
+    neutral: PaletteColorOptions
   }
 }
 
@@ -39,10 +40,13 @@ export const light = createTheme({
       active: '#f5f5f5',
     },
     hot: {
-      main: '#99CC00',
+      main: '#ff0000',
     },
     cold: {
-      main: '#8C00CC',
+      main: '#0000ff',
+    },
+    neutral: {
+      main: '#ffff00',
     },
   },
   shape: {
@@ -67,10 +71,13 @@ export const dark = createTheme({
       active: '#333333',
     },
     hot: {
-      main: '#99CC00',
+      main: '#ff0000',
     },
     cold: {
-      main: '#8C00CC',
+      main: '#0000ff',
+    },
+    neutral: {
+      main: '#ffff00',
     },
   },
   shape: {
