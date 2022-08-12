@@ -1,13 +1,16 @@
-import { Typography } from '@mui/material'
 import React from 'react'
+import { Typography } from '@mui/material'
 import { View } from '../../View'
+import component from './component'
 
 const GetStartedView: View = {
   name: 'Get started',
-  component: () => <div>Get started</div>,
+  component,
   getInitialData: async () => ({}),
   id: 'get-started',
-  header: () => <Typography variant="h6">Get started</Typography>,
+  header(props) {
+    return <></>
+  },
 }
 
 export default GetStartedView
