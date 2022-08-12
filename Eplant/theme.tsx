@@ -16,6 +16,7 @@ declare module '@mui/material/styles' {
   interface Palette {
     hot: PaletteColor
     cold: PaletteColor
+    neutral: PaletteColor
   }
   interface PaletteOptions {
     hot: PaletteColorOptions
