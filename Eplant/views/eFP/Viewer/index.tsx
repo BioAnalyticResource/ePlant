@@ -10,84 +10,96 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import React from 'react'
+import React, { startTransition } from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
 import { EFPViewerAction, EFPViewerData } from './types'
-import { FixedSizeList as List } from 'react-window'
+import {
+  areEqual,
+  FixedSizeList as List,
+  ListChildComponentProps,
+} from 'react-window'
 import _ from 'lodash'
 import useDimensions from '@eplant/util/useDimensions'
 import { EFPData } from '../types'
 import Legend from './legend'
 
-export const EFPListMemoized = React.memo(
-  function EFPList(props: {
-    geneticElement: GeneticElement
-    views: EFP[]
-    viewData: EFPData[]
-    activeView: EFP
-    dispatch: ViewProps<EFPViewerData, EFPViewerAction>['dispatch']
-    height: number
-    colorMode: 'absolute' | 'relative'
-  }) {
+type EFPListProps = {
+  geneticElement: GeneticElement
+  views: EFP[]
+  viewData: EFPData[]
+  activeView: EFP
+  dispatch: ViewProps<EFPViewerData, EFPViewerAction>['dispatch']
+  height: number
+  colorMode: 'absolute' | 'relative'
+}
+
+const EFPListItem = React.memo(
+  function EFPRow({ index: i, data }: { index: number; data: EFPListProps }) {
     return (
-      <List
-        height={props.height}
-        itemCount={props.views.length}
-        itemSize={75 + 8}
-        width={108}
-        style={{
-          zIndex: 10,
-        }}
-      >
-        {({ index: i, style }) => (
-          <div style={style}>
-            <Tooltip
-              placement="right"
-              arrow
-              title={<div>{props.views[i].name}</div>}
-            >
-              <div>
-                <EFPPreview
-                  sx={(theme) => ({
-                    width: '108px',
-                    height: '75px',
-                    zIndex: 100,
-                  })}
-                  data={props.viewData[i]}
-                  key={props.views[i].id}
-                  // Why is this an error? It is guarded by the above check.
-                  gene={props.geneticElement}
-                  selected={props.views[i].id == props.activeView.id}
-                  view={props.views[i]}
-                  onClick={() => {
-                    props.dispatch({ type: 'set-view', id: props.views[i].id })
-                  }}
-                  colorMode={props.colorMode}
-                />
-              </div>
-            </Tooltip>
-          </div>
-        )}
-      </List>
+      <Tooltip placement="right" arrow title={<div>{data.views[i].name}</div>}>
+        <div>
+          <EFPPreview
+            sx={(theme) => ({
+              width: '108px',
+              height: '75px',
+              zIndex: 100,
+            })}
+            data={data.viewData[i]}
+            key={data.views[i].id}
+            // Why is this an error? It is guarded by the above check.
+            gene={data.geneticElement}
+            selected={data.views[i].id == data.activeView.id}
+            view={data.views[i]}
+            onClick={() => {
+              data.dispatch({ type: 'set-view', id: data.views[i].id })
+            }}
+            colorMode={data.colorMode}
+          />
+        </div>
+      </Tooltip>
     )
   },
   (prev, next) => {
-    const a = [
-      prev.geneticElement.id == next.geneticElement.id,
-      _.isEqual(
-        prev.views.map((v) => v.id),
-        next.views.map((v) => v.id)
-      ),
-      prev.activeView.id == next.activeView.id,
-      prev.dispatch == next.dispatch,
-      prev.height == next.height,
-      prev.colorMode == next.colorMode,
-      _.isEqual(prev.viewData, next.viewData),
-    ]
-    return a.every((v) => v)
+    return (
+      prev.data.views[prev.index].id === next.data.views[next.index].id &&
+      prev.data.colorMode === next.data.colorMode &&
+      prev.data.geneticElement.id === next.data.geneticElement.id &&
+      prev.data.activeView === next.data.activeView &&
+      prev.index == next.index
+    )
   }
 )
+
+const EFPListRow = React.memo(function EFPListRow({
+  style,
+  index,
+  data,
+}: ListChildComponentProps) {
+  return (
+    <div style={style}>
+      <EFPListItem index={index} data={data} />
+    </div>
+  )
+},
+areEqual)
+
+export const EFPListMemoized = function EFPList(props: EFPListProps) {
+  return (
+    <List
+      height={props.height}
+      itemCount={props.views.length}
+      itemSize={75 + 8}
+      width={108}
+      style={{
+        zIndex: 10,
+      }}
+      itemData={props}
+    >
+      {EFPListRow}
+    </List>
+  )
+}
 export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
   constructor(
     public id: string,
@@ -263,9 +275,11 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
               })}
               initialTransform={props.activeData.transform}
               onTransformChange={(transform) => {
-                props.dispatch({
-                  type: 'set-transform',
-                  transform,
+                startTransition(() => {
+                  props.dispatch({
+                    type: 'set-transform',
+                    transform,
+                  })
                 })
               }}
             >

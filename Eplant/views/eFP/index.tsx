@@ -105,7 +105,9 @@ export default class EFP implements View {
     public id: EFPId,
     public svgURL: string,
     public xmlURL: string
-  ) {}
+  ) {
+    this.component = this.component.bind(this)
+  }
   //TODO: Reimplement this once the new BAR API is ready
   getInitialData = async (
     gene: GeneticElement | null,
@@ -233,7 +235,7 @@ export default class EFP implements View {
     }
     return out
   }
-  component = (props: ViewProps<EFPData, EFPAction>): JSX.Element => {
+  component(props: ViewProps<EFPData, EFPAction>): JSX.Element {
     const { view, loading } = useEFPSVG(
       {
         svgURL: this.svgURL,
@@ -254,7 +256,7 @@ export default class EFP implements View {
       '-' +
       React.useMemo(() => Math.random().toString(16).slice(3), [])
     const styles = useStyles(id, props.activeData)
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
       document.head.appendChild(el)
@@ -284,6 +286,24 @@ export default class EFP implements View {
       )
       setSvgElements(elements as any)
     }, [props.activeData.groups, id])
+
+    const svgDiv = React.useMemo(() => {
+      return (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'flex',
+          }}
+          id={id}
+          dangerouslySetInnerHTML={{ __html: svg ?? '' }}
+        />
+      )
+    }, [svg, id])
+
     if (!svg) {
       return (
         <div
@@ -310,18 +330,7 @@ export default class EFP implements View {
           flexDirection: 'column',
         }}
       >
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            position: 'relative',
-            alignItems: 'center',
-            justifyContent: 'center',
-            display: 'flex',
-          }}
-          id={id}
-          dangerouslySetInnerHTML={{ __html: svg }}
-        />
+        {svgDiv}
         {!props.activeData.renderAsThumbnail &&
           svgElements.map(({ el, group, tissue }) => (
             <SVGTooltip
