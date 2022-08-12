@@ -13,7 +13,7 @@ import {
 import React, { startTransition } from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
-import { EFPViewerAction, EFPViewerData } from './types'
+import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
 import {
   areEqual,
   FixedSizeList as List,
@@ -21,7 +21,7 @@ import {
 } from 'react-window'
 import _ from 'lodash'
 import useDimensions from '@eplant/util/useDimensions'
-import { EFPData } from '../types'
+import { EFPData, EFPState } from '../types'
 import Legend from './legend'
 
 type EFPListProps = {
@@ -29,7 +29,11 @@ type EFPListProps = {
   views: EFP[]
   viewData: EFPData[]
   activeView: EFP
-  dispatch: ViewProps<EFPViewerData, EFPViewerAction>['dispatch']
+  dispatch: ViewProps<
+    EFPViewerData,
+    EFPViewerState,
+    EFPViewerAction
+  >['dispatch']
   height: number
   colorMode: 'absolute' | 'relative'
 }
@@ -102,7 +106,23 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
     </List>
   )
 }
-export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
+export default class EFPViewer
+  implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
+{
+  getInitialState(data: EFPViewerData): EFPViewerState {
+    console.log(data)
+    return {
+      activeView: data.views[0].id,
+      colorMode: 'absolute',
+      transform: {
+        offset: {
+          x: 0,
+          y: 0,
+        },
+        zoom: 1,
+      },
+    }
+  }
   constructor(
     public id: string,
     public name: string,
@@ -146,7 +166,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       colorMode: 'absolute' as const,
     }
   }
-  reducer = (state: EFPViewerData, action: EFPViewerAction) => {
+  reducer = (state: EFPViewerState, action: EFPViewerAction) => {
     switch (action.type) {
       case 'set-view':
         return {
@@ -178,7 +198,9 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         return state
     }
   }
-  component = (props: ViewProps<EFPViewerData, EFPViewerAction>) => {
+  component = (
+    props: ViewProps<EFPViewerData, EFPViewerState, EFPViewerAction>
+  ) => {
     const EFPViews = React.useMemo(
       () =>
         props.activeData.views.map(
@@ -189,9 +211,9 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
 
     const activeViewIndex = React.useMemo(
       () =>
-        EFPViews.findIndex((v) => v.id == props.activeData.activeView) ??
+        EFPViews.findIndex((v) => v.id == props.state.activeView) ??
         EFPViews[0],
-      [props.activeData.activeView, ...EFPViews.map((v) => v.id)]
+      [props.state.activeView, ...EFPViews.map((v) => v.id)]
     )
     if (activeViewIndex == -1) {
       throw new Error('active view does not exist')
@@ -202,7 +224,10 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
         <Component
           activeData={{
             ...props.activeData.viewData[activeViewIndex],
-            colorMode: props.activeData.colorMode,
+          }}
+          state={{
+            colorMode: props.state.colorMode,
+            renderAsThumbnail: false,
           }}
           geneticElement={props.geneticElement}
           dispatch={() => {}}
@@ -213,7 +238,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       props.geneticElement?.id,
       props.dispatch,
       props.activeData.viewData[activeViewIndex],
-      props.activeData.colorMode,
+      props.state.colorMode,
     ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
@@ -246,7 +271,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
             viewData={props.activeData.viewData}
             geneticElement={props.geneticElement}
             views={EFPViews}
-            colorMode={props.activeData.colorMode}
+            colorMode={props.state.colorMode}
           />
           <Box
             sx={{
@@ -263,7 +288,10 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
               })}
               data={{
                 ...props.activeData.viewData[activeViewIndex],
-                colorMode: props.activeData.colorMode,
+              }}
+              state={{
+                colorMode: props.state.colorMode,
+                renderAsThumbnail: false,
               }}
             />
             <PanZoom
@@ -275,7 +303,7 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
                 height: '100%',
                 zIndex: 0,
               })}
-              initialTransform={props.activeData.transform}
+              initialTransform={props.state.transform}
               onTransformChange={(transform) => {
                 props.dispatch({
                   type: 'set-transform',
@@ -290,22 +318,21 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerAction> {
       </Box>
     )
   }
-  actions: View<EFPViewerData, EFPViewerAction>['actions'] = [
+  actions: View<EFPViewerData, EFPViewerState, EFPViewerAction>['actions'] = [
     {
       action: { type: 'reset-transform' },
       render: () => <>Reset pan/zoom</>,
     },
     {
       action: { type: 'toggle-color-mode' },
-      render: (props) => <>Toggle data mode: {props.activeData.colorMode}</>,
+      render: (props) => <>Toggle data mode: {props.state.colorMode}</>,
     },
   ]
-  header: View<EFPViewerData, EFPViewerAction>['header'] = (props) => (
+  header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
+    props
+  ) => (
     <Typography variant="h6">
-      {
-        props.activeData.views.find((v) => v.id == props.activeData.activeView)
-          ?.name
-      }
+      {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}
       {': '}
       {props.geneticElement?.id}
     </Typography>

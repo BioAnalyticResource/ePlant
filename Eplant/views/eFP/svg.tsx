@@ -5,6 +5,7 @@ import { atomWithStorage } from 'jotai/utils'
 import * as React from 'react'
 import { ViewProps } from '../../View'
 import {
+  ColorMode,
   EFPAction,
   EFPData,
   EFPGroup,
@@ -92,7 +93,7 @@ export function getColor(
   group: EFPSampleData,
   control: number,
   theme: Theme,
-  colorMode: 'relative' | 'absolute'
+  colorMode: ColorMode
 ): string {
   const extremum = Math.max(
     Math.abs(Math.log2(group.min / control)),
@@ -112,7 +113,11 @@ export function getColor(
     )
 }
 
-export function useStyles(id: string, { colorMode, groups, control }: EFPData) {
+export function useStyles(
+  id: string,
+  { groups, control }: EFPData,
+  colorMode: ColorMode
+) {
   const theme = useTheme()
   const samples = groups
     .flatMap((group) =>

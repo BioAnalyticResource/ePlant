@@ -43,6 +43,50 @@ export const usePageLoad = () => {
   return [progress, progress == 1] as [number, boolean]
 }
 
+export function atomWithStorage<T>(
+  storage: Storage<string, T>,
+  key: string,
+  initialValue: T,
+  loading?: () => () => void
+) {
+  const val = atom<T>(initialValue)
+  const loadedValue = storage.get(key)
+  val.onMount = (setAtom) => {
+    const listener = (e: T | undefined) => {
+      if (e) setAtom(e)
+      else setAtom(initialValue)
+    }
+    ;(async () => {
+      const finished = loading?.()
+      try {
+        const val = await loadedValue
+        if (val) {
+          setAtom(val)
+        }
+      } finally {
+        if (finished) finished()
+      }
+    })()
+    return storage.watch(key, listener)
+  }
+  const a = atom(
+    (get) => {
+      //throw loadedValue
+      return get(val)
+    },
+    (get, set, x: React.SetStateAction<T>) => {
+      const newValue =
+        typeof x == 'function' ? (x as (prev: T) => T)(get(val)) : x
+      if (get(persistAtom)) {
+        storage.set(key, newValue)
+      }
+      set(val, newValue)
+    }
+  )
+  return a
+}
+
+// TODO: This should probably be removed
 // Atom with storage that doesn't persist when persistAtom is set to false
 function atomWithOptionalStorage<T>(
   key: string,
@@ -72,7 +116,6 @@ function atomWithOptionalStorage<T>(
   }
   const a = atom(
     (get) => {
-      //throw loadedValue
       return get(val)
     },
     (get, set, x: React.SetStateAction<T>) => {

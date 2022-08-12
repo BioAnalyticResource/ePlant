@@ -1,33 +1,39 @@
 import GeneticElement from '@eplant/GeneticElement'
 
-export type ViewDispatch<A> = (a: A) => void
-export type ViewProps<T, A> = {
-  activeData: T
-  dispatch: ViewDispatch<A>
+export type ViewDispatch<Action> = (a: Action) => void
+export type ViewProps<Data, State, Action> = {
+  activeData: Data
+  state: State
+  dispatch: ViewDispatch<Action>
   geneticElement: GeneticElement | null
 }
 
-type ViewAction<T, Action> = {
-  render: (props: ViewProps<T, Action>) => JSX.Element
+type ViewAction<State, Action> = {
+  render: (props: {
+    state: State
+    dispatch: ViewDispatch<Action>
+    geneticElement: GeneticElement | null
+  }) => JSX.Element
   action: Action
 }
 
 // T must be serializable/deserializable with JSON.stringify/JSON.parse
-export interface View<T = any, Action = any> {
+export interface View<Data = any, State = any, Action = any> {
   // loadEvent should be called to update the view's loading bar.
   // The input is a float between 0 and 1 which represents the fraction of the data
   // that has currently loaded.
+  getInitialState: (initialData: Data) => State
   getInitialData?: (
     gene: GeneticElement | null,
     loadEvent: (amount: number) => void
-  ) => Promise<T>
-  reducer?: (state: T, action: Action) => T
-  actions?: ViewAction<T, Action>[]
+  ) => Promise<Data>
+  reducer?: (state: State, action: Action) => State
+  actions?: ViewAction<State, Action>[]
   // Validate props.activeData with the ZodType
-  component: (props: ViewProps<T, Action>) => JSX.Element | null
+  component: (props: ViewProps<Data, State, Action>) => JSX.Element | null
   icon?: () => JSX.Element
   readonly name: string
   readonly id: string
   citation?: (props: { gene: GeneticElement | null }) => JSX.Element
-  header: (props: ViewProps<T, Action>) => JSX.Element
+  header: (props: ViewProps<Data, State, Action>) => JSX.Element
 }

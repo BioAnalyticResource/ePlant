@@ -13,7 +13,7 @@ const PublicationViewer: View<PublicationViewerData> = {
   component({
     geneticElement,
     activeData,
-  }: ViewProps<PublicationViewerData, never>) {
+  }: ViewProps<PublicationViewerData, null, null>) {
     const [tab, setTab] = React.useState<TabValues>('publications')
     return (
       <div>
@@ -52,6 +52,9 @@ const PublicationViewer: View<PublicationViewerData> = {
       Publications related to {geneticElement?.id}
     </Typography>
   ),
+  getInitialState() {
+    return null
+  },
 }
 
 export default PublicationViewer

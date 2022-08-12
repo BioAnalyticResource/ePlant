@@ -8,6 +8,9 @@ const GetStartedView: View = {
   component,
   getInitialData: async () => ({}),
   id: 'get-started',
+  getInitialState() {
+    return null
+  },
   header(props) {
     return <></>
   },

@@ -1,5 +1,5 @@
 import arabidopsis from '@eplant/Species/arabidopsis'
-import { GeneInfoViewData } from '@eplant/views/GeneInfoView/data'
+import { GeneInfoViewData } from '@eplant/views/GeneInfoView/types'
 import { ViewProps } from '@eplant/View'
 
 const a: ViewProps<GeneInfoViewData> = {

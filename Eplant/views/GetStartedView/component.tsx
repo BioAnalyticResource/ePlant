@@ -7,7 +7,7 @@ import Tile from './Tile'
 
 export default function GetStartedView({
   geneticElement,
-}: ViewProps<Record<string, never>, never>) {
+}: ViewProps<Record<string, undefined>, undefined, undefined>) {
   const theme = useTheme()
   return (
     <Stack spacing={2}>

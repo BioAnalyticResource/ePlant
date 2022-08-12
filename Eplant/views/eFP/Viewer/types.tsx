@@ -1,8 +1,7 @@
 import { Transform } from '@eplant/util/PanZoom'
-import { EFPData, EFPId } from '@eplant/views/eFP/types'
+import { ColorMode, EFPData, EFPId } from '@eplant/views/eFP/types'
 
 export type EFPViewerData = {
-  activeView: EFPId
   views: {
     svgURL: string
     xmlURL: string
@@ -10,9 +9,14 @@ export type EFPViewerData = {
     name: string
   }[]
   viewData: EFPData[]
-  transform: Transform
-  colorMode: 'absolute' | 'relative'
 }
+
+export type EFPViewerState = {
+  activeView: EFPId
+  transform: Transform
+  colorMode: ColorMode
+}
+
 export type EFPViewerAction =
   | { type: 'set-view'; id: EFPId }
   | { type: 'reset-transform' }

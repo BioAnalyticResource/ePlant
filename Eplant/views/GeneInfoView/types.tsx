@@ -31,3 +31,6 @@ export type GeneInfoViewData = {
   features: GeneFeature[]
   proteinSequence?: string
 }
+
+export type GeneInfoViewState = undefined
+export type GeneInfoViewAction = undefined

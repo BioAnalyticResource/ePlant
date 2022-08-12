@@ -13,16 +13,19 @@ import React from 'react'
 import EFPPreview from '../eFP/EFPPreview'
 import { AtGenExpress } from '../PlantEFP'
 import { View } from '../../View'
-import { viewDataStorage } from '@eplant/View/viewData'
+import { viewDataStorage, viewStateStorage } from '@eplant/View/viewData'
 
-type DebugViewData = {
+type DebugViewState = {
   testToggle: boolean
 }
 
 type DebugViewAction = { type: 'test-toggle' }
 
-const DebugView: View<DebugViewData, DebugViewAction> = {
+const DebugView: View<null, DebugViewState, DebugViewAction> = {
   name: 'Debug view',
+  getInitialState: () => ({
+    testToggle: false,
+  }),
   component: (props) => {
     const viewID = useViewID()
     return (
@@ -37,9 +40,7 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
           <TableBody>
             <TableRow>
               <TableCell>Toggle value</TableCell>
-              <TableCell>
-                {props.activeData.testToggle ? 'true' : 'false'}
-              </TableCell>
+              <TableCell>{props.state.testToggle ? 'true' : 'false'}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>View ID</TableCell>
@@ -47,13 +48,18 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
             </TableRow>
           </TableBody>
         </Table>
-        <Button onClick={() => viewDataStorage.clear()}>Wipe view data</Button>
+        <Button
+          onClick={() => {
+            viewStateStorage.clear()
+            viewDataStorage.clear()
+          }}
+        >
+          Wipe view data
+        </Button>
       </div>
     )
   },
-  getInitialData: async () => ({
-    testToggle: false,
-  }),
+  getInitialData: async () => null,
   reducer: (state, action) => {
     switch (action.type) {
       case 'test-toggle':
@@ -69,7 +75,7 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
     {
       action: { type: 'test-toggle' },
       render(props) {
-        return <>{props.activeData.testToggle ? 'Turn off' : 'Turn on'}</>
+        return <>{props.state.testToggle ? 'Turn off' : 'Turn on'}</>
       },
     },
   ],

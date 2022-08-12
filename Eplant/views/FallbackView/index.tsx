@@ -6,6 +6,9 @@ const FallbackView: View<void> = {
   name: 'Unknown view',
   component: () => <div>Unknown view</div>,
   getInitialData: async () => {},
+  getInitialState(initialData) {
+    return {}
+  },
   id: 'fallback',
   header: ({ geneticElement }) => (
     <Typography variant="h6">{geneticElement?.id}</Typography>

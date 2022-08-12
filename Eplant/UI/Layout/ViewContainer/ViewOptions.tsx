@@ -6,17 +6,17 @@ import React from 'react'
 import Dropdown from '@eplant/UI/Dropdown'
 import delayed from '@eplant/util/delayed'
 
-export default function ViewOptions<T, A>({
+export default function ViewOptions<T, S, A>({
   view,
   gene,
   loading,
-  activeData,
+  state,
   dispatch,
 }: {
-  view: View<T, A>
+  view: View<T, S, A>
   gene: GeneticElement | null
   loading: boolean
-  activeData?: T
+  state?: S
   dispatch: ViewDispatch<A>
 }) {
   const [transitioning, startTransition] = React.useTransition()
@@ -35,10 +35,10 @@ export default function ViewOptions<T, A>({
             key={i}
             onClick={() => startTransition(() => dispatch(a.action))}
           >
-            {activeData ? (
+            {state ? (
               <a.render
                 dispatch={dispatch}
-                activeData={activeData}
+                state={state}
                 geneticElement={gene}
               />
             ) : (

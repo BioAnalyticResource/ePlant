@@ -3,7 +3,7 @@ import component from './component'
 import { Info, InfoOutlined } from '@mui/icons-material'
 import { View } from '../../View'
 import { Link, Typography } from '@mui/material'
-import { GeneInfoViewData } from './data'
+import { GeneInfoViewData } from './types'
 import GeneInfoViewIcon from './icon'
 
 /**
@@ -16,6 +16,9 @@ const GeneInfoView: View<GeneInfoViewData> = {
   // component: React.lazy(() => import('./component')),
   component: component,
   icon: () => <GeneInfoViewIcon />,
+  getInitialState(initialData) {
+    return null
+  },
   citation({ gene }) {
     return (
       <div>

@@ -1,10 +1,10 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { atom, useAtom, WritableAtom } from 'jotai'
+import { atom, useAtom, useAtomValue, WritableAtom } from 'jotai'
 import * as React from 'react'
 import { View, ViewDispatch } from './index'
 import Storage from '@eplant/util/Storage'
 import usePromise from '@eplant/util/usePromise'
-import { useViewID } from '@eplant/state'
+import { atomWithStorage, useViewID } from '@eplant/state'
 
 export enum ViewDataError {
   UNSUPPORTED_GENE = 'Unsupported gene',
@@ -21,6 +21,7 @@ type ViewDataType<T> = {
 export const viewDataStorage = new Storage<string, ViewDataType<unknown>>(
   'view-data'
 )
+export const viewStateStorage = new Storage<string, unknown>('view-state')
 
 const defaultViewData = {
   activeData: undefined,
@@ -29,12 +30,13 @@ const defaultViewData = {
   loadingAmount: 0,
 }
 
-export type UseViewDataType<T, A> = ViewDataType<T> & {
+export type UseViewDataType<T, S, A> = ViewDataType<T> & {
   dispatch: ViewDispatch<A>
+  state?: S
 }
 
 // Initial view data is stored on disk to improve load times
-const initialViewAtoms: {
+const viewDataAtoms: {
   [key: string]: WritableAtom<
     ViewDataType<unknown>,
     React.SetStateAction<ViewDataType<unknown>>,
@@ -42,69 +44,78 @@ const initialViewAtoms: {
   >
 } = {}
 
-function getViewAtom(key: string, persist: boolean) {
-  if (initialViewAtoms[key]) return initialViewAtoms[key]
+const viewStateAtoms: {
+  [key: string]: WritableAtom<unknown, React.SetStateAction<unknown>, void>
+} = {}
+
+function getViewAtom(key: string) {
+  if (viewDataAtoms[key]) return viewDataAtoms[key]
   const a = atom<ViewDataType<unknown>>({
     ...defaultViewData,
     loading: true,
   })
-  if (persist) {
-    // Check if there is cached data on mount
-    a.onMount = (setAtom) => {
-      viewDataStorage.get(key).then((v) => {
-        if (v) setAtom(v)
-        else setAtom(defaultViewData)
-      })
-      const listener = (e: ViewDataType<unknown> | undefined) => {
-        if (e) setAtom(e)
-        else setAtom(defaultViewData)
-      }
-      return viewDataStorage.watch(key, listener)
+  // Check if there is cached data on mount
+  a.onMount = (setAtom) => {
+    viewDataStorage.get(key).then((v) => {
+      if (v) setAtom(v)
+      else setAtom(defaultViewData)
+    })
+    const listener = (e: ViewDataType<unknown> | undefined) => {
+      if (e) setAtom(e)
+      else setAtom(defaultViewData)
     }
+    return viewDataStorage.watch(key, listener)
   }
-  initialViewAtoms[key] = a
-  return initialViewAtoms[key]
+  viewDataAtoms[key] = a
+  return viewDataAtoms[key]
 }
 
-export function useViewData<T, A>(
-  view: View<T, A>,
-  gene: GeneticElement | null
-): UseViewDataType<T, A> {
-  const key = `${view.id}-${gene?.id ?? 'generic-view'}`
-  const id = key + '-' + useViewID()
-  const [initialViewData, setInitialViewData] = useAtom(getViewAtom(key, true))
-  const [viewData, setViewData] = useAtom(getViewAtom(id, false))
+function getViewStateAtom(key: string) {
+  if (viewStateAtoms[key]) return viewStateAtoms[key]
+  viewStateAtoms[key] = atomWithStorage(viewStateStorage, key, undefined)
+  return viewStateAtoms[key]
+}
 
-  // When the initialViewData is loaded from cache, set the viewData
-  // if there is no cached initialViewData then load it using the view's loader
+export function useViewData<T, S, A>(
+  view: View<T, S, A>,
+  gene: GeneticElement | null
+): UseViewDataType<T, S, A> {
+  const key = `${view.id}-${gene?.id ?? 'generic-view'}`
+  const id = (view?.id ?? 'generic-view') + '-' + useViewID()
+  const [viewData, setViewData] = useAtom(getViewAtom(key))
+  const [viewState, setViewState] = useAtom(getViewStateAtom(id))
+
+  // If there is no cached viewData then load it using the view's loader
   React.useEffect(() => {
     // Don't load data if the view data and they key aren't synced
-    if (!initialViewData.loading && !initialViewData.error) {
+    if (!viewData.loading && !viewData.error) {
       const loader = gene?.species.api.loaders[view.id] ?? view.getInitialData
       ;(async () => {
         // Guaranteed to work even though types are broken because if gene is null then view.getInitialData (which accepts null) is always used
         try {
           // If there already is data then don't load it again
-          if (initialViewData.activeData) return
+          if (viewData.activeData !== undefined) return
           if (!loader) {
             throw ViewDataError.UNSUPPORTED_GENE
           }
-          setInitialViewData({
+          setViewData({
             ...defaultViewData,
             loading: true,
           })
           const data = await loader(gene as GeneticElement, (amount) => {
-            setInitialViewData((data) => ({
-              ...data,
-              loadingAmount: Math.max(amount, data.loadingAmount),
-            }))
+            setViewData((data) => {
+              return {
+                ...data,
+                loadingAmount: Math.max(amount, data.loadingAmount),
+              }
+            })
           })
           const newData = {
             ...defaultViewData,
             activeData: data,
             loading: false,
           }
-          setInitialViewData(newData)
+          setViewData(newData)
           viewDataStorage.set(key, newData)
         } catch (e) {
           const newData = {
@@ -115,40 +126,40 @@ export function useViewData<T, A>(
                 : (e as ViewDataError),
             loading: false,
           }
-          setInitialViewData(newData)
+          setViewData(newData)
         }
       })()
     }
-  }, [initialViewData, id])
+  }, [viewData, id, gene?.id, view.id])
 
   React.useEffect(() => {
-    if (initialViewData.activeData && !viewData.activeData) {
-      setViewData(initialViewData as ViewDataType<T>)
+    if (
+      viewState === undefined &&
+      viewData.activeData !== undefined &&
+      view.getInitialState
+    ) {
+      setViewState(view.getInitialState(viewData.activeData as T))
     }
-  }, [initialViewData, viewData])
+  }, [viewState, viewData.activeData, view.getInitialState])
 
   const dispatch = React.useMemo(
     () => (action: A) => {
-      setViewData((viewData) => ({
-        ...viewData,
-        activeData:
-          view.reducer && viewData.activeData
-            ? view.reducer(viewData.activeData as T, action)
-            : viewData.activeData,
-      }))
+      setViewState((viewState: S) =>
+        view.reducer && viewState !== undefined
+          ? view.reducer(viewState, action)
+          : viewState
+      )
     },
-    [setViewData, view.id, id]
+    [setViewState, view.id, id]
   )
 
   // Reset viewData when the key changes
-  if (viewData.loading || initialViewData.loading) {
-    return {
-      ...(initialViewData as ViewDataType<T>),
-      dispatch,
-    }
-  }
   return {
     ...(viewData as ViewDataType<T>),
     dispatch,
+    // TODO: Figure out why viewData.activeData sometimes refers to the value from the previous render
+    state: viewState as S | undefined /* ?? viewData.activeData !== undefined
+        ? view.getInitialState(viewData.activeData)
+        : undefined,*/,
   }
 }

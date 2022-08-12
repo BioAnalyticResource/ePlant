@@ -1,18 +1,25 @@
 import React from 'react'
 import { Box, styled, useTheme } from '@mui/material'
-import { EFPData } from '../types'
+import { EFPData, EFPState } from '../types'
 import { getColor } from '../svg'
 import useDimensions from '@eplant/util/useDimensions'
 
 const GRADIENT_STEPS = 11
-export default styled(function Legend({ data, ...rest }: { data: EFPData }) {
+export default styled(function Legend({
+  data,
+  state,
+  ...rest
+}: {
+  data: EFPData
+  state: EFPState
+}) {
   const theme = useTheme()
   const control = data.control ?? 1
   const values = Array(GRADIENT_STEPS)
     .fill(0)
     .map((_, i) => {
       const ratio = i / (GRADIENT_STEPS - 1)
-      if (data.colorMode == 'relative') {
+      if (state.colorMode == 'relative') {
         const extremum = Math.max(
           Math.abs(Math.log2(data.min / control)),
           Math.log2(data.max / control),
@@ -30,11 +37,11 @@ export default styled(function Legend({ data, ...rest }: { data: EFPData }) {
   const gradient = values
     .map((g) =>
       getColor(
-        data.colorMode == 'absolute' ? g : 2 ** g * control,
+        state.colorMode == 'absolute' ? g : 2 ** g * control,
         data,
         data.control ?? 1,
         theme,
-        data.colorMode
+        state.colorMode
       )
     )
     .map((color, i) => (

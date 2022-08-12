@@ -16,10 +16,14 @@ export type EFPGroup = EFPSampleData & {
   control?: number
 }
 export type EFPData = EFPSampleData & {
-  renderAsThumbnail: boolean
   groups: EFPGroup[]
   control?: number
+}
+
+export type ColorMode = 'absolute' | 'relative'
+export type EFPState = {
   colorMode: 'absolute' | 'relative'
+  renderAsThumbnail: boolean
 }
 
 export type EFPSVG = { svg: string; xml: string; id: EFPId }

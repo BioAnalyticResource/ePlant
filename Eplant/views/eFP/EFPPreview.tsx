@@ -56,8 +56,10 @@ export default function EFPPreview({
         <view.component
           activeData={{
             ...dataDeferred,
-            colorMode: colorModeDeferred,
+          }}
+          state={{
             renderAsThumbnail: true,
+            colorMode: colorModeDeferred,
           }}
           geneticElement={gene}
           dispatch={() => {}}

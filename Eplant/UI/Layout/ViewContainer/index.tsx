@@ -35,20 +35,18 @@ import ViewOptions from './ViewOptions'
  * @param props The remaining props are passed directly to the container
  * @returns
  */
-export function ViewContainer<T, A>({
+export function ViewContainer<T, S, A>({
   view,
   setView,
   gene,
   ...props
 }: {
-  view: View<T, A>
+  view: View<T, S, A>
   setView: (view: View) => void
   gene: GeneticElement | null
 } & BoxProps) {
-  const { activeData, error, loading, loadingAmount, dispatch } = useViewData(
-    view,
-    gene
-  )
+  const { activeData, error, loading, loadingAmount, dispatch, state } =
+    useViewData(view, gene)
 
   const idLabel = React.useId()
   const selectId = React.useId()
@@ -121,9 +119,9 @@ export function ViewContainer<T, A>({
             </FormControl>
             <ViewOptions
               gene={gene}
+              state={state}
               view={view}
               loading={loading}
-              activeData={activeData}
               dispatch={dispatch}
             />
           </Stack>
@@ -159,7 +157,7 @@ export function ViewContainer<T, A>({
         </Toolbar>
       </AppBar>
     ),
-    [view.id, gene?.id, loading, activeData, dispatch]
+    [view.id, gene?.id, loading, activeData, state, dispatch]
   )
   return (
     <Box {...props} display="flex" flexDirection="column">
@@ -208,7 +206,7 @@ export function ViewContainer<T, A>({
       >
         <ErrorBoundary>
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-          {loading || !activeData ? (
+          {loading || activeData === undefined || state === undefined ? (
             <LoadingPage
               loadingAmount={loadingAmount}
               gene={gene}
@@ -218,11 +216,13 @@ export function ViewContainer<T, A>({
           ) : (
             <>
               <view.header
+                state={state}
                 activeData={activeData}
                 dispatch={dispatch}
                 geneticElement={gene}
               />
               <view.component
+                state={state}
                 geneticElement={gene}
                 activeData={activeData}
                 dispatch={dispatch}

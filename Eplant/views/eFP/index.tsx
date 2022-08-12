@@ -22,6 +22,7 @@ import {
   EFPGroup,
   EFPId,
   EFPSampleData,
+  EFPState,
   EFPTissue,
 } from './types'
 import _ from 'lodash'
@@ -99,7 +100,11 @@ function SVGTooltip(props: {
   )
 }
 
-export default class EFP implements View {
+export default class EFP implements View<EFPData, EFPState, EFPAction> {
+  getInitialState: (initialData: EFPData) => EFPState = () => ({
+    colorMode: 'absolute',
+    renderAsThumbnail: false,
+  })
   constructor(
     public name: string,
     public id: EFPId,
@@ -219,8 +224,6 @@ export default class EFP implements View {
       })
       .filter((g) => Number.isFinite(g.mean))
     const out: EFPData = {
-      renderAsThumbnail: false,
-      colorMode: 'absolute',
       groups: groupsData,
       control: _.mean(
         groupsData.map((g) => g.control).filter((g) => Number.isFinite(g))
@@ -235,7 +238,7 @@ export default class EFP implements View {
     }
     return out
   }
-  component(props: ViewProps<EFPData, EFPAction>): JSX.Element {
+  component(props: ViewProps<EFPData, EFPState, EFPAction>): JSX.Element {
     const { view, loading } = useEFPSVG(
       {
         svgURL: this.svgURL,
@@ -243,7 +246,7 @@ export default class EFP implements View {
         id: this.id,
       },
       {
-        showText: !props.activeData.renderAsThumbnail,
+        showText: !props.state.renderAsThumbnail,
       }
     )
 
@@ -255,7 +258,7 @@ export default class EFP implements View {
       (props.geneticElement?.id ?? 'no-gene') +
       '-' +
       React.useMemo(() => Math.random().toString(16).slice(3), [])
-    const styles = useStyles(id, props.activeData)
+    const styles = useStyles(id, props.activeData, props.state.colorMode)
     React.useEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
@@ -331,7 +334,7 @@ export default class EFP implements View {
         }}
       >
         {svgDiv}
-        {!props.activeData.renderAsThumbnail &&
+        {!props.state.renderAsThumbnail &&
           svgElements.map(({ el, group, tissue }) => (
             <SVGTooltip
               data={props.activeData}

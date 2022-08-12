@@ -7,7 +7,11 @@ import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import _ from 'lodash'
 import React from 'react'
-import { GeneInfoViewData } from './data'
+import {
+  GeneInfoViewAction,
+  GeneInfoViewData,
+  GeneInfoViewState,
+} from './types'
 import { View, ViewProps } from '../../View'
 import { useViewData } from '../../View/viewData'
 import { GeneModel } from './GeneModel'
@@ -131,7 +135,7 @@ const ViewButton = styled(function ViewButton({
     geneticElement
   )
   return (
-    <Button {...props} disabled={!!error || !activeData}>
+    <Button {...props} disabled={!!error || activeData === undefined}>
       <LinearProgress
         sx={(theme) => ({
           position: 'absolute',
@@ -169,7 +173,7 @@ const ViewButton = styled(function ViewButton({
 export default function GeneInfoViewer({
   geneticElement,
   activeData,
-}: ViewProps<GeneInfoViewData, never>) {
+}: ViewProps<GeneInfoViewData, GeneInfoViewState, GeneInfoViewAction>) {
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
