@@ -13,7 +13,7 @@ export const AtGenExpress = new EFP(
 
 export default new EFPViewer(
   'plant',
-  'Plant EFP',
+  'Plant eFP',
   [
     {
       name: 'AtGenExpress',

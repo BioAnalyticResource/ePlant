@@ -5,7 +5,7 @@ import ExperimentEFPIcon from './icon'
 
 export default new EFPViewer(
   'tissue',
-  'Tissue & Experiment EFP',
+  'Tissue & Experiment eFP',
   [
     {
       svgURL:
