@@ -109,9 +109,9 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
 export default class EFPViewer
   implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
 {
-  getInitialState(data: EFPViewerData): EFPViewerState {
+  getInitialState(): EFPViewerState {
     return {
-      activeView: data.views[0].id,
+      activeView: '',
       colorMode: 'absolute',
       transform: {
         offset: {
@@ -208,14 +208,18 @@ export default class EFPViewer
       [...props.activeData.views.map((v) => v.id)]
     )
 
-    const activeViewIndex = React.useMemo(
+    let activeViewIndex = React.useMemo(
       () =>
         EFPViews.findIndex((v) => v.id == props.state.activeView) ??
         EFPViews[0],
       [props.state.activeView, ...EFPViews.map((v) => v.id)]
     )
     if (activeViewIndex == -1) {
-      throw new Error('active view does not exist')
+      activeViewIndex = 0
+      props.dispatch({
+        type: 'set-view',
+        id: EFPViews[0].id,
+      })
     }
     const efp = React.useMemo(() => {
       const Component = EFPViews[activeViewIndex].component

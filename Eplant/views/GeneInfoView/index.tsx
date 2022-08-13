@@ -16,7 +16,7 @@ const GeneInfoView: View<GeneInfoViewData> = {
   // component: React.lazy(() => import('./component')),
   component: component,
   icon: () => <GeneInfoViewIcon />,
-  getInitialState(initialData) {
+  getInitialState() {
     return null
   },
   citation({ gene }) {

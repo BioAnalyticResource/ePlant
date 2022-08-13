@@ -133,14 +133,10 @@ export function useViewData<T, S, A>(
   }, [viewData, id, gene?.id, view.id])
 
   React.useEffect(() => {
-    if (viewState === undefined && viewData.activeData !== undefined) {
-      setViewState(
-        view.getInitialState
-          ? view.getInitialState(viewData.activeData as T)
-          : null
-      )
+    if (viewState === undefined) {
+      setViewState(view.getInitialState?.() ?? null)
     }
-  }, [viewState, viewData.activeData, view.getInitialState])
+  }, [id])
 
   const dispatch = React.useMemo(
     () => (action: A) => {
@@ -158,7 +154,9 @@ export function useViewData<T, S, A>(
     ...(viewData as ViewDataType<T>),
     dispatch,
     // TODO: Figure out why viewData.activeData sometimes refers to the value from the previous render
-    state: viewState as S | undefined /* ?? viewData.activeData !== undefined
+    state:
+      (viewState as S | undefined) ??
+      view.getInitialState?.() /* ?? viewData.activeData !== undefined
         ? view.getInitialState(viewData.activeData)
         : undefined,*/,
   }
