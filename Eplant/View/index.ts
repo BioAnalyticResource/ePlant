@@ -34,6 +34,8 @@ export interface View<Data = any, State = any, Action = any> {
   icon?: () => JSX.Element
   readonly name: string
   readonly id: string
+  description?: string
+  thumbnail?: string
   citation?: (props: { gene: GeneticElement | null }) => JSX.Element
   header: (props: ViewProps<Data, State, Action>) => JSX.Element
 }

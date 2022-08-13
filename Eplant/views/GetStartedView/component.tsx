@@ -1,14 +1,15 @@
 import { Grid, Link, Stack, Typography, useTheme } from '@mui/material'
 import { Filter1, Filter2, Filter3 } from '@mui/icons-material'
-import { ViewProps } from '../../View'
+import { ViewProps } from '@eplant/View'
 import React from 'react'
-import views from './views'
 import Tile from './Tile'
+import { useConfig } from '@eplant/config'
 
 export default function GetStartedView({
   geneticElement,
 }: ViewProps<Record<string, undefined>, undefined, undefined>) {
   const theme = useTheme()
+  const { views } = useConfig()
   return (
     <Stack spacing={2}>
       <div>
@@ -63,11 +64,15 @@ export default function GetStartedView({
         </Typography>
       </Stack>
       <Grid container spacing={2} columns={4}>
-        {views.map((view) => (
-          <Grid item key={view.title} xs={1}>
-            <Tile {...view} />
-          </Grid>
-        ))}
+        {views.map((view) => {
+          if (view.description && view.thumbnail) {
+            return (
+              <Grid item key={view.id} xs={1}>
+                <Tile view={view} />
+              </Grid>
+            )
+          }
+        })}
       </Grid>
     </Stack>
   )
