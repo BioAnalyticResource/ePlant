@@ -52,9 +52,6 @@ const PublicationViewer: View<PublicationViewerData> = {
       Publications related to {geneticElement?.id}
     </Typography>
   ),
-  getInitialState() {
-    return null
-  },
 }
 
 export default PublicationViewer

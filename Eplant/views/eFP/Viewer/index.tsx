@@ -110,7 +110,6 @@ export default class EFPViewer
   implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
 {
   getInitialState(data: EFPViewerData): EFPViewerState {
-    console.log(data)
     return {
       activeView: data.views[0].id,
       colorMode: 'absolute',

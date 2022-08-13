@@ -133,12 +133,12 @@ export function useViewData<T, S, A>(
   }, [viewData, id, gene?.id, view.id])
 
   React.useEffect(() => {
-    if (
-      viewState === undefined &&
-      viewData.activeData !== undefined &&
-      view.getInitialState
-    ) {
-      setViewState(view.getInitialState(viewData.activeData as T))
+    if (viewState === undefined && viewData.activeData !== undefined) {
+      setViewState(
+        view.getInitialState
+          ? view.getInitialState(viewData.activeData as T)
+          : null
+      )
     }
   }, [viewState, viewData.activeData, view.getInitialState])
 

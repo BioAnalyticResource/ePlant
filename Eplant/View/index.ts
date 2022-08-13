@@ -22,7 +22,7 @@ export interface View<Data = any, State = any, Action = any> {
   // loadEvent should be called to update the view's loading bar.
   // The input is a float between 0 and 1 which represents the fraction of the data
   // that has currently loaded.
-  getInitialState: (initialData: Data) => State
+  getInitialState?: (initialData: Data) => State
   getInitialData?: (
     gene: GeneticElement | null,
     loadEvent: (amount: number) => void
