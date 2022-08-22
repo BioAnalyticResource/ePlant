@@ -348,12 +348,12 @@ export function Collections(props: {
 
   // If there are genes that aren't in a collection, put them in the first
   useEffect(() => {
-    const unincluded = genes.map(
-      (g) => !collections.some((c) => c.genes.some((geneId) => geneId == g.id))
-    )
-
-    if (unincluded.some((x) => x)) {
-      setCollections((collections) => {
+    setCollections((collections) => {
+      const unincluded = genes.map(
+        (g) =>
+          !collections.some((c) => c.genes.some((geneId) => geneId == g.id))
+      )
+      if (unincluded.some((x) => x)) {
         const cols = collections.slice()
         if (cols.length == 0) {
           cols.push({
@@ -369,8 +369,8 @@ export function Collections(props: {
           ),
         }
         return cols
-      })
-    }
+      } else return collections
+    })
   }, [genes, collections])
 
   return (
