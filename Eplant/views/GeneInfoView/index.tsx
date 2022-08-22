@@ -5,6 +5,7 @@ import { View } from '../../View'
 import { Link, Typography } from '@mui/material'
 import { GeneInfoViewData } from './types'
 import GeneInfoViewIcon from './icon'
+import { ViewDataError } from '@eplant/View/viewData'
 
 /**
  * Show information about a gene, including its sequence and features.
@@ -18,6 +19,10 @@ const GeneInfoView: View<GeneInfoViewData> = {
   icon: () => <GeneInfoViewIcon />,
   getInitialState() {
     return null
+  },
+  getInitialData() {
+    // Loader override for the genes species must be undefined if getInitialData is being called
+    throw ViewDataError.UNSUPPORTED_GENE
   },
   citation({ gene }) {
     return (
