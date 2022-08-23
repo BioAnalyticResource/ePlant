@@ -206,7 +206,7 @@ export function ViewContainer<T, S, A>({
       >
         <ErrorBoundary>
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-          {loading || activeData === undefined || state === undefined ? (
+          {loading || activeData === undefined ? (
             <LoadingPage
               loadingAmount={loadingAmount}
               gene={gene}

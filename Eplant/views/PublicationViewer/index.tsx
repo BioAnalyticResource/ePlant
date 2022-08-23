@@ -7,6 +7,7 @@ import { PublicationViewerData, TabValues } from './types'
 import { DocumentScanner, DocumentScannerOutlined } from '@mui/icons-material'
 import PublicationViewerIcon from './icon'
 import Thumbnail from '../../../thumbnails/publication_viewer.png'
+import { ViewDataError } from '@eplant/View/viewData'
 
 const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication Viewer',
@@ -55,8 +56,9 @@ const PublicationViewer: View<PublicationViewerData> = {
       Publications related to {geneticElement?.id}
     </Typography>
   ),
-  getInitialState() {
-    return null
+  async getInitialData() {
+    // Loader override for the genes species must be undefined if getInitialData is being called
+    throw ViewDataError.UNSUPPORTED_GENE
   },
 }
 

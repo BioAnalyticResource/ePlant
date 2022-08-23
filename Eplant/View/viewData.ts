@@ -32,7 +32,7 @@ const defaultViewData = {
 
 export type UseViewDataType<T, S, A> = ViewDataType<T> & {
   dispatch: ViewDispatch<A>
-  state?: S
+  state: S
 }
 
 // Initial view data is stored on disk to improve load times
@@ -112,7 +112,7 @@ export function useViewData<T, S, A>(
           })
           const newData = {
             ...defaultViewData,
-            activeData: data,
+            activeData: data ?? null,
             loading: false,
           }
           setViewData(newData)
@@ -133,14 +133,10 @@ export function useViewData<T, S, A>(
   }, [viewData, id, gene?.id, view.id])
 
   React.useEffect(() => {
-    if (
-      viewState === undefined &&
-      viewData.activeData !== undefined &&
-      view.getInitialState
-    ) {
-      setViewState(view.getInitialState(viewData.activeData as T))
+    if (viewState === undefined) {
+      setViewState(view.getInitialState?.() ?? null)
     }
-  }, [viewState, viewData.activeData, view.getInitialState])
+  }, [id])
 
   const dispatch = React.useMemo(
     () => (action: A) => {
@@ -158,7 +154,9 @@ export function useViewData<T, S, A>(
     ...(viewData as ViewDataType<T>),
     dispatch,
     // TODO: Figure out why viewData.activeData sometimes refers to the value from the previous render
-    state: viewState as S | undefined /* ?? viewData.activeData !== undefined
+    state: (viewState ??
+      view.getInitialState?.() ??
+      null) as S /* ?? viewData.activeData !== undefined
         ? view.getInitialState(viewData.activeData)
         : undefined,*/,
   }

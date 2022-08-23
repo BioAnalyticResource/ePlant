@@ -2,12 +2,11 @@ import { Typography } from '@mui/material'
 import React from 'react'
 import { View } from '../../View'
 
-const FallbackView: View<void> = {
+const FallbackView: View<null> = {
   name: 'Unknown view',
   component: () => <div>Unknown view</div>,
-  getInitialData: async () => {},
-  getInitialState(initialData) {
-    return {}
+  async getInitialData() {
+    return null
   },
   id: 'fallback',
   header: ({ geneticElement }) => (

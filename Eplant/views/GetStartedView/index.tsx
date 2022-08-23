@@ -6,11 +6,10 @@ import component from './component'
 const GetStartedView: View = {
   name: 'Get started',
   component,
-  getInitialData: async () => ({}),
-  id: 'get-started',
-  getInitialState() {
+  async getInitialData() {
     return null
   },
+  id: 'get-started',
   header(props) {
     return <></>
   },

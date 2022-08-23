@@ -101,7 +101,7 @@ function SVGTooltip(props: {
 }
 
 export default class EFP implements View<EFPData, EFPState, EFPAction> {
-  getInitialState: (initialData: EFPData) => EFPState = () => ({
+  getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
   })
