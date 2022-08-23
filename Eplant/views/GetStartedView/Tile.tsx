@@ -46,7 +46,7 @@ export default function Tile({
           variant="caption"
           color={(theme) => theme.palette.secondary.main}
         >
-          Example <Link onClick={setView}>AT3G24650 | ABI3</Link>
+          Example <Link href='#' onClick={setView}>AT3G24650 | ABI3</Link>
         </Typography>
       </CardActions>
     </Card>

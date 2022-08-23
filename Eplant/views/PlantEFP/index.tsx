@@ -3,6 +3,7 @@ import React from 'react'
 import EFP from '../eFP'
 import EFPViewer from '../eFP/Viewer'
 import PlantEFPIcon from './icon'
+import Thumbnail from '../../../thumbnails/plant_efp.png'
 
 export const AtGenExpress = new EFP(
   'AtGen',
@@ -32,5 +33,7 @@ export default new EFPViewer(
         'https://bar.utoronto.ca/eplant/data/plant/Klepikova/Arabidopsis_thaliana.xml',
     },
   ],
-  () => <PlantEFPIcon />
+  () => <PlantEFPIcon />,
+  'Visualize gene expression over time on a developmental map.',
+  Thumbnail
 )

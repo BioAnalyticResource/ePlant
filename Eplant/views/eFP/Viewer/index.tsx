@@ -127,7 +127,9 @@ export default class EFPViewer
     public id: string,
     public name: string,
     private views: EFPViewerData['views'],
-    public icon: () => JSX.Element
+    public icon: () => JSX.Element,
+    public description?: string,
+    public thumbnail?: string,
   ) {}
   getInitialData = async (
     gene: GeneticElement | null,

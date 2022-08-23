@@ -6,6 +6,7 @@ import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
 import { DocumentScanner, DocumentScannerOutlined } from '@mui/icons-material'
 import PublicationViewerIcon from './icon'
+import Thumbnail from '../../../thumbnails/publication_viewer.png'
 
 const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication Viewer',
@@ -33,6 +34,8 @@ const PublicationViewer: View<PublicationViewerData> = {
     )
   },
   icon: () => <PublicationViewerIcon />,
+  description: "Find publications that mention your gene of interest.",
+  thumbnail: Thumbnail,
   citation({ gene }) {
     return (
       <div>

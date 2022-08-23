@@ -2,6 +2,7 @@ import { Science } from '@mui/icons-material'
 import React from 'react'
 import EFPViewer from '../eFP/Viewer'
 import ExperimentEFPIcon from './icon'
+import Thumbnail from '../../../thumbnails/tissue_efp.png'
 
 export default new EFPViewer(
   'tissue',
@@ -256,5 +257,7 @@ export default new EFPViewer(
       id: 'SingleCellView',
     },
   ],
-  () => <ExperimentEFPIcon />
+  () => <ExperimentEFPIcon />,
+  "Visualize gene expression across multiple tissues and experiment samples.",
+  Thumbnail
 )
