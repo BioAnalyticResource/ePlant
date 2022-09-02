@@ -42,7 +42,7 @@ export default function GetStartedView({
       <Stack>
         <Typography variant="body2" color={theme.palette.secondary.main}>
           Built by students in the{' '}
-          <Link href="https://bar.utoronto.ca/" target="_blank">
+          <Link href="http://bar.utoronto.ca/" target="_blank">
             Provart Lab
           </Link>{' '}
           at the University of Toronto. If you&apos;re interested in
