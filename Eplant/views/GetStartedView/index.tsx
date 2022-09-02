@@ -1,6 +1,5 @@
-import React from 'react'
-import { Typography } from '@mui/material'
-import { View } from '../../View'
+import * as React from 'react'
+import { View } from '../View'
 import component from './component'
 
 const GetStartedView: View = {
