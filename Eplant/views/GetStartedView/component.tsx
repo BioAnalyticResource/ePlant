@@ -3,13 +3,13 @@ import { Filter1, Filter2, Filter3 } from '@mui/icons-material'
 import { ViewProps } from '@eplant/View'
 import React from 'react'
 import Tile from './Tile'
-import { useConfig } from '@eplant/config'
+import { useConfig } from '@eplant/state'
 
 export default function GetStartedView({
   geneticElement,
 }: ViewProps<Record<string, undefined>, undefined, undefined>) {
   const theme = useTheme()
-  const { views } = useConfig()
+  const [{ views }] = useConfig()
   return (
     <Stack spacing={2}>
       <div>

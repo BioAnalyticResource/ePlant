@@ -1,10 +1,12 @@
-import { useDarkMode, useSpecies } from '@eplant/state'
+import { useDarkMode, usePanesDispatch, useSpecies } from '@eplant/state'
 import {
   Box,
   Divider,
   FormControlLabel,
   FormGroup,
+  IconButton,
   Switch,
+  Typography,
 } from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
@@ -16,6 +18,7 @@ import GeneticElementComponent from '../GeneticElementComponent'
 import { Collections } from './Collections'
 import GeneticElement from '@eplant/GeneticElement'
 import _, { uniq } from 'lodash'
+import { Settings } from '@mui/icons-material'
 
 /**
  * The left nav bar in ePlant. Contains a search bar, and list of collections of genes.
@@ -30,10 +33,15 @@ export function LeftNav(props: {
   const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
+  const panesDispatch = usePanesDispatch()
   React.useEffect(() => {
     const uniq = _.uniqBy(geneticElements, (g) => g.id)
     if (uniq.length != geneticElements.length) setGeneticElements(uniq)
   }, [geneticElements])
+  const openSettings = React.useCallback(() => {
+    panesDispatch({type: 'new', id: 'settings', activeGene: null})
+    panesDispatch({type: 'set-view', id: 'settings', view: 'settings'})
+  }, [])
   return (
     <Stack gap={4} direction="column" height={'100%'}>
       <LogoWithText text="ePlant" />
@@ -57,17 +65,12 @@ export function LeftNav(props: {
         selectedGene={props.selectedGene}
       />
       <Box flexGrow={1} />
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              onChange={(v) => setDarkMode(v.target.checked)}
-              checked={darkMode}
-            />
-          }
-          label="Dark Mode"
-        />
-      </FormGroup>
+      <Stack direction="row" alignItems="center">
+        <IconButton onClick={openSettings}>
+          <Settings />
+        </IconButton>
+        <Typography>Settings</Typography>
+      </Stack>
     </Stack>
   )
 }

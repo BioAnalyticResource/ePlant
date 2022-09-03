@@ -1,6 +1,5 @@
-import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import { usePrinting, useViewID } from '@eplant/state'
+import { usePrinting, useViewID, useConfig } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
@@ -56,7 +55,7 @@ export function ViewContainer<T, S, A>({
 
   const viewId = useViewID()
 
-  const { userViews, views, genericViews } = useConfig()
+  const [{ userViews, views, genericViews }] = useConfig()
 
   React.useEffect(() => {
     if (printing == viewId) {

@@ -5,7 +5,7 @@ import './index.css'
 import Eplant from './Eplant'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'jotai'
-import { useDarkMode } from '@eplant/state'
+import { useDarkMode, useDebug, useSetConfig } from '@eplant/state'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { dark, light } from './theme'
 
@@ -13,13 +13,16 @@ import FallbackView from './views/FallbackView'
 import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
 import PublicationViewer from './views/PublicationViewer'
-import { Config } from './config'
 import DebugView from './views/DebugView'
 import PlantEFP from './views/PlantEFP'
 import ExperimentEFP from './views/ExperimentEFP'
+import SettingsView from './views/SettingsView'
 
 // Views that aren't associated with individual genes
-const genericViews = [GetStartedView, FallbackView]
+const genericViews = [GetStartedView,
+  FallbackView,
+  SettingsView,
+]
 
 // List of views that a user can select from
 // Can contain views from the genericViews list too
@@ -48,15 +51,27 @@ const eplantScope = Symbol('Eplant scope')
 
 function RootApp() {
   const [darkMode, setDarkMode] = useDarkMode()
+  const setConfig = useSetConfig()
+  const [debug] = useDebug()
+  React.useEffect(() => setConfig(defaultConfig), [])
+  React.useEffect(() => {
+    setConfig(config => {
+      if (debug && !config.userViews.some(view => view.id === 'debug-view')) {
+        config.userViews.push(DebugView)
+        return {...config}
+      } else if (!debug && config.userViews.some(view => view.id === 'debug-view')) {
+        return {...config, userViews: config.userViews.filter(view => view.id !== 'debug-view')}
+      }
+      return config
+    })
+  })
   return (
     <React.StrictMode>
       <Provider scope={eplantScope}>
         <ThemeProvider theme={darkMode ? dark : light}>
           <CssBaseline />
           <BrowserRouter>
-            <Config.Provider value={defaultConfig}>
-              <Eplant />
-            </Config.Provider>
+            <Eplant />
           </BrowserRouter>
         </ThemeProvider>
       </Provider>

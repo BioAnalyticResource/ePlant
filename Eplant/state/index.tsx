@@ -5,6 +5,7 @@ import Storage from '@eplant/util/Storage'
 import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
 import * as FlexLayout from 'flexlayout-react'
+import { EplantConfig } from '@eplant/config'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
@@ -310,3 +311,20 @@ export const modelAtom = atomWithOptionalStorage<FlexLayout.Model>(
 )
 export const useModel = () => useAtom(modelAtom)
 export const useSetModel = () => useSetAtom(modelAtom)
+
+export const configAtom = atom<EplantConfig>(
+{
+  genericViews: [],
+  userViews: [],
+  views: [],
+  tabHeight: 48,
+  rootPath: ''
+})
+
+export const useConfig = () => useAtom(configAtom)
+export const useSetConfig = () => useSetAtom(configAtom)
+
+export const debugAtom = atomWithOptionalStorage<boolean>('debug', false)
+
+export const useDebug = () => useAtom(debugAtom)
+export const useSetDebug = () => useSetAtom(debugAtom)

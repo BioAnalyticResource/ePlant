@@ -1,4 +1,4 @@
-import { useConfig } from '@eplant/config'
+import { useConfig } from '@eplant/state'
 import GeneticElement from '@eplant/GeneticElement'
 import { usePanesDispatch, useViewID } from '@eplant/state'
 import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
@@ -260,7 +260,7 @@ export default function GeneInfoViewer({
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   const id = useViewID()
   const panesDispatch = usePanesDispatch()
-  const { userViews } = useConfig()
+  const [{ userViews }] = useConfig()
   return (
     <Stack direction="column" gap={'16px'} flex={1}>
       <div style={{ whiteSpace: 'nowrap' }}>
