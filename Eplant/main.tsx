@@ -19,10 +19,7 @@ import ExperimentEFP from './views/ExperimentEFP'
 import SettingsView from './views/SettingsView'
 
 // Views that aren't associated with individual genes
-const genericViews = [GetStartedView,
-  FallbackView,
-  SettingsView,
-]
+const genericViews = [GetStartedView, FallbackView, SettingsView]
 
 // List of views that a user can select from
 // Can contain views from the genericViews list too
@@ -55,12 +52,20 @@ function RootApp() {
   const [debug] = useDebug()
   React.useEffect(() => setConfig(defaultConfig), [])
   React.useEffect(() => {
-    setConfig(config => {
-      if (debug && !config.userViews.some(view => view.id === 'debug-view')) {
+    setConfig((config) => {
+      if (debug && !config.userViews.some((view) => view.id === 'debug-view')) {
         config.userViews.push(DebugView)
-        return {...config}
-      } else if (!debug && config.userViews.some(view => view.id === 'debug-view')) {
-        return {...config, userViews: config.userViews.filter(view => view.id !== 'debug-view')}
+        return { ...config }
+      } else if (
+        !debug &&
+        config.userViews.some((view) => view.id === 'debug-view')
+      ) {
+        return {
+          ...config,
+          userViews: config.userViews.filter(
+            (view) => view.id !== 'debug-view'
+          ),
+        }
       }
       return config
     })

@@ -39,8 +39,8 @@ export function LeftNav(props: {
     if (uniq.length != geneticElements.length) setGeneticElements(uniq)
   }, [geneticElements])
   const openSettings = React.useCallback(() => {
-    panesDispatch({type: 'new', id: 'settings', activeGene: null})
-    panesDispatch({type: 'set-view', id: 'settings', view: 'settings'})
+    panesDispatch({ type: 'new', id: 'settings', activeGene: null })
+    panesDispatch({ type: 'set-view', id: 'settings', view: 'settings' })
   }, [])
   return (
     <Stack gap={4} direction="column" height={'100%'}>

@@ -312,13 +312,12 @@ export const modelAtom = atomWithOptionalStorage<FlexLayout.Model>(
 export const useModel = () => useAtom(modelAtom)
 export const useSetModel = () => useSetAtom(modelAtom)
 
-export const configAtom = atom<EplantConfig>(
-{
+export const configAtom = atom<EplantConfig>({
   genericViews: [],
   userViews: [],
   views: [],
   tabHeight: 48,
-  rootPath: ''
+  rootPath: '',
 })
 
 export const useConfig = () => useAtom(configAtom)
