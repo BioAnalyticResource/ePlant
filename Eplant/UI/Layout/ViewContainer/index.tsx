@@ -117,14 +117,14 @@ export function ViewContainer<T, S, A>({
                 ))}
               </Select>
             </FormControl>
-            <ViewOptions
-              gene={gene}
-              state={state}
-              view={view}
-              loading={loading}
-              dispatch={dispatch}
-            />
           </Stack>
+          <ViewOptions
+            gene={gene}
+            state={state}
+            view={view}
+            loading={loading}
+            dispatch={dispatch}
+          />
           <Button
             variant="text"
             sx={{
