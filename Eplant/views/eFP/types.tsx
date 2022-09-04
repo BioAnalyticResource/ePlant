@@ -18,6 +18,7 @@ export type EFPGroup = EFPSampleData & {
 export type EFPData = EFPSampleData & {
   groups: EFPGroup[]
   control?: number
+  supported: boolean
 }
 
 export type ColorMode = 'absolute' | 'relative'

@@ -235,6 +235,9 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         _.sum(groupsData.map((g) => g.std ** 2 * g.samples)) /
         _.sum(groupsData.map((g) => g.samples)),
       samples: _.sum(groupsData.map((g) => g.samples)),
+      supported:
+        Number.isFinite(_.mean(groupsData.map((g) => g.mean))) &&
+        groupsData.length > 0,
     }
     return out
   }
@@ -315,10 +318,25 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
             height: '100%',
             display: 'flex',
             alignItems: 'center',
-            alignSelf: 'center',
+            justifyContent: 'center',
           }}
         >
           <CircularProgress />
+        </div>
+      )
+    }
+    if (!props.activeData.supported) {
+      return (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography>N/A</Typography>
         </div>
       )
     }

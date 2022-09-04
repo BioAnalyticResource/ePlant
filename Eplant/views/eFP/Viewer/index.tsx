@@ -23,6 +23,7 @@ import _ from 'lodash'
 import useDimensions from '@eplant/util/useDimensions'
 import { EFPData, EFPState } from '../types'
 import Legend from './legend'
+import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -128,7 +129,7 @@ export default class EFPViewer
     private views: EFPViewerData['views'],
     public icon: () => JSX.Element,
     public description?: string,
-    public thumbnail?: string,
+    public thumbnail?: string
   ) {}
   getInitialData = async (
     gene: GeneticElement | null,
@@ -282,42 +283,60 @@ export default class EFPViewer
             sx={{
               flexGrow: 1,
               position: 'relative',
+              overflow: 'auto',
             }}
           >
-            <Legend
-              sx={(theme) => ({
-                position: 'absolute',
-                left: theme.spacing(2),
-                top: 0,
-                zIndex: 10,
-              })}
-              data={{
-                ...props.activeData.viewData[activeViewIndex],
-              }}
-              state={{
-                colorMode: props.state.colorMode,
-                renderAsThumbnail: false,
-              }}
-            />
-            <PanZoom
-              sx={(theme) => ({
-                position: 'absolute',
-                top: theme.spacing(4),
-                left: theme.spacing(2),
-                width: '100%',
-                height: '100%',
-                zIndex: 0,
-              })}
-              initialTransform={props.state.transform}
-              onTransformChange={(transform) => {
-                props.dispatch({
-                  type: 'set-transform',
-                  transform,
-                })
-              }}
-            >
-              {efp}
-            </PanZoom>
+            {props.activeData.viewData[activeViewIndex].supported ? (
+              <>
+                <Legend
+                  sx={(theme) => ({
+                    position: 'absolute',
+                    left: theme.spacing(2),
+                    top: 0,
+                    zIndex: 10,
+                  })}
+                  data={{
+                    ...props.activeData.viewData[activeViewIndex],
+                  }}
+                  state={{
+                    colorMode: props.state.colorMode,
+                    renderAsThumbnail: false,
+                  }}
+                />
+                <PanZoom
+                  sx={(theme) => ({
+                    position: 'absolute',
+                    top: theme.spacing(4),
+                    left: theme.spacing(2),
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 0,
+                  })}
+                  initialTransform={props.state.transform}
+                  onTransformChange={(transform) => {
+                    props.dispatch({
+                      type: 'set-transform',
+                      transform,
+                    })
+                  }}
+                >
+                  {efp}
+                </PanZoom>
+              </>
+            ) : (
+              <div
+                style={{
+                  position: 'absolute',
+                  padding: '10px',
+                  width: '100%',
+                }}
+              >
+                <NotSupported
+                  geneticElement={props.geneticElement}
+                  view={EFPViews[activeViewIndex]}
+                ></NotSupported>
+              </div>
+            )}
           </Box>
         </Box>
       </Box>
