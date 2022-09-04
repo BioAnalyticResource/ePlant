@@ -180,7 +180,7 @@ export function ViewContainer<T, S, A>({
       </Modal>
 
       {topBar}
-      <Container
+      <Box
         sx={(theme) => ({
           padding: '2rem',
           flexGrow: 1,
@@ -230,7 +230,7 @@ export function ViewContainer<T, S, A>({
             </>
           )}
         </ErrorBoundary>
-      </Container>
+      </Box>
     </Box>
   )
 }
