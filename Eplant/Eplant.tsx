@@ -194,6 +194,7 @@ function DirectPane() {
       style={{
         display: 'flex',
         flexDirection: 'column',
+        overflow: 'auto',
       }}
     >
       <Box
