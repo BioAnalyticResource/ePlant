@@ -8,8 +8,8 @@ import Thumbnail from '../../../thumbnails/plant_efp.png'
 export const AtGenExpress = new EFP(
   'AtGen',
   'atgen',
-  'http://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.svg',
-  'http://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.xml'
+  'https://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.svg',
+  'https://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.xml'
 )
 
 export default new EFPViewer(
@@ -20,17 +20,17 @@ export default new EFPViewer(
       name: 'AtGenExpress',
       id: 'atgenexpress',
       svgURL:
-        'http://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.svg',
+        'https://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.svg',
       xmlURL:
-        'http://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.xml',
+        'https://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.xml',
     },
     {
       name: 'Klepikova',
       id: 'klepikova',
       svgURL:
-        'http://bar.utoronto.ca/eplant/data/plant/Klepikova/Arabidopsis_thaliana.svg',
+        'https://bar.utoronto.ca/eplant/data/plant/Klepikova/Arabidopsis_thaliana.svg',
       xmlURL:
-        'http://bar.utoronto.ca/eplant/data/plant/Klepikova/Arabidopsis_thaliana.xml',
+        'https://bar.utoronto.ca/eplant/data/plant/Klepikova/Arabidopsis_thaliana.xml',
     },
   ],
   () => <PlantEFPIcon />,

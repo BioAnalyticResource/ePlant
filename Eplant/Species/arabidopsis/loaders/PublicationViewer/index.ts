@@ -17,7 +17,7 @@ const loader: View<PublicationViewerData>['getInitialData'] = async (
   const [publications, geneRIFs] = await Promise.all([
     axios
       .get<{ result: PublicationData[] }>(
-        `http://bar.utoronto.ca/webservices/bar_araport/` +
+        `https://bar.utoronto.ca/webservices/bar_araport/` +
           `publications_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {
@@ -27,7 +27,7 @@ const loader: View<PublicationViewerData>['getInitialData'] = async (
       }),
     axios
       .get<{ result: GeneRIFsData[] }>(
-        `http://bar.utoronto.ca/webservices/bar_araport/` +
+        `https://bar.utoronto.ca/webservices/bar_araport/` +
           `generifs_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {

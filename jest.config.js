@@ -11,7 +11,7 @@ module.exports = {
     },
   },
   testEnvironmentOptions: {
-    url: 'http://bar.utoronto.ca/eplant',
+    url: 'https://bar.utoronto.ca/eplant',
   },
   moduleNameMapper: {
     '^@eplant/(.*)$': path.resolve(__dirname, 'Eplant/$1'),

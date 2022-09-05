@@ -127,7 +127,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     const database = xml.getElementsByTagName('view')[0]?.getAttribute('db')
     let webservice = xml.getElementsByTagName('webservice')[0]?.textContent
     if (!webservice)
-      webservice = `http://bar.utoronto.ca/eplant/cgi-bin/plantefp.cgi?datasource=${
+      webservice = `https://bar.utoronto.ca/eplant/cgi-bin/plantefp.cgi?datasource=${
         database ?? 'atgenexp_plus'
       }&`
 
