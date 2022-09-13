@@ -1,4 +1,5 @@
-import { useDarkMode, useConfig, useSetDebug } from '@eplant/state'
+import { useConfig } from '@eplant/config'
+import { useSettings } from '@eplant/state'
 import { ViewProps } from '@eplant/View'
 import { FormControlLabel, FormGroup, Switch, Typography } from '@mui/material'
 import React from 'react'
@@ -8,17 +9,15 @@ export default function SettingsView({
   geneticElement,
   activeData,
 }: ViewProps<any, any, any>) {
-  const [darkMode, setDarkMode] = useDarkMode()
-  const [config] = useConfig()
-  const setDebug = useSetDebug()
+  const [settings, setSettings] = useSettings()
   return (
     <>
       <FormGroup>
         <FormControlLabel
           control={
             <Switch
-              onChange={(e) => setDarkMode(e.target.checked)}
-              checked={darkMode}
+              onChange={(e) => setSettings({ ...settings, darkMode: e.target.checked})}
+              checked={settings.darkMode}
             />
           }
           label="Dark Mode"
@@ -28,8 +27,8 @@ export default function SettingsView({
         <FormControlLabel
           control={
             <Switch
-              onChange={(e) => setDebug(e.target.checked)}
-              checked={config.userViews.includes(DebugView)}
+              onChange={(e) => setSettings({...settings, debugMode: e.target.checked})}
+              checked={settings.debugMode}
             />
           }
           label="Show Debug View"

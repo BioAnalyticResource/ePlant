@@ -1,4 +1,4 @@
-import { useDarkMode, usePanesDispatch, useSpecies } from '@eplant/state'
+import { useSettings, usePanesDispatch, useSpecies } from '@eplant/state'
 import {
   Box,
   Divider,
@@ -32,7 +32,6 @@ export function LeftNav(props: {
 }) {
   const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
-  const [darkMode, setDarkMode] = useDarkMode()
   const panesDispatch = usePanesDispatch()
   React.useEffect(() => {
     const uniq = _.uniqBy(geneticElements, (g) => g.id)

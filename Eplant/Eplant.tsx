@@ -20,6 +20,7 @@ import {
 } from 'flexlayout-react'
 import * as React from 'react'
 import { Route, Routes, useParams, useSearchParams } from 'react-router-dom'
+import { useConfig } from './config'
 import GeneticElement from './GeneticElement'
 import {
   useGeneticElements,
@@ -31,7 +32,6 @@ import {
   useModel,
   pageLoad,
   usePageLoad,
-  useConfig,
 } from './state'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
@@ -74,7 +74,7 @@ function ViewTab(props: {
   const view = panes[props.id]
   const gene = genes.find((g) => g.id == view?.activeGene) ?? null
   // If there is no gene selected choose one
-  const [{ userViews, views }] = useConfig()
+  const { userViews, views } = useConfig()
   const v = views.find((v) => v.id == view?.view) ?? FallbackView
 
   React.useEffect(() => {
@@ -157,7 +157,7 @@ const factory: (
 }
 
 export default function Eplant() {
-  const [{ rootPath }] = useConfig()
+  const { rootPath } = useConfig()
   return (
     <Routes>
       <Route path={rootPath}>
@@ -178,7 +178,7 @@ function DirectPane() {
   const theme = useTheme()
   const [activeId] = useActiveId()
   const [model] = useModel()
-  const [{ tabHeight, views }] = useConfig()
+  const { tabHeight, views } = useConfig()
   const [globalProgress, loaded] = usePageLoad()
   React.useEffect(() => {
     updateColors(theme)
@@ -290,7 +290,7 @@ function EplantLayout() {
   const layout = React.useRef<Layout>(null)
 
   const [activeId, setActiveId] = useActiveId()
-  const [{ tabHeight }] = useConfig()
+  const { tabHeight } = useConfig()
   const [model, setModel] = useModel()
   const theme = useTheme()
   const [globalProgress, loaded] = usePageLoad()

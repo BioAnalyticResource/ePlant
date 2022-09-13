@@ -5,7 +5,6 @@ import Storage from '@eplant/util/Storage'
 import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
 import * as FlexLayout from 'flexlayout-react'
-import { EplantConfig } from '@eplant/config'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
@@ -268,10 +267,6 @@ export const printingAtom = atom<string | null>(null)
 export const usePrinting = () => useAtom(printingAtom)
 export const useSetPrinting = () => useSetAtom(printingAtom)
 
-export const darkModeAtom = atomWithOptionalStorage<boolean>('dark-mode', true)
-export const useDarkMode = () => useAtom(darkModeAtom)
-export const useSetDarkMode = () => useSetAtom(darkModeAtom)
-
 export const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
 export const useActiveId = () => useAtom(activeIdAtom)
 
@@ -312,18 +307,15 @@ export const modelAtom = atomWithOptionalStorage<FlexLayout.Model>(
 export const useModel = () => useAtom(modelAtom)
 export const useSetModel = () => useSetAtom(modelAtom)
 
-export const configAtom = atom<EplantConfig>({
-  genericViews: [],
-  userViews: [],
-  views: [],
-  tabHeight: 48,
-  rootPath: '',
-})
-
-export const useConfig = () => useAtom(configAtom)
-export const useSetConfig = () => useSetAtom(configAtom)
-
-export const debugAtom = atomWithOptionalStorage<boolean>('debug', false)
-
-export const useDebug = () => useAtom(debugAtom)
-export const useSetDebug = () => useSetAtom(debugAtom)
+export type SettingsType = {
+  darkMode: boolean,
+  debugMode: boolean,
+}
+export const Settings = atomWithOptionalStorage<SettingsType>(
+  'settings',
+  {
+    darkMode: true,
+    debugMode: false,
+  })
+export const useSettings = () => useAtom(Settings)
+export const useSetSettings = () => useSetAtom(Settings)
