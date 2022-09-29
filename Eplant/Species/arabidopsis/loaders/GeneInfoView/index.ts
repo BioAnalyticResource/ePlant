@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { GeneFeature, GeneInfoViewData } from '@eplant/views/GeneInfoView/data'
-import { View } from '@eplant/views/View'
+import { GeneFeature, GeneInfoViewData } from '@eplant/views/GeneInfoView/types'
+import { View } from '@eplant/View'
 
 const loader: View<GeneInfoViewData>['getInitialData'] = async (
   geneticElement,
@@ -78,7 +78,7 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
           `get_protein_sequence_by_identifier.php?locus=${geneticElement.id}.1`
       )
     ).data.result[0].sequence
-    loadEvent(0.75)
+    loadEvent(1)
   }
 
   return {

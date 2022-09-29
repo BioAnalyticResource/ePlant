@@ -7,9 +7,15 @@ import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import _ from 'lodash'
 import React from 'react'
-import { GeneInfoViewData } from './data'
-import { useViewData, View, ViewProps } from '../View'
+import {
+  GeneInfoViewAction,
+  GeneInfoViewData,
+  GeneInfoViewState,
+} from './types'
+import { View, ViewProps } from '../../View'
+import { useViewData } from '../../View/viewData'
 import { GeneModel } from './GeneModel'
+import { Box, Button, ButtonProps, LinearProgress } from '@mui/material'
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -119,10 +125,55 @@ const GeneSequence = ({
   return <CodeBody variant="caption">{spans}</CodeBody>
 }
 
+const ViewButton = styled(function ViewButton({
+  geneticElement,
+  view,
+  ...props
+}: { geneticElement: GeneticElement; view: View } & ButtonProps) {
+  const { loading, error, loadingAmount, activeData } = useViewData(
+    view,
+    geneticElement
+  )
+  return (
+    <Button {...props} disabled={!!error || activeData === undefined}>
+      <LinearProgress
+        sx={(theme) => ({
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: '100%',
+          width: '100%',
+          zIndex: 0,
+          opacity: loading ? 1 : 0,
+          transition: 'opacity 0.2s ease-in-out',
+          background: theme.palette.background.paper,
+          '.MuiLinearProgress-bar': {
+            background: theme.palette.background.active,
+            // Round both corners on the right side
+            borderRadius: '0px 0.5rem 0.5rem 0px',
+          },
+        })}
+        value={loadingAmount * 100}
+        variant="determinate"
+      />
+      <Box
+        sx={{
+          zIndex: 2,
+        }}
+      >
+        {props.children}
+      </Box>
+    </Button>
+  )
+})({
+  position: 'relative',
+  overflow: 'hidden',
+})
+
 export default function GeneInfoViewer({
   geneticElement,
   activeData,
-}: ViewProps<GeneInfoViewData>) {
+}: ViewProps<GeneInfoViewData, GeneInfoViewState, GeneInfoViewAction>) {
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
@@ -258,13 +309,4 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
       view: view.id,
     })
   }
-}
-
-function ViewButton({
-  geneticElement,
-  view,
-  ...props
-}: { geneticElement: GeneticElement; view: View } & LoadingButtonProps) {
-  const { loading, error, loadingAmount } = useViewData(view, geneticElement)
-  return <LoadingButton {...props} loading={loading} disabled={!!error} />
 }

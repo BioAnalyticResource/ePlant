@@ -1,4 +1,9 @@
-import { createTheme, ThemeOptions, TypeBackground } from '@mui/material'
+import {
+  createTheme,
+  PaletteColorOptions,
+  ThemeOptions,
+  TypeBackground,
+} from '@mui/material'
 import React from 'react'
 
 declare module '@mui/material/styles' {
@@ -7,6 +12,16 @@ declare module '@mui/material/styles' {
   }
   interface PaletteColor {
     pale?: string
+  }
+  interface Palette {
+    hot: PaletteColor
+    cold: PaletteColor
+    neutral: PaletteColor
+  }
+  interface PaletteOptions {
+    hot: PaletteColorOptions
+    cold: PaletteColorOptions
+    neutral: PaletteColorOptions
   }
 }
 
@@ -24,6 +39,15 @@ export const light = createTheme({
       default: '#e0e0e0',
       paper: '#ffffff',
       active: '#f5f5f5',
+    },
+    hot: {
+      main: '#ff0000',
+    },
+    cold: {
+      main: '#0000ff',
+    },
+    neutral: {
+      main: '#ffff00',
     },
   },
   shape: {
@@ -46,6 +70,15 @@ export const dark = createTheme({
       default: '#121212',
       paper: '#222222',
       active: '#333333',
+    },
+    hot: {
+      main: '#ff0000',
+    },
+    cold: {
+      main: '#0000ff',
+    },
+    neutral: {
+      main: '#ffff00',
     },
   },
   shape: {

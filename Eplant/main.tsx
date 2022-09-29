@@ -15,26 +15,33 @@ import GetStartedView from './views/GetStartedView'
 import PublicationViewer from './views/PublicationViewer'
 import { Config } from './config'
 import DebugView from './views/DebugView'
+import PlantEFP from './views/PlantEFP'
+import ExperimentEFP from './views/ExperimentEFP'
 
 // Views that aren't associated with individual genes
 const genericViews = [GetStartedView, FallbackView]
 
 // List of views that a user can select from
 // Can contain views from the genericViews list too
-const userViews = [GeneInfoView, PublicationViewer, DebugView]
+const userViews = [
+  GeneInfoView,
+  PublicationViewer,
+  DebugView,
+  PlantEFP,
+  ExperimentEFP,
+]
 
 // List of views that are used to lookup a view by id
 const views = [...genericViews, ...userViews]
 
 const tabHeight = 48
-const rootPath = ''
 
 export const defaultConfig = {
   genericViews,
   userViews,
   views,
   tabHeight,
-  rootPath,
+  rootPath: import.meta.env.BASE_URL,
 }
 // For some reason this is necessary to make the tabs work, maybe FlexLayout uses a Jotai provider?
 const eplantScope = Symbol('Eplant scope')
@@ -42,16 +49,18 @@ const eplantScope = Symbol('Eplant scope')
 function RootApp() {
   const [darkMode, setDarkMode] = useDarkMode()
   return (
-    <Provider scope={eplantScope}>
-      <ThemeProvider theme={darkMode ? dark : light}>
-        <CssBaseline />
-        <BrowserRouter>
-          <Config.Provider value={defaultConfig}>
-            <Eplant />
-          </Config.Provider>
-        </BrowserRouter>
-      </ThemeProvider>
-    </Provider>
+    <React.StrictMode>
+      <Provider scope={eplantScope}>
+        <ThemeProvider theme={darkMode ? dark : light}>
+          <CssBaseline />
+          <BrowserRouter>
+            <Config.Provider value={defaultConfig}>
+              <Eplant />
+            </Config.Provider>
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
+    </React.StrictMode>
   )
 }
 

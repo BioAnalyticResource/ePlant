@@ -1,37 +1,54 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { useViewData, View } from '@eplant/views/View'
-import { MenuItem } from '@mui/material'
+import { View, ViewProps, ViewDispatch } from '@eplant/View'
+import { useViewData } from '@eplant/View/viewData'
+import { CircularProgress, MenuItem } from '@mui/material'
 import React from 'react'
 import Dropdown from '@eplant/UI/Dropdown'
+import delayed from '@eplant/util/delayed'
 
-export default function ViewOptions<T, A>({
+export default function ViewOptions<T, S, A>({
   view,
   gene,
+  loading,
+  state,
+  dispatch,
 }: {
-  view: View<T, A>
+  view: View<T, S, A>
   gene: GeneticElement | null
+  loading: boolean
+  state?: S
+  dispatch: ViewDispatch<A>
 }) {
-  const { activeData, loading, dispatch } = useViewData(view, gene)
+  const [transitioning, startTransition] = React.useTransition()
   if (!view.actions) return <></>
   return (
-    <Dropdown
-      variant="text"
-      color="secondary"
-      sx={{
-        color: 'secondary.contrastText',
-      }}
-      disabled={loading}
-      options={
-        activeData
-          ? view.actions.map((a, i) => (
-              <MenuItem key={i} onClick={() => dispatch(a.action)}>
-                <a.render activeData={activeData} geneticElement={gene} />
-              </MenuItem>
-            ))
-          : []
-      }
-    >
-      View options
-    </Dropdown>
+    <>
+      <Dropdown
+        variant="text"
+        color="secondary"
+        sx={{
+          color: 'secondary.contrastText',
+        }}
+        disabled={loading || transitioning}
+        options={view.actions.map((a, i) => (
+          <MenuItem
+            key={i}
+            onClick={() => startTransition(() => dispatch(a.action))}
+          >
+            {state ? (
+              <a.render
+                dispatch={dispatch}
+                state={state}
+                geneticElement={gene}
+              />
+            ) : (
+              '...'
+            )}
+          </MenuItem>
+        ))}
+      >
+        View options
+      </Dropdown>
+    </>
   )
 }

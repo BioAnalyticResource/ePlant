@@ -1,15 +1,21 @@
-import { Link, Tab, Tabs } from '@mui/material'
+import { Link, Tab, Tabs, Typography } from '@mui/material'
 import * as React from 'react'
-import { View, ViewProps } from '../View'
+import { View, ViewProps } from '../../View'
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
-import { DocumentScanner } from '@mui/icons-material'
+import { DocumentScanner, DocumentScannerOutlined } from '@mui/icons-material'
+import PublicationViewerIcon from './icon'
+import Thumbnail from '../../../thumbnails/publication_viewer.png'
+import { ViewDataError } from '@eplant/View/viewData'
 
 const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication Viewer',
   id: 'publication-viewer',
-  component({ geneticElement, activeData }: ViewProps<PublicationViewerData>) {
+  component({
+    geneticElement,
+    activeData,
+  }: ViewProps<PublicationViewerData, null, null>) {
     const [tab, setTab] = React.useState<TabValues>('publications')
     return (
       <div>
@@ -28,7 +34,9 @@ const PublicationViewer: View<PublicationViewerData> = {
       </div>
     )
   },
-  icon: () => <DocumentScanner />,
+  icon: () => <PublicationViewerIcon />,
+  description: "Find publications that mention your gene of interest.",
+  thumbnail: Thumbnail,
   citation({ gene }) {
     return (
       <div>
@@ -42,6 +50,15 @@ const PublicationViewer: View<PublicationViewerData> = {
         </Link>
       </div>
     )
+  },
+  header: ({ geneticElement }) => (
+    <Typography variant="h6">
+      Publications related to {geneticElement?.id}
+    </Typography>
+  ),
+  async getInitialData() {
+    // Loader override for the genes species must be undefined if getInitialData is being called
+    throw ViewDataError.UNSUPPORTED_GENE
   },
 }
 

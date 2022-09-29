@@ -1,34 +1,65 @@
-import { Table, TableBody, TableCell, TableHead } from '@mui/material'
+import { useViewID } from '@eplant/state'
+import { BugReport, BugReportOutlined } from '@mui/icons-material'
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material'
 import React from 'react'
-import { View } from '../View'
+import EFPPreview from '../eFP/EFPPreview'
+import { AtGenExpress } from '../PlantEFP'
+import { View } from '../../View'
+import { viewDataStorage, viewStateStorage } from '@eplant/View/viewData'
 
-type DebugViewData = {
+type DebugViewState = {
   testToggle: boolean
 }
 
 type DebugViewAction = { type: 'test-toggle' }
 
-const DebugView: View<DebugViewData, DebugViewAction> = {
+const DebugView: View<null, DebugViewState, DebugViewAction> = {
   name: 'Debug view',
-  component: (props) => (
-    <div>
-      <Table>
-        <TableHead>
-          <TableCell>Key</TableCell>
-          <TableCell>Value</TableCell>
-        </TableHead>
-        <TableBody>
-          <TableCell>Toggle value</TableCell>
-          <TableCell>
-            {props.activeData.testToggle ? 'true' : 'false'}
-          </TableCell>
-        </TableBody>
-      </Table>
-    </div>
-  ),
-  getInitialData: async () => ({
+  getInitialState: () => ({
     testToggle: false,
   }),
+  component: (props) => {
+    const viewID = useViewID()
+    return (
+      <div>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Key</TableCell>
+              <TableCell>Value</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>Toggle value</TableCell>
+              <TableCell>{props.state.testToggle ? 'true' : 'false'}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>View ID</TableCell>
+              <TableCell>{viewID}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        <Button
+          onClick={() => {
+            viewStateStorage.clear()
+            viewDataStorage.clear()
+          }}
+        >
+          Wipe view data
+        </Button>
+      </div>
+    )
+  },
+  getInitialData: async () => null,
   reducer: (state, action) => {
     switch (action.type) {
       case 'test-toggle':
@@ -44,11 +75,15 @@ const DebugView: View<DebugViewData, DebugViewAction> = {
     {
       action: { type: 'test-toggle' },
       render(props) {
-        return <>{props.activeData.testToggle ? 'Turn off' : 'Turn on'}</>
+        return <>{props.state.testToggle ? 'Turn off' : 'Turn on'}</>
       },
     },
   ],
   id: 'debug-view',
+  header: ({ geneticElement }) => (
+    <Typography variant="h6">Debug view for {geneticElement?.id}</Typography>
+  ),
+  icon: () => <BugReportOutlined />,
 }
 
 export default DebugView

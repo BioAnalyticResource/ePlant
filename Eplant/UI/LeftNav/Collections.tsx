@@ -1,4 +1,4 @@
-import { useGeneticElements } from '@eplant/state'
+import { useCollections, useGeneticElements } from '@eplant/state'
 import GeneticElement from '@eplant/GeneticElement'
 import {
   Add,
@@ -333,15 +333,7 @@ export function Collections(props: {
   selectedGene?: string
 }) {
   const [genes, setGenes] = useGeneticElements()
-  const [collections, setCollections] = useStateWithStorage<
-    { genes: string[]; name: string; open: boolean }[]
-  >('collections', [
-    {
-      genes: genes.map((g) => g.id),
-      name: 'Collection 1',
-      open: true,
-    },
-  ])
+  const [collections, setCollections] = useCollections()
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -356,12 +348,12 @@ export function Collections(props: {
 
   // If there are genes that aren't in a collection, put them in the first
   useEffect(() => {
-    const unincluded = genes.map(
-      (g) => !collections.some((c) => c.genes.some((geneId) => geneId == g.id))
-    )
-
-    if (unincluded.some((x) => x)) {
-      setCollections((collections) => {
+    setCollections((collections) => {
+      const unincluded = genes.map(
+        (g) =>
+          !collections.some((c) => c.genes.some((geneId) => geneId == g.id))
+      )
+      if (unincluded.some((x) => x)) {
         const cols = collections.slice()
         if (cols.length == 0) {
           cols.push({
@@ -371,16 +363,14 @@ export function Collections(props: {
           })
         }
         cols[0] = {
-          name: 'Collection 1',
-          open: true,
           ...cols[0],
           genes: (cols[0]?.genes ?? []).concat(
             genes.filter((g, i) => unincluded[i]).map((g) => g.id)
           ),
         }
         return cols
-      })
-    }
+      } else return collections
+    })
   }, [genes, collections])
 
   return (

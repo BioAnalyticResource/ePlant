@@ -4,6 +4,7 @@ import { usePrinting, useViewID } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
+import ErrorBoundary from '@eplant/util/ErrorBoundary'
 import {
   AppBar,
   Button,
@@ -21,7 +22,8 @@ import {
 } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
 import * as React from 'react'
-import { useViewData, View } from '../../../views/View'
+import { View } from '../../../View'
+import { useViewData } from '@eplant/View/viewData'
 import LoadingPage from './LoadingPage'
 import ViewOptions from './ViewOptions'
 
@@ -33,17 +35,18 @@ import ViewOptions from './ViewOptions'
  * @param props The remaining props are passed directly to the container
  * @returns
  */
-export function ViewContainer({
+export function ViewContainer<T, S, A>({
   view,
   setView,
   gene,
   ...props
 }: {
-  view: View
+  view: View<T, S, A>
   setView: (view: View) => void
   gene: GeneticElement | null
 } & BoxProps) {
-  const { activeData, error, loading, loadingAmount } = useViewData(view, gene)
+  const { activeData, error, loading, loadingAmount, dispatch, state } =
+    useViewData(view, gene)
 
   const idLabel = React.useId()
   const selectId = React.useId()
@@ -63,26 +66,8 @@ export function ViewContainer({
       }, 100)
     }
   }, [printing])
-  return (
-    <Box {...props}>
-      <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
-        <DialogTitle>
-          <Typography variant="h6">
-            Citation and experiment information for &quot;{view.name}&quot;
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          {view.citation ? (
-            <view.citation gene={gene} />
-          ) : (
-            <Box>No citations provided for this view</Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setViewingCitations(false)}>Close</Button>
-        </DialogActions>
-      </Modal>
-
+  const topBar = React.useMemo(
+    () => (
       <AppBar
         variant="elevation"
         sx={(theme) => ({
@@ -132,8 +117,14 @@ export function ViewContainer({
                 ))}
               </Select>
             </FormControl>
-            <ViewOptions gene={gene} view={view} />
           </Stack>
+          <ViewOptions
+            gene={gene}
+            state={state}
+            view={view}
+            loading={loading}
+            dispatch={dispatch}
+          />
           <Button
             variant="text"
             sx={{
@@ -165,10 +156,38 @@ export function ViewContainer({
           </Button>
         </Toolbar>
       </AppBar>
-      <Container
+    ),
+    [view.id, gene?.id, loading, activeData, state, dispatch]
+  )
+  return (
+    <Box {...props} display="flex" flexDirection="column">
+      <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
+        <DialogTitle>
+          <Typography variant="h6">
+            Citation and experiment information for &quot;{view.name}&quot;
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          {view.citation ? (
+            <view.citation gene={gene} />
+          ) : (
+            <Box>No citations provided for this view</Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewingCitations(false)}>Close</Button>
+        </DialogActions>
+      </Modal>
+
+      {topBar}
+      <Box
         sx={(theme) => ({
           padding: '2rem',
-          overflow: 'scroll',
+          flexGrow: 1,
+          display: 'flex',
+          gap: theme.spacing(4),
+          overflow: 'auto',
+          flexDirection: 'column',
           ...(printing == viewId
             ? {
                 display: 'block !important',
@@ -181,17 +200,13 @@ export function ViewContainer({
                 background: theme.palette.background.paper,
                 width: '100%',
                 minHeight: '100%',
-                overflow: 'scroll',
               }
             : {}),
         })}
       >
-        <Stack gap={4} direction="column">
+        <ErrorBoundary>
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-          {gene && !genericViews.some((geneView) => view.id == geneView.id) ? (
-            <GeneHeader geneticElement={gene} />
-          ) : null}
-          {loading || !activeData ? (
+          {loading || activeData === undefined ? (
             <LoadingPage
               loadingAmount={loadingAmount}
               gene={gene}
@@ -199,10 +214,23 @@ export function ViewContainer({
               error={error}
             />
           ) : (
-            <view.component geneticElement={gene} activeData={activeData} />
+            <>
+              <view.header
+                state={state}
+                activeData={activeData}
+                dispatch={dispatch}
+                geneticElement={gene}
+              />
+              <view.component
+                state={state}
+                geneticElement={gene}
+                activeData={activeData}
+                dispatch={dispatch}
+              />
+            </>
           )}
-        </Stack>
-      </Container>
+        </ErrorBoundary>
+      </Box>
     </Box>
   )
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { type View } from './views/View'
+import { type View } from './View'
 
 export type EplantConfig = {
   readonly genericViews: View[]

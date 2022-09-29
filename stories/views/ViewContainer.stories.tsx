@@ -1,6 +1,6 @@
 import GeneInfoView from '@eplant/views/GeneInfoView'
 import { defaultConfig } from '@eplant/main'
-import { View, ViewDataError } from '@eplant/views/View'
+import { View } from '@eplant/View'
 import exampleData from '@eplant/Species/arabidopsis/loaders/GeneInfoView/exampleData'
 import { ViewContainer } from '@eplant/UI/Layout/ViewContainer'
 import { ComponentMeta } from '@storybook/react'
@@ -9,6 +9,7 @@ import GeneticElement from '@eplant/GeneticElement'
 import { HourglassFull } from '@mui/icons-material'
 import delayed from '@eplant/util/delayed'
 import { Config } from '@eplant/config'
+import { ViewDataError } from '@eplant/View/viewData'
 
 export default {
   title: 'View Container',

@@ -1,0 +1,117 @@
+import { Box, BoxProps } from '@mui/material'
+import _ from 'lodash'
+import React from 'react'
+
+type Point = { x: number; y: number }
+export type Transform = {
+  offset: Point
+  zoom: number
+}
+
+export default function PanZoom({
+  children,
+  onTransformChange,
+  initialTransform,
+  ...props
+}: BoxProps & {
+  initialTransform: Transform
+  onTransformChange: (transform: Transform) => void
+}) {
+  const [dragStart, setDragStart] =
+    React.useState<{
+      click: Point
+      offset: Point
+    } | null>(null)
+
+  const [transform, setTransform] = React.useState<Transform>(initialTransform)
+  const { offset, zoom } = transform
+  const containerRef = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    const listener = (e: WheelEvent) => {
+      e.stopPropagation()
+      e.preventDefault()
+      if (e.buttons == 0 && containerRef.current) {
+        const { x, y, width, height } =
+          containerRef.current.getBoundingClientRect()
+        const { clientX, clientY } = e
+        setTransform(({ offset, zoom }) => {
+          // Adjust offset so that the mouse stays at the same position
+          const newZoom = zoom * (1 - e.deltaY / 200)
+          if (newZoom < 0.25 || newZoom > 4) return { offset, zoom }
+          const mouseX = clientX - x - width / 2,
+            mouseY = clientY - y - height / 2
+          const updateX = mouseX / newZoom - mouseX / zoom,
+            updateY = mouseY / newZoom - mouseY / zoom
+          const out = {
+            offset: {
+              x: offset.x + updateX,
+              y: offset.y + updateY,
+            },
+            zoom: newZoom,
+          }
+          return out
+        })
+      }
+    }
+    if (containerRef.current) {
+      containerRef.current.addEventListener('wheel', listener, {
+        passive: false,
+      })
+      return () => {
+        if (containerRef.current)
+          containerRef.current.removeEventListener('wheel', listener)
+      }
+    }
+  }, [containerRef.current, offset, zoom])
+
+  React.useEffect(() => {
+    onTransformChange(transform)
+  }, [transform])
+
+  return (
+    <Box
+      {...props}
+      overflow="hidden"
+      ref={containerRef}
+      onMouseDown={(e) => {
+        const { x, y } = e.currentTarget.getBoundingClientRect()
+        const { clientX, clientY } = e
+        setDragStart({
+          click: { x: clientX - x, y: clientY - y },
+          offset,
+        })
+      }}
+      onMouseMove={(e) => {
+        if (dragStart) {
+          if (e.buttons == 0) {
+            setDragStart(null)
+            return
+          }
+          const { x, y } = e.currentTarget.getBoundingClientRect()
+          const { clientX, clientY } = e
+          const mouseX = clientX - x,
+            mouseY = clientY - y
+          setTransform({
+            offset: {
+              x: dragStart.offset.x + (mouseX - dragStart.click.x) / zoom,
+              y: dragStart.offset.y + (mouseY - dragStart.click.y) / zoom,
+            },
+            zoom,
+          })
+        }
+      }}
+    >
+      <Box
+        sx={{
+          userSelect: 'none',
+          transform: `scale(${zoom}) translate(${offset.x}px, ${offset.y}px)`,
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
+  )
+}

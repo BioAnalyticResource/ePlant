@@ -19,6 +19,10 @@ module.exports = {
   },
   // Add tsconfig-paths to the webpack config
   webpackFinal: (config) => {
+    config.module.rules.push({
+      test: /\.tsx?$/,
+      loader: 'ts-loader',
+    })
     config.resolve.plugins = [
       new TsconfigPathsPlugin({
         configFile: path.resolve(__dirname, '../tsconfig.json'),

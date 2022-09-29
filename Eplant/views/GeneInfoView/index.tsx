@@ -1,9 +1,11 @@
 import * as React from 'react'
 import component from './component'
-import { Info } from '@mui/icons-material'
-import { View } from '../View'
-import { Link } from '@mui/material'
-import { GeneInfoViewData } from './data'
+import { Info, InfoOutlined } from '@mui/icons-material'
+import { View } from '../../View'
+import { Link, Typography } from '@mui/material'
+import { GeneInfoViewData } from './types'
+import GeneInfoViewIcon from './icon'
+import { ViewDataError } from '@eplant/View/viewData'
 
 /**
  * Show information about a gene, including its sequence and features.
@@ -14,7 +16,14 @@ const GeneInfoView: View<GeneInfoViewData> = {
   //TODO: figure out how to make this a component lazy
   // component: React.lazy(() => import('./component')),
   component: component,
-  icon: () => <Info />,
+  icon: () => <GeneInfoViewIcon />,
+  getInitialState() {
+    return null
+  },
+  getInitialData() {
+    // Loader override for the genes species must be undefined if getInitialData is being called
+    throw ViewDataError.UNSUPPORTED_GENE
+  },
   citation({ gene }) {
     return (
       <div>
@@ -38,6 +47,9 @@ const GeneInfoView: View<GeneInfoViewData> = {
       </div>
     )
   },
+  header: ({ geneticElement }) => (
+    <Typography variant="h6">Information on {geneticElement?.id}</Typography>
+  ),
 }
 
 export default GeneInfoView

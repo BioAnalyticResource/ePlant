@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ComponentMeta, Story } from '@storybook/react'
 import data from '@eplant/Species/arabidopsis/loaders/GeneInfoView/exampleData'
 import GeneInfoView from '@eplant/views/GeneInfoView'
-import { GeneInfoViewData } from '@eplant/views/GeneInfoView/data'
+import { GeneInfoViewData } from '@eplant/views/GeneInfoView/types'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import GeneticElement from '@eplant/GeneticElement'
 

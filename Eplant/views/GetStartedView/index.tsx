@@ -1,11 +1,17 @@
-import React from 'react'
+import * as React from 'react'
 import { View } from '../View'
+import component from './component'
 
 const GetStartedView: View = {
   name: 'Get started',
-  component: () => <div>Get started</div>,
-  getInitialData: async () => ({}),
+  component,
+  async getInitialData() {
+    return null
+  },
   id: 'get-started',
+  header(props) {
+    return <></>
+  },
 }
 
 export default GetStartedView

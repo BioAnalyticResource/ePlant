@@ -1,6 +1,6 @@
 import arabidopsis from '@eplant/Species/arabidopsis'
 import { PublicationViewerData } from '@eplant/views/PublicationViewer/types'
-import { ViewProps } from '@eplant/views/View'
+import { ViewProps } from '@eplant/View'
 
 const a: ViewProps<PublicationViewerData> = {
   geneticElement: {
