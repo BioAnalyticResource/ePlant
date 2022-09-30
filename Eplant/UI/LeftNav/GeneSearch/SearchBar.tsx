@@ -70,10 +70,11 @@ export default function SearchBar(props: {
         <TextField
           placeholder={props.placeholder}
           label={props.label}
-          variant="outlined"
+          variant="filled"
           {...params}
           InputProps={{
             ...InputProps,
+
             onKeyDown(e) {
               if (e.key === 'Enter') {
                 if (inputValue == '') {
@@ -88,6 +89,7 @@ export default function SearchBar(props: {
                 sx={{
                   position: 'absolute',
                   right: '4px',
+                  bottom: '22px',
                 }}
               >
                 <IconButton

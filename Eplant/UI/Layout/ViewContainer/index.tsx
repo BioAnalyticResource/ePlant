@@ -84,7 +84,7 @@ export function ViewContainer<T, S, A>({
             sx={{ flexGrow: 1, height: '100%', alignItems: 'center' }}
           >
             <FormControl variant="standard">
-              <InputLabel id={idLabel}>View</InputLabel>
+              {/* <InputLabel id={idLabel}>View</InputLabel> */}
               <Select
                 value={view.id}
                 labelId={idLabel}
@@ -99,6 +99,8 @@ export function ViewContainer<T, S, A>({
                     ':focus': {
                       backgroundColor: 'transparent',
                     },
+                    '& legend': { display: 'none' },
+                    '& fieldset': { top: 0 },
                   },
                 }}
               >

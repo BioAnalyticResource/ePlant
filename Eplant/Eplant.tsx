@@ -257,6 +257,7 @@ export function MainEplant() {
         PaperProps={{
           sx: {
             border: 'none',
+            backgroundColor: 'transparent',
           },
         }}
       >

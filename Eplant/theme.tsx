@@ -30,15 +30,18 @@ export const light = createTheme({
     mode: 'light',
     primary: {
       main: '#99CC00',
+      dark: '#5c7a00',
     },
     secondary: {
       main: '#888',
       contrastText: '#000',
     },
     background: {
-      default: '#e0e0e0',
+      default: '#eeeeee',
       paper: '#ffffff',
-      active: '#f5f5f5',
+      paperOverlay: '#f4f4f4',
+      active: '#dddddd',
+      hover: '#bbbbbb',
     },
     hot: {
       main: '#ff0000',
@@ -51,7 +54,7 @@ export const light = createTheme({
     },
   },
   shape: {
-    borderRadius: 2,
+    borderRadius: 6,
   },
 })
 if (light.palette?.primary) light.palette.primary.pale = '#fbfff2'
@@ -61,15 +64,18 @@ export const dark = createTheme({
     mode: 'dark',
     primary: {
       main: '#99CC00',
+      dark: '#5c7a00',
     },
     secondary: {
       main: '#9e9e9e',
       contrastText: '#fff',
     },
     background: {
-      default: '#121212',
+      default: '#111111',
       paper: '#222222',
-      active: '#333333',
+      paperOverlay: '#333333',
+      active: '#444444',
+      hover: '#555555',
     },
     hot: {
       main: '#ff0000',
@@ -82,7 +88,7 @@ export const dark = createTheme({
     },
   },
   shape: {
-    borderRadius: 2,
+    borderRadius: 6,
   },
 })
 
