@@ -51,7 +51,6 @@ export function LeftNav(props: {
           )
         }}
       />
-      <Divider light />
       <Collections
         onSelectGene={props.onSelectGene}
         selectedGene={props.selectedGene}

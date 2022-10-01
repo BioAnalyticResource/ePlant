@@ -4,9 +4,9 @@ import Autocomplete from '@mui/material/Autocomplete'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { debounce } from 'lodash'
 import * as React from 'react'
-import { Theme, SxProps } from '@mui/material'
+import { Theme, SxProps, useTheme } from '@mui/material'
 import { Chip, InputAdornment } from '@mui/material'
-
+import CloseIcon from '@mui/icons-material/Close'
 /**
  * The search bar in ePlant. Supports async autocomplete and searching for multiple genes at once.
  * @param props.label The label of the search bar
@@ -30,6 +30,7 @@ export default function SearchBar(props: {
   const [options, setOptions] = React.useState<string[]>([])
   const [focused, setFocused] = React.useState<boolean>(false)
   const updateOptions = React.useRef<(text: string) => void>()
+  const theme = useTheme()
 
   React.useEffect(() => {
     updateOptions.current = debounce(async (newValue) => {
@@ -63,14 +64,19 @@ export default function SearchBar(props: {
             size="small"
             {...getTagProps({ index })}
             key={index}
+            deleteIcon={<CloseIcon />}
           />
         ))
       }
       renderInput={({ InputProps, ...params }) => (
         <TextField
+          sx={(theme) => ({
+            background: theme.palette.background.paper,
+            borderRadius: 1,
+          })}
           placeholder={props.placeholder}
           label={props.label}
-          variant="filled"
+          variant="outlined"
           {...params}
           InputProps={{
             ...InputProps,
@@ -83,13 +89,14 @@ export default function SearchBar(props: {
                 }
               }
             },
+
             endAdornment: (
               <InputAdornment
                 position="end"
                 sx={{
                   position: 'absolute',
                   right: '4px',
-                  bottom: '22px',
+                  bottom: '27px',
                 }}
               >
                 <IconButton
@@ -107,6 +114,7 @@ export default function SearchBar(props: {
             ),
           }}
           {...params}
+          size="medium"
         />
       )}
     />
