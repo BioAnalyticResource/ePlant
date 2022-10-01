@@ -8,7 +8,13 @@ export default function GeneHeader({
   geneticElement: GeneticElement | null
 }) {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', width: 'fit-content' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        width: 'fit-content',
+      }}
+    >
       {geneticElement ? (
         <>
           <Typography variant="h6">{geneticElement.id}</Typography>
