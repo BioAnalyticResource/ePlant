@@ -15,8 +15,10 @@ import { EFPData } from './types'
 const EFPPreviewContainer = styled(
   (props: BoxProps & { selected: boolean }) => <Box {...props} />
 )(({ theme, selected }) => ({
-  border: selected ? `2px solid ${theme.palette.primary.main}` : ``,
-  background: theme.palette.background.active,
+  border: selected
+    ? `1px solid ${theme.palette.primary.main}`
+    : `1px solid ${theme.palette.background.active}`,
+  background: theme.palette.background.paper,
   borderRadius: theme.shape.borderRadius,
   padding: `${selected ? 1 : 3}px`,
   boxSizing: 'border-box',
@@ -73,7 +75,10 @@ export default function EFPPreview({
             backgroundColor: 'rgba(0, 0, 0, 0.2)',
           }}
         >
-          <Typography variant="caption">
+          <Typography
+            variant="caption"
+            sx={{ marginLeft: '4px', fontWeight: 'light' }}
+          >
             MAX:{' '}
             {Math.round(Math.max(...dataDeferred.groups.map((g) => g.max)))}
           </Typography>

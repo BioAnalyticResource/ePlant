@@ -93,18 +93,33 @@ areEqual)
 
 export const EFPListMemoized = function EFPList(props: EFPListProps) {
   return (
-    <List
-      height={props.height}
-      itemCount={props.views.length}
-      itemSize={75 + 8}
-      width={108}
-      style={{
-        zIndex: 10,
+    <Box
+      id="thumbnailContainer"
+      sx={{
+        background: (theme) => theme.palette.background.paperOverlay,
+        border: '1px solid',
+        borderRadius: 1,
+        borderColor: (theme) => theme.palette.background.active,
+        padding: 2,
+        position: 'relative',
+        left: -16,
+        top: -16,
+        overflow: 'hidden',
       }}
-      itemData={props}
     >
-      {EFPListRow}
-    </List>
+      <List
+        height={props.height}
+        itemCount={props.views.length}
+        itemSize={75 + 12}
+        width={108}
+        style={{
+          zIndex: 10,
+        }}
+        itemData={props}
+      >
+        {EFPListRow}
+      </List>
+    </Box>
   )
 }
 export default class EFPViewer
