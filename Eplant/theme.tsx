@@ -39,8 +39,8 @@ export const light = createTheme({
     background: {
       default: '#f4f4f4',
       paper: '#ffffff',
-      paperOverlay: '#f4f4f4',
-      active: '#dddddd',
+      paperOverlay: '#fafafa',
+      active: '#dadada',
       hover: '#bbbbbb',
     },
     hot: {
@@ -74,7 +74,7 @@ export const dark = createTheme({
       default: '#111111',
       paper: '#222222',
       paperOverlay: '#333333',
-      active: '#444444',
+      active: '#3a3a3a',
       hover: '#555555',
     },
     hot: {
