@@ -1,7 +1,7 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { View, ViewProps, ViewDispatch } from '@eplant/View'
 import { useViewData } from '@eplant/View/viewData'
-import { CircularProgress, MenuItem } from '@mui/material'
+import { CircularProgress, Divider, MenuItem } from '@mui/material'
 import React from 'react'
 import Dropdown from '@eplant/UI/Dropdown'
 import delayed from '@eplant/util/delayed'

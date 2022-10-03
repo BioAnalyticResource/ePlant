@@ -16,8 +16,8 @@ const EFPPreviewContainer = styled(
   (props: BoxProps & { selected: boolean }) => <Box {...props} />
 )(({ theme, selected }) => ({
   border: selected
-    ? `1px solid ${theme.palette.primary.main}`
-    : `1px solid ${theme.palette.background.active}`,
+    ? `2px solid ${theme.palette.primary.main}`
+    : `2px solid ${theme.palette.background.active}`,
   background: theme.palette.background.paper,
   borderRadius: theme.shape.borderRadius,
   padding: `${selected ? 1 : 3}px`,

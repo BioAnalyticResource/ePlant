@@ -307,7 +307,7 @@ export default class EFPViewer
                   sx={(theme) => ({
                     position: 'absolute',
                     left: theme.spacing(2),
-                    top: 0,
+                    bottom: 0,
                     zIndex: 10,
                   })}
                   data={{

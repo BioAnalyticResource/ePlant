@@ -27,6 +27,7 @@ import {
   Typography,
 } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import * as React from 'react'
 import { View, ViewProps } from '../../../View'
@@ -99,6 +100,10 @@ export function ViewContainer<T, S, A>({
       }, 100)
     }
   }, [printing])
+
+  //
+  const showToolbarButtons = useMediaQuery('(min-width:1024px)')
+
   const topBar = React.useMemo(
     () => (
       <AppBar
@@ -176,6 +181,7 @@ export function ViewContainer<T, S, A>({
               </Select>
             </FormControl>
           </Stack>
+
           <ViewOptions
             gene={gene}
             state={state}
@@ -183,35 +189,39 @@ export function ViewContainer<T, S, A>({
             loading={loading}
             dispatch={dispatch}
           />
-          <Button
-            variant="text"
-            sx={{
-              color: 'secondary.contrastText',
-            }}
-            disabled={loading}
-            color="secondary"
-            onClick={() => {
-              setViewingCitations(true)
-            }}
-          >
-            Get citations
-          </Button>
-          <Button
-            variant="text"
-            sx={{
-              color: 'secondary.contrastText',
-            }}
-            disabled={loading}
-            color="secondary"
-            onClick={() => {
-              downloadFile(
-                `${view.id}${gene ? '-' + gene.id : ''}.json`,
-                JSON.stringify(activeData, null, 2)
-              )
-            }}
-          >
-            Download data
-          </Button>
+
+          {/* On small screens show options in a hamburger menu */}
+          <Box sx={{ display: showToolbarButtons ? 'flex' : 'none' }}>
+            <Button
+              variant="text"
+              sx={{
+                color: 'secondary.contrastText',
+              }}
+              disabled={loading}
+              color="secondary"
+              onClick={() => {
+                setViewingCitations(true)
+              }}
+            >
+              Get citations
+            </Button>
+            <Button
+              variant="text"
+              sx={{
+                color: 'secondary.contrastText',
+              }}
+              disabled={loading}
+              color="secondary"
+              onClick={() => {
+                downloadFile(
+                  `${view.id}${gene ? '-' + gene.id : ''}.json`,
+                  JSON.stringify(activeData, null, 2)
+                )
+              }}
+            >
+              Download data
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
     ),
