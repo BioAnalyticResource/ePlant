@@ -2,38 +2,30 @@ import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { usePrinting, useViewID } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
-import { styled, useTheme } from '@mui/material/styles'
-
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
 import {
   AppBar,
   Button,
-  ButtonProps,
   Container,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
   InputLabel,
-  ListItemIcon,
-  ListItemText,
   MenuItem,
-  MenuList,
   Select,
   Stack,
   Toolbar,
   Typography,
 } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
-
 import * as React from 'react'
-import { View, ViewProps } from '../../../View'
+import { View } from '../../../View'
 import { useViewData } from '@eplant/View/viewData'
 import LoadingPage from './LoadingPage'
 import ViewOptions from './ViewOptions'
-import { flexbox } from '@mui/system'
 
 /**
  * Wraps a view in a container that provides a toolbar and a download button. It also manages loading the view's data.
@@ -65,31 +57,6 @@ export function ViewContainer<T, S, A>({
   const viewId = useViewID()
 
   const { userViews, views, genericViews } = useConfig()
-
-  const ViewButton = styled(function ViewButton({
-    geneticElement,
-    view,
-    ...props
-  }: { geneticElement: GeneticElement; view: View } & ButtonProps) {
-    const { loading, error, loadingAmount, activeData } = useViewData(
-      view,
-      geneticElement
-    )
-    return (
-      <Button {...props}>
-        <Box
-          sx={{
-            zIndex: 2,
-          }}
-        >
-          {props.children}
-        </Box>
-      </Button>
-    )
-  })({
-    position: 'relative',
-    overflow: 'hidden',
-  })
 
   React.useEffect(() => {
     if (printing == viewId) {
@@ -124,14 +91,11 @@ export function ViewContainer<T, S, A>({
                 label={'View'}
                 id={selectId}
                 onChange={(e) => {
-                  const view = views.find((view) => view.id == e?.target?.value)
-                  if (view) setView(view)
+                  const v = views.find((v) => v.id == e?.target?.value)
+                  if (v) setView(v)
                 }}
                 inputProps={{
                   sx: {
-                    display: 'flex',
-                    alignItems: 'center',
-
                     ':focus': {
                       backgroundColor: 'transparent',
                     },
@@ -140,37 +104,32 @@ export function ViewContainer<T, S, A>({
                   },
                 }}
               >
-                {userViews.map((view) => (
+                {views.map((v, i) => (
                   <MenuItem
-                    key={view.id}
-                    value={view.id}
+                    key={v.id}
+                    value={v.id}
                     style={{
-                      display: userViews.some((u) => u.id == view.id)
-                        ? 'flex'
+                      display: userViews.some((u) => u.id == v.id)
+                        ? 'block'
                         : 'none',
-                      paddingTop: 8,
-                      paddingBottom: 8,
-                      marginBottom: 8,
                     }}
                   >
-                    <Box sx={{ paddingRight: 2, marginTop: 0.5 }}>
-                      <view.icon />
-                    </Box>
-                    <ListItemText
-                      sx={{
-                        textAlign: 'left',
-                        color: 'secondary.contrastText',
-                        textTransform: 'none',
-                        fontWeight: 'regular',
-                      }}
-                      key={view.name}
-                      view={view}
-                      onClick={(e) => {
-                        if (view) setView(view)
-                      }}
-                    >
-                      {view.name}
-                    </ListItemText>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {view.icon ? (
+                        <span
+                          style={{
+                            transform: 'scale(1.2)',
+                            paddingRight: 16,
+                            paddingLeft: 4,
+                            marginTop: 6,
+                          }}
+                        >
+                          {/* TODO: make each icon different */}
+                          <view.icon />
+                        </span>
+                      ) : undefined}{' '}
+                      <span>{v.name}</span>
+                    </div>
                   </MenuItem>
                 ))}
               </Select>
