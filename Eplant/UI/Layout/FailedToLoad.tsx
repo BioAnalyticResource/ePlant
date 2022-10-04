@@ -53,9 +53,10 @@ export default function FailedToLoad(props: {
         </Link>
       </Typography>
       <Illustration
-        color={theme.palette.divider}
+        color={theme.palette.primary.dark}
         style={{
-          maxHeight: '250px',
+          marginTop: 8,
+          maxHeight: '225px',
         }}
       />
     </Stack>

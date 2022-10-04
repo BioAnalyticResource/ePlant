@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { View } from '../View'
 import component from './component'
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 
 const GetStartedView: View = {
   name: 'Get started',
@@ -12,6 +13,7 @@ const GetStartedView: View = {
   header(props) {
     return <></>
   },
+  icon: () => <HomeOutlinedIcon />,
 }
 
 export default GetStartedView

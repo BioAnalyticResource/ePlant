@@ -67,31 +67,6 @@ export function ViewContainer<T, S, A>({
 
   const { userViews, views, genericViews } = useConfig()
 
-  const ViewButton = styled(function ViewButton({
-    geneticElement,
-    view,
-    ...props
-  }: { geneticElement: GeneticElement; view: View } & ButtonProps) {
-    const { loading, error, loadingAmount, activeData } = useViewData(
-      view,
-      geneticElement
-    )
-    return (
-      <Button {...props}>
-        <Box
-          sx={{
-            zIndex: 2,
-          }}
-        >
-          {props.children}
-        </Box>
-      </Button>
-    )
-  })({
-    position: 'relative',
-    overflow: 'hidden',
-  })
-
   React.useEffect(() => {
     if (printing == viewId) {
       setTimeout(() => {
@@ -115,12 +90,12 @@ export function ViewContainer<T, S, A>({
         elevation={0}
       >
         <Toolbar style={{ gap: '8px' }}>
-          {/* View selector dropdown */}
           <Stack
             direction="row"
             gap={2}
             sx={{ flexGrow: 1, height: '100%', alignItems: 'center' }}
           >
+            {/* View selector dropdown */}
             <FormControl variant="standard">
               {/* <InputLabel id={idLabel}>View</InputLabel> */}
               <Select
@@ -189,8 +164,7 @@ export function ViewContainer<T, S, A>({
             loading={loading}
             dispatch={dispatch}
           />
-
-          {/* On small screens show options in a hamburger menu */}
+          {/* On small screens show Get Citations and Download Data buttons in the View Options menu instead of in the toolbar */}
           <Box sx={{ display: showToolbarButtons ? 'flex' : 'none' }}>
             <Button
               variant="text"

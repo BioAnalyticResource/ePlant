@@ -62,30 +62,60 @@ function SVGTooltip(props: {
         <Grow {...TransitionProps} timeout={350}>
           <Box
             sx={(theme) => ({
-              backgroundColor: theme.palette.background.active,
-              padding: theme.spacing(1),
-              boxShadow: theme.shadows[2],
+              backgroundColor: theme.palette.background.transparentOverlay,
+              backdropFilter: 'blur(7px)',
+              boxShadow: theme.shadows[3],
+              borderRadius: 1,
             })}
           >
             <Table size="small">
               <TableBody>
                 <TableRow>
-                  <TableCell>Sample name</TableCell>
+                  <TableCell
+                    sx={{
+                      color: theme.palette.secondary.main,
+                      textAlign: 'right',
+                    }}
+                  >
+                    Sample name
+                  </TableCell>
                   <TableCell>{props.tissue.name}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Level</TableCell>
+                  <TableCell
+                    sx={{
+                      color: theme.palette.secondary.main,
+                      textAlign: 'right',
+                    }}
+                  >
+                    Level
+                  </TableCell>
                   <TableCell>
                     {props.tissue.mean.toFixed(2)}±{props.tissue.std.toFixed(2)}
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Samples</TableCell>
+                  <TableCell
+                    sx={{
+                      color: theme.palette.secondary.main,
+                      textAlign: 'right',
+                    }}
+                  >
+                    Samples
+                  </TableCell>
                   <TableCell>{props.tissue.samples}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Log2 of fold change vs control</TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      color: theme.palette.secondary.main,
+                      textAlign: 'right',
+                      borderBottom: 'none',
+                    }}
+                  >
+                    Log2 fold change vs control
+                  </TableCell>
+                  <TableCell sx={{ borderBottom: 'none' }}>
                     {Math.log2(
                       props.tissue.mean / (props.data.control ?? 1)
                     ).toFixed(2)}

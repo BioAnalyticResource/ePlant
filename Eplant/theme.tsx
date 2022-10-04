@@ -30,7 +30,7 @@ export const light = createTheme({
     mode: 'light',
     primary: {
       main: '#99CC00',
-      dark: '#5c7a00',
+      dark: '#c2e066',
     },
     secondary: {
       main: '#888',
@@ -40,8 +40,10 @@ export const light = createTheme({
       default: '#f4f4f4',
       paper: '#ffffff',
       paperOverlay: '#fafafa',
-      active: '#dadada',
-      hover: '#bbbbbb',
+      transparentOverlay: '#fafafaCC',
+      active: '#eeeeee',
+      selected: '#dddddd',
+      hover: '#cccccc',
     },
     hot: {
       main: '#ff0000',
@@ -74,8 +76,9 @@ export const dark = createTheme({
       default: '#111111',
       paper: '#222222',
       paperOverlay: '#333333',
+      transparentOverlay: '#333333DD',
       active: '#3a3a3a',
-      hover: '#555555',
+      hover: '#444444',
     },
     hot: {
       main: '#ff0000',

@@ -262,7 +262,7 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   const panesDispatch = usePanesDispatch()
   const { userViews } = useConfig()
   return (
-    <Stack>
+    <Stack sx={{ marginTop: 1 }}>
       <Box
         sx={{
           display: 'flex',
@@ -281,7 +281,7 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
         }}
       >
         <Typography variant="body2" color="secondary">
-          Available views
+          Views available for this gene
         </Typography>
         {userViews.map((view) => (
           <ViewButton
@@ -293,7 +293,7 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
               textTransform: 'none',
               fontWeight: 'regular',
               '&:hover': {
-                backgroundColor: (theme) => theme.palette.primary.main,
+                backgroundColor: (theme) => theme.palette.primary.dark,
               },
             }}
             startIcon={

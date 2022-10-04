@@ -153,7 +153,7 @@ export default function GeneticElementComponent({
       sx={(theme) => ({
         transition: '0.1s ease all',
         background: selected
-          ? theme.palette.background.active
+          ? theme.palette.background.selected
           : theme.palette.background.default,
         ':hover': {
           background: theme.palette.background.hover,
