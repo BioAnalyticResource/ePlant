@@ -11,10 +11,13 @@ export type EFPViewerData = {
   viewData: EFPData[]
 }
 
+export type EFPViewerSortTypes = 'expression-level' | 'name'
+
 export type EFPViewerState = {
   activeView: EFPId
   transform: Transform
   colorMode: ColorMode
+  sortBy: EFPViewerSortTypes
 }
 
 export type EFPViewerAction =
@@ -22,3 +25,4 @@ export type EFPViewerAction =
   | { type: 'reset-transform' }
   | { type: 'set-transform'; transform: Transform }
   | { type: 'toggle-color-mode' }
+  | { type: 'sort-by'; by: EFPViewerSortTypes }

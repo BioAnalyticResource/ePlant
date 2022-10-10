@@ -1,4 +1,9 @@
-import { useDarkMode, useSpecies } from '@eplant/state'
+import {
+  useActiveId,
+  useDarkMode,
+  usePanesDispatch,
+  useSpecies,
+} from '@eplant/state'
 import {
   Box,
   Divider,
@@ -30,6 +35,10 @@ export function LeftNav(props: {
   const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
+
+  const panesDispatch = usePanesDispatch()
+  const activeID = useActiveId()[0]
+
   React.useEffect(() => {
     const uniq = _.uniqBy(geneticElements, (g) => g.id)
     if (uniq.length != geneticElements.length) setGeneticElements(uniq)
@@ -49,6 +58,13 @@ export function LeftNav(props: {
               )
             )
           )
+          if (s.length > 0) {
+            panesDispatch({
+              type: 'set-active-gene',
+              id: activeID,
+              activeGene: s[0].id,
+            })
+          }
         }}
       />
       <Collections

@@ -164,38 +164,35 @@ export function ViewContainer<T, S, A>({
             loading={loading}
             dispatch={dispatch}
           />
-          {/* On small screens show Get Citations and Download Data buttons in the View Options menu instead of in the toolbar */}
-          <Box sx={{ display: showToolbarButtons ? 'flex' : 'none' }}>
-            <Button
-              variant="text"
-              sx={{
-                color: 'secondary.contrastText',
-              }}
-              disabled={loading}
-              color="secondary"
-              onClick={() => {
-                setViewingCitations(true)
-              }}
-            >
-              Get citations
-            </Button>
-            <Button
-              variant="text"
-              sx={{
-                color: 'secondary.contrastText',
-              }}
-              disabled={loading}
-              color="secondary"
-              onClick={() => {
-                downloadFile(
-                  `${view.id}${gene ? '-' + gene.id : ''}.json`,
-                  JSON.stringify(activeData, null, 2)
-                )
-              }}
-            >
-              Download data
-            </Button>
-          </Box>
+          <Button
+            variant="text"
+            sx={{
+              color: 'secondary.contrastText',
+            }}
+            disabled={loading}
+            color="secondary"
+            onClick={() => {
+              setViewingCitations(true)
+            }}
+          >
+            Get citations
+          </Button>
+          <Button
+            variant="text"
+            sx={{
+              color: 'secondary.contrastText',
+            }}
+            disabled={loading}
+            color="secondary"
+            onClick={() => {
+              downloadFile(
+                `${view.id}${gene ? '-' + gene.id : ''}.json`,
+                JSON.stringify(activeData, null, 2)
+              )
+            }}
+          >
+            Download data
+          </Button>
         </Toolbar>
       </AppBar>
     ),

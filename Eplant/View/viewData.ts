@@ -76,11 +76,16 @@ function getViewStateAtom(key: string) {
   return viewStateAtoms[key]
 }
 
+
+export function getViewDataKey(viewId: string, gene: GeneticElement | null) {
+  return `${viewId}-${gene?.id ?? 'generic-view'}`
+}
+
 export function useViewData<T, S, A>(
   view: View<T, S, A>,
   gene: GeneticElement | null
 ): UseViewDataType<T, S, A> {
-  const key = `${view.id}-${gene?.id ?? 'generic-view'}`
+  const key = getViewDataKey(view.id, gene)
   const id = (view?.id ?? 'generic-view') + '-' + useViewID()
   const [viewData, setViewData] = useAtom(getViewAtom(key))
   const [viewState, setViewState] = useAtom(getViewStateAtom(id))

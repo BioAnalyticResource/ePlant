@@ -77,6 +77,7 @@ export const dark = createTheme({
       paper: '#222222',
       paperOverlay: '#333333',
       transparentOverlay: '#333333DD',
+      selected: '#333333',
       active: '#3a3a3a',
       hover: '#444444',
     },
