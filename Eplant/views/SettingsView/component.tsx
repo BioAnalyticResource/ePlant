@@ -16,7 +16,7 @@ export default function SettingsView({
         <FormControlLabel
           control={
             <Switch
-              onChange={(e) => setSettings({ ...settings, darkMode: e.target.checked})}
+              onChange={(e) => setSettings({ ...settings, darkMode: e.target.checked })}
               checked={settings.darkMode}
             />
           }
@@ -27,11 +27,11 @@ export default function SettingsView({
         <FormControlLabel
           control={
             <Switch
-              onChange={(e) => setSettings({...settings, debugMode: e.target.checked})}
+              onChange={(e) => setSettings({ ...settings, debugMode: e.target.checked })}
               checked={settings.debugMode}
             />
           }
-          label="Show Debug View"
+          label="Show Debug View(requires reolad)"
         />
       </FormGroup>
     </>
