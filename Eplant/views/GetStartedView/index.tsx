@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View } from '../View'
+import { View } from '@eplant/View'
 import component from './component'
 
 const GetStartedView: View = {
@@ -9,7 +9,7 @@ const GetStartedView: View = {
     return null
   },
   id: 'get-started',
-  header(props) {
+  header() {
     return <></>
   },
 }
