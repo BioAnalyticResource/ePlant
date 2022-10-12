@@ -79,8 +79,7 @@ export default function EFPPreview({
             variant="caption"
             sx={{ marginLeft: '4px', fontWeight: 'light' }}
           >
-            MAX:{' '}
-            {Math.round(Math.max(...dataDeferred.groups.map((g) => g.max)))}
+            MAX: {Math.round(dataDeferred.max)}
           </Typography>
         </div>
       </EFPPreviewContainer>

@@ -220,30 +220,33 @@ export default class EFPViewer
   component = (
     props: ViewProps<EFPViewerData, EFPViewerState, EFPViewerAction>
   ) => {
-    const sortedViews = props.activeData.views.slice().sort((a, b) => {
-      if (props.state.sortBy == 'name') return a.name.localeCompare(b.name)
-      if (props.state.sortBy == 'expression-level') {
-        const aIndex = props.activeData.views.findIndex((v) => v.id == a.id)
-        const bIndex = props.activeData.views.findIndex((v) => v.id == b.id)
-        //TODO: MAKE THE SORT FUNCTIONS WORK
+    const viewIndices: number[] = [
+      ...Array(props.activeData.views.length).keys(),
+    ]
+    viewIndices.sort((a, b) => {
+      if (props.state.sortBy == 'name')
+        return props.activeData.views[a].name.localeCompare(
+          props.activeData.views[b].name
+        )
+      else {
         return (
-          props.activeData.viewData[bIndex].max -
-          props.activeData.viewData[aIndex].max
+          props.activeData.viewData[b].max - props.activeData.viewData[a].max
         )
       }
     })
+    const sortedViews = viewIndices.map((i) => props.activeData.views[i])
+    const sortedViewData = viewIndices.map((i) => props.activeData.viewData[i])
+
     const EFPViews = React.useMemo(
       () =>
-        props.activeData.views.map(
+        sortedViews.map(
           (view) => new EFP(view.name, view.id, view.svgURL, view.xmlURL)
         ),
-      [...props.activeData.views.map((v) => v.id)]
+      [...sortedViews.map((v) => v.id)]
     )
 
     let activeViewIndex = React.useMemo(
-      () =>
-        EFPViews.findIndex((v) => v.id == props.state.activeView) ??
-        EFPViews[0],
+      () => EFPViews.findIndex((v) => v.id == props.state.activeView),
       [props.state.activeView, ...EFPViews.map((v) => v.id)]
     )
     if (activeViewIndex == -1) {
@@ -258,7 +261,7 @@ export default class EFPViewer
       return (
         <Component
           activeData={{
-            ...props.activeData.viewData[activeViewIndex],
+            ...sortedViewData[activeViewIndex],
           }}
           state={{
             colorMode: props.state.colorMode,
@@ -272,7 +275,7 @@ export default class EFPViewer
       activeViewIndex,
       props.geneticElement?.id,
       props.dispatch,
-      props.activeData.viewData[activeViewIndex],
+      sortedViewData[activeViewIndex],
       props.state.colorMode,
     ])
     const ref = React.useRef<HTMLDivElement>(null)
@@ -366,7 +369,7 @@ export default class EFPViewer
               height={dimensions.height - 5}
               activeView={EFPViews[activeViewIndex]}
               dispatch={props.dispatch}
-              viewData={props.activeData.viewData}
+              viewData={sortedViewData}
               geneticElement={props.geneticElement}
               views={EFPViews}
               colorMode={props.state.colorMode}

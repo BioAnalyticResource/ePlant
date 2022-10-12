@@ -9,6 +9,10 @@ import React from 'react'
 declare module '@mui/material/styles' {
   interface TypeBackground {
     active: string
+    paperOverlay: string
+    transparentOverlay: string
+    selected: string
+    hover: string
   }
   interface PaletteColor {
     pale?: string

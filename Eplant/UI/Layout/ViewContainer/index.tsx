@@ -134,7 +134,7 @@ export function ViewContainer<T, S, A>({
                     }}
                   >
                     <Box sx={{ paddingRight: 2, marginTop: 0.5 }}>
-                      <view.icon />
+                      {view.icon && <view.icon />}
                     </Box>
                     <ListItemText
                       sx={{
@@ -144,7 +144,6 @@ export function ViewContainer<T, S, A>({
                         fontWeight: 'regular',
                       }}
                       key={view.name}
-                      view={view}
                       onClick={(e) => {
                         if (view) setView(view)
                       }}
