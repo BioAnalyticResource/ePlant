@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View } from '../View'
+import { View } from '@eplant/View'
 import component from './component'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 
@@ -10,7 +10,7 @@ const GetStartedView: View = {
     return null
   },
   id: 'get-started',
-  header(props) {
+  header() {
     return <></>
   },
   icon: () => <HomeOutlinedIcon />,

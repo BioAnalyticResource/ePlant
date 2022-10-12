@@ -4,10 +4,10 @@
   "description": "Eplant",
   "main": "index.ts",
   "scripts": {
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "storybook": "start-storybook -p 6006",
     "start": "vite serve",
-    "build": "vite build",
+    "build": "tsc --noEmit && vite build",
     "build-storybook": "build-storybook",
     "postinstall": "cd ./node_modules/flexlayout-react && npm install --legacy-peer-deps && npm run build:commonjs"
   },
@@ -75,6 +75,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
-    "react-window": "^1.8.7"
+    "react-window": "^1.8.7",
+    "vite": "^3.1.7"
   }
 }
