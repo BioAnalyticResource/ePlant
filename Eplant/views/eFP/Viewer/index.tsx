@@ -107,7 +107,7 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
       height={props.height}
       itemCount={props.views.length}
       itemSize={75 + 12}
-      width={108}
+      width={130}
       style={{
         zIndex: 10,
       }}
@@ -280,6 +280,9 @@ export default class EFPViewer
     ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
+    {
+      console.log(props)
+    }
 
     if (!props.geneticElement) return <></>
     return (
@@ -325,6 +328,7 @@ export default class EFPViewer
                 variant="text"
                 options={sortedViews.map((view) => (
                   <MenuItem
+                    selected={props.state.activeView == view.id ? true : false}
                     onClick={() =>
                       props.dispatch({ type: 'set-view', id: view.id })
                     }
@@ -341,6 +345,7 @@ export default class EFPViewer
                 color="secondary"
                 options={[
                   <MenuItem
+                    selected={props.state.sortBy == 'name' ? true : false}
                     key="byName"
                     onClick={() =>
                       props.dispatch({ type: 'sort-by', by: 'name' })
@@ -349,6 +354,9 @@ export default class EFPViewer
                     By name
                   </MenuItem>,
                   <MenuItem
+                    selected={
+                      props.state.sortBy == 'expression-level' ? true : false
+                    }
                     key="byExpression"
                     onClick={() =>
                       props.dispatch({

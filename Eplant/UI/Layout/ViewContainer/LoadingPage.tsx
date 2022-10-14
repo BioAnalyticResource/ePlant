@@ -68,13 +68,13 @@ export default function LoadingPage(props: {
         Loading{' '}
         {props.gene
           ? props.gene.id + ' data for ' + props.view.name
-          : 'Loading data for ' + props.view.name}
+          : 'data for ' + props.view.name}
       </Typography>
       <LinearProgress variant="determinate" value={props.loadingAmount * 100} />
       <Box display="flex" alignItems={'center'} justifyContent={'center'}>
         <LoadingImage
           style={{
-            marginTop: '48px',
+            marginTop: '80px',
             maxWidth: '100%',
             maxHeight: '300px',
           }}

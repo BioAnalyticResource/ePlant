@@ -202,14 +202,14 @@ export function ViewContainer<T, S, A>({
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
         <DialogTitle>
           <Typography variant="h6">
-            Citation and experiment information for &quot;{view.name}&quot;
+            Citation and experiment information for {view.name}
           </Typography>
         </DialogTitle>
         <DialogContent>
           {view.citation ? (
             <view.citation gene={gene} />
           ) : (
-            <Box>No citations provided for this view</Box>
+            <Box>No information provided for this view</Box>
           )}
         </DialogContent>
         <DialogActions>

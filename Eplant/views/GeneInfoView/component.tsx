@@ -146,9 +146,9 @@ const ViewButton = styled(function ViewButton({
           zIndex: 0,
           opacity: loading ? 1 : 0,
           transition: 'opacity 0.2s ease-in-out',
-          background: theme.palette.background.paper,
+          background: 'transparent',
           '.MuiLinearProgress-bar': {
-            background: theme.palette.background.active,
+            background: theme.palette.background.hover,
             // Round both corners on the right side
             borderRadius: '0px 0.5rem 0.5rem 0px',
           },

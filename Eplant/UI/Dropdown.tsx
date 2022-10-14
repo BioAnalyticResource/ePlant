@@ -45,7 +45,7 @@ const StyledMenu = styled((props: MenuProps) => (
 /**
  * A dropdown menu.
  * @param { props.options } - The options to display in the dropdown. Everything should be
- * wrapped in `<MenuItem>` tags
+ * wrapped in <MenuItem> tags
  * @param { props.children } - The content to display in the dropdown button.
  * @returns
  */

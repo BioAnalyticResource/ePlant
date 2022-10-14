@@ -34,17 +34,19 @@ export default function FailedToLoad(props: {
   const theme = useTheme()
   return (
     <Stack gap={2} alignItems="center" direction="column" width="100%">
-      <Typography variant="h5">
+      <Typography variant="h5" sx={{ textAlign: 'center', maxWidth: 600 }}>
         {props.geneticElement
-          ? `There was an error while trying to load "${props.view.name.toLowerCase()}" for ${
+          ? `There was an error while trying to load ${props.view.name.toLowerCase()} for ${
               props.geneticElement.id
             }`
-          : `There was an error while trying to load "${props.view.name.toLowerCase()}" without a selected gene.`}
+          : `There was an error while trying to load ${props.view.name.toLowerCase()} without a selected gene.`}
       </Typography>
       <Typography
         variant="body1"
         sx={(theme) => ({
           color: theme.palette.text.secondary,
+          textAlign: 'center',
+          marginBottom: 10,
         })}
       >
         Please contact us by opening an issue on{' '}
@@ -55,7 +57,6 @@ export default function FailedToLoad(props: {
       <Illustration
         color={theme.palette.primary.dark}
         style={{
-          marginTop: 8,
           maxHeight: '225px',
         }}
       />
