@@ -61,7 +61,7 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
   }
 
   // Find the type of the genetic element
-  let geneticElementType: string = parentFeatType
+  let geneticElementType: GeneInfoViewData['geneticElementType'] = parentFeatType as GeneInfoViewData['geneticElementType']
   if (parentFeatType == 'gene') {
     geneticElementType = 'non_coding'
     if (childFeatType == 'mRNA') geneticElementType = 'protein_coding'
@@ -91,7 +91,7 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
     chromosome_end: parseInt(data.chromosome_end),
     strand: data.strand,
     geneSequence: sequence,
-    features: geneModelFeatures,
+    features: geneModelFeatures ?? [],
     geneticElementType,
     proteinSequence,
   }

@@ -3,7 +3,6 @@ import { atom, useAtom, useAtomValue, WritableAtom } from 'jotai'
 import * as React from 'react'
 import { View, ViewDispatch } from './index'
 import Storage from '@eplant/util/Storage'
-import usePromise from '@eplant/util/usePromise'
 import { atomWithStorage, useViewID } from '@eplant/state'
 
 export enum ViewDataError {
