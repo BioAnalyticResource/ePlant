@@ -146,9 +146,9 @@ const ViewButton = styled(function ViewButton({
           zIndex: 0,
           opacity: loading ? 1 : 0,
           transition: 'opacity 0.2s ease-in-out',
-          background: theme.palette.background.paper,
+          background: 'transparent',
           '.MuiLinearProgress-bar': {
-            background: theme.palette.background.active,
+            background: theme.palette.background.hover,
             // Round both corners on the right side
             borderRadius: '0px 0.5rem 0.5rem 0px',
           },
@@ -262,43 +262,65 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   const panesDispatch = usePanesDispatch()
   const { userViews } = useConfig()
   return (
-    <Stack direction="column" gap={'16px'} flex={1}>
-      <div style={{ whiteSpace: 'nowrap' }}>
+    <Stack sx={{ marginTop: 1 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+          background: (theme) => theme.palette.background.paperOverlay,
+          border: '1px solid',
+          borderRadius: 1,
+          borderColor: (theme) => theme.palette.background.active,
+          padding: 2,
+          position: 'relative',
+          left: -16,
+          top: -16,
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+        }}
+      >
         <Typography variant="body2" color="secondary">
-          Available views
+          Views available for this gene
         </Typography>
-      </div>
-      {userViews.map((view) => (
-        <ViewButton
-          color="secondary"
-          sx={{
-            textAlign: 'left',
-            justifyContent: 'flex-start',
-            color: 'secondary.contrastText',
-            textTransform: 'none',
-          }}
-          startIcon={
-            view.icon ? (
-              <div
-                style={{
-                  transform: 'scale(1.2)',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  display: 'flex',
-                }}
-              >
-                <view.icon />
-              </div>
-            ) : undefined
-          }
-          key={view.name}
-          view={view}
-          geneticElement={geneticElement}
-          onClick={() => switchViews(view)}
-        >
-          {view.name}
-        </ViewButton>
-      ))}
+        {userViews.map((view) => (
+          <ViewButton
+            color="secondary"
+            sx={{
+              textAlign: 'left',
+              justifyContent: 'flex-start',
+              color: 'secondary.contrastText',
+              textTransform: 'none',
+              fontWeight: 'regular',
+              '&:hover': {
+                backgroundColor: (theme) => theme.palette.primary.dark,
+              },
+            }}
+            startIcon={
+              view.icon ? (
+                <div
+                  style={{
+                    transform: 'scale(1.2)',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    display: 'flex',
+                    paddingLeft: 8,
+                    paddingRight: 8,
+                  }}
+                >
+                  <view.icon />
+                </div>
+              ) : undefined
+            }
+            key={view.name}
+            view={view}
+            geneticElement={geneticElement}
+            onClick={() => switchViews(view)}
+          >
+            {view.name}
+          </ViewButton>
+        ))}
+      </Box>
     </Stack>
   )
 

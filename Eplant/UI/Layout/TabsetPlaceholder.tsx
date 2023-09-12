@@ -31,19 +31,19 @@ export default function TabsetPlaceholder(props: { addTab: () => void }) {
   return (
     <Stack gap={6} direction="column" width="100%">
       <Illustration
-        color={theme.palette.divider}
+        color={theme.palette.primary.dark}
         style={{
-          maxHeight: '250px',
+          maxHeight: '300px',
         }}
       />
       <Box justifyContent="center" display="flex">
         <Button
-          variant="outlined"
+          variant="contained"
           color="primary"
           onClick={props.addTab}
           endIcon={<Add />}
         >
-          ADD TAB
+          NEW TAB
         </Button>
       </Box>
     </Stack>

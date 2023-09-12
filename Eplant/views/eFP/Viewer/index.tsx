@@ -1,11 +1,20 @@
 import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { View, ViewProps } from '@eplant/View'
-import { useViewData, ViewDataError } from '@eplant/View/viewData'
+import {
+  getViewDataKey,
+  useViewData,
+  ViewDataError,
+  viewDataStorage,
+} from '@eplant/View/viewData'
 import {
   Box,
   Drawer,
+  FormControl,
+  InputLabel,
   LinearProgress,
+  MenuItem,
+  Select,
   Tooltip,
   Typography,
   useTheme,
@@ -24,6 +33,7 @@ import useDimensions from '@eplant/util/useDimensions'
 import { EFPData, EFPState } from '../types'
 import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
+import Dropdown from '@eplant/UI/Dropdown'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -96,8 +106,8 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
     <List
       height={props.height}
       itemCount={props.views.length}
-      itemSize={75 + 8}
-      width={108}
+      itemSize={75 + 12}
+      width={130}
       style={{
         zIndex: 10,
       }}
@@ -107,6 +117,7 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
     </List>
   )
 }
+
 export default class EFPViewer
   implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
 {
@@ -121,6 +132,7 @@ export default class EFPViewer
         },
         zoom: 1,
       },
+      sortBy: 'name',
     }
   }
   constructor(
@@ -175,6 +187,11 @@ export default class EFPViewer
           ...state,
           activeView: action.id,
         }
+      case 'sort-by':
+        return {
+          ...state,
+          sortBy: action.by,
+        }
       case 'reset-transform':
         return {
           ...state,
@@ -203,18 +220,33 @@ export default class EFPViewer
   component = (
     props: ViewProps<EFPViewerData, EFPViewerState, EFPViewerAction>
   ) => {
+    const viewIndices: number[] = [
+      ...Array(props.activeData.views.length).keys(),
+    ]
+    viewIndices.sort((a, b) => {
+      if (props.state.sortBy == 'name')
+        return props.activeData.views[a].name.localeCompare(
+          props.activeData.views[b].name
+        )
+      else {
+        return (
+          props.activeData.viewData[b].max - props.activeData.viewData[a].max
+        )
+      }
+    })
+    const sortedViews = viewIndices.map((i) => props.activeData.views[i])
+    const sortedViewData = viewIndices.map((i) => props.activeData.viewData[i])
+
     const EFPViews = React.useMemo(
       () =>
-        props.activeData.views.map(
+        sortedViews.map(
           (view) => new EFP(view.name, view.id, view.svgURL, view.xmlURL)
         ),
-      [...props.activeData.views.map((v) => v.id)]
+      [...sortedViews.map((v) => v.id)]
     )
 
     let activeViewIndex = React.useMemo(
-      () =>
-        EFPViews.findIndex((v) => v.id == props.state.activeView) ??
-        EFPViews[0],
+      () => EFPViews.findIndex((v) => v.id == props.state.activeView),
       [props.state.activeView, ...EFPViews.map((v) => v.id)]
     )
     if (activeViewIndex == -1) {
@@ -229,7 +261,7 @@ export default class EFPViewer
       return (
         <Component
           activeData={{
-            ...props.activeData.viewData[activeViewIndex],
+            ...sortedViewData[activeViewIndex],
           }}
           state={{
             colorMode: props.state.colorMode,
@@ -243,11 +275,14 @@ export default class EFPViewer
       activeViewIndex,
       props.geneticElement?.id,
       props.dispatch,
-      props.activeData.viewData[activeViewIndex],
+      sortedViewData[activeViewIndex],
       props.state.colorMode,
     ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
+    {
+      console.log(props)
+    }
 
     if (!props.geneticElement) return <></>
     return (
@@ -270,15 +305,84 @@ export default class EFPViewer
             justifyContent: 'stretch',
           }}
         >
-          <EFPListMemoized
-            height={dimensions.height - 5}
-            activeView={EFPViews[activeViewIndex]}
-            dispatch={props.dispatch}
-            viewData={props.activeData.viewData}
-            geneticElement={props.geneticElement}
-            views={EFPViews}
-            colorMode={props.state.colorMode}
-          />
+          {/* Left column of EFP Previews */}
+          <Box
+            sx={{
+              background: (theme) => theme.palette.background.paperOverlay,
+              border: '1px solid',
+              borderRadius: 1,
+              borderColor: (theme) => theme.palette.background.active,
+              padding: 2,
+              position: 'relative',
+              left: -16,
+              top: -16,
+              overflow: 'hidden',
+            }}
+          >
+            {/* Dropdown menus for selecting a view and sort options
+            
+            //TODO: Make the dropdown menus appear closer to the button, left aligned and with a max height */}
+            <Box sx={{ marginBottom: 1 }}>
+              <Dropdown
+                color="secondary"
+                variant="text"
+                options={sortedViews.map((view) => (
+                  <MenuItem
+                    selected={props.state.activeView == view.id ? true : false}
+                    onClick={() =>
+                      props.dispatch({ type: 'set-view', id: view.id })
+                    }
+                    key={view.id}
+                  >
+                    {view.name}
+                  </MenuItem>
+                ))}
+              >
+                Select
+              </Dropdown>
+              <Dropdown
+                variant="text"
+                color="secondary"
+                options={[
+                  <MenuItem
+                    selected={props.state.sortBy == 'name' ? true : false}
+                    key="byName"
+                    onClick={() =>
+                      props.dispatch({ type: 'sort-by', by: 'name' })
+                    }
+                  >
+                    By name
+                  </MenuItem>,
+                  <MenuItem
+                    selected={
+                      props.state.sortBy == 'expression-level' ? true : false
+                    }
+                    key="byExpression"
+                    onClick={() =>
+                      props.dispatch({
+                        type: 'sort-by',
+                        by: 'expression-level',
+                      })
+                    }
+                  >
+                    By expression level
+                  </MenuItem>,
+                ]}
+              >
+                Sort
+              </Dropdown>
+            </Box>
+            {/* The actual stack of EFP Previews */}
+            <EFPListMemoized
+              height={dimensions.height - 5}
+              activeView={EFPViews[activeViewIndex]}
+              dispatch={props.dispatch}
+              viewData={sortedViewData}
+              geneticElement={props.geneticElement}
+              views={EFPViews}
+              colorMode={props.state.colorMode}
+            />
+          </Box>
           <Box
             sx={{
               flexGrow: 1,
@@ -292,7 +396,7 @@ export default class EFPViewer
                   sx={(theme) => ({
                     position: 'absolute',
                     left: theme.spacing(2),
-                    top: 0,
+                    bottom: 0,
                     zIndex: 10,
                   })}
                   data={{

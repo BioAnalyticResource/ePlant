@@ -1,9 +1,11 @@
 import {
+  Button,
   Card,
   CardActions,
   CardContent,
   CardMedia,
   Link,
+  Stack,
   Typography,
 } from '@mui/material'
 import React from 'react'
@@ -15,9 +17,7 @@ export type TileProps = {
   view: View
 }
 
-export default function Tile({
-  view,
-}: TileProps) {
+export default function Tile({ view }: TileProps) {
   const id = useViewID()
   const panesDispatch = usePanesDispatch()
   const [genes, setGenes] = useGeneticElements()
@@ -33,21 +33,38 @@ export default function Tile({
     })
   }
   return (
-    <Card>
+    <Card
+      sx={(theme) => ({
+        background: theme.palette.background.paperOverlay,
+        boxShadow: '0px 3px 6px rgb(0,0,0,0.25)',
+        height: '100%',
+      })}
+    >
+      <CardMedia
+        component="img"
+        image={view.thumbnail}
+        alt={view.name}
+        height="150"
+      />
+
       <CardContent>
         <div>
           <Typography variant="h5">{view.name}</Typography>
           <Typography variant="body2">{view.description}</Typography>
         </div>
       </CardContent>
-      <CardMedia component="img" image={view.thumbnail} alt={view.name} />
+
       <CardActions>
         <Typography
           variant="caption"
           color={(theme) => theme.palette.secondary.main}
+          sx={{ ml: 1 }}
         >
-          Example <Link href='#' onClick={setView}>AT3G24650 | ABI3</Link>
+          Example{' '}
         </Typography>
+        <Button onClick={setView} size="small">
+          AT3G24650 | ABI3
+        </Button>
       </CardActions>
     </Card>
   )

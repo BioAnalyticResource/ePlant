@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material'
+import { Box, Button, Link } from '@mui/material'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { SearchBar } from './SearchBar'
@@ -35,14 +35,17 @@ const columns: GridColDef[] = [
     width: 130,
     headerClassName: 'select-none',
     renderCell: (params: GridRenderCellParams<string>) => (
-      <Button
-        href={params.value}
-        variant="outlined"
-        size="small"
-        color="secondary"
-      >
-        VIEW PAPER
-      </Button>
+      <>
+        <a
+          href={params.value}
+          rel="noopener noreferrer"
+          target="_blank"
+          color="inherit"
+          style={{ textDecoration: 'none' }}
+        >
+          <Button>View paper</Button>
+        </a>
+      </>
     ),
   },
 ]

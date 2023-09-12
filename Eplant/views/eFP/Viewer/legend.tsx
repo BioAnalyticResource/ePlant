@@ -3,6 +3,7 @@ import { Box, styled, useTheme } from '@mui/material'
 import { EFPData, EFPState } from '../types'
 import { getColor } from '../svg'
 import useDimensions from '@eplant/util/useDimensions'
+import { reverse } from 'lodash'
 
 const GRADIENT_STEPS = 11
 export default styled(function Legend({
@@ -35,6 +36,7 @@ export default styled(function Legend({
     })
 
   const gradient = values
+    .reverse()
     .map((g) =>
       getColor(
         state.colorMode == 'absolute' ? g : 2 ** g * control,
@@ -63,14 +65,33 @@ export default styled(function Legend({
         display: 'flex',
         flexDirection: 'row',
         zIndex: 100,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        gap: theme.spacing(2),
+        alignItems: 'stretch',
+        gap: theme.spacing(1),
       })}
     >
-      {values[0].toFixed(2)}
-      <div style={{ alignItems: 'center', display: 'flex' }}>{gradient}</div>
-      {values[values.length - 1].toFixed(2)}
+      <Box
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {gradient}
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box sx={{ fontSize: 12 }}>{values[0].toFixed(0)}</Box>
+
+        <Box sx={{ fontSize: 12 }}>
+          {state.colorMode == 'absolute' ? '' : '0'}
+        </Box>
+        <Box sx={{ fontSize: 12 }}>{values[values.length - 1].toFixed(0)}</Box>
+      </Box>
     </Box>
   )
 })()

@@ -11,7 +11,7 @@ export default function GetStartedView({
   const theme = useTheme()
   const { views } = useConfig()
   return (
-    <Stack spacing={2}>
+    <Stack spacing={4}>
       <div>
         <Typography variant="h2">ePlant 3</Typography>
         <Typography variant="h4" color={theme.palette.secondary.main}>
@@ -22,25 +22,25 @@ export default function GetStartedView({
         <Typography variant="h5">Start</Typography>
         <Stack direction="row" spacing={1}>
           <Filter1 color="primary" />
-          <Typography color={theme.palette.primary.main}>
-            Select a species
-          </Typography>
+          <Typography>Select a species</Typography>
         </Stack>
         <Stack direction="row" spacing={1}>
           <Filter2 color="primary" />
-          <Typography color={theme.palette.primary.main}>
-            Enter a gene of interest
-          </Typography>
+          <Typography>Enter a gene of interest</Typography>
         </Stack>
         <Stack direction="row" spacing={1}>
           <Filter3 color="primary" />
-          <Typography color={theme.palette.primary.main}>
+          <Typography>
             Use the view selector to navigate between views
           </Typography>
         </Stack>
       </Stack>
       <Stack>
-        <Typography variant="body2" color={theme.palette.secondary.main}>
+        <Typography
+          sx={{ width: '100%', maxWidth: 600 }}
+          variant="body2"
+          color={theme.palette.secondary.main}
+        >
           Built by students in the{' '}
           <Link href="https://bar.utoronto.ca/" target="_blank">
             Provart Lab
@@ -63,11 +63,11 @@ export default function GetStartedView({
           .
         </Typography>
       </Stack>
-      <Grid container spacing={2} columns={4}>
+      <Grid container spacing={0} columns={4}>
         {views.map((view) => {
           if (view.description && view.thumbnail) {
             return (
-              <Grid item key={view.id} xs={1}>
+              <Grid item key={view.id} xs={1} sx={{ marginRight: 2 }}>
                 <Tile view={view} />
               </Grid>
             )

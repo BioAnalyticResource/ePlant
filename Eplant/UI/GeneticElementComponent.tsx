@@ -33,16 +33,16 @@ function SelectedIndicator(props: BoxProps & { hover: boolean }) {
           top: 0,
           width: props.hover ? '24px' : '16px',
           height: '24px',
-          background: theme.palette.background.paper,
+          background: theme.palette.background.default,
           transition: '0.1s ease all',
         })}
       />
       <Box
         position="absolute"
         sx={(theme) => ({
-          left: props.hover ? 0 : '6px',
+          left: props.hover ? '0' : '0px',
           top: 0,
-          width: props.hover ? '22px' : '8px',
+          width: props.hover ? '22px' : '22px',
           height: '24px',
           background: theme.palette.primary.main,
           borderTopLeftRadius: theme.shape.borderRadius,
@@ -112,7 +112,7 @@ export default function GeneticElementComponent({
 
   const theme = useTheme()
 
-  const backgroundColor = theme.palette.background.paper
+  const backgroundColor = theme.palette.background.default
 
   const iconSx = (theme: Theme) => ({
     cursor: 'pointer',
@@ -125,8 +125,14 @@ export default function GeneticElementComponent({
     <DragIndicator
       sx={(theme) => ({
         ...iconSx(theme),
-        color: theme.palette.background.paper,
-        opacity: hover ? '1' : '0',
+        color: theme.palette.background.default,
+        ':hover': {
+          color: selected
+            ? theme.palette.primary.dark
+            : theme.palette.secondary.main,
+        },
+
+        //opacity: hover ? '1' : '0',
       })}
     />
   )
@@ -146,8 +152,11 @@ export default function GeneticElementComponent({
       }}
       sx={(theme) => ({
         transition: '0.1s ease all',
+        background: selected
+          ? theme.palette.background.selected
+          : theme.palette.background.default,
         ':hover': {
-          background: theme.palette.background.active,
+          background: theme.palette.background.hover,
         },
       })}
       elevation={0}
@@ -176,12 +185,19 @@ export default function GeneticElementComponent({
             position: 'relative',
             ':before': {
               content: '""',
-              background: `linear-gradient(to right, transparent 80%, inherit})`,
+              background: `linear-gradient(to right, transparent, 95%, ${
+                selected
+                  ? theme.palette.background.selected
+                  : theme.palette.background.default
+              })`,
               width: '100%',
               height: '100%',
               position: 'absolute',
               pointerEvents: 'none',
               zIndex: 5,
+            },
+            ':hover::before': {
+              background: `linear-gradient(to right, transparent, 95%, ${theme.palette.background.hover})`,
             },
           }}
           ref={textContainerRef}
@@ -200,16 +216,25 @@ export default function GeneticElementComponent({
             })}
             ref={textGroupRef}
           >
-            <Typography>{geneticElement.id}</Typography>
+            <Typography sx={{ fontWeight: selected ? 'bold' : 'regular' }}>
+              {geneticElement.id}
+            </Typography>
             <Divider orientation="vertical" flexItem></Divider>
-            <Typography>{geneticElement.aliases.join(', ')}</Typography>
+            <Typography sx={{ fontWeight: selected ? 'bold' : 'regular' }}>
+              {geneticElement.aliases.join(', ')}
+            </Typography>
           </Stack>
         </Box>
         <OptionsButton
           sx={(theme) => ({
             width: '24px',
             height: '24px',
+            ':hover': {
+              background: theme.palette.background.hover,
+              color: theme.palette.secondary.main,
+            },
             ...iconSx(theme),
+            color: theme.palette.background.default,
           })}
           onClick={openMenu}
         />

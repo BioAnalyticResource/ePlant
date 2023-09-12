@@ -164,9 +164,10 @@ export function Collection({
         sx={(theme) => ({
           borderRadius: theme.shape.borderRadius,
           color: theme.palette.text.secondary,
-          ':hover': {
-            backgroundColor: theme.palette.background.active,
-          },
+          backgroundColor:
+            genes.length > 0 && !open
+              ? theme.palette.background.active
+              : theme.palette.background.default,
         })}
       >
         <Stack
@@ -186,6 +187,9 @@ export function Collection({
             sx={(theme) => ({
               transform: `rotate(${open ? 0 : -90}deg)`,
               transition: 'all 0.5s ease',
+              ':hover': {
+                color: theme.palette.text.primary,
+              },
             })}
           />
           <TextField
@@ -203,9 +207,22 @@ export function Collection({
           <Typography
             style={{
               display: !renaming ? undefined : 'none',
+              width: '100%',
             }}
           >
-            {name}
+            <div
+              style={{
+                display: 'flex',
+                flexFlow: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <span>{name}</span>
+              <span style={{ fontSize: '0.8rem', opacity: '0.5' }}>
+                {genes.length > 0 && !open ? genes.length + ' genes' : ''}
+              </span>
+            </div>
           </Typography>
           <div style={{ flex: 1 }} />
           {renaming ? (
@@ -219,7 +236,11 @@ export function Collection({
                 width: '24px',
                 height: '24px',
                 opacity: hover ? '1' : '0',
-                //color: theme.palette.text.secondary,
+                color: theme.palette.text.secondary,
+                ':hover': {
+                  background: theme.palette.background.hover,
+                  color: theme.palette.text.primary,
+                },
               })}
             ></OptionsButton>
           )}

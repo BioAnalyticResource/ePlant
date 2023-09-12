@@ -50,6 +50,7 @@ export function LoadingImage(props: SVGProps<SVGSVGElement>) {
  * @param props.view The view that is being loaded
  * @returns
  */
+
 export default function LoadingPage(props: {
   loadingAmount: number
   gene: GeneticElement | null
@@ -64,16 +65,20 @@ export default function LoadingPage(props: {
   return (
     <Stack gap={4}>
       <Typography variant="body2">
-        Loading data for {props.view.name}...
+        Loading{' '}
+        {props.gene
+          ? props.gene.id + ' data for ' + props.view.name
+          : 'data for ' + props.view.name}
       </Typography>
       <LinearProgress variant="determinate" value={props.loadingAmount * 100} />
       <Box display="flex" alignItems={'center'} justifyContent={'center'}>
         <LoadingImage
           style={{
+            marginTop: '80px',
             maxWidth: '100%',
-            maxHeight: '450px',
+            maxHeight: '300px',
           }}
-          fill={theme.palette.divider}
+          fill={theme.palette.primary.dark}
         />
       </Box>
     </Stack>

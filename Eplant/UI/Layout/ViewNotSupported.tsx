@@ -25,7 +25,7 @@ const Illustration = ({
 )
 
 /**
- * The view shown when a view is not supported. Shown when the user switches active genes to a gene that does not support this view
+ * The view shown when a view is not supported. Shown when the user switches active genes to a gene that does not support this view. Has a picture of a dead plant.
  */
 export default function NotSupported(props: {
   geneticElement: GeneticElement | null
@@ -36,35 +36,29 @@ export default function NotSupported(props: {
     <Stack gap={2} alignItems="center" direction="column" width="100%">
       <Typography variant="h5">
         {props.geneticElement
-          ? `Cannot view "${props.view.name.toLowerCase()}" for ${
+          ? `Cannot view ${props.view.name.toLowerCase()} for ${
               props.geneticElement.id
             }`
-          : `The "${props.view.name.toLowerCase()}" requires a gene to be selected`}
+          : `There is no gene selected`}
       </Typography>
       <Typography
         variant="body1"
         sx={(theme) => ({
           color: theme.palette.text.secondary,
+          marginBottom: 8,
         })}
       >
         {props.geneticElement
-          ? 'This is usually because there is no data for this gene.'
-          : ''}
+          ? 'No data is available for this gene.'
+          : `The ${props.view.name.toLowerCase()} requires a selected gene.`}
       </Typography>
       <Illustration
-        color={theme.palette.divider}
+        color={theme.palette.primary.dark}
         style={{
-          maxHeight: '250px',
+          marginTop: 8,
+          maxHeight: '200px',
         }}
       />
-      <Typography
-        variant="body1"
-        sx={(theme) => ({
-          color: theme.palette.text.secondary,
-        })}
-      >
-        Select gene or change views from the dropdown menu in the toolbar.
-      </Typography>
     </Stack>
   )
 }

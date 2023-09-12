@@ -73,13 +73,14 @@ export function SearchGroup({
           )
         }}
       ></SearchBar>
-      {/* TODO: Implement alternate search options */}
+      {/* TODO: Implement alternate search options 
       <MenuButton disabled variant="contained">
         Search by expression
       </MenuButton>
       <MenuButton disabled variant="contained">
         Search by phenotype
       </MenuButton>
+      */}
     </Stack>
   )
 }
