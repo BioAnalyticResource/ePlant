@@ -32,6 +32,11 @@ export default function SearchBar(props: {
   const updateOptions = React.useRef<(text: string) => void>()
   const theme = useTheme()
 
+  function handleChange(input: string[]){
+    const seperatedItems = input.slice(-1)[0].split(",")
+    setValue([...input.slice(0, -1), ...seperatedItems])
+  }
+
   React.useEffect(() => {
     updateOptions.current = debounce(async (newValue) => {
       setOptions((await props.complete?.(newValue)) ?? [])
@@ -45,7 +50,7 @@ export default function SearchBar(props: {
 
   return (
     <Autocomplete
-      onChange={(event, newVal) => setValue(newVal)}
+      onChange={(event, newVal) => handleChange(newVal)}
       value={value}
       id={id}
       options={options}
