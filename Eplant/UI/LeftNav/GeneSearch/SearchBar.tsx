@@ -33,9 +33,12 @@ export default function SearchBar(props: {
   const theme = useTheme()
 
   function handleChange(input: string[]){
-    // If input is a comma seperated list, will split into seperate genes 
-    const seperatedItems = input.slice(-1)[0].split(",")
-    setValue([...input.slice(0, -1), ...seperatedItems])
+    if(input.length > 0){
+      // If input is a comma seperated list, will split into seperate genes 
+      setValue([...input.slice(0, -1), ...input.slice(-1)[0].split(",")])
+    }else{
+      setValue(input)
+    }
   }
 
   React.useEffect(() => {
