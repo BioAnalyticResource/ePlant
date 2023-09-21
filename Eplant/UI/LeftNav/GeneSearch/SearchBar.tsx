@@ -34,7 +34,8 @@ export default function SearchBar(props: {
 
   React.useEffect(() => {
     updateOptions.current = debounce(async (newValue) => {
-      setOptions((await props.complete?.(newValue)) ?? [])
+      const newoptions = await props.complete?.(newValue)
+      setOptions(newoptions?.length ? newoptions: [])
     }, 100)
   }, [props.complete])
   const id = React.useId()
