@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require('path')
+import path from 'path'
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',

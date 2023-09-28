@@ -1,6 +1,6 @@
-const process = require('process')
-const path = require('path')
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+import process from 'process'
+import path from 'path'
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 
 module.exports = {
   stories: [
