@@ -305,7 +305,7 @@ function EplantLayout() {
   // Update the model when the activeId changes
   React.useEffect(() => {
     if (model.getNodeById(activeId)) model.doAction(Actions.selectTab(activeId))
-    else model.doAction(Actions.deselectTabset())
+    // else model.doAction(Actions.deselectTabset())
   }, [activeId, model])
 
   // Add a new tab when there is a non-popout pane
