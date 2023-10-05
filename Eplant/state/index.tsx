@@ -131,7 +131,7 @@ function atomWithOptionalStorage<T>(
 }
 
 function useAtomReducer<T, A>(
-  atom: WritableAtom<T, React.SetStateAction<T>[], void>,
+  atom: WritableAtom<T, [React.SetStateAction<T>], void>,
   reducer: (x: T, action: A) => T
 ): (action: A) => void {
   const setValue = useSetAtom(atom)

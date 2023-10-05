@@ -38,13 +38,13 @@ export type UseViewDataType<T, S, A> = ViewDataType<T> & {
 const viewDataAtoms: {
   [key: string]: WritableAtom<
     ViewDataType<unknown>,
-    React.SetStateAction<ViewDataType<unknown>>[],
+    [React.SetStateAction<ViewDataType<unknown>>],
     void
   >
 } = {}
 
 const viewStateAtoms: {
-  [key: string]: WritableAtom<unknown, React.SetStateAction<unknown>[], void>
+  [key: string]: WritableAtom<unknown, [React.SetStateAction<unknown>], void>
 } = {}
 
 function getViewAtom(key: string) {
