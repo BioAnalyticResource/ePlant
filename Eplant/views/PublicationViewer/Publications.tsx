@@ -34,7 +34,7 @@ const columns: GridColDef[] = [
     headerName: 'Link',
     width: 130,
     headerClassName: 'select-none',
-    renderCell: (params: GridRenderCellParams<any>) => (
+    renderCell: (params: GridRenderCellParams<{[key:string]: unknown}>) => (
       <>
         <a
           href={params.value}
