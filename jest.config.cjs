@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import path from 'path'
+const path = require('path')
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
@@ -15,6 +15,5 @@ module.exports = {
   },
   moduleNameMapper: {
     '^@eplant/(.*)$': path.resolve(__dirname, 'Eplant/$1'),
-    '^@stories/(.*)$': path.resolve(__dirname, 'stories/$1'),
   },
 }
