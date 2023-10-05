@@ -16,7 +16,7 @@ const columns: GridColDef[] = [
     headerName: 'Link',
     width: 130,
     headerClassName: 'select-none',
-    renderCell: (params: GridRenderCellParams<string>) => (
+    renderCell: (params: GridRenderCellParams<any>) => (
       <Button
         href={params.value}
         variant="outlined"

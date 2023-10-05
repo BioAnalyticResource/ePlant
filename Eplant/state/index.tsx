@@ -131,11 +131,11 @@ function atomWithOptionalStorage<T>(
 }
 
 function useAtomReducer<T, A>(
-  atom: WritableAtom<T, React.SetStateAction<T>, void>,
+  atom: WritableAtom<T, React.SetStateAction<T>[], void>,
   reducer: (x: T, action: A) => T
 ): (action: A) => void {
   const setValue = useSetAtom(atom)
-  return (action: A) => setValue((value) => reducer(value, action))
+  return (action: A) => setValue((value:any) => reducer(value, action))
 }
 
 export const genesAtom = atomWithOptionalStorage<GeneticElement[]>(
