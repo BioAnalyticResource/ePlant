@@ -51,7 +51,7 @@ function RootApp() {
   const [darkMode, setDarkMode] = useDarkMode()
   return (
     <React.StrictMode>
-      <Provider scope={eplantScope}>
+      <Provider>
         <ThemeProvider theme={darkMode ? dark : light}>
           <CssBaseline />
           <BrowserRouter>

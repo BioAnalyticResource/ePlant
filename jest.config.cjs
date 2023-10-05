@@ -15,6 +15,5 @@ module.exports = {
   },
   moduleNameMapper: {
     '^@eplant/(.*)$': path.resolve(__dirname, 'Eplant/$1'),
-    '^@stories/(.*)$': path.resolve(__dirname, 'stories/$1'),
   },
 }

@@ -92,7 +92,7 @@ export default function GeneticElementComponent({
 
   const [textScroll, setTextScroll] = useState<boolean>(false)
 
-  const textGroupRef = useRef<HTMLDivElement>()
+  const textGroupRef = useRef<HTMLDivElement>(null)
   const textContainerRef = useRef<HTMLDivElement>()
 
   const menuId = useId()
