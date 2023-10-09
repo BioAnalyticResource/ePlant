@@ -32,6 +32,15 @@ export default function SearchBar(props: {
   const updateOptions = React.useRef<(text: string) => void>()
   const theme = useTheme()
 
+  function handleChange(input: string[]){
+    if(input.length > 0){
+      // If input is a comma seperated list, will split into seperate genes 
+      setValue([...input.slice(0, -1), ...input.slice(-1)[0].split(",")])
+    }else{
+      setValue(input)
+    }
+  }
+
   React.useEffect(() => {
     updateOptions.current = debounce(async (newValue) => {
       const newoptions = await props.complete?.(newValue)
@@ -46,7 +55,7 @@ export default function SearchBar(props: {
 
   return (
     <Autocomplete
-      onChange={(event, newVal) => setValue(newVal)}
+      onChange={(event, newVal) => handleChange(newVal)}
       value={value}
       id={id}
       options={options}
