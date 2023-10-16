@@ -26,6 +26,8 @@ jobs:
           node-version: '20.x'
       - run: npm ci
       - run: npm run build
+        env:
+          BASE_URL=""
       - run: mv dist _site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
