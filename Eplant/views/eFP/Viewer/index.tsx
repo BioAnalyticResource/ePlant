@@ -139,6 +139,7 @@ export default class EFPViewer
     public id: string,
     public name: string,
     private views: EFPViewerData['views'],
+    private efps: EFP[],
     public icon: () => JSX.Element,
     public description?: string,
     public thumbnail?: string
@@ -152,13 +153,8 @@ export default class EFPViewer
     const loadingProgress = Array(this.views.length).fill(0)
     let totalLoaded = 0
     const viewData = await Promise.all(
-      this.views.map(async (view, i) => {
-        const data = await new EFP(
-          view.name,
-          view.id,
-          view.svgURL,
-          view.xmlURL
-        ).getInitialData(gene, (progress) => {
+      this.efps.map(async (efp, i) => {
+        const data = efp.getInitialData(gene, (progress) => {
           totalLoaded -= loadingProgress[i]
           loadingProgress[i] = progress
           totalLoaded += loadingProgress[i]
@@ -281,7 +277,7 @@ export default class EFPViewer
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
     {
-      console.log(props)
+      // console.log(props)
     }
 
     if (!props.geneticElement) return <></>
