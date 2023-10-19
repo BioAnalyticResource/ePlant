@@ -17,6 +17,7 @@ import { Config } from './config'
 import DebugView from './views/DebugView'
 import PlantEFP from './views/PlantEFP'
 import ExperimentEFP from './views/ExperimentEFP'
+import CellEFP from './views/CellEFP'
 
 // Views that aren't associated with individual genes
 const genericViews = [GetStartedView, FallbackView]
@@ -29,6 +30,7 @@ const userViews = [
   PublicationViewer,
   DebugView,
   PlantEFP,
+  CellEFP,
   ExperimentEFP,
 ]
 

@@ -233,7 +233,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         const tissues: EFPTissue[] = group.tissues.map((tissue) => ({
           name: tissue.name,
           id: tissue.id,
-          ...getEFPSampleData(
+          ...this._getEFPSampleData(
             tissue.samples
               .map((name) => samples[name])
               .filter((n) => Number.isFinite(n))
@@ -249,7 +249,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
           name: group.name,
           control: Number.isFinite(control) ? control : undefined,
           tissues: tissues.filter((t) => t.samples > 0),
-          ...getEFPSampleData(tissueValues),
+          ...this._getEFPSampleData(tissueValues),
         }
       })
       .filter((g) => Number.isFinite(g.mean))
@@ -404,17 +404,19 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       </Typography>
     )
   }
-}
 
-function getEFPSampleData(samples: number[]): EFPSampleData {
-  const mean = _.mean(samples)
-  return {
-    max: Math.max(...samples),
-    min: Math.min(...samples),
-    mean: mean,
-    std: Math.sqrt(
-      _.sumBy(samples, (v) => Math.pow(v - mean, 2)) / samples.length
-    ),
-    samples: samples.length,
+  _getEFPSampleData(samples: number[]): EFPSampleData {
+    const mean = _.mean(samples)
+    return {
+      max: Math.max(...samples),
+      min: Math.min(...samples),
+      mean: mean,
+      std: Math.sqrt(
+        _.sumBy(samples, (v) => Math.pow(v - mean, 2)) / samples.length
+      ),
+      samples: samples.length,
+    }
   }
 }
+
+
