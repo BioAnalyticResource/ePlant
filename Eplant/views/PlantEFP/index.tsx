@@ -25,7 +25,7 @@ const views: EFPViewerData['views'] = [
       'https://bar.utoronto.ca/eplant/data/plant/Klepikova/Arabidopsis_thaliana.xml',
   },
 ]
-const efps: EFP[] = efpFactory(views);
+const efps: EFP[] = efpFactory.makeEfps(views);
 
 export default new EFPViewer(
   'plant',

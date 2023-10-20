@@ -258,7 +258,7 @@ const views: EFPViewerData['views'] = [
   },
 ]
 
-const efps: EFP[] = efpFactory(views);
+const efps: EFP[] = efpFactory.makeEfps(views);
 
 export default new EFPViewer(
   'tissue',
