@@ -274,11 +274,8 @@ export default class EFPViewer
       sortedViewData[activeViewIndex],
       props.state.colorMode,
     ])
-    const ref = React.useRef<HTMLDivElement>(null)
-    const dimensions = useDimensions(ref)
-    {
-      // console.log(props)
-    }
+    const ref = React.useRef<HTMLDivElement>(null);
+    const dimensions = useDimensions(ref);
 
     if (!props.geneticElement) return <></>
     return (

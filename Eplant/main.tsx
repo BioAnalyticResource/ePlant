@@ -18,6 +18,7 @@ import DebugView from './views/DebugView'
 import PlantEFP from './views/PlantEFP'
 import ExperimentEFP from './views/ExperimentEFP'
 import CellEFP from './views/CellEFP'
+import { useAtomsDebugValue } from 'jotai-devtools'
 
 // Views that aren't associated with individual genes
 const genericViews = [GetStartedView, FallbackView]
@@ -48,7 +49,10 @@ export const defaultConfig = {
 }
 // For some reason this is necessary to make the tabs work, maybe FlexLayout uses a Jotai provider?
 const eplantScope = Symbol('Eplant scope')
-
+const DebugAtoms = () => {
+  useAtomsDebugValue()
+  return null
+}
 function RootApp() {
   const [darkMode, setDarkMode] = useDarkMode()
   return (
@@ -58,6 +62,7 @@ function RootApp() {
           <CssBaseline />
           <BrowserRouter>
             <Config.Provider value={defaultConfig}>
+              <DebugAtoms />
               <Eplant />
             </Config.Provider>
           </BrowserRouter>
