@@ -28,113 +28,16 @@ import {
 import _ from 'lodash'
 import { useViewID } from '@eplant/state'
 import { ViewDataError } from '@eplant/View/viewData'
+import SVGTooltip from './Tooltips/EFPTooltip'
 
-function SVGTooltip(props: {
-  el: SVGElement | null
-  group: EFPGroup
-  tissue: EFPTissue
-  data: EFPData
-}) {
-  const [open, setOpen] = React.useState(false)
-  const theme = useTheme()
-  React.useEffect(() => {
-    const enterListener = () => {
-      setOpen(true)
-    }
-    const leaveListener = () => {
-      setOpen(false)
-    }
-    if (props.el) {
-      props.el.addEventListener('mouseenter', enterListener)
-      props.el.addEventListener('mouseleave', leaveListener)
-      return () => {
-        if (props.el) {
-          props.el.removeEventListener('mouseenter', enterListener)
-          props.el.removeEventListener('mouseleave', leaveListener)
-          setOpen(false)
-        }
-      }
-    }
-  }, [props.el])
-  return (
-    <Popper transition anchorEl={props.el} open={open}>
-      {({ TransitionProps }) => (
-        <Grow {...TransitionProps} timeout={350}>
-          <Box
-            sx={(theme) => ({
-              backgroundColor: theme.palette.background.transparentOverlay,
-              backdropFilter: 'blur(7px)',
-              boxShadow: theme.shadows[3],
-              borderRadius: 1,
-            })}
-          >
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Sample name
-                  </TableCell>
-                  <TableCell>{props.tissue.name}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Level
-                  </TableCell>
-                  <TableCell>
-                    {props.tissue.mean.toFixed(2)}±{props.tissue.std.toFixed(2)}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Samples
-                  </TableCell>
-                  <TableCell>{props.tissue.samples}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                      borderBottom: 'none',
-                    }}
-                  >
-                    Log2 fold change vs control
-                  </TableCell>
-                  <TableCell sx={{ borderBottom: 'none' }}>
-                    {Math.log2(
-                      props.tissue.mean / (props.data.control ?? 1)
-                    ).toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Box>
-        </Grow>
-      )}
-    </Popper>
-  )
-}
+
 
 export default class EFP implements View<EFPData, EFPState, EFPAction> {
   getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
   })
+  tooltipComponent: (props: { el: SVGElement | null; group: EFPGroup; tissue: EFPTissue; data: EFPData }) => React.JSX.Element
   constructor(
     public name: string,
     public id: EFPId,
@@ -142,6 +45,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     public xmlURL: string
   ) {
     this.component = this.component.bind(this)
+    this.tooltipComponent = SVGTooltip;
   }
   //TODO: Reimplement this once the new BAR API is ready
   getInitialData = async (
@@ -384,7 +288,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         {svgDiv}
         {!props.state.renderAsThumbnail &&
           svgElements.map(({ el, group, tissue }) => (
-            <SVGTooltip
+            <this.tooltipComponent
               data={props.activeData}
               key={tissue.id}
               el={el}

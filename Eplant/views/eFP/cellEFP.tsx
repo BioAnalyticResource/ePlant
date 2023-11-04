@@ -3,15 +3,20 @@ import { ViewDataError } from "@eplant/View/viewData";
 import EFP from ".";
 import _ from 'lodash'
 import { EFPData, EFPGroup, EFPId, EFPTissue } from "./types";
+import { Popper, Grow, Box, Table, TableBody, TableRow, TableCell, useTheme } from "@mui/material";
+import React from "react";
+import CellSVGTooltip from "./Tooltips/cellEFPTooltip";
 
 export default class CellEFP extends EFP{
-    constructor(
+  tooltipComponent: (props: { el: SVGElement | null; group: EFPGroup; tissue: EFPTissue; data: EFPData; }) => React.JSX.Element; 
+  constructor(
         public name: string,
         public id: EFPId,
         public svgURL: string,
         public xmlURL: string
       ) {
         super(name, id, svgURL, xmlURL);
+        this.tooltipComponent = CellSVGTooltip
       }
     
     // Override
