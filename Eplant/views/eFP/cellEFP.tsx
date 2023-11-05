@@ -19,7 +19,6 @@ export default class CellEFP extends EFP{
         this.tooltipComponent = CellSVGTooltip
       }
     
-    // Override
     getInitialData = async (
         gene: GeneticElement | null,
         loadEvent: (val: number) => void
