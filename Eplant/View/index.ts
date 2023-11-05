@@ -18,6 +18,7 @@ type ViewAction<State, Action> = {
 }
 
 export interface View<Data = any, State = any, Action = any> {
+  [x: string]: any
   /**
    * Get the initial state of this view.
    * When `getInitialState` is undefined the state defaults to `null`

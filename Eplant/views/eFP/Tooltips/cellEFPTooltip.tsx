@@ -45,7 +45,7 @@ function CellSVGTooltip(props: {
                 <TableBody>
                   <TableRow>
                     <TableCell>
-                    {props.tissue.name}
+                    {props.tissue.name.charAt(0).toUpperCase() + props.tissue.name.slice(1)}
                     </TableCell>
                     <TableCell></TableCell>
                   </TableRow>
@@ -53,7 +53,7 @@ function CellSVGTooltip(props: {
                     <TableCell
                       sx={{
                         color: theme.palette.secondary.main,
-                        textAlign: 'right',
+                        textAlign: 'left',
                       }}
                     >
                       Localization Score
