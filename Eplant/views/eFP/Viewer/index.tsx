@@ -34,7 +34,7 @@ import { EFPData, EFPState } from '../types'
 import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
-import CellEFP from '../cellEFP'
+import CellEFP from '../../CellEFP/cellEFP'
 
 type EFPListProps = {
   geneticElement: GeneticElement

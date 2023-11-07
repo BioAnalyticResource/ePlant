@@ -1,11 +1,11 @@
 import GeneticElement from "@eplant/GeneticElement";
 import { ViewDataError } from "@eplant/View/viewData";
-import EFP from ".";
+import EFP from "../eFP";
 import _ from 'lodash'
-import { EFPData, EFPGroup, EFPId, EFPTissue } from "./types";
+import { EFPData, EFPGroup, EFPId, EFPTissue } from "../eFP/types";
 import { Popper, Grow, Box, Table, TableBody, TableRow, TableCell, useTheme } from "@mui/material";
 import React from "react";
-import CellSVGTooltip from "./Tooltips/cellEFPTooltip";
+import CellSVGTooltip from "../eFP/Tooltips/cellEFPTooltip";
 
 export default class CellEFP extends EFP{
   tooltipComponent: (props: { el: SVGElement | null; group: EFPGroup; tissue: EFPTissue; data: EFPData; }) => React.JSX.Element; 

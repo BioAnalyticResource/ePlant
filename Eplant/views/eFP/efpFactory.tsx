@@ -1,6 +1,6 @@
 import EFP from ".";
 import { EFPViewerData } from "./Viewer/types";
-import CellEFP from "./cellEFP";
+import CellEFP from "../CellEFP/cellEFP";
 
 
 export class efpFactory{
