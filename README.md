@@ -3,7 +3,7 @@ ePlant is a gene-first visualization tool for plant genomes.
 
 ## Using ePlant
 Create a new tab or choose a gene of interest (GOI) using the search bar on the left. 
-> Currently the only plant genome available is that of _arabidopsis thaliania_. 
+> Currently the only plant genome available is that of _Arabidopsis thaliania_. 
 
 Use the navigation dropdown to discover more information about the expression of that gene from a phenotypic to a molecular level.
 
@@ -44,7 +44,7 @@ A list of relevant publications.
 ### Plant
 A visual map of where the gene is expressed in the body of the plant.
   - Choose a data mode (relative/absolute)
-  - Select diagram: AtGenExpress or Klepikova
+  - Select diagram origin: [AtGenExpress](https://www.arabidopsis.org/portals/expression/microarray/ATGenExpress.jsp) or Klepikova (for Anna Klepikova, author of [this paper](https://pubmed.ncbi.nlm.nih.gov/27549386/) on arabidopsis)
   - Sort diagrams by name or expression level
   - Hover over images for more information
 
@@ -92,7 +92,7 @@ If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResou
     ```bash
     git remote add upstream https://github.com/BioAnalyticResource/ePlant
     ```
-1. Verify your node and npm versions. Most folks are working with Node v18.18.0 and npm 9.8.1
+1. Verify your node and npm versions. Most folks are working with Node v18.0.0^ and npm 9.8.0^.
     ```bash
       node -v
       npm -v
@@ -122,6 +122,8 @@ If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResou
 1. Give the pull request a descriptive title so that someone who didn't work on it will know what you did. Link the issue if possible.
 
 ## Glossary
+
+**AtGenExpress**: A multinational effort designed to uncover the transcriptome of the multicellular model organism _Arabidopsis thaliana_. 
 
 **BAR**: Bio-analytic resource; a group of bioinformatics tools created by the [lab of Dr. Nicholas Provart](http://provart.csb.utoronto.ca/the-lab/) at the University of Toronto.
 
