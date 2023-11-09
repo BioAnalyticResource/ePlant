@@ -79,16 +79,9 @@ See the relations of the gene to other plant genes. -->
 ## Roadmap
 
 ## How to contribute
-If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResource/ePlant/issues). We use a (forking workflow)[https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow];
+Read the [onboarding blueprint](https://github.com/BioAnalyticResource/ePlant/issues/29).
 
-1. Create a fork and download it to your local machine.
-    ```bash
-    git clone <your fork address>
-    npm install
-    npm run dev
-    ```
-1. Comment on a ticket to take it.
-1. Turn on notifications for that thread.
+If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResource/ePlant/issues). We use a forking workflow. For an in-depth look at what that means and an example, [read this article](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow).
 
 ## Glossary
 
