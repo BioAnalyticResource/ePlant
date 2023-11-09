@@ -92,9 +92,10 @@ If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResou
     ```bash
     git remote add upstream https://github.com/BioAnalyticResource/ePlant
     ```
-1. Verify your node version. Most folks are working with v18.18.0.
+1. Verify your node and npm versions. Most folks are working with Node v18.18.0 and npm 9.8.1
     ```bash
       node -v
+      npm -v
     ```
     If that command doesn't return anything, [install the LTS version of Node](https://nodejs.org/en/download).
 
@@ -130,3 +131,4 @@ If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResou
 
 **eFP**: Electronic fluorescent pictographic
 
+**GeneRIF**: Gene reference into function; A [standard](https://www.ncbi.nlm.nih.gov/gene/about-generif) that provides a mechanism to allow scientists to add to the functional annotation of genes described in [Gene](https://www.ncbi.nlm.nih.gov/gene).
