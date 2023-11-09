@@ -81,7 +81,44 @@ See the relations of the gene to other plant genes. -->
 ## How to contribute
 Read the [onboarding blueprint](https://github.com/BioAnalyticResource/ePlant/issues/29).
 
-If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResource/ePlant/issues). We use a forking workflow. For an in-depth look at what that means and an example, [read this article](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow).
+If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResource/ePlant/issues). We use a forking workflow. For an in-depth look at what that means, [read this article](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow).
+
+### Quickstart
+1. Create a fork and download it to your local machine.
+    ```bash
+    git clone <your fork address>
+    ```
+1. Set up the main ePlant project as your upstream branch.
+    ```bash
+    git remote add upstream https://github.com/BioAnalyticResource/ePlant
+    ```
+1. Verify your node version. Most folks are working with v18.18.0.
+    ```bash
+      node -v
+    ```
+    If that command doesn't return anything, [install the LTS version of Node](https://nodejs.org/en/download).
+
+1. Download all dependencies.
+    ```bash
+    npm i
+    ```
+1. Run your local version of ePlant.
+    ```bash
+    npm run dev
+    ```
+1. Comment on a ticket to take it.
+1. Turn on notifications for that thread.
+1. Complete the necessary fix.
+1. Push your changes to **your** fork.
+    ```bash
+    git push origin main
+    ```
+1. Create a pull request. 
+    > Underneath where it says **Compare changes**, there is a line that says 
+      > `Compare changes across branches, commits, tags, and more below. If you need to, you can also compare across forks.`
+    Click that link to bring up a dropdown menu of ePlant forks. 
+1. Choose your fork as the head repository and `https://github.com/BioAnalyticResource/ePlant/` as the base repository.
+1. Give the pull request a descriptive title so that someone who didn't work on it will know what you did. Link the issue if possible.
 
 ## Glossary
 
