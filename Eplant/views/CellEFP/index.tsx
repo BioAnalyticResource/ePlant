@@ -5,7 +5,7 @@ import EFPViewer from '../eFP/Viewer'
 import CellEFPIcon from './icon'
 import Thumbnail from '../../../thumbnails/plant_efp.png'
 import { EFPViewerData } from '../eFP/Viewer/types'
-import { efpFactory } from '../eFP/efpFactory'
+import { makeCellEfps } from '../eFP/efpFactory'
 
 
 const views: EFPViewerData['views'] = [
@@ -18,7 +18,7 @@ const views: EFPViewerData['views'] = [
       'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.xml',
     }
 ]
-const efps: EFP[] = efpFactory.makeCellEfps(views);
+const efps: EFP[] = makeCellEfps(views);
 
 export default new EFPViewer(
   'cell',
