@@ -1,19 +1,9 @@
 import GeneticElement from '@eplant/GeneticElement'
 import {
-  Box,
   CircularProgress,
-  Fade,
-  Grow,
-  Popper,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Tooltip,
   Typography,
-  useTheme,
 } from '@mui/material'
-import React, { ReactPropTypes, useId, useMemo } from 'react'
+import React from 'react'
 import { View, ViewProps } from '@eplant/View'
 import { useEFPSVG, useStyles } from './svg'
 import {
@@ -26,7 +16,6 @@ import {
   EFPTissue,
 } from './types'
 import _ from 'lodash'
-import { useViewID } from '@eplant/state'
 import { ViewDataError } from '@eplant/View/viewData'
 import SVGTooltip from './Tooltips/EFPTooltip'
 
@@ -137,7 +126,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         const tissues: EFPTissue[] = group.tissues.map((tissue) => ({
           name: tissue.name,
           id: tissue.id,
-          ...this._getEFPSampleData(
+          ...getEFPSampleData(
             tissue.samples
               .map((name) => samples[name])
               .filter((n) => Number.isFinite(n))
@@ -153,7 +142,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
           name: group.name,
           control: Number.isFinite(control) ? control : undefined,
           tissues: tissues.filter((t) => t.samples > 0),
-          ...this._getEFPSampleData(tissueValues),
+          ...getEFPSampleData(tissueValues),
         }
       })
       .filter((g) => Number.isFinite(g.mean))
@@ -308,19 +297,18 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       </Typography>
     )
   }
-
-  _getEFPSampleData(samples: number[]): EFPSampleData {
-    const mean = _.mean(samples)
-    return {
-      max: Math.max(...samples),
-      min: Math.min(...samples),
-      mean: mean,
-      std: Math.sqrt(
-        _.sumBy(samples, (v) => Math.pow(v - mean, 2)) / samples.length
-      ),
-      samples: samples.length,
-    }
-  }
 }
 
+export function getEFPSampleData(samples: number[]): EFPSampleData {
+  const mean = _.mean(samples)
+  return {
+    max: Math.max(...samples),
+    min: Math.min(...samples),
+    mean: mean,
+    std: Math.sqrt(
+      _.sumBy(samples, (v) => Math.pow(v - mean, 2)) / samples.length
+    ),
+    samples: samples.length,
+  }
+}
 
