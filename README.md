@@ -1,5 +1,5 @@
 # ePlant
-ePlant is a gene-first visualization tool for plant genomes.
+ePlant is a gene-centered visualization tool for plant genomes.
 
 ## Using ePlant
 Create a new tab or choose a gene of interest (GOI) using the search bar on the left. 
@@ -22,7 +22,7 @@ Currently available views:
   🌎 World
   🧬 Chromosome 
   Interactions 
-  Molecular
+  Molecule
   Sequence 
 🔄 Pathways 
 
@@ -41,14 +41,14 @@ A list of relevant publications.
 - Author, year, journal, title, and links to publications associated with the GOI
 - Gene RIFs with annotations and links source to paper
 
-### Plant
+### Plant (cm scale)
 A visual map of where the gene is expressed in the body of the plant.
   - Choose a data mode (relative/absolute)
   - Select diagram origin: [AtGenExpress](https://www.arabidopsis.org/portals/expression/microarray/ATGenExpress.jsp) or Klepikova (for Anna Klepikova, author of [this paper](https://pubmed.ncbi.nlm.nih.gov/27549386/) on arabidopsis)
   - Sort diagrams by name or expression level
   - Hover over images for more information
 
-### Tissue & Experiment
+### Tissue & Experiment (mm scale)
 Expression patterns in different cells.
  
 <!-- 
@@ -56,7 +56,7 @@ Expression patterns in different cells.
 Based on experiments done by the lab, the striated bars show [when?where?] a given gene is expressed.
 Yellow: weak, red: strong
 
-### World (KM scale)
+### World (km scale)
 Gene extression infomration plotted on a map.
 You can overlay climate information (precipitation, historical max temp, historical min temp).
 
@@ -120,6 +120,11 @@ If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResou
     Click that link to bring up a dropdown menu of ePlant forks. 
 1. Choose your fork as the head repository and `https://github.com/BioAnalyticResource/ePlant/` as the base repository.
 1. Give the pull request a descriptive title so that someone who didn't work on it will know what you did. Link the issue if possible.
+
+### Reviewing a pull request
+
+
+
 
 ## Glossary
 
