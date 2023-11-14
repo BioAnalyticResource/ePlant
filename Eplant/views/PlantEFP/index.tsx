@@ -31,7 +31,7 @@ export default new EFPViewer(
   'plant',
   'Plant eFP',
   views,
-  efps,
+  {efps: efps},
   () => <PlantEFPIcon />,
   'Visualize gene expression over time on a developmental map.',
   Thumbnail

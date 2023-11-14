@@ -264,7 +264,7 @@ export default new EFPViewer(
   'tissue',
   'Tissue & Experiment eFP',
   views,
-  efps,
+  {efps: efps},
   () => <ExperimentEFPIcon />,
   'Visualize gene expression across multiple tissues and experiment samples.',
   Thumbnail

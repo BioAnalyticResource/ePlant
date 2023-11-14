@@ -140,7 +140,7 @@ export default class EFPViewer
     public id: string,
     public name: string,
     private views: EFPViewerData['views'],
-    private efps: EFPViewerData['efps'],
+    public extraProps: {efps: EFP[]},
     public icon: () => JSX.Element,
     public description?: string,
     public thumbnail?: string
@@ -154,7 +154,7 @@ export default class EFPViewer
     const loadingProgress = Array(this.views.length).fill(0)
     let totalLoaded = 0
     const viewData = await Promise.all(
-      this.efps.map(async (efp, i) => {
+      this.extraProps.efps.map(async (efp, i) => {
         const data = efp.getInitialData(gene, (progress) => {
           totalLoaded -= loadingProgress[i]
           loadingProgress[i] = progress
@@ -165,7 +165,6 @@ export default class EFPViewer
         return data
       })
     )
-
     return {
       activeView: this.views[0].id,
       views: this.views,
@@ -174,7 +173,7 @@ export default class EFPViewer
         zoom: 1,
       },
       viewData: viewData,
-      efps: this.efps,
+      efps: this.extraProps.efps,
       colorMode: 'absolute' as const,
     }
   }
