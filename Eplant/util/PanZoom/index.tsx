@@ -11,10 +11,10 @@ export type Transform = {
 export default function PanZoom({
   children,
   onTransformChange,
-  initialTransform: transform,
+  transform,
   ...props
 }: BoxProps & {
-  initialTransform: Transform
+  transform: Transform
   onTransformChange: (transform: Transform) => void
 }) {
   const [dragStart, setDragStart] = React.useState<{
