@@ -258,13 +258,13 @@ const views: EFPViewerData['views'] = [
   },
 ]
 
-const efps: EFP[] = makeEfps(views);
+const efps: EFP[] = makeEfps(views)
 
 export default new EFPViewer(
   'tissue',
   'Tissue & Experiment eFP',
   views,
-  {efps: efps},
+  efps,
   () => <ExperimentEFPIcon />,
   'Visualize gene expression across multiple tissues and experiment samples.',
   Thumbnail

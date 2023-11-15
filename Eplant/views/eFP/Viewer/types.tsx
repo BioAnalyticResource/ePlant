@@ -10,7 +10,6 @@ export type EFPViewerData = {
     name: string
   }[]
   viewData: EFPData[]
-  efps: EFP[]
 }
 
 export type EFPViewerSortTypes = 'expression-level' | 'name'

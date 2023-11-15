@@ -140,7 +140,7 @@ export default class EFPViewer
     public id: string,
     public name: string,
     private views: EFPViewerData['views'],
-    public extraProps: {efps: EFP[]},
+    public efps: EFP[],
     public icon: () => JSX.Element,
     public description?: string,
     public thumbnail?: string
@@ -154,7 +154,7 @@ export default class EFPViewer
     const loadingProgress = Array(this.views.length).fill(0)
     let totalLoaded = 0
     const viewData = await Promise.all(
-      this.extraProps.efps.map(async (efp, i) => {
+      this.efps.map(async (efp, i) => {
         const data = efp.getInitialData(gene, (progress) => {
           totalLoaded -= loadingProgress[i]
           loadingProgress[i] = progress
@@ -173,7 +173,7 @@ export default class EFPViewer
         zoom: 1,
       },
       viewData: viewData,
-      efps: this.extraProps.efps,
+      efps: this.efps,
       colorMode: 'absolute' as const,
     }
   }
@@ -233,7 +233,7 @@ export default class EFPViewer
     })
     const sortedViews = viewIndices.map((i) => props.activeData.views[i])
     const sortedViewData = viewIndices.map((i) => props.activeData.viewData[i])
-    const sortedEfps = viewIndices.map((i) => props.activeData.efps[i])
+    const sortedEfps = viewIndices.map((i) => this.efps[i])
 
     let activeViewIndex = React.useMemo(
       () => sortedEfps.findIndex((v) => v.id == props.state.activeView),
@@ -268,8 +268,8 @@ export default class EFPViewer
       sortedViewData[activeViewIndex],
       props.state.colorMode,
     ])
-    const ref = React.useRef<HTMLDivElement>(null);
-    const dimensions = useDimensions(ref);
+    const ref = React.useRef<HTMLDivElement>(null)
+    const dimensions = useDimensions(ref)
 
     if (!props.geneticElement) return <></>
     return (

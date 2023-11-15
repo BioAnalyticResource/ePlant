@@ -261,7 +261,7 @@ export function ViewContainer<T, S, A>({
               <view.component
                 state={state}
                 geneticElement={gene}
-                activeData={{...activeData, ...view.extraProps}}
+                activeData={activeData}
                 dispatch={dispatch}
               />
             </>

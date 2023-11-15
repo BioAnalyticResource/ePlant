@@ -6,24 +6,21 @@ import Thumbnail from '../../../thumbnails/plant_efp.png'
 import { EFPViewerData } from '../eFP/Viewer/types'
 import { makeCellEfps } from '../eFP/efpFactory'
 
-
 const views: EFPViewerData['views'] = [
   {
-      name: 'cellEFP',
-      id: 'cellefp',
-      svgURL:
-      'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.svg',
-      xmlURL:
-      'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.xml',
-    }
+    name: 'cellEFP',
+    id: 'cellefp',
+    svgURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.svg',
+    xmlURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.xml',
+  },
 ]
-const efps: EFP[] = makeCellEfps(views);
+const efps: EFP[] = makeCellEfps(views)
 
 export default new EFPViewer(
   'cell',
   'Cell eFP',
   views,
-  {efps: efps},
+  efps,
   () => <CellEFPIcon />,
   'Visualize gene expression over time on a developmental map.',
   Thumbnail

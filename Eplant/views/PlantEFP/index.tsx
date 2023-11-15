@@ -25,13 +25,13 @@ const views: EFPViewerData['views'] = [
       'https://bar.utoronto.ca/eplant/data/plant/Klepikova/Arabidopsis_thaliana.xml',
   },
 ]
-const efps: EFP[] = makeEfps(views);
+const efps: EFP[] = makeEfps(views)
 
 export default new EFPViewer(
   'plant',
   'Plant eFP',
   views,
-  {efps: efps},
+  efps,
   () => <PlantEFPIcon />,
   'Visualize gene expression over time on a developmental map.',
   Thumbnail

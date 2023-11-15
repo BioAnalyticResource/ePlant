@@ -63,8 +63,4 @@ export interface View<Data = any, State = any, Action = any> {
    * Return the title of this view's tab
    */
   header: (props: ViewProps<Data, State, Action>) => JSX.Element
-  /**
-   * Any extra props necessary for construction of the view
-   */
-  extraProps?: {[key: string]: unknown}
 }
