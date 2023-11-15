@@ -4,7 +4,7 @@ import EFP from '../eFP'
 import EFPViewer from '../eFP/Viewer'
 import PlantEFPIcon from './icon'
 import Thumbnail from '../../../thumbnails/plant_efp.png'
-import { makeEfps } from '../eFP/efpFactory'
+import { makeEfps } from '../eFP/Viewer/util'
 import { EFPViewerData } from '../eFP/Viewer/types'
 
 const views: EFPViewerData['views'] = [
