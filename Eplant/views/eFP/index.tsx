@@ -310,19 +310,6 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       }[]
     >([])
 
-    React.useLayoutEffect(() => {
-      const elements = Array.from(
-        props.activeData.groups.flatMap((group) =>
-          group.tissues.map((t) => ({
-            el: document.querySelector(`#${id} .efp-group-${t.id}`),
-            group,
-            tissue: t,
-          }))
-        )
-      )
-      setSvgElements(elements as any)
-    }, [props.activeData.groups, id])
-
     const svgDiv = React.useMemo(() => {
       return (
         <div
@@ -339,6 +326,19 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         />
       )
     }, [svg, id])
+
+    React.useLayoutEffect(() => {
+      const elements = Array.from(
+        props.activeData.groups.flatMap((group) =>
+          group.tissues.map((t) => ({
+            el: document.querySelector(`#${id} .efp-group-${t.id}`),
+            group,
+            tissue: t,
+          }))
+        )
+      )
+      setSvgElements(elements as any)
+    }, [props.activeData.groups, id, svgDiv])
 
     if (!svg) {
       return (
