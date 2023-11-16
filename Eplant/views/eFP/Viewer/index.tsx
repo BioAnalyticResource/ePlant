@@ -34,6 +34,7 @@ import { EFPData, EFPState } from '../types'
 import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
+import CellEFP from '../../CellEFP/cellEFP'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -139,7 +140,7 @@ export default class EFPViewer
     public id: string,
     public name: string,
     private views: EFPViewerData['views'],
-    private efps: EFP[],
+    public efps: EFP[],
     public icon: () => JSX.Element,
     public description?: string,
     public thumbnail?: string
@@ -164,7 +165,6 @@ export default class EFPViewer
         return data
       })
     )
-
     return {
       activeView: this.views[0].id,
       views: this.views,
@@ -172,7 +172,8 @@ export default class EFPViewer
         offset: { x: 0, y: 0 },
         zoom: 1,
       },
-      viewData,
+      viewData: viewData,
+      efps: this.efps,
       colorMode: 'absolute' as const,
     }
   }
@@ -232,28 +233,21 @@ export default class EFPViewer
     })
     const sortedViews = viewIndices.map((i) => props.activeData.views[i])
     const sortedViewData = viewIndices.map((i) => props.activeData.viewData[i])
-
-    const EFPViews = React.useMemo(
-      () =>
-        sortedViews.map(
-          (view) => new EFP(view.name, view.id, view.svgURL, view.xmlURL)
-        ),
-      [...sortedViews.map((v) => v.id)]
-    )
+    const sortedEfps = viewIndices.map((i) => this.efps[i])
 
     let activeViewIndex = React.useMemo(
-      () => EFPViews.findIndex((v) => v.id == props.state.activeView),
-      [props.state.activeView, ...EFPViews.map((v) => v.id)]
+      () => sortedEfps.findIndex((v) => v.id == props.state.activeView),
+      [props.state.activeView, ...sortedEfps.map((v) => v.id)]
     )
     if (activeViewIndex == -1) {
       activeViewIndex = 0
       props.dispatch({
         type: 'set-view',
-        id: EFPViews[0].id,
+        id: sortedEfps[0].id,
       })
     }
     const efp = React.useMemo(() => {
-      const Component = EFPViews[activeViewIndex].component
+      const Component = sortedEfps[activeViewIndex].component
       return (
         <Component
           activeData={{
@@ -276,9 +270,6 @@ export default class EFPViewer
     ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
-    {
-      // console.log(props)
-    }
 
     if (!props.geneticElement) return <></>
     return (
@@ -371,11 +362,11 @@ export default class EFPViewer
             {/* The actual stack of EFP Previews */}
             <EFPListMemoized
               height={dimensions.height - 5}
-              activeView={EFPViews[activeViewIndex]}
+              activeView={sortedEfps[activeViewIndex]}
               dispatch={props.dispatch}
               viewData={sortedViewData}
               geneticElement={props.geneticElement}
-              views={EFPViews}
+              views={sortedEfps}
               colorMode={props.state.colorMode}
             />
           </Box>
@@ -433,7 +424,7 @@ export default class EFPViewer
               >
                 <NotSupported
                   geneticElement={props.geneticElement}
-                  view={EFPViews[activeViewIndex]}
+                  view={sortedEfps[activeViewIndex]}
                 ></NotSupported>
               </div>
             )}

@@ -1,31 +1,27 @@
-import { Forest } from '@mui/icons-material'
 import React from 'react'
 import EFP from '../eFP'
 import EFPViewer from '../eFP/Viewer'
-import PlantEFPIcon from './icon'
+import CellEFPIcon from './icon'
 import Thumbnail from '../../../thumbnails/plant_efp.png'
 import { EFPViewerData } from '../eFP/Viewer/types'
-import { efpFactory } from '../eFP/efpFactory'
-
+import { makeCellEfps } from '../eFP/Viewer/util'
 
 const views: EFPViewerData['views'] = [
   {
-      name: 'cellEFP',
-      id: 'cellefp',
-      svgURL:
-      'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.svg',
-      xmlURL:
-      'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.xml',
-    }
+    name: 'cellEFP',
+    id: 'cellefp',
+    svgURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.svg',
+    xmlURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.xml',
+  },
 ]
-const efps: EFP[] = efpFactory.makeCellEfps(views);
+const efps: EFP[] = makeCellEfps(views)
 
 export default new EFPViewer(
   'cell',
   'Cell eFP',
   views,
   efps,
-  () => <PlantEFPIcon />,
+  () => <CellEFPIcon />,
   'Visualize gene expression over time on a developmental map.',
   Thumbnail
 )

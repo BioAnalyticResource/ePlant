@@ -1,19 +1,9 @@
 import GeneticElement from '@eplant/GeneticElement'
 import {
-  Box,
   CircularProgress,
-  Fade,
-  Grow,
-  Popper,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Tooltip,
   Typography,
-  useTheme,
 } from '@mui/material'
-import React, { ReactPropTypes, useId, useMemo } from 'react'
+import React from 'react'
 import { View, ViewProps } from '@eplant/View'
 import { useEFPSVG, useStyles } from './svg'
 import {
@@ -26,115 +16,17 @@ import {
   EFPTissue,
 } from './types'
 import _ from 'lodash'
-import { useViewID } from '@eplant/state'
 import { ViewDataError } from '@eplant/View/viewData'
+import SVGTooltip from './Tooltips/EFPTooltip'
 
-function SVGTooltip(props: {
-  el: SVGElement | null
-  group: EFPGroup
-  tissue: EFPTissue
-  data: EFPData
-}) {
-  const [open, setOpen] = React.useState(false)
-  const theme = useTheme()
-  React.useEffect(() => {
-    const enterListener = () => {
-      setOpen(true)
-    }
-    const leaveListener = () => {
-      setOpen(false)
-    }
-    if (props.el) {
-      props.el.addEventListener('mouseenter', enterListener)
-      props.el.addEventListener('mouseleave', leaveListener)
-      return () => {
-        if (props.el) {
-          props.el.removeEventListener('mouseenter', enterListener)
-          props.el.removeEventListener('mouseleave', leaveListener)
-          setOpen(false)
-        }
-      }
-    }
-  }, [props.el])
-  return (
-    <Popper transition anchorEl={props.el} open={open}>
-      {({ TransitionProps }) => (
-        <Grow {...TransitionProps} timeout={350}>
-          <Box
-            sx={(theme) => ({
-              backgroundColor: theme.palette.background.transparentOverlay,
-              backdropFilter: 'blur(7px)',
-              boxShadow: theme.shadows[3],
-              borderRadius: 1,
-            })}
-          >
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Sample name
-                  </TableCell>
-                  <TableCell>{props.tissue.name}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Level
-                  </TableCell>
-                  <TableCell>
-                    {props.tissue.mean.toFixed(2)}±{props.tissue.std.toFixed(2)}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Samples
-                  </TableCell>
-                  <TableCell>{props.tissue.samples}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                      borderBottom: 'none',
-                    }}
-                  >
-                    Log2 fold change vs control
-                  </TableCell>
-                  <TableCell sx={{ borderBottom: 'none' }}>
-                    {Math.log2(
-                      props.tissue.mean / (props.data.control ?? 1)
-                    ).toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Box>
-        </Grow>
-      )}
-    </Popper>
-  )
-}
+
 
 export default class EFP implements View<EFPData, EFPState, EFPAction> {
   getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
   })
+  tooltipComponent: (props: { el: SVGElement | null; group: EFPGroup; tissue: EFPTissue; data: EFPData }) => React.JSX.Element
   constructor(
     public name: string,
     public id: EFPId,
@@ -142,6 +34,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     public xmlURL: string
   ) {
     this.component = this.component.bind(this)
+    this.tooltipComponent = SVGTooltip;
   }
   //TODO: Reimplement this once the new BAR API is ready
   getInitialData = async (
@@ -233,7 +126,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         const tissues: EFPTissue[] = group.tissues.map((tissue) => ({
           name: tissue.name,
           id: tissue.id,
-          ...this._getEFPSampleData(
+          ...getEFPSampleData(
             tissue.samples
               .map((name) => samples[name])
               .filter((n) => Number.isFinite(n))
@@ -249,7 +142,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
           name: group.name,
           control: Number.isFinite(control) ? control : undefined,
           tissues: tissues.filter((t) => t.samples > 0),
-          ...this._getEFPSampleData(tissueValues),
+          ...getEFPSampleData(tissueValues),
         }
       })
       .filter((g) => Number.isFinite(g.mean))
@@ -384,7 +277,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         {svgDiv}
         {!props.state.renderAsThumbnail &&
           svgElements.map(({ el, group, tissue }) => (
-            <SVGTooltip
+            <this.tooltipComponent
               data={props.activeData}
               key={tissue.id}
               el={el}
@@ -404,19 +297,18 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       </Typography>
     )
   }
-
-  _getEFPSampleData(samples: number[]): EFPSampleData {
-    const mean = _.mean(samples)
-    return {
-      max: Math.max(...samples),
-      min: Math.min(...samples),
-      mean: mean,
-      std: Math.sqrt(
-        _.sumBy(samples, (v) => Math.pow(v - mean, 2)) / samples.length
-      ),
-      samples: samples.length,
-    }
-  }
 }
 
+export function getEFPSampleData(samples: number[]): EFPSampleData {
+  const mean = _.mean(samples)
+  return {
+    max: Math.max(...samples),
+    min: Math.min(...samples),
+    mean: mean,
+    std: Math.sqrt(
+      _.sumBy(samples, (v) => Math.pow(v - mean, 2)) / samples.length
+    ),
+    samples: samples.length,
+  }
+}
 

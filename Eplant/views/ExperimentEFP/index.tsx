@@ -5,7 +5,7 @@ import ExperimentEFPIcon from './icon'
 import Thumbnail from '../../../thumbnails/tissue_efp.png'
 import { EFPViewerData } from '../eFP/Viewer/types'
 import EFP from '../eFP'
-import { efpFactory } from '../eFP/efpFactory'
+import { makeEfps } from '../eFP/Viewer/util'
 
 const views: EFPViewerData['views'] = [
   {
@@ -258,7 +258,7 @@ const views: EFPViewerData['views'] = [
   },
 ]
 
-const efps: EFP[] = efpFactory.makeEfps(views);
+const efps: EFP[] = makeEfps(views)
 
 export default new EFPViewer(
   'tissue',

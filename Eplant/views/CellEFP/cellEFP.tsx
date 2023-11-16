@@ -1,20 +1,23 @@
 import GeneticElement from "@eplant/GeneticElement";
 import { ViewDataError } from "@eplant/View/viewData";
-import EFP from ".";
+import EFP, { getEFPSampleData } from "../eFP";
 import _ from 'lodash'
-import { EFPData, EFPGroup, EFPId, EFPTissue } from "./types";
+import { EFPData, EFPGroup, EFPId, EFPTissue } from "../eFP/types";
+import React from "react";
+import CellSVGTooltip from "../eFP/Tooltips/cellEFPTooltip";
 
 export default class CellEFP extends EFP{
-    constructor(
+  tooltipComponent: (props: { el: SVGElement | null; group: EFPGroup; tissue: EFPTissue; data: EFPData; }) => React.JSX.Element; 
+  constructor(
         public name: string,
         public id: EFPId,
         public svgURL: string,
         public xmlURL: string
       ) {
         super(name, id, svgURL, xmlURL);
+        this.tooltipComponent = CellSVGTooltip
       }
     
-    // Override
     getInitialData = async (
         gene: GeneticElement | null,
         loadEvent: (val: number) => void
@@ -70,7 +73,7 @@ export default class CellEFP extends EFP{
                 const tissues: EFPTissue[] = group.tissues.map((tissue) => ({
                     name: tissue.name,
                     id: tissue.id,
-                    ...this._getEFPSampleData(
+                    ...getEFPSampleData(
                       tissue.samples
                         .map((name) => data[name.toLowerCase()]||0)
                         .filter((n) => Number.isFinite(n))
@@ -80,7 +83,7 @@ export default class CellEFP extends EFP{
                 return {
                     name: group.name,
                     tissues: tissues.filter((t) => t.samples > 0),
-                    ...this._getEFPSampleData(tissueValues),
+                    ...getEFPSampleData(tissueValues),
                   }
         }).filter((g) => Number.isFinite(g.mean))
 
