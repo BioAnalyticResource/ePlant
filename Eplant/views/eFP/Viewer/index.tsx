@@ -107,7 +107,7 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
 }
 
 export default class EFPViewer
-  implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
+implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
 {
   getInitialState(): EFPViewerState {
     return {
@@ -168,49 +168,39 @@ export default class EFPViewer
   }
   reducer = (state: EFPViewerState, action: EFPViewerAction) => {
     switch (action.type) {
-      case 'set-view':
-        return {
-          ...state,
-          activeView: action.id,
-        }
-      case 'sort-by':
-        return {
-          ...state,
-          sortBy: action.by,
-        }
-      case 'reset-transform':
-        return {
-          ...state,
-          transform: {
-            offset: { x: 0, y: 0 },
-            zoom: 1,
-          },
-        }
-      case 'set-transform':
-        return {
-          ...state,
-          transform: action.transform,
-        }
-      case 'toggle-color-mode':
-        return {
-          ...state,
-          colorMode:
+    case 'set-view':
+      return {
+        ...state,
+        activeView: action.id,
+      }
+    case 'sort-by':
+      return {
+        ...state,
+        sortBy: action.by,
+      }
+    case 'reset-transform':
+      return {
+        ...state,
+        transform: {
+          offset: { x: 0, y: 0 },
+          zoom: 1,
+        },
+      }
+    case 'set-transform':
+      return {
+        ...state,
+        transform: action.transform,
+      }
+    case 'toggle-color-mode':
+      return {
+        ...state,
+        colorMode:
             state.colorMode == 'absolute'
               ? ('relative' as const)
               : ('absolute' as const),
-        }
-      case 'toggle-mask-modal':
-        return {
-          ...state,
-          maskModalVisible: state.maskModalVisible ? false : true,
-        }
-      case 'set-mask-threshold':
-        return {
-          ...state,
-          maskThreshold: action.threshold,
-        }
-      default:
-        return state
+      }
+    default:
+      return state
     }
   }
   component = (
@@ -271,6 +261,9 @@ export default class EFPViewer
     ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
+    {
+      // console.log(props)
+    }
 
     if (!props.geneticElement) return <></>
     return (
