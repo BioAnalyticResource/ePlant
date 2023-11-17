@@ -281,7 +281,7 @@ export default class EFPViewer
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
     {
-      console.log(props)
+      // console.log(props)
     }
 
     if (!props.geneticElement) return <></>
