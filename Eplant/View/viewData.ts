@@ -1,5 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { atom, useAtom, useAtomValue, WritableAtom } from 'jotai'
+import { atom, useAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
 import { View, ViewDispatch } from './index'
 import Storage from '@eplant/util/Storage'

@@ -2,22 +2,13 @@ import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { View, ViewProps } from '@eplant/View'
 import {
-  getViewDataKey,
-  useViewData,
   ViewDataError,
-  viewDataStorage,
 } from '@eplant/View/viewData'
 import {
   Box,
-  Drawer,
-  FormControl,
-  InputLabel,
-  LinearProgress,
   MenuItem,
-  Select,
   Tooltip,
   Typography,
-  useTheme,
 } from '@mui/material'
 import React, { startTransition } from 'react'
 import EFP from '..'
@@ -28,13 +19,11 @@ import {
   FixedSizeList as List,
   ListChildComponentProps,
 } from 'react-window'
-import _ from 'lodash'
 import useDimensions from '@eplant/util/useDimensions'
-import { EFPData, EFPState } from '../types'
+import { EFPData } from '../types'
 import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
-import CellEFP from '../../CellEFP/cellEFP'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -56,7 +45,7 @@ const EFPListItem = React.memo(
       <Tooltip placement="right" arrow title={<div>{data.views[i].name}</div>}>
         <div>
           <EFPPreview
-            sx={(theme) => ({
+            sx={() => ({
               width: '108px',
               height: '75px',
               zIndex: 100,

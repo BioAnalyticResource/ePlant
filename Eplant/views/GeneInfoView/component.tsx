@@ -1,7 +1,6 @@
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { usePanesDispatch, useViewID } from '@eplant/state'
-import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
 import Stack from '@mui/material/Stack'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'

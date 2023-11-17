@@ -1,7 +1,6 @@
 import GeneticElement from '@eplant/GeneticElement'
 import {
   Box,
-  LinearProgress,
   styled,
   BoxProps,
   Typography,
@@ -9,7 +8,6 @@ import {
 } from '@mui/material'
 import * as React from 'react'
 import EFP from '.'
-import { useViewData } from '../../View/viewData'
 import { EFPData } from './types'
 
 const EFPPreviewContainer = styled(

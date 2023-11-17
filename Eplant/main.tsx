@@ -46,8 +46,6 @@ export const defaultConfig = {
   tabHeight,
   rootPath: import.meta.env.BASE_URL,
 }
-// For some reason this is necessary to make the tabs work, maybe FlexLayout uses a Jotai provider?
-const eplantScope = Symbol('Eplant scope')
 function RootApp() {
   const [darkMode, setDarkMode] = useDarkMode()
   return (

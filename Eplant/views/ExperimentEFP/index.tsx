@@ -1,4 +1,3 @@
-import { Science } from '@mui/icons-material'
 import React from 'react'
 import EFPViewer from '../eFP/Viewer'
 import ExperimentEFPIcon from './icon'

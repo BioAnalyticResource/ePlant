@@ -106,7 +106,6 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
                 color = theme.palette.grey[300]
               }
 
-              const text = `Type:${sf.type}\nStart:${sf.start}\nEnd:${sf.end}\nStrand:${sf.strand}`
               return (
                 <Tooltip
                   key={sf.uniqueID}

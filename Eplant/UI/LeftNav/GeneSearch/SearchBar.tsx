@@ -4,7 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { debounce } from 'lodash'
 import * as React from 'react'
-import { Theme, SxProps, useTheme } from '@mui/material'
+import { Theme, SxProps } from '@mui/material'
 import { Chip, InputAdornment } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 /**
@@ -30,7 +30,6 @@ export default function SearchBar(props: {
   const [options, setOptions] = React.useState<string[]>([])
   const [focused, setFocused] = React.useState<boolean>(false)
   const updateOptions = React.useRef<(text: string) => void>()
-  const theme = useTheme()
 
   function handleChange(input: string[]){
     if(input.length > 0){

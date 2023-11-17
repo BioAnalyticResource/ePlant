@@ -1,14 +1,10 @@
 import { Theme, useTheme } from '@mui/material'
-import DOMPurify from 'dompurify'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import * as React from 'react'
-import { ViewProps } from '../../View'
 import {
   ColorMode,
-  EFPAction,
   EFPData,
-  EFPGroup,
   EFPId,
   EFPSampleData,
   EFPSVGCache,

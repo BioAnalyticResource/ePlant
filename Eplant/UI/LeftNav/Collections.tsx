@@ -4,8 +4,6 @@ import {
   Add,
   Check,
   ExpandMore,
-  MoreVert,
-  SignalCellularNoSimOutlined,
 } from '@mui/icons-material'
 import {
   Button,
@@ -14,7 +12,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Paper,
   Stack,
   TextField,
   Typography,
@@ -26,7 +23,6 @@ import GeneticElementComponent, {
 } from '../GeneticElementComponent'
 import {
   SortableContext,
-  arrayMove,
   verticalListSortingStrategy,
   useSortable,
 } from '@dnd-kit/sortable'
@@ -34,7 +30,6 @@ import {
   DndContext,
   DragEndEvent,
   useDroppable,
-  DragOverEvent,
   DragStartEvent,
   DragOverlay,
   useSensors,
@@ -43,13 +38,11 @@ import {
   useSensor,
 } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
-import _, { truncate } from 'lodash'
 import {
   restrictToVerticalAxis,
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers'
 import OptionsButton from '../OptionsButton'
-import useStateWithStorage from '@eplant/util/useStateWithStorage'
 
 /**
  * A draggable/sortable version of {@link GeneticElementComponent}

@@ -1,10 +1,8 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { View, ViewProps, ViewDispatch } from '@eplant/View'
-import { useViewData } from '@eplant/View/viewData'
-import { CircularProgress, Divider, MenuItem } from '@mui/material'
+import { View, ViewDispatch } from '@eplant/View'
+import { MenuItem } from '@mui/material'
 import React from 'react'
 import Dropdown from '@eplant/UI/Dropdown'
-import delayed from '@eplant/util/delayed'
 
 export default function ViewOptions<T, S, A>({
   view,
