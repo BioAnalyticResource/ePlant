@@ -1,8 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  CircularProgress,
-  Typography,
-} from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import React from 'react'
 import { View, ViewProps } from '@eplant/View'
 import { useEFPSVG, useStyles } from './svg'
@@ -19,32 +16,35 @@ import _ from 'lodash'
 import { ViewDataError } from '@eplant/View/viewData'
 import SVGTooltip from './Tooltips/EFPTooltip'
 
-
-
 export default class EFP implements View<EFPData, EFPState, EFPAction> {
   getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
   })
-  tooltipComponent: (props: { el: SVGElement | null; group: EFPGroup; tissue: EFPTissue; data: EFPData }) => React.JSX.Element
+  tooltipComponent: (props: {
+    el: SVGElement | null
+    group: EFPGroup
+    tissue: EFPTissue
+    data: EFPData
+  }) => React.JSX.Element
   constructor(
     public name: string,
     public id: EFPId,
     public svgURL: string,
-    public xmlURL: string
+    public xmlURL: string,
   ) {
     this.component = this.component.bind(this)
-    this.tooltipComponent = SVGTooltip;
+    this.tooltipComponent = SVGTooltip
   }
   //TODO: Reimplement this once the new BAR API is ready
   getInitialData = async (
     gene: GeneticElement | null,
-    loadEvent: (val: number) => void
+    loadEvent: (val: number) => void,
   ): Promise<EFPData> => {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     const parser = new DOMParser()
     const xml = await fetch(this.xmlURL).then(async (res) =>
-      parser.parseFromString(await res.text(), 'text/xml')
+      parser.parseFromString(await res.text(), 'text/xml'),
     )
     // Get the url for the api request
     const database = xml.getElementsByTagName('view')[0]?.getAttribute('db')
@@ -60,7 +60,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       (group) => {
         const tissues = Array.from(group.getElementsByTagName('tissue'))
         const controls = Array.from(group.getElementsByTagName('control')).map(
-          (a) => a.getAttribute('sample') as string
+          (a) => a.getAttribute('sample') as string,
         )
         sampleNames.push(...controls)
         return {
@@ -75,12 +75,12 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
                   const name = a.getAttribute('name') as string
                   sampleNames.push(name)
                   return name
-                }
+                },
               ),
             }
           }),
         }
-      }
+      },
     )
 
     loadEvent(0.2)
@@ -95,27 +95,27 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
           fetch(
             webservice +
               `id=${gene.id}&samples=${encodeURIComponent(
-                JSON.stringify(names)
-              )}`
+                JSON.stringify(names),
+              )}`,
           )
             .then((res) => res.json())
             .then(
               (samples) =>
                 samples
                   .filter(
-                    (sample: any) => sample && !isNaN(parseFloat(sample.value))
+                    (sample: any) => sample && !isNaN(parseFloat(sample.value)),
                   )
                   .map((sample: any) => ({
                     name: sample.name,
                     value: parseFloat(sample.value),
-                  })) as { value: number; name: string }[]
+                  })) as { value: number; name: string }[],
             )
             .then((samples) => {
               loaded += loadStep
               loadEvent(loaded)
               return samples
-            })
-        )
+            }),
+        ),
       )
     ).flat()
 
@@ -129,14 +129,14 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
           ...getEFPSampleData(
             tissue.samples
               .map((name) => samples[name])
-              .filter((n) => Number.isFinite(n))
+              .filter((n) => Number.isFinite(n)),
           ),
         }))
         const tissueValues = tissues.map((tissue) => tissue.mean)
         const control = _.mean(
           group.controls
             .map((control) => samples[control])
-            .filter((n) => Number.isFinite(n))
+            .filter((n) => Number.isFinite(n)),
         )
         return {
           name: group.name,
@@ -149,7 +149,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     const out: EFPData = {
       groups: groupsData,
       control: _.mean(
-        groupsData.map((g) => g.control).filter((g) => Number.isFinite(g))
+        groupsData.map((g) => g.control).filter((g) => Number.isFinite(g)),
       ),
       min: Math.min(...groupsData.map((g) => g.min)),
       max: Math.max(...groupsData.map((g) => g.max)),
@@ -173,7 +173,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       },
       {
         showText: !props.state.renderAsThumbnail,
-      }
+      },
     )
 
     const { svg } = view ?? {}
@@ -210,8 +210,8 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
             el: document.querySelector(`#${id} .efp-group-${t.id}`),
             group,
             tissue: t,
-          }))
-        )
+          })),
+        ),
       )
       setSvgElements(elements as any)
     }, [props.activeData.groups, id])
@@ -306,9 +306,8 @@ export function getEFPSampleData(samples: number[]): EFPSampleData {
     min: Math.min(...samples),
     mean: mean,
     std: Math.sqrt(
-      _.sumBy(samples, (v) => Math.pow(v - mean, 2)) / samples.length
+      _.sumBy(samples, (v) => Math.pow(v - mean, 2)) / samples.length,
     ),
     samples: samples.length,
   }
 }
-

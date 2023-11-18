@@ -1,7 +1,4 @@
-import {
-  createTheme,
-  PaletteColorOptions,
-} from '@mui/material'
+import { createTheme, PaletteColorOptions } from '@mui/material'
 
 declare module '@mui/material/styles' {
   interface TypeBackground {

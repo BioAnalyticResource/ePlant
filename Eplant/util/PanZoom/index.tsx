@@ -16,11 +16,10 @@ export default function PanZoom({
   initialTransform: Transform
   onTransformChange: (transform: Transform) => void
 }) {
-  const [dragStart, setDragStart] =
-    React.useState<{
-      click: Point
-      offset: Point
-    } | null>(null)
+  const [dragStart, setDragStart] = React.useState<{
+    click: Point
+    offset: Point
+  } | null>(null)
 
   const [transform, setTransform] = React.useState<Transform>(initialTransform)
   const { offset, zoom } = transform

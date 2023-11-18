@@ -1,15 +1,8 @@
 import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { View, ViewProps } from '@eplant/View'
-import {
-  ViewDataError,
-} from '@eplant/View/viewData'
-import {
-  Box,
-  MenuItem,
-  Tooltip,
-  Typography,
-} from '@mui/material'
+import { ViewDataError } from '@eplant/View/viewData'
+import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
 import React, { startTransition } from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
@@ -75,7 +68,7 @@ const EFPListItem = React.memo(
       prev.data.activeView === next.data.activeView &&
       prev.index == next.index
     )
-  }
+  },
 )
 
 const EFPListRow = React.memo(function EFPListRow({
@@ -88,8 +81,7 @@ const EFPListRow = React.memo(function EFPListRow({
       <EFPListItem index={index} data={data} />
     </div>
   )
-},
-areEqual)
+}, areEqual)
 
 export const EFPListMemoized = function EFPList(props: EFPListProps) {
   return (
@@ -132,11 +124,11 @@ export default class EFPViewer
     public efps: EFP[],
     public icon: () => JSX.Element,
     public description?: string,
-    public thumbnail?: string
+    public thumbnail?: string,
   ) {}
   getInitialData = async (
     gene: GeneticElement | null,
-    loadEvent: (progress: number) => void
+    loadEvent: (progress: number) => void,
   ) => {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     // Load all the views
@@ -152,7 +144,7 @@ export default class EFPViewer
         })
         loadingProgress[i] = 1
         return data
-      })
+      }),
     )
     return {
       activeView: this.views[0].id,
@@ -204,7 +196,7 @@ export default class EFPViewer
     }
   }
   component = (
-    props: ViewProps<EFPViewerData, EFPViewerState, EFPViewerAction>
+    props: ViewProps<EFPViewerData, EFPViewerState, EFPViewerAction>,
   ) => {
     const viewIndices: number[] = [
       ...Array(props.activeData.views.length).keys(),
@@ -212,7 +204,7 @@ export default class EFPViewer
     viewIndices.sort((a, b) => {
       if (props.state.sortBy == 'name')
         return props.activeData.views[a].name.localeCompare(
-          props.activeData.views[b].name
+          props.activeData.views[b].name,
         )
       else {
         return (
@@ -226,7 +218,7 @@ export default class EFPViewer
 
     let activeViewIndex = React.useMemo(
       () => sortedEfps.findIndex((v) => v.id == props.state.activeView),
-      [props.state.activeView, ...sortedEfps.map((v) => v.id)]
+      [props.state.activeView, ...sortedEfps.map((v) => v.id)],
     )
     if (activeViewIndex == -1) {
       activeViewIndex = 0
@@ -433,7 +425,7 @@ export default class EFPViewer
     },
   ]
   header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
-    props
+    props,
   ) => (
     <Typography variant="h6">
       {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}

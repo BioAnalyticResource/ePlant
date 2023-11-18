@@ -1,14 +1,5 @@
-import {
-  useActiveId,
-  useDarkMode,
-  usePanesDispatch,
-} from '@eplant/state'
-import {
-  Box,
-  FormControlLabel,
-  FormGroup,
-  Switch,
-} from '@mui/material'
+import { useActiveId, useDarkMode, usePanesDispatch } from '@eplant/state'
+import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { SearchGroup } from './GeneSearch'
@@ -47,11 +38,11 @@ export function LeftNav(props: {
             geneticElements.concat(
               _.uniqBy(
                 s.filter(
-                  (g) => !geneticElements.find((gene) => g.id == gene.id)
+                  (g) => !geneticElements.find((gene) => g.id == gene.id),
                 ),
-                (a) => a.id
-              )
-            )
+                (a) => a.id,
+              ),
+            ),
           )
           if (s.length > 0) {
             panesDispatch({

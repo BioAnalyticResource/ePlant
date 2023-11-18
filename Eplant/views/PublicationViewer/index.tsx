@@ -34,7 +34,7 @@ const PublicationViewer: View<PublicationViewerData> = {
     )
   },
   icon: () => <PublicationViewerIcon />,
-  description: "Find publications that mention your gene of interest.",
+  description: 'Find publications that mention your gene of interest.',
   thumbnail: Thumbnail,
   citation({ gene }) {
     return (

@@ -32,7 +32,7 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
   }, [ref.current])
 
   const skipExons = !!feature.subfeatures.find((f: GeneFeature) =>
-    f.type.endsWith('UTR')
+    f.type.endsWith('UTR'),
   )
 
   // Different arrows depending on strand type
@@ -82,7 +82,7 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
           {feature.subfeatures
             .filter(
               (sf: GeneFeature) =>
-                sf.type != 'mRNA' && (sf.type != 'exon' || !skipExons)
+                sf.type != 'mRNA' && (sf.type != 'exon' || !skipExons),
             )
             .map((sf: GeneFeature) => {
               const drawWidth = 0.9 * (width - 2 * margin),
@@ -91,7 +91,7 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
               const x = ((sf.start - feature.start) / length) * drawWidth
               const w = Math.max(
                 (Math.abs(sf.end - sf.start) / length) * drawWidth,
-                0
+                0,
               )
 
               let h = 4,
