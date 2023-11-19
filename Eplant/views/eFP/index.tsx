@@ -1,8 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  CircularProgress,
-  Typography,
-} from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import React from 'react'
 import { View, ViewProps } from '@eplant/View'
 import { useEFPSVG, useStyles } from './svg'
@@ -19,14 +16,18 @@ import _ from 'lodash'
 import { ViewDataError } from '@eplant/View/viewData'
 import SVGTooltip from './Tooltips/EFPTooltip'
 
-
-
 export default class EFP implements View<EFPData, EFPState, EFPAction> {
   getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
   })
-  tooltipComponent: (props: { el: SVGElement | null; group: EFPGroup; tissue: EFPTissue; data: EFPData }) => React.JSX.Element
+  tooltipComponent: (props: {
+    el: SVGElement | null
+    group: EFPGroup
+    tissue: EFPTissue
+    data: EFPData
+    state: EFPState
+  }) => React.JSX.Element
   constructor(
     public name: string,
     public id: EFPId,
@@ -34,7 +35,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     public xmlURL: string
   ) {
     this.component = this.component.bind(this)
-    this.tooltipComponent = SVGTooltip;
+    this.tooltipComponent = SVGTooltip
   }
   //TODO: Reimplement this once the new BAR API is ready
   getInitialData = async (
@@ -283,6 +284,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
               el={el}
               group={group}
               tissue={tissue}
+              state={props.state}
             />
           ))}
       </div>
@@ -311,4 +313,3 @@ export function getEFPSampleData(samples: number[]): EFPSampleData {
     samples: samples.length,
   }
 }
-
