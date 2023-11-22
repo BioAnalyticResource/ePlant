@@ -56,7 +56,6 @@ export function ViewContainer<T, S, A>({
 } & BoxProps) {
   const { activeData, error, loading, loadingAmount, dispatch, state } =
     useViewData(view, gene)
-
   const idLabel = useId()
   const selectId = useId()
   const [printing, setPrinting] = usePrinting()
