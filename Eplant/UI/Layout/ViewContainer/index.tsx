@@ -104,13 +104,7 @@ export function ViewContainer<T, S, A>({
                 id={selectId}
                 onChange={(e) => {
                   const view = views.find((view) => view.id == e?.target?.value)
-                  if (view) {
-                    setView(view)
-                  const newParams = new URLSearchParams({
-                    ...searchParams,
-                    view:view.id
-                  })
-                }
+                  if (view) setView(view)
                 }}
                 inputProps={{
                   sx: {
