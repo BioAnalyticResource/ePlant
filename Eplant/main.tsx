@@ -47,18 +47,14 @@ export const defaultConfig = {
   rootPath: import.meta.env.BASE_URL,
 }
 function RootApp() {
-  const [darkMode, setDarkMode] = useDarkMode()
   return (
     <React.StrictMode>
       <Provider>
-        <ThemeProvider theme={darkMode ? dark : light}>
-          <CssBaseline />
           <BrowserRouter>
             <Config.Provider value={defaultConfig}>
               <Eplant />
             </Config.Provider>
           </BrowserRouter>
-        </ThemeProvider>
       </Provider>
     </React.StrictMode>
   )

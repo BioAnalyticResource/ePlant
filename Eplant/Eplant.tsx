@@ -3,9 +3,12 @@ import {
   Box,
   CircularProgress,
   Container,
+  CssBaseline,
   Drawer,
   DrawerProps,
   IconButton,
+  LinearProgress,
+  ThemeProvider,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as FlexLayout from 'flexlayout-react'
@@ -29,12 +32,16 @@ import {
   storage,
   useModel,
   usePageLoad,
+  useDarkMode,
 } from './state'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import { LeftNav } from './UI/LeftNav'
 import FallbackView from './views/FallbackView'
 import { Theme } from '@mui/system'
+import ErrorBoundary from './util/ErrorBoundary'
+import { dark, light } from './theme'
+
 
 // TODO: Make this drawer support opening/closing on mobile
 
@@ -154,13 +161,18 @@ const factory: (
 
 export default function Eplant() {
   const { rootPath } = useConfig()
+  const [darkMode, setDarkMode] = useDarkMode()
+
   return (
-    <Routes>
-      <Route path={rootPath}>
-        <Route index element={<MainEplant />} />
-        <Route path="pane" element={<DirectPane />} />
-      </Route>
-    </Routes>
+    <ThemeProvider theme={darkMode ? dark : light}>
+      <CssBaseline />
+      <Routes>
+        <Route path={rootPath}>
+          <Route index element={<MainEplant />} />
+          <Route path="pane" element={<DirectPane />} />
+        </Route>
+      </Routes>
+    </ThemeProvider>
   )
 }
 
