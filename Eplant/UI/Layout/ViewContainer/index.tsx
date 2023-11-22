@@ -125,7 +125,7 @@ export function ViewContainer<T, S, A>({
                   },
                 }}
               >
-                {userViews.map((view,i) => (
+                {userViews.map((view) => (
                   <MenuItem
                       key={view.id}
                       value={view.id}
