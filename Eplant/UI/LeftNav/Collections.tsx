@@ -106,6 +106,7 @@ type CollectionProps = {
   selectedGene?: string
   onSelectGene?: (gene: GeneticElement) => void
 }
+type ICollections = { genes: string[]; name: string; open: boolean }[]; 
 /**
  * A sortable, renamable collection of {@link GeneticElementComponent}s
  *
@@ -365,11 +366,11 @@ export function Collections(props: {
     useSensor(KeyboardSensor, {})
   )
 
-  const [activeId, setActiveId] = React.useState<string | undefined>(undefined)
+  const [activeId, setActiveId] = useState<string | undefined>(undefined)
 
   // If there are genes that aren't in a collection, put them in the first
   useEffect(() => {
-    setCollections((collections) => {
+    setCollections((collections:ICollections) => {
       const unincluded = genes.map(
         (g) =>
           !collections.some((c) => c.genes.some((geneId) => geneId == g.id))
@@ -424,7 +425,7 @@ export function Collections(props: {
               deleteCollection(i)
             }}
             onNameChange={(newName) => {
-              setCollections((collections) => {
+              setCollections((collections:ICollections) => {
                 const cols = collections.slice()
                 cols[i] = {
                   ...p,
@@ -435,7 +436,7 @@ export function Collections(props: {
             }}
             deleteGene={(g) => deleteGene(g)}
             setOpen={() => {
-              setCollections((collections) => {
+              setCollections((collections:ICollections) => {
                 const cols = collections.slice()
                 cols[i] = {
                   ...p,
@@ -498,7 +499,7 @@ export function Collections(props: {
 
     // If they are in the same array we can move them
     // If not then splice the activeGene into the other array
-    setCollections((collections) => {
+    setCollections((collections:ICollections) => {
       const cols = collections.slice()
       const activeGene = genes.find((g) => g.id == active.id)
       if (!activeGene) return collections
@@ -582,7 +583,7 @@ export function Collections(props: {
   }
 
   function deleteGene(gene: GeneticElement) {
-    setCollections((collections) => {
+    setCollections((collections:ICollections) => {
       const cols = collections.slice()
       const idx = cols.findIndex((c) => c.genes.includes(gene.id))
       const collection = cols[idx]

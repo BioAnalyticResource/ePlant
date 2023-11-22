@@ -14,7 +14,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import React, { SVGProps, useEffect, useId, useRef, useState } from 'react'
+import { SVGProps, useEffect, useId, useRef, useState } from 'react'
 import OptionsButton from './OptionsButton'
 
 /**

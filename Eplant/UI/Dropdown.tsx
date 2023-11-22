@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState,useId} from 'react'
 import {
   alpha,
   Button,
@@ -53,7 +53,7 @@ export default function Dropdown({
   options,
   ...buttonProps
 }: { options: React.ReactNode[] } & ButtonProps) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -61,8 +61,8 @@ export default function Dropdown({
   const handleClose = () => {
     setAnchorEl(null)
   }
-  const buttonId = React.useId()
-  const menuId = React.useId()
+  const buttonId = useId()
+  const menuId = useId()
 
   return (
     <div>
