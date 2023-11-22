@@ -104,4 +104,6 @@ dist
 .tern-port
 .vscode/settings.json
 
+# notes files
+*-notes.md
 .DS_Store
