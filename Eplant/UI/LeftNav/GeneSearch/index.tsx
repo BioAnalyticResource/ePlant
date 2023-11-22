@@ -4,7 +4,7 @@ import { Button, MenuItem, styled, TextField } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import SearchBar from './SearchBar'
-
+import { useState, useEffect } from 'react'
 export const MenuButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.main,
   color: theme.palette.text.secondary,
@@ -24,14 +24,14 @@ export function SearchGroup({
 }: {
   addGeneticElements: (gene: GeneticElement[]) => void
 }) {
-  const [species, setSpecies] = React.useState<Species>()
+  const [species, setSpecies] = useState<Species>()
   const [speciesList, setSpeciesList] = useSpecies()
   const [searchingByExpression, setSearchingByExpression] =
-    React.useState<boolean>(false)
+    useState<boolean>(false)
   const [searchingByPhenotype, setSearchingByPhenotype] =
-    React.useState<boolean>(false)
+    useState<boolean>(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!species && speciesList.length) setSpecies(speciesList[0])
   }, [species])
   return (

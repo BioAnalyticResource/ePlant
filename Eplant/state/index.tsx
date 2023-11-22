@@ -3,7 +3,7 @@ import { Species } from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import Storage from '@eplant/util/Storage'
 import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
-import * as React from 'react'
+import {useState, useEffect, createContext, useContext} from 'react'
 import * as FlexLayout from 'flexlayout-react'
 
 const persistAtom = atom<boolean>(true)
@@ -38,8 +38,8 @@ export const pageLoad = (() => {
 })()
 
 export const usePageLoad = () => {
-  const [progress, setProgress] = React.useState(0)
-  React.useEffect(() => pageLoad.watch(setProgress), [])
+  const [progress, setProgress] = useState(0);
+  useEffect(() => pageLoad.watch(setProgress), [])
   return [progress, progress == 1] as [number, boolean]
 }
 
@@ -118,7 +118,7 @@ function atomWithOptionalStorage<T>(
     (get) => {
       return get(val)
     },
-    (get, set, x: React.SetStateAction<T>) => {
+    (get, set, x: SetStateAction<T>) => {
       const newValue =
         typeof x == 'function' ? (x as (prev: T) => T)(get(val)) : x
       if (get(persistAtom)) {
@@ -260,8 +260,8 @@ export const usePanes = () =>
   ]
 export const usePanesDispatch = () => useAtomReducer(panesAtom, panesReducer)
 
-export const ViewIDContext = React.createContext<string>('')
-export const useViewID = () => React.useContext(ViewIDContext)
+export const ViewIDContext = createContext<string>('')
+export const useViewID = () => useContext(ViewIDContext)
 
 export const printingAtom = atom<string | null>(null)
 export const usePrinting = () => useAtom(printingAtom)

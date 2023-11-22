@@ -3,7 +3,7 @@ import GeneticElement from '@eplant/GeneticElement'
 import { usePrinting, useViewID } from '@eplant/state'
 import GeneHeader from '@eplant/UI/GeneHeader'
 import { styled, useTheme } from '@mui/material/styles'
-
+import {useParams, useSearchParams, Link} from 'react-router-dom';
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
@@ -29,7 +29,7 @@ import {
 import Box, { BoxProps } from '@mui/material/Box'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import * as React from 'react'
+import {useId, useEffect, useState, useMemo} from 'react'
 import { View, ViewProps } from '../../../View'
 import { useViewData } from '@eplant/View/viewData'
 import LoadingPage from './LoadingPage'
@@ -41,7 +41,7 @@ import { flexbox } from '@mui/system'
  * @param props.view The view to wrap
  * @param props.setView A function that is called when the user requests to change the wrapped view
  * @param props.gene The gene that is currently selected
- * @param props The remaining props are passed directly to the container
+ * @param props The remaining props are  directly to the container
  * @returns
  */
 export function ViewContainer<T, S, A>({
@@ -57,17 +57,17 @@ export function ViewContainer<T, S, A>({
   const { activeData, error, loading, loadingAmount, dispatch, state } =
     useViewData(view, gene)
 
-  const idLabel = React.useId()
-  const selectId = React.useId()
+  const idLabel = useId()
+  const selectId = useId()
   const [printing, setPrinting] = usePrinting()
 
-  const [viewingCitations, setViewingCitations] = React.useState(false)
+  const [viewingCitations, setViewingCitations] = useState(false)
 
   const viewId = useViewID()
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { userViews, views } = useConfig()
 
-  const { userViews, views, genericViews } = useConfig()
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (printing == viewId) {
       setTimeout(() => {
         window.print()
@@ -76,10 +76,9 @@ export function ViewContainer<T, S, A>({
     }
   }, [printing])
 
-  //
+  
   const showToolbarButtons = useMediaQuery('(min-width:1024px)')
-
-  const topBar = React.useMemo(
+  const topBar = useMemo(
     () => (
       <AppBar
         variant="elevation"
@@ -105,7 +104,13 @@ export function ViewContainer<T, S, A>({
                 id={selectId}
                 onChange={(e) => {
                   const view = views.find((view) => view.id == e?.target?.value)
-                  if (view) setView(view)
+                  if (view) {
+                    setView(view)
+                  const newParams = new URLSearchParams({
+                    ...searchParams,
+                    view:view.id
+                  })
+                }
                 }}
                 inputProps={{
                   sx: {
@@ -120,19 +125,19 @@ export function ViewContainer<T, S, A>({
                   },
                 }}
               >
-                {userViews.map((view) => (
+                {userViews.map((view,i) => (
                   <MenuItem
-                    key={view.id}
-                    value={view.id}
-                    style={{
-                      display: userViews.some((u) => u.id == view.id)
-                        ? 'flex'
-                        : 'none',
-                      paddingTop: 8,
-                      paddingBottom: 8,
-                      marginBottom: 8,
-                    }}
-                  >
+                      key={view.id}
+                      value={view.id}
+                      style={{
+                        display: userViews.some((u) => u.id == view.id)
+                          ? 'flex'
+                          : 'none',
+                          paddingTop: 8,
+                          paddingBottom: 8,
+                          marginBottom: 8,
+                        }}
+                    >                 
                     <Box sx={{ paddingRight: 2, marginTop: 0.5 }}>
                       {view.icon && <view.icon />}
                     </Box>
@@ -146,6 +151,7 @@ export function ViewContainer<T, S, A>({
                       key={view.name}
                       onClick={(e) => {
                         if (view) setView(view)
+                        console.log('chnging view', view);
                       }}
                     >
                       {view.name}
@@ -164,7 +170,7 @@ export function ViewContainer<T, S, A>({
             dispatch={dispatch}
           />
           <Button
-            variant="text"
+            variant='text'
             sx={{
               color: 'secondary.contrastText',
             }}
@@ -197,6 +203,7 @@ export function ViewContainer<T, S, A>({
     ),
     [view.id, gene?.id, loading, activeData, state, dispatch]
   )
+
   return (
     <Box {...props} display="flex" flexDirection="column">
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>

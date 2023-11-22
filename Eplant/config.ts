@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, useContext} from 'react'
 import { type View } from './View'
 
 export type EplantConfig = {
@@ -9,7 +9,7 @@ export type EplantConfig = {
   readonly rootPath: string
 }
 
-export const Config = React.createContext<EplantConfig>({
+export const Config = createContext<EplantConfig>({
   genericViews: [],
   userViews: [],
   views: [],
@@ -17,4 +17,4 @@ export const Config = React.createContext<EplantConfig>({
   rootPath: ''
 })
 
-export const useConfig = () => React.useContext(Config)
+export const useConfig = () => useContext(Config)

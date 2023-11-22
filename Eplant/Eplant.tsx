@@ -18,7 +18,7 @@ import {
   Layout,
   TabSetNode,
 } from 'flexlayout-react'
-import * as React from 'react'
+import {useEffect, useRef, useState} from 'react'
 import { Route, Routes, useParams, useSearchParams } from 'react-router-dom'
 import { useConfig } from './config'
 import GeneticElement from './GeneticElement'
@@ -45,7 +45,7 @@ import ErrorBoundary from './util/ErrorBoundary'
 const sideBarWidth = 300
 
 function ResponsiveDrawer(props: DrawerProps) {
-  const [open, setOpen] = React.useState(props.open)
+  const [open, setOpen] = useState(props.open)
 
   return (
     <Drawer {...props} open={open} onClose={() => setOpen(false)}>
@@ -77,7 +77,7 @@ function ViewTab(props: {
   const { userViews, views } = useConfig()
   const v = views.find((v) => v.id == view?.view) ?? FallbackView
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Only include the gene name in the tab name if a gene is selected and this view belongs to that gene
     const targetName = `${
       gene && userViews.some((geneView) => geneView.id == view?.view)
@@ -92,7 +92,7 @@ function ViewTab(props: {
   })
 
   // If no gene is selected and there are available genes, select one
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.id == activeId && !gene && genes.length > 0) {
       panesDispatch({
         type: 'set-active-gene',
@@ -180,11 +180,11 @@ function DirectPane() {
   const [model] = useModel()
   const { tabHeight, views } = useConfig()
   const [globalProgress, loaded] = usePageLoad()
-  React.useEffect(() => {
+  useEffect(() => {
     updateColors(theme)
   }, [theme, loaded])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (loaded && panes[id] && model.getNodeById(id)) window.close()
   }, [panes, loaded, model])
 
@@ -288,7 +288,7 @@ export function MainEplant() {
 }
 function EplantLayout() {
   const [panes, panesDispatch] = usePanes()
-  const layout = React.useRef<Layout>(null)
+  const layout = useRef<Layout>(null)
 
   const [activeId, setActiveId] = useActiveId()
   const { tabHeight } = useConfig()
@@ -296,21 +296,21 @@ function EplantLayout() {
   const theme = useTheme()
   const [globalProgress, loaded] = usePageLoad()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (loaded) {
       updateColors(theme)
     }
   }, [theme, loaded])
 
   // Update the model when the activeId changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (model.getNodeById(activeId)) model.doAction(Actions.selectTab(activeId))
     // TODO: Need to add back if using flex-layout from Alex's fork
     // else model.doAction(Actions.deselectTabset())
   }, [activeId, model])
 
   // Add a new tab when there is a non-popout pane
-  React.useEffect(() => {
+  useEffect(() => {
     if (loaded) {
       for (const id in panes) {
         if (panes[id].popout) continue
@@ -319,7 +319,7 @@ function EplantLayout() {
     }
   }, [panes, model, loaded])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loaded) return
     const json = model.toJson()
     if (!json.global) json.global = {}

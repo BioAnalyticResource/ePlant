@@ -21,7 +21,7 @@ import GeneticElementComponent from '../GeneticElementComponent'
 import { Collections } from './Collections'
 import GeneticElement from '@eplant/GeneticElement'
 import _, { uniq } from 'lodash'
-
+import { useEffect } from 'react'
 /**
  * The left nav bar in ePlant. Contains a search bar, and list of collections of genes.
  * @param props.onSelectGene A function that is called when a new gene is selected
@@ -39,7 +39,7 @@ export function LeftNav(props: {
   const panesDispatch = usePanesDispatch()
   const activeID = useActiveId()[0]
 
-  React.useEffect(() => {
+  useEffect(() => {
     const uniq = _.uniqBy(geneticElements, (g) => g.id)
     if (uniq.length != geneticElements.length) setGeneticElements(uniq)
   }, [geneticElements])
