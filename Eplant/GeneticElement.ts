@@ -17,7 +17,7 @@ export default class GeneticElement {
     id: string,
     annotation: string,
     species: Species,
-    aliases: string[]
+    aliases: string[],
   ) {
     this.id = id
     this.annotation = annotation
@@ -39,7 +39,7 @@ export default class GeneticElement {
       geneticElement.id,
       geneticElement.annotation,
       Species.getSpecies(geneticElement.species) as Species,
-      geneticElement.aliases
+      geneticElement.aliases,
     )
   }
 }
@@ -53,7 +53,7 @@ export type SpeciesApi = {
   loaders: {
     [key: string]: (
       gene: GeneticElement,
-      loadEvent: (amount: number) => void
+      loadEvent: (amount: number) => void,
     ) => Promise<any>
   }
 }
@@ -77,7 +77,7 @@ export class Species {
 
   static getGene(
     speciesId: string,
-    geneId: string
+    geneId: string,
   ): Promise<GeneticElement | null> {
     const species = Species.getSpecies(speciesId)
     if (!species) return Promise.resolve(null)

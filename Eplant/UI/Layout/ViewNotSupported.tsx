@@ -1,8 +1,6 @@
 import React from 'react'
 import { View } from '../../View'
-import { Add, Start } from '@mui/icons-material'
-import { Color, Stack, useTheme, Button, Typography } from '@mui/material'
-import Box from '@mui/material/Box'
+import { Stack, useTheme, Typography } from '@mui/material'
 import { SVGProps } from 'react'
 import GeneticElement from '@eplant/GeneticElement'
 

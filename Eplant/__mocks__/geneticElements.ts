@@ -1,6 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
-import ArabidopsisGeneInfoView from '@eplant/Species/arabidopsis/loaders/GeneInfoView'
 
 const g: GeneticElement[] = [
   {

@@ -31,7 +31,7 @@ export interface View<Data = any, State = any, Action = any> {
    */
   getInitialData: (
     gene: GeneticElement | null,
-    loadEvent: (amount: number) => void
+    loadEvent: (amount: number) => void,
   ) => Promise<Data>
   /**
    * A reducer method that is used for the view actions menu,
