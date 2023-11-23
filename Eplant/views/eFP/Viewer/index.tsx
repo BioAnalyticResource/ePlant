@@ -384,7 +384,7 @@ export default class EFPViewer
                     height: '100%',
                     zIndex: 0,
                   })}
-                  initialTransform={props.state.transform}
+                  transform={props.state.transform}
                   onTransformChange={(transform) => {
                     props.dispatch({
                       type: 'set-transform',
