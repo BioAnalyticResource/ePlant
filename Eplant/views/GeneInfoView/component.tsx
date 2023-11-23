@@ -1,7 +1,6 @@
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { usePanesDispatch, useViewID } from '@eplant/state'
-import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
 import Stack from '@mui/material/Stack'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
@@ -35,7 +34,7 @@ const GeneSequence = ({
   const theme = useTheme()
   const spans = []
   const feature = activeData.features.find(
-    (sf) => sf.uniqueID == geneticElement.id + '.1'
+    (sf) => sf.uniqueID == geneticElement.id + '.1',
   )
   // Can't render anything if there is no feature
   if (!feature) return <></>
@@ -57,7 +56,8 @@ const GeneSequence = ({
 
     features
       .filter(
-        (sf: any) => sf.type == 'five_prime_UTR' || sf.type == 'three_prime_UTR'
+        (sf: any) =>
+          sf.type == 'five_prime_UTR' || sf.type == 'three_prime_UTR',
       )
       .map((a: any) => {
         if (
@@ -115,7 +115,7 @@ const GeneSequence = ({
       spans.push(
         <span style={prevStyle} key={spans.length}>
           {str}
-        </span>
+        </span>,
       )
       str = ''
     }
@@ -132,7 +132,7 @@ const ViewButton = styled(function ViewButton({
 }: { geneticElement: GeneticElement; view: View } & ButtonProps) {
   const { loading, error, loadingAmount, activeData } = useViewData(
     view,
-    geneticElement
+    geneticElement,
   )
   return (
     <Button {...props} disabled={!!error || activeData === undefined}>

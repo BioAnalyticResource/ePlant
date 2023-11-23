@@ -1,5 +1,4 @@
 import { Box, BoxProps } from '@mui/material'
-import _ from 'lodash'
 import React from 'react'
 
 type Point = { x: number; y: number }

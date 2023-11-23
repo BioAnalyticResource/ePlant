@@ -13,7 +13,7 @@ export default function useStateWithStorage<T>(
   key: string,
   initial: T,
   serialize: (val: T) => string = JSON.stringify,
-  deserialize: (val: string) => T = JSON.parse
+  deserialize: (val: string) => T = JSON.parse,
 ): [T, (a: SetStateAction<T>) => void, boolean] {
   const persist = usePersist()[0]
   const [val, setVal] = useState<T>(initial)
