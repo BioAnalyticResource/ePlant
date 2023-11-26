@@ -1,4 +1,3 @@
-import { Forest } from '@mui/icons-material'
 import React from 'react'
 import EFP from '../eFP'
 import EFPViewer from '../eFP/Viewer'
@@ -34,5 +33,5 @@ export default new EFPViewer(
   efps,
   () => <PlantEFPIcon />,
   'Visualize gene expression over time on a developmental map.',
-  Thumbnail
+  Thumbnail,
 )

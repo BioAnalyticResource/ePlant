@@ -1,5 +1,5 @@
 import { Add } from '@mui/icons-material'
-import { Color, Stack, useTheme, Button } from '@mui/material'
+import { Stack, useTheme, Button } from '@mui/material'
 import Box from '@mui/material/Box'
 import * as React from 'react'
 import { SVGProps } from 'react'

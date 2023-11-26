@@ -1,8 +1,6 @@
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { usePrinting, useViewID } from '@eplant/state'
-import GeneHeader from '@eplant/UI/GeneHeader'
-import { styled, useTheme } from '@mui/material/styles'
 
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
@@ -10,31 +8,24 @@ import ErrorBoundary from '@eplant/util/ErrorBoundary'
 import {
   AppBar,
   Button,
-  ButtonProps,
-  Container,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
-  InputLabel,
-  ListItemIcon,
   ListItemText,
   MenuItem,
-  MenuList,
   Select,
   Stack,
   Toolbar,
   Typography,
 } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
 import * as React from 'react'
-import { View, ViewProps } from '../../../View'
+import { View } from '../../../View'
 import { useViewData } from '@eplant/View/viewData'
 import LoadingPage from './LoadingPage'
 import ViewOptions from './ViewOptions'
-import { flexbox } from '@mui/system'
 
 /**
  * Wraps a view in a container that provides a toolbar and a download button. It also manages loading the view's data.
@@ -74,9 +65,6 @@ export function ViewContainer<T, S, A>({
       }, 100)
     }
   }, [printing])
-
-  //
-  const showToolbarButtons = useMediaQuery('(min-width:1024px)')
 
   const topBar = React.useMemo(
     () => (
@@ -185,7 +173,7 @@ export function ViewContainer<T, S, A>({
             onClick={() => {
               downloadFile(
                 `${view.id}${gene ? '-' + gene.id : ''}.json`,
-                JSON.stringify(activeData, null, 2)
+                JSON.stringify(activeData, null, 2),
               )
             }}
           >
@@ -194,7 +182,7 @@ export function ViewContainer<T, S, A>({
         </Toolbar>
       </AppBar>
     ),
-    [view.id, gene?.id, loading, activeData, state, dispatch]
+    [view.id, gene?.id, loading, activeData, state, dispatch],
   )
   return (
     <Box {...props} display="flex" flexDirection="column">

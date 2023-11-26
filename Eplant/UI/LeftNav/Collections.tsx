@@ -1,12 +1,6 @@
 import { useCollections, useGeneticElements } from '@eplant/state'
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  Add,
-  Check,
-  ExpandMore,
-  MoreVert,
-  SignalCellularNoSimOutlined,
-} from '@mui/icons-material'
+import { Add, Check, ExpandMore } from '@mui/icons-material'
 import {
   Button,
   Card,
@@ -14,7 +8,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Paper,
   Stack,
   TextField,
   Typography,
@@ -26,7 +19,6 @@ import GeneticElementComponent, {
 } from '../GeneticElementComponent'
 import {
   SortableContext,
-  arrayMove,
   verticalListSortingStrategy,
   useSortable,
 } from '@dnd-kit/sortable'
@@ -34,7 +26,6 @@ import {
   DndContext,
   DragEndEvent,
   useDroppable,
-  DragOverEvent,
   DragStartEvent,
   DragOverlay,
   useSensors,
@@ -43,13 +34,11 @@ import {
   useSensor,
 } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
-import _, { truncate } from 'lodash'
 import {
   restrictToVerticalAxis,
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers'
 import OptionsButton from '../OptionsButton'
-import useStateWithStorage from '@eplant/util/useStateWithStorage'
 
 /**
  * A draggable/sortable version of {@link GeneticElementComponent}
@@ -57,7 +46,7 @@ import useStateWithStorage from '@eplant/util/useStateWithStorage'
  * @param {boolean} props.active Set to active if this component is currently being dragged
  */
 function SortableGeneticElement(
-  props: GeneticElementComponentProps & { active: boolean }
+  props: GeneticElementComponentProps & { active: boolean },
 ) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -362,7 +351,7 @@ export function Collections(props: {
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, {})
+    useSensor(KeyboardSensor, {}),
   )
 
   const [activeId, setActiveId] = React.useState<string | undefined>(undefined)
@@ -372,7 +361,7 @@ export function Collections(props: {
     setCollections((collections) => {
       const unincluded = genes.map(
         (g) =>
-          !collections.some((c) => c.genes.some((geneId) => geneId == g.id))
+          !collections.some((c) => c.genes.some((geneId) => geneId == g.id)),
       )
       if (unincluded.some((x) => x)) {
         const cols = collections.slice()
@@ -386,7 +375,7 @@ export function Collections(props: {
         cols[0] = {
           ...cols[0],
           genes: (cols[0]?.genes ?? []).concat(
-            genes.filter((g, i) => unincluded[i]).map((g) => g.id)
+            genes.filter((g, i) => unincluded[i]).map((g) => g.id),
           ),
         }
         return cols
@@ -489,7 +478,7 @@ export function Collections(props: {
       // when elements are dragged between collections
 
       swapWithinCollection,
-    }: { finished: boolean; swapWithinCollection: boolean }
+    }: { finished: boolean; swapWithinCollection: boolean },
   ) {
     if (finished) setActiveId(undefined)
     const { active, over } = event
@@ -503,7 +492,7 @@ export function Collections(props: {
       const activeGene = genes.find((g) => g.id == active.id)
       if (!activeGene) return collections
       const activeArrayIndex = cols.findIndex((col) =>
-        col.genes.includes(activeGene.id)
+        col.genes.includes(activeGene.id),
       )
       const activeArrayCollection = cols[activeArrayIndex]
       if (!activeArrayCollection) return collections
@@ -516,7 +505,7 @@ export function Collections(props: {
         const idx = parseInt(
           over.id
             .toString()
-            .replace('Collection-' + (bottom ? 'bottom' : 'top'), '')
+            .replace('Collection-' + (bottom ? 'bottom' : 'top'), ''),
         )
         if (idx == activeArrayIndex) return collections
 
@@ -546,7 +535,7 @@ export function Collections(props: {
       if (!overGene) return collections
 
       const overArrayIndex = cols.findIndex((col) =>
-        col.genes.includes(overGene.id)
+        col.genes.includes(overGene.id),
       )
       const overArrayCollection = cols[overArrayIndex]
       if (!overArrayCollection) return collections
@@ -609,7 +598,7 @@ export function Collections(props: {
           name: 'Collection ' + (collections.length + 1),
           open: true,
         },
-      ])
+      ]),
     )
   }
 }

@@ -23,5 +23,5 @@ export default new EFPViewer(
   efps,
   () => <CellEFPIcon />,
   'Visualize gene expression over time on a developmental map.',
-  Thumbnail
+  Thumbnail,
 )

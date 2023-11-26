@@ -1,4 +1,4 @@
-import { openDB, deleteDB, wrap, unwrap, IDBPDatabase, DBSchema } from 'idb'
+import { openDB, IDBPDatabase, DBSchema } from 'idb'
 import delayed from '../delayed'
 
 type UpdateEvent<T> = { type: 'update'; key: T }

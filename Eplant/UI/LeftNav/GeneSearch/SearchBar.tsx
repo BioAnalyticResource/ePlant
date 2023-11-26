@@ -4,7 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { debounce } from 'lodash'
 import * as React from 'react'
-import { Theme, SxProps, useTheme } from '@mui/material'
+import { Theme, SxProps } from '@mui/material'
 import { Chip, InputAdornment } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 /**
@@ -30,13 +30,12 @@ export default function SearchBar(props: {
   const [options, setOptions] = React.useState<string[]>([])
   const [focused, setFocused] = React.useState<boolean>(false)
   const updateOptions = React.useRef<(text: string) => void>()
-  const theme = useTheme()
 
-  function handleChange(input: string[]){
-    if(input.length > 0){
-      // If input is a comma seperated list, will split into seperate genes 
-      setValue([...input.slice(0, -1), ...input.slice(-1)[0].split(",")])
-    }else{
+  function handleChange(input: string[]) {
+    if (input.length > 0) {
+      // If input is a comma seperated list, will split into seperate genes
+      setValue([...input.slice(0, -1), ...input.slice(-1)[0].split(',')])
+    } else {
       setValue(input)
     }
   }
@@ -44,7 +43,7 @@ export default function SearchBar(props: {
   React.useEffect(() => {
     updateOptions.current = debounce(async (newValue) => {
       const newoptions = await props.complete?.(newValue)
-      setOptions(newoptions?.length ? newoptions: [])
+      setOptions(newoptions?.length ? newoptions : [])
     }, 100)
   }, [props.complete])
   const id = React.useId()
