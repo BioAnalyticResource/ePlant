@@ -4,7 +4,6 @@ import * as React from 'react'
 import { SearchBar } from './SearchBar'
 import { GeneRIFsData } from './types'
 
-
 const columns: GridColDef[] = [
   {
     field: 'annotation',
@@ -17,7 +16,7 @@ const columns: GridColDef[] = [
     headerName: 'Link',
     width: 130,
     headerClassName: 'select-none',
-    renderCell: (params: GridRenderCellParams<{[key:string]: unknown}>) => (
+    renderCell: (params: GridRenderCellParams<{ [key: string]: unknown }>) => (
       <Button
         href={params.value}
         variant="outlined"

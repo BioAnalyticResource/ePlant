@@ -1,4 +1,4 @@
-import { Icon, IconProps, styled } from '@mui/material'
+import { styled } from '@mui/material'
 import React from 'react'
 
 export default styled((props) => (

@@ -1,5 +1,5 @@
 import { useViewID } from '@eplant/state'
-import { BugReport, BugReportOutlined } from '@mui/icons-material'
+import { BugReportOutlined } from '@mui/icons-material'
 import {
   Button,
   Table,
@@ -10,8 +10,6 @@ import {
   Typography,
 } from '@mui/material'
 import React from 'react'
-import EFPPreview from '../eFP/EFPPreview'
-import { AtGenExpress } from '../PlantEFP'
 import { View } from '../../View'
 import { viewDataStorage, viewStateStorage } from '@eplant/View/viewData'
 
