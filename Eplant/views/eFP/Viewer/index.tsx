@@ -355,7 +355,6 @@ export default class EFPViewer
             sx={{
               flexGrow: 1,
               position: 'relative',
-              overflow: 'auto',
             }}
           >
             {props.activeData.viewData[activeViewIndex].supported ? (
