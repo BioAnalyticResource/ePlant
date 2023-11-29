@@ -35,7 +35,15 @@ const GeneDistributionChart = ({ data }: { data: EFPData }) => {
 
   const lineCoords = xVal ? 'M' + xVal + ' 587V220' : 'M400 587V220'
   return (
-    <div style={{ display: 'flex', position: 'relative' }}>
+    <div
+      style={{
+        display: 'flex',
+        position: 'relative',
+        zIndex: 10,
+        width: '100%',
+        height: '10%',
+      }}
+    >
       {geneRanking ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
