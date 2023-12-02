@@ -11,7 +11,7 @@ export default function GetStartedView({
   const theme = useTheme()
   const { views } = useConfig()
   return (
-    <Stack spacing={4}>
+    <Stack spacing={3}>
       <div>
         <Typography variant="h2">ePlant 3</Typography>
         <Typography variant="h4" color={theme.palette.secondary.main}>
@@ -37,7 +37,7 @@ export default function GetStartedView({
       </Stack>
       <Stack>
         <Typography
-          sx={{ width: '100%', maxWidth: 600 }}
+          sx={{ width: '100%', maxWidth: 860 }}
           variant="body2"
           color={theme.palette.secondary.main}
         >
@@ -63,11 +63,11 @@ export default function GetStartedView({
           .
         </Typography>
       </Stack>
-      <Grid container spacing={0} columns={4}>
+      <Grid container spacing={0} columns={5}>
         {views.map((view) => {
           if (view.description && view.thumbnail) {
             return (
-              <Grid item key={view.id} xs={1} sx={{ marginRight: 2 }}>
+              <Grid item key={view.id} xs={1} sx={{ marginRight: 1 }}>
                 <Tile view={view} />
               </Grid>
             )
