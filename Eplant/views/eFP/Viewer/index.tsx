@@ -356,7 +356,6 @@ export default class EFPViewer
             sx={{
               flexGrow: 1,
               position: 'relative',
-              overflow: 'auto',
             }}
           >
             {props.activeData.viewData[activeViewIndex].supported ? (
@@ -390,7 +389,7 @@ export default class EFPViewer
                     height: '100%',
                     zIndex: 0,
                   })}
-                  initialTransform={props.state.transform}
+                  transform={props.state.transform}
                   onTransformChange={(transform) => {
                     props.dispatch({
                       type: 'set-transform',

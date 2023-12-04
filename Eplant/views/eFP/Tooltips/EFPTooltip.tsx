@@ -9,13 +9,14 @@ import {
   useTheme,
 } from '@mui/material'
 import React from 'react'
-import { EFPGroup, EFPTissue, EFPData } from '../types'
+import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
 
 function SVGTooltip(props: {
   el: SVGElement | null
   group: EFPGroup
   tissue: EFPTissue
   data: EFPData
+  state: EFPState
 }) {
   const [open, setOpen] = React.useState(false)
   const theme = useTheme()
@@ -76,33 +77,54 @@ function SVGTooltip(props: {
                     {props.tissue.mean.toFixed(2)}±{props.tissue.std.toFixed(2)}
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Samples
-                  </TableCell>
-                  <TableCell>{props.tissue.samples}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                      borderBottom: 'none',
-                    }}
-                  >
-                    Log2 fold change vs control
-                  </TableCell>
-                  <TableCell sx={{ borderBottom: 'none' }}>
-                    {Math.log2(
-                      props.tissue.mean / (props.data.control ?? 1),
-                    ).toFixed(2)}
-                  </TableCell>
-                </TableRow>
+                {props.state.colorMode == 'relative' ? (
+                  <>
+                    <TableRow>
+                      <TableCell
+                        sx={{
+                          color: theme.palette.secondary.main,
+                          textAlign: 'right',
+                        }}
+                      >
+                        Samples
+                      </TableCell>
+                      <TableCell>{props.tissue.samples}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        sx={{
+                          color: theme.palette.secondary.main,
+                          textAlign: 'right',
+                          borderBottom: 'none',
+                        }}
+                      >
+                        Log2 fold change vs control
+                      </TableCell>
+                      <TableCell sx={{ borderBottom: 'none' }}>
+                        {Math.log2(
+                          props.tissue.mean / (props.data.control ?? 1)
+                        ).toFixed(2)}
+                      </TableCell>
+                    </TableRow>
+                  </>
+                ) : (
+                  <>
+                    <TableRow>
+                      <TableCell
+                        sx={{
+                          color: theme.palette.secondary.main,
+                          textAlign: 'right',
+                          borderBottom: 'none',
+                        }}
+                      >
+                        Samples
+                      </TableCell>
+                      <TableCell sx={{ borderBottom: 'none' }}>
+                        {props.tissue.samples}
+                      </TableCell>
+                    </TableRow>
+                  </>
+                )}
               </TableBody>
             </Table>
           </Box>

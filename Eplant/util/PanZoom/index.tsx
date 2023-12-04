@@ -10,10 +10,10 @@ export type Transform = {
 export default function PanZoom({
   children,
   onTransformChange,
-  initialTransform,
+  transform,
   ...props
 }: BoxProps & {
-  initialTransform: Transform
+  transform: Transform
   onTransformChange: (transform: Transform) => void
 }) {
   const [dragStart, setDragStart] = React.useState<{
@@ -21,7 +21,6 @@ export default function PanZoom({
     offset: Point
   } | null>(null)
 
-  const [transform, setTransform] = React.useState<Transform>(initialTransform)
   const { offset, zoom } = transform
   const containerRef = React.useRef<HTMLDivElement>(null)
 
@@ -33,23 +32,21 @@ export default function PanZoom({
         const { x, y, width, height } =
           containerRef.current.getBoundingClientRect()
         const { clientX, clientY } = e
-        setTransform(({ offset, zoom }) => {
-          // Adjust offset so that the mouse stays at the same position
-          const newZoom = zoom * (1 - e.deltaY / 200)
-          if (newZoom < 0.25 || newZoom > 4) return { offset, zoom }
-          const mouseX = clientX - x - width / 2,
-            mouseY = clientY - y - height / 2
-          const updateX = mouseX / newZoom - mouseX / zoom,
-            updateY = mouseY / newZoom - mouseY / zoom
-          const out = {
-            offset: {
-              x: offset.x + updateX,
-              y: offset.y + updateY,
-            },
-            zoom: newZoom,
-          }
-          return out
-        })
+        // Adjust offset so that the mouse stays at the same position
+        const newZoom = zoom * (1 - e.deltaY / 200)
+        if (newZoom < 0.25 || newZoom > 4) return { offset, zoom }
+        const mouseX = clientX - x - width / 2,
+          mouseY = clientY - y - height / 2
+        const updateX = mouseX / newZoom - mouseX / zoom,
+          updateY = mouseY / newZoom - mouseY / zoom
+        const newTransform = {
+          offset: {
+            x: offset.x + updateX,
+            y: offset.y + updateY,
+          },
+          zoom: newZoom,
+        }
+        onTransformChange(newTransform)
       }
     }
     if (containerRef.current) {
@@ -62,10 +59,6 @@ export default function PanZoom({
       }
     }
   }, [containerRef.current, offset, zoom])
-
-  React.useEffect(() => {
-    onTransformChange(transform)
-  }, [transform])
 
   return (
     <Box
@@ -90,7 +83,7 @@ export default function PanZoom({
           const { clientX, clientY } = e
           const mouseX = clientX - x,
             mouseY = clientY - y
-          setTransform({
+          onTransformChange({
             offset: {
               x: dragStart.offset.x + (mouseX - dragStart.click.x) / zoom,
               y: dragStart.offset.y + (mouseY - dragStart.click.y) / zoom,
