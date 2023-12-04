@@ -17,6 +17,7 @@ import { EFPData } from '../types'
 import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
+import GeneDistributionChart from './GeneDistributionChart'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -359,6 +360,11 @@ export default class EFPViewer
           >
             {props.activeData.viewData[activeViewIndex].supported ? (
               <>
+                {props.activeData.views[activeViewIndex].name !== 'cellEFP' && (
+                  <GeneDistributionChart
+                    data={{ ...props.activeData.viewData[activeViewIndex] }}
+                  />
+                )}
                 <Legend
                   sx={(theme) => ({
                     position: 'absolute',
