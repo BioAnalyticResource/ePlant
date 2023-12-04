@@ -165,7 +165,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     return out
   }
   component(props: ViewProps<EFPData, EFPState, EFPAction>): JSX.Element {
-    const { view, _loading } = useEFPSVG(
+    const { view } = useEFPSVG(
       {
         svgURL: this.svgURL,
         xmlURL: this.xmlURL,
@@ -202,7 +202,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         tissue: EFPTissue
       }[]
     >([])
-    
+
     const svgDiv = React.useMemo(() => {
       return (
         <div
@@ -227,8 +227,8 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
             el: document.querySelector(`#${id} .efp-group-${t.id}`),
             group,
             tissue: t,
-          }))
-        )
+          })),
+        ),
       )
       setSvgElements(elements as any)
     }, [props.activeData.groups, id, svgDiv])
