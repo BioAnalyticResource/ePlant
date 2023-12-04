@@ -2,7 +2,7 @@ import GeneticElement from '@eplant/GeneticElement'
 import { ViewDataError } from '@eplant/View/viewData'
 import EFP, { getEFPSampleData } from '../eFP'
 import _ from 'lodash'
-import { EFPData, EFPGroup, EFPId, EFPTissue } from '../eFP/types'
+import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../eFP/types'
 import React from 'react'
 import CellSVGTooltip from '../eFP/Tooltips/cellEFPTooltip'
 
@@ -12,6 +12,7 @@ export default class CellEFP extends EFP {
     group: EFPGroup
     tissue: EFPTissue
     data: EFPData
+    state: EFPState
   }) => React.JSX.Element
   constructor(
     public name: string,
