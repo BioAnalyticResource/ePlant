@@ -26,6 +26,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     group: EFPGroup
     tissue: EFPTissue
     data: EFPData
+    state: EFPState
   }) => React.JSX.Element
   constructor(
     public name: string,
@@ -283,6 +284,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
               el={el}
               group={group}
               tissue={tissue}
+              state={props.state}
             />
           ))}
       </div>

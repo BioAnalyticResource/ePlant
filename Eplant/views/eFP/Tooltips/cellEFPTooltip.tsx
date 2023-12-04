@@ -8,7 +8,7 @@ import {
   TableCell,
   useTheme,
 } from '@mui/material'
-import { EFPGroup, EFPTissue, EFPData } from '../types'
+import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
 import React from 'react'
 
 function CellSVGTooltip(props: {
@@ -16,6 +16,7 @@ function CellSVGTooltip(props: {
   group: EFPGroup
   tissue: EFPTissue
   data: EFPData
+  state: EFPState
 }) {
   const [open, setOpen] = React.useState(false)
   const theme = useTheme()
