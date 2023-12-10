@@ -308,11 +308,7 @@ export default class EFPViewer
           {/* Left column of EFP Previews */}
           <Box
             sx={{
-              background: (theme) => theme.palette.background.paperOverlay,
-              border: '1px solid',
-              borderRadius: 1,
-              borderColor: (theme) => theme.palette.background.active,
-              padding: 2,
+              padding: 1,
               position: 'relative',
               left: -16,
               top: -16,
