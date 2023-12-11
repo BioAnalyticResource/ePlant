@@ -63,6 +63,8 @@ function SVGTooltip(props: {
           <Box
             sx={(theme) => ({
               backgroundColor: theme.palette.background.transparentOverlay,
+              border: '1px solid',
+              borderColor: theme.palette.background.active,
               backdropFilter: 'blur(7px)',
               boxShadow: theme.shadows[3],
               borderRadius: 1,

@@ -220,7 +220,7 @@ export function ViewContainer<T, S, A>({
       {topBar}
       <Box
         sx={(theme) => ({
-          padding: '2rem',
+          padding: '1rem',
           flexGrow: 1,
           display: 'flex',
           gap: theme.spacing(4),
