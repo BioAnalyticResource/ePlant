@@ -267,21 +267,16 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 3,
-          background: (theme) => theme.palette.background.paperOverlay,
-          border: '1px solid',
-          borderRadius: 1,
-          borderColor: (theme) => theme.palette.background.active,
-          padding: 2,
+          gap: 2,
+          padding: 0,
           position: 'relative',
-          left: -16,
-          top: -16,
+          top: -8,
           overflow: 'hidden',
           whiteSpace: 'nowrap',
         }}
       >
         <Typography variant="body2" color="secondary">
-          Views available for this gene
+          Available views
         </Typography>
         {userViews.map((view) => (
           <ViewButton
