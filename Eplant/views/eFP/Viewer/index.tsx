@@ -303,6 +303,7 @@ export default class EFPViewer
             flexDirection: 'row',
             alignItems: 'stretch',
             justifyContent: 'stretch',
+            overflow: 'hidden',
           }}
         >
           {/* Left column of EFP Previews */}
@@ -310,9 +311,6 @@ export default class EFPViewer
             sx={{
               padding: 1,
               position: 'relative',
-              left: -16,
-              top: -16,
-              overflow: 'hidden',
             }}
           >
             {/* Dropdown menus for selecting a view and sort options
@@ -379,12 +377,17 @@ export default class EFPViewer
               colorMode={props.state.colorMode}
             />
           </Box>
+          {/* main canvas area */}
           <Box
-            sx={{
+            sx={(theme) => ({
               flexGrow: 1,
               position: 'relative',
-              overflow: 'auto',
-            }}
+              overflow: 'hidden',
+              background: theme.palette.background.paperOverlay,
+              border: `1px solid`,
+              borderColor: theme.palette.background.active,
+              borderRadius: theme.shape.borderRadius + 'px',
+            })}
           >
             {props.activeData.viewData[activeViewIndex].supported ? (
               <>
@@ -392,7 +395,7 @@ export default class EFPViewer
                   sx={(theme) => ({
                     position: 'absolute',
                     left: theme.spacing(2),
-                    bottom: 0,
+                    bottom: theme.spacing(2),
                     zIndex: 10,
                   })}
                   data={{
@@ -406,8 +409,8 @@ export default class EFPViewer
                 <PanZoom
                   sx={(theme) => ({
                     position: 'absolute',
-                    top: theme.spacing(4),
-                    left: theme.spacing(2),
+                    top: theme.spacing(0),
+                    left: theme.spacing(0),
                     width: '100%',
                     height: '100%',
                     zIndex: 0,
