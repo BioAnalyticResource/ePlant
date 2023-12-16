@@ -23,9 +23,19 @@ function SVGTooltip(props: {
   React.useEffect(() => {
     const enterListener = () => {
       setOpen(true)
+      props.el?.firstElementChild?.setAttribute('stroke-width', '1.5')
+      props.el?.firstElementChild?.setAttribute(
+        'stroke',
+        theme.palette.secondary.contrastText,
+      )
     }
     const leaveListener = () => {
       setOpen(false)
+      props.el?.firstElementChild?.setAttribute('stroke-width', '0.5')
+      props.el?.firstElementChild?.setAttribute(
+        'stroke',
+        theme.palette.secondary.dark,
+      )
     }
     if (props.el) {
       props.el.addEventListener('mouseenter', enterListener)
@@ -102,7 +112,7 @@ function SVGTooltip(props: {
                       </TableCell>
                       <TableCell sx={{ borderBottom: 'none' }}>
                         {Math.log2(
-                          props.tissue.mean / (props.data.control ?? 1)
+                          props.tissue.mean / (props.data.control ?? 1),
                         ).toFixed(2)}
                       </TableCell>
                     </TableRow>
