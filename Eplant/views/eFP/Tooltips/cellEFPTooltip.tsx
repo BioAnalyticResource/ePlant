@@ -11,6 +11,20 @@ import {
 import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
 import React from 'react'
 
+const setStroke = (el: Element | null, colour: string, width: string) => {
+  if (el) {
+    if (el.firstElementChild?.children.length === 0) {
+      for (const child of el.children) {
+        child.setAttribute('stroke-width', width)
+        child.setAttribute('stroke', colour)
+      }
+    } else {
+      for (const child of el.children) {
+        setStroke(child, colour, width)
+      }
+    }
+  }
+}
 function CellSVGTooltip(props: {
   el: SVGElement | null
   group: EFPGroup
@@ -20,12 +34,15 @@ function CellSVGTooltip(props: {
 }) {
   const [open, setOpen] = React.useState(false)
   const theme = useTheme()
+
   React.useEffect(() => {
     const enterListener = () => {
       setOpen(true)
+      setStroke(props.el, '#000000', '3')
     }
     const leaveListener = () => {
       setOpen(false)
+      setStroke(props.el, '#FFFFFF', '2')
     }
     if (props.el) {
       props.el.addEventListener('mouseenter', enterListener)
