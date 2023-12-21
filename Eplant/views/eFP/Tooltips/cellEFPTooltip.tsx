@@ -10,21 +10,8 @@ import {
 } from '@mui/material'
 import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
 import React from 'react'
+import { setStroke } from './EFPTooltip'
 
-const setStroke = (el: Element | null, colour: string, width: string) => {
-  if (el) {
-    if (el.firstElementChild?.children.length === 0) {
-      for (const child of el.children) {
-        child.setAttribute('stroke-width', width)
-        child.setAttribute('stroke', colour)
-      }
-    } else {
-      for (const child of el.children) {
-        setStroke(child, colour, width)
-      }
-    }
-  }
-}
 function CellSVGTooltip(props: {
   el: SVGElement | null
   group: EFPGroup

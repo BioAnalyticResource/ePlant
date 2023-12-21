@@ -11,6 +11,26 @@ import {
 import React from 'react'
 import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
 
+export const setStroke = (
+  el: Element | null,
+  colour: string,
+  width: string,
+) => {
+  // For multigroup SVGs, recursively sets stroke of all path elements
+  if (el) {
+    if (el.firstElementChild?.children.length === 0) {
+      for (const child of el.children) {
+        child.setAttribute('stroke-width', width)
+        child.setAttribute('stroke', colour)
+      }
+    } else {
+      for (const child of el.children) {
+        setStroke(child, colour, width)
+      }
+    }
+  }
+}
+
 function SVGTooltip(props: {
   el: SVGElement | null
   group: EFPGroup
@@ -23,19 +43,21 @@ function SVGTooltip(props: {
   React.useEffect(() => {
     const enterListener = () => {
       setOpen(true)
-      props.el?.firstElementChild?.setAttribute('stroke-width', '1.5')
-      props.el?.firstElementChild?.setAttribute(
-        'stroke',
-        theme.palette.secondary.contrastText,
-      )
+      setStroke(props.el, theme.palette.secondary.contrastText, '1.5')
+      // props.el?.firstElementChild?.setAttribute('stroke-width', '1.5')
+      // props.el?.firstElementChild?.setAttribute(
+      //   'stroke',
+      //   theme.palette.secondary.contrastText,
+      // )
     }
     const leaveListener = () => {
       setOpen(false)
-      props.el?.firstElementChild?.setAttribute('stroke-width', '0.5')
-      props.el?.firstElementChild?.setAttribute(
-        'stroke',
-        theme.palette.secondary.dark,
-      )
+      setStroke(props.el, theme.palette.secondary.dark, '0.5')
+      // props.el?.firstElementChild?.setAttribute('stroke-width', '0.5')
+      // props.el?.firstElementChild?.setAttribute(
+      //   'stroke',
+      //   theme.palette.secondary.dark,
+      // )
     }
     if (props.el) {
       props.el.addEventListener('mouseenter', enterListener)
