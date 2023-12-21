@@ -44,20 +44,10 @@ function SVGTooltip(props: {
     const enterListener = () => {
       setOpen(true)
       setStroke(props.el, theme.palette.secondary.contrastText, '1.5')
-      // props.el?.firstElementChild?.setAttribute('stroke-width', '1.5')
-      // props.el?.firstElementChild?.setAttribute(
-      //   'stroke',
-      //   theme.palette.secondary.contrastText,
-      // )
     }
     const leaveListener = () => {
       setOpen(false)
       setStroke(props.el, theme.palette.secondary.dark, '0.5')
-      // props.el?.firstElementChild?.setAttribute('stroke-width', '0.5')
-      // props.el?.firstElementChild?.setAttribute(
-      //   'stroke',
-      //   theme.palette.secondary.dark,
-      // )
     }
     if (props.el) {
       props.el.addEventListener('mouseenter', enterListener)
