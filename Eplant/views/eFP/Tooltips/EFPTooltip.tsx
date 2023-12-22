@@ -11,6 +11,26 @@ import {
 import React from 'react'
 import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
 
+export const setStroke = (
+  el: Element | null,
+  colour: string,
+  width: string,
+) => {
+  // For multigroup SVGs, recursively sets stroke of all path elements
+  if (el) {
+    if (el.firstElementChild?.children.length === 0) {
+      for (const child of el.children) {
+        child.setAttribute('stroke-width', width)
+        child.setAttribute('stroke', colour)
+      }
+    } else {
+      for (const child of el.children) {
+        setStroke(child, colour, width)
+      }
+    }
+  }
+}
+
 function SVGTooltip(props: {
   el: SVGElement | null
   group: EFPGroup
@@ -23,9 +43,11 @@ function SVGTooltip(props: {
   React.useEffect(() => {
     const enterListener = () => {
       setOpen(true)
+      setStroke(props.el, theme.palette.secondary.contrastText, '1.5')
     }
     const leaveListener = () => {
       setOpen(false)
+      setStroke(props.el, theme.palette.secondary.dark, '0.5')
     }
     if (props.el) {
       props.el.addEventListener('mouseenter', enterListener)
@@ -102,7 +124,7 @@ function SVGTooltip(props: {
                       </TableCell>
                       <TableCell sx={{ borderBottom: 'none' }}>
                         {Math.log2(
-                          props.tissue.mean / (props.data.control ?? 1)
+                          props.tissue.mean / (props.data.control ?? 1),
                         ).toFixed(2)}
                       </TableCell>
                     </TableRow>

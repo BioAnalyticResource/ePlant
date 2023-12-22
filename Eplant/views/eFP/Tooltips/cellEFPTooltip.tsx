@@ -10,6 +10,7 @@ import {
 } from '@mui/material'
 import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
 import React from 'react'
+import { setStroke } from './EFPTooltip'
 
 function CellSVGTooltip(props: {
   el: SVGElement | null
@@ -20,12 +21,15 @@ function CellSVGTooltip(props: {
 }) {
   const [open, setOpen] = React.useState(false)
   const theme = useTheme()
+
   React.useEffect(() => {
     const enterListener = () => {
       setOpen(true)
+      setStroke(props.el, '#000000', '3')
     }
     const leaveListener = () => {
       setOpen(false)
+      setStroke(props.el, '#FFFFFF', '2')
     }
     if (props.el) {
       props.el.addEventListener('mouseenter', enterListener)
