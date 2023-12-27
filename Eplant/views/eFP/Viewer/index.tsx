@@ -455,7 +455,7 @@ export default class EFPViewer
     },
     {
       action: { type: 'toggle-mask-modal' },
-      render: (props) => <>Mask data</>
+      render: () => <>Mask data</>
     }
   ]
   header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
