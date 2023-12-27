@@ -26,6 +26,7 @@ export type EFPPreviewProps = {
   selected: boolean
   colorMode: 'absolute' | 'relative'
   data: EFPData
+  maskThreshold: number
 } & BoxProps
 export default function EFPPreview({
   gene,
@@ -33,6 +34,7 @@ export default function EFPPreview({
   selected,
   colorMode,
   data,
+  maskThreshold,
   ...boxProps
 }: EFPPreviewProps) {
   const colorModeDeferred = React.useDeferredValue(colorMode)
@@ -54,9 +56,10 @@ export default function EFPPreview({
           state={{
             renderAsThumbnail: true,
             colorMode: colorModeDeferred,
+            maskThreshold: maskThreshold
           }}
           geneticElement={gene}
-          dispatch={() => {}}
+          dispatch={() => { }}
         />
         <div
           style={{
