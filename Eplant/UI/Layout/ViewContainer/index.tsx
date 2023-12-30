@@ -89,7 +89,7 @@ export function ViewContainer<T, S, A>({
         position="sticky"
         elevation={0}
       >
-        <Toolbar style={{ gap: '8px', paddingLeft: 16 }}>
+        <Toolbar style={{ gap: '8px', padding: 8 }}>
           <Stack
             direction="row"
             gap={2}
