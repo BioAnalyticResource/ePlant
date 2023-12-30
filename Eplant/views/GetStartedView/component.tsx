@@ -20,15 +20,15 @@ export default function GetStartedView({
       </div>
       <Stack spacing={1}>
         <Typography variant="h5">Start</Typography>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={2}>
           <Filter1 color="primary" />
           <Typography>Select a species</Typography>
         </Stack>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={2}>
           <Filter2 color="primary" />
           <Typography>Enter a gene of interest</Typography>
         </Stack>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={2}>
           <Filter3 color="primary" />
           <Typography>
             Use the view selector to navigate between views
@@ -63,11 +63,11 @@ export default function GetStartedView({
           .
         </Typography>
       </Stack>
-      <Grid container spacing={0} columns={5}>
+      <Grid container spacing={1} columns={3}>
         {views.map((view) => {
           if (view.description && view.thumbnail) {
             return (
-              <Grid item key={view.id} xs={1} sx={{ marginRight: 1 }}>
+              <Grid item key={view.id} xs={1}>
                 <Tile view={view} />
               </Grid>
             )
