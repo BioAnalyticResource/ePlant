@@ -89,11 +89,15 @@ export function ViewContainer<T, S, A>({
         position="sticky"
         elevation={0}
       >
-        <Toolbar style={{ gap: '8px' }}>
+        <Toolbar style={{ gap: '8px', paddingLeft: 16 }}>
           <Stack
             direction="row"
             gap={2}
-            sx={{ flexGrow: 1, height: '100%', alignItems: 'center' }}
+            sx={{
+              flexGrow: 1,
+              height: '100%',
+              alignItems: 'center',
+            }}
           >
             {/* View selector dropdown */}
             <FormControl variant="standard">
