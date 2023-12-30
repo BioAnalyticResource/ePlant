@@ -82,11 +82,10 @@ function ViewTab(props: {
 
   React.useEffect(() => {
     // Only include the gene name in the tab name if a gene is selected and this view belongs to that gene
-    const targetName = `${
-      gene && userViews.some((geneView) => geneView.id == view?.view)
+    const targetName = `${gene && userViews.some((geneView) => geneView.id == view?.view)
         ? gene.id + ' - '
         : ''
-    }${v ? v.name : 'No view'}`
+      }${v ? v.name : 'No view'}`
     if (props.layout && props.layout.node.getName() != targetName) {
       props.layout.model.doAction(
         Actions.renameTab(props.layout.node.getId(), targetName),
@@ -315,7 +314,7 @@ function EplantLayout() {
     if (model.getNodeById(activeId)) model.doAction(Actions.selectTab(activeId))
     // TODO: Need to add back if using flex-layout from Alex's fork
     // else model.doAction(Actions.deselectTabset())
-  }, [activeId, model])
+  }, [activeId])
 
   // Add a new tab when there is a non-popout pane
   React.useEffect(() => {
@@ -428,9 +427,9 @@ function EplantLayout() {
 
     layout.current.addTabToTabSet(
       tabsetId ??
-        model.getActiveTabset()?.getId?.() ??
-        model.getRoot().getChildren()[0]?.getId() ??
-        '',
+      model.getActiveTabset()?.getId?.() ??
+      model.getRoot().getChildren()[0]?.getId() ??
+      '',
       {
         name: name,
         component: 'view',
@@ -483,7 +482,7 @@ function EplantLayout() {
 }
 
 function updateColors(theme: Theme) {
-  ;(
+  ; (
     Array.from(
       document.getElementsByClassName('flexlayout__layout'),
     ) as HTMLDivElement[]
