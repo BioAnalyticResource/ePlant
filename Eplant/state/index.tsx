@@ -56,17 +56,17 @@ export function atomWithStorage<T>(
       if (e) setAtom(e)
       else setAtom(initialValue)
     }
-    ;(async () => {
-      const finished = loading?.()
-      try {
-        const val = await loadedValue
-        if (val) {
-          setAtom(val)
+      ; (async () => {
+        const finished = loading?.()
+        try {
+          const val = await loadedValue
+          if (val) {
+            setAtom(val)
+          }
+        } finally {
+          if (finished) finished()
         }
-      } finally {
-        if (finished) finished()
-      }
-    })()
+      })()
     return storage.watch(key, listener)
   }
   const a = atom(
@@ -101,17 +101,17 @@ function atomWithOptionalStorage<T>(
       if (e) setAtom(deserialize(e))
       else setAtom(initialValue)
     }
-    ;(async () => {
-      pageLoad.start()
-      try {
-        const val = await loadedValue
-        if (val) {
-          setAtom(deserialize(val))
+      ; (async () => {
+        pageLoad.start()
+        try {
+          const val = await loadedValue
+          if (val) {
+            setAtom(deserialize(val))
+          }
+        } finally {
+          pageLoad.done()
         }
-      } finally {
-        pageLoad.done()
-      }
-    })()
+      })()
     return storage.watch(key, listener)
   }
   const a = atom(
@@ -146,6 +146,18 @@ export const genesAtom = atomWithOptionalStorage<GeneticElement[]>(
 )
 export const useGeneticElements = () => useAtom(genesAtom)
 export const useSetGeneticElements = () => useSetAtom(genesAtom)
+
+export const fetchCitations = async () => {
+  try {
+    const response = await fetch('https://bar.utoronto.ca/eplant/data/citations.json')
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error fetching citations:', error)
+  }
+}
+export const citationsAtom = atom(await fetchCitations())
+export const useCitations = () => useAtom(citationsAtom)
 
 export const collectionsAtom = atomWithOptionalStorage<
   { genes: string[]; name: string; open: boolean }[]

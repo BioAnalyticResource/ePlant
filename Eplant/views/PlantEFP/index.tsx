@@ -8,7 +8,7 @@ import { EFPViewerData } from '../eFP/Viewer/types'
 
 const views: EFPViewerData['views'] = [
   {
-    name: 'AtGenExpress',
+    name: 'AtGenExpress eFP',
     id: 'atgenexpress',
     svgURL:
       'https://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.svg',
@@ -16,7 +16,7 @@ const views: EFPViewerData['views'] = [
       'https://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.xml',
   },
   {
-    name: 'Klepikova',
+    name: 'Klepikova eFP',
     id: 'klepikova',
     svgURL:
       'https://bar.utoronto.ca/eplant/data/plant/Klepikova/Arabidopsis_thaliana.svg',

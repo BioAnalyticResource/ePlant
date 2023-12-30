@@ -18,6 +18,8 @@ import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
 import GeneDistributionChart from './GeneDistributionChart'
+import { useCitations } from '@eplant/state'
+import { getCitation } from '@eplant/util/citations'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -126,7 +128,7 @@ export default class EFPViewer
     public icon: () => JSX.Element,
     public description?: string,
     public thumbnail?: string,
-  ) {}
+  ) { }
   getInitialData = async (
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void,
@@ -240,7 +242,7 @@ export default class EFPViewer
             renderAsThumbnail: false,
           }}
           geneticElement={props.geneticElement}
-          dispatch={() => {}}
+          dispatch={() => { }}
         />
       )
     }, [
@@ -289,7 +291,7 @@ export default class EFPViewer
             }}
           >
             {/* Dropdown menus for selecting a view and sort options
-            
+
             //TODO: Make the dropdown menus appear closer to the button, left aligned and with a max height */}
             <Box sx={{ marginBottom: 1 }}>
               <Dropdown
@@ -438,4 +440,21 @@ export default class EFPViewer
       {props.geneticElement?.id}
     </Typography>
   )
+
+  citation = (props: { activeData?: EFPViewerData, state?: EFPViewerState, gene?: GeneticElement | null }) => {
+    const viewID = props.activeData?.views.find((v) => v.id == props.state?.activeView)?.name
+    if (viewID) {
+      const citation = getCitation(viewID)
+      console.log(citation)
+      return (
+        <div>
+          <br></br>{citation.source ? citation.source : ""}
+          <br></br>{citation.notes ? citation.notes : ""}
+          <br></br>{citation.URL ? citation.notes : ""}
+        </div>
+      )
+    } else {
+      return <div></div>
+    }
+  }
 }
