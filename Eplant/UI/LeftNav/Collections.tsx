@@ -162,11 +162,11 @@ export function Collection({
       <Card
         elevation={0}
         sx={(theme) => ({
-          borderRadius: theme.shape.borderRadius,
+          borderRadius: theme.shape.borderRadius + 'px',
           color: theme.palette.text.secondary,
           backgroundColor:
             genes.length > 0 && !open
-              ? theme.palette.background.active
+              ? theme.palette.background.paper
               : theme.palette.background.default,
         })}
       >
@@ -213,9 +213,10 @@ export function Collection({
             <div
               style={{
                 display: 'flex',
-                flexFlow: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+                flexFlow: 'column',
+                lineHeight: 'normal',
+                padding: '8px 0px',
+                // justifyContent: 'space-between',
               }}
             >
               <span>{name}</span>
