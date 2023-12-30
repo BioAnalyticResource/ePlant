@@ -108,16 +108,20 @@ export function ViewContainer<T, S, A>({
                   if (view) setView(view)
                 }}
                 inputProps={{
-                  sx: {
+                  sx: (theme) => ({
                     display: 'flex',
                     alignItems: 'center',
-
+                    backgroundColor: theme.palette.background.paperOverlay,
+                    paddingLeft: 1,
+                    paddingRight: 1,
+                    borderRadius: 1,
                     ':focus': {
-                      backgroundColor: 'transparent',
+                      backgroundColor: theme.palette.background.paperOverlay,
+                      borderRadius: 1,
                     },
                     '& legend': { display: 'none' },
                     '& fieldset': { top: 0 },
-                  },
+                  }),
                 }}
               >
                 {userViews.map((view) => (
