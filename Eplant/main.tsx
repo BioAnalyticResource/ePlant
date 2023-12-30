@@ -24,7 +24,6 @@ const genericViews = [GetStartedView, FallbackView]
 // List of views that a user can select from
 // Can contain views from the genericViews list too
 const userViews = [
-  GetStartedView,
   GeneInfoView,
   PublicationViewer,
   DebugView,
@@ -72,7 +71,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register(import.meta.env.BASE_URL + '/sw.js')
+      const registration = await navigator.serviceWorker.register(
+        import.meta.env.BASE_URL + '/sw.js'
+      )
       if (registration.installing) {
         console.log('Service worker installing')
       } else if (registration.waiting) {
