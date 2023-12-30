@@ -10,7 +10,7 @@ import Thumbnail from '../../../thumbnails/publication_viewer.png'
 import { ViewDataError } from '@eplant/View/viewData'
 
 const PublicationViewer: View<PublicationViewerData> = {
-  name: 'Publication Viewer',
+  name: 'Publication viewer',
   id: 'publication-viewer',
   component({
     geneticElement,
@@ -35,7 +35,7 @@ const PublicationViewer: View<PublicationViewerData> = {
     )
   },
   icon: () => <PublicationViewerIcon />,
-  description: "Find publications that mention your gene of interest.",
+  description: 'Find publications that mention your gene of interest.',
   thumbnail: Thumbnail,
   citation({ gene }) {
     return (
