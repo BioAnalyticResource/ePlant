@@ -111,6 +111,11 @@ export function ViewContainer<T, S, A>({
                   const view = views.find((view) => view.id == e?.target?.value)
                   if (view) setView(view)
                 }}
+                sx={{
+                  '& .MuiSelect-select': {
+                    paddingRight: '36px !important',
+                  },
+                }}
                 inputProps={{
                   sx: (theme: {
                     palette: { background: { paperOverlay: any } }
@@ -119,7 +124,6 @@ export function ViewContainer<T, S, A>({
                     alignItems: 'center',
                     backgroundColor: theme.palette.background.paperOverlay,
                     paddingLeft: 1,
-                    paddingRight: 1,
                     borderRadius: 1,
                     ':focus': {
                       backgroundColor: theme.palette.background.paperOverlay,
