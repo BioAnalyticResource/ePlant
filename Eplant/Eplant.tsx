@@ -42,7 +42,7 @@ import ErrorBoundary from './util/ErrorBoundary'
 
 // TODO: Make this drawer support opening/closing on mobile
 
-const sideBarWidth = 300
+const sideBarWidth = 240
 
 function ResponsiveDrawer(props: DrawerProps) {
   const [open, setOpen] = React.useState(props.open)
