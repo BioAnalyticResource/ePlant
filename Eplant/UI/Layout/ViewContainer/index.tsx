@@ -101,9 +101,26 @@ export function ViewContainer<T, S, A>({
           >
             {/* View selector dropdown */}
             <FormControl variant="standard">
-              {/* <InputLabel id={idLabel}>View</InputLabel> */}
               <Select
                 value={view.id}
+                renderValue={() => {
+                  if (view.id == 'get-started') {
+                    return <span style={{ paddingLeft: 8 }}>View selector</span>
+                  }
+                  return (
+                    <span
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Box sx={{ paddingRight: 1.5, marginTop: 0.5 }}>
+                        {view.icon && <view.icon />}
+                      </Box>
+                      {view.name}
+                    </span>
+                  )
+                }}
                 labelId={idLabel}
                 label={'View'}
                 id={selectId}
@@ -123,7 +140,7 @@ export function ViewContainer<T, S, A>({
                     display: 'flex',
                     alignItems: 'center',
                     backgroundColor: theme.palette.background.paperOverlay,
-                    paddingLeft: 1,
+                    padding: 1,
                     borderRadius: 1,
                     ':focus': {
                       backgroundColor: theme.palette.background.paperOverlay,
@@ -134,6 +151,9 @@ export function ViewContainer<T, S, A>({
                   }),
                 }}
               >
+                <MenuItem disabled value="">
+                  Select a view
+                </MenuItem>
                 {userViews.map((view) => (
                   <MenuItem
                     key={view.id}
@@ -144,7 +164,7 @@ export function ViewContainer<T, S, A>({
                         : 'none',
                       paddingTop: 8,
                       paddingBottom: 8,
-                      marginBottom: 8,
+                      marginBottom: 0,
                     }}
                   >
                     <Box sx={{ paddingRight: 2, marginTop: 0.5 }}>
