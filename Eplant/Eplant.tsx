@@ -384,7 +384,7 @@ function EplantLayout() {
                   }}
                   size="small"
                 >
-                  <Close />
+                  <Close fontSize="inherit" />
                 </IconButton>,
               ]
             }}
@@ -456,7 +456,7 @@ function EplantLayout() {
         size="small"
         key="add-tab"
       >
-        <Add />
+        <Add fontSize="inherit" />
       </IconButton>
     )
     renderValues.buttons.push(
@@ -468,7 +468,7 @@ function EplantLayout() {
         size="small"
         key="make-popout"
       >
-        <CallMade />
+        <CallMade fontSize="inherit" />
       </IconButton>
     )
   }
