@@ -267,12 +267,12 @@ export function ViewContainer<T, S, A>({
             />
           ) : (
             <>
-              <view.header
+              {/* <view.header
                 state={state}
                 activeData={activeData}
                 dispatch={dispatch}
                 geneticElement={gene}
-              />
+              /> */}
               <view.component
                 state={state}
                 geneticElement={gene}
