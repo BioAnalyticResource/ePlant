@@ -112,7 +112,9 @@ export function ViewContainer<T, S, A>({
                   if (view) setView(view)
                 }}
                 inputProps={{
-                  sx: (theme) => ({
+                  sx: (theme: {
+                    palette: { background: { paperOverlay: any } }
+                  }) => ({
                     display: 'flex',
                     alignItems: 'center',
                     backgroundColor: theme.palette.background.paperOverlay,
