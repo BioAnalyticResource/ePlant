@@ -309,7 +309,7 @@ export default class EFPViewer
           {/* Left column of EFP Previews */}
           <Box
             sx={{
-              padding: 1,
+              padding: 0,
               position: 'relative',
             }}
           >
