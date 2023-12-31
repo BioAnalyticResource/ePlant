@@ -311,15 +311,17 @@ export default class EFPViewer
             sx={{
               padding: 0,
               position: 'relative',
+              width: 168,
             }}
           >
             {/* Dropdown menus for selecting a view and sort options
             
             //TODO: Make the dropdown menus appear closer to the button, left aligned and with a max height */}
-            <Box sx={{ marginBottom: 1 }}>
+            <Box sx={{ marginBottom: 1, display: 'flex', gap: 1 }}>
               <Dropdown
                 color="secondary"
                 variant="text"
+                size="small"
                 options={sortedViews.map((view) => (
                   <MenuItem
                     selected={props.state.activeView == view.id ? true : false}
@@ -336,6 +338,7 @@ export default class EFPViewer
               </Dropdown>
               <Dropdown
                 variant="text"
+                size="small"
                 color="secondary"
                 options={[
                   <MenuItem
