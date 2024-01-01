@@ -190,6 +190,7 @@ export default function GeneticElementComponent({
                   ? theme.palette.background.selected
                   : theme.palette.background.default
               })`,
+
               width: '100%',
               height: '100%',
               position: 'absolute',
@@ -197,7 +198,7 @@ export default function GeneticElementComponent({
               zIndex: 5,
             },
             ':hover::before': {
-              background: `linear-gradient(to right, transparent, 95%, ${theme.palette.background.hover})`,
+              background: `linear-gradient(to right, transparent, 95%, ${theme.palette.background.selected})`,
             },
           }}
           ref={textContainerRef}
