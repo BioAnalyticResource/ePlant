@@ -34,6 +34,7 @@ import { EFPData, EFPState } from '../types'
 import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
+import { red } from '@mui/material/colors'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -311,7 +312,6 @@ export default class EFPViewer
             sx={{
               padding: 0,
               position: 'relative',
-              width: 168,
             }}
           >
             {/* Dropdown menus for selecting a view and sort options
@@ -322,6 +322,8 @@ export default class EFPViewer
                 color="secondary"
                 variant="text"
                 size="small"
+                sx={{ padding: '0.25rem 0.5rem', minWidth: 'fit-content' }}
+                endIcon={undefined}
                 options={sortedViews.map((view) => (
                   <MenuItem
                     selected={props.state.activeView == view.id ? true : false}
@@ -334,11 +336,13 @@ export default class EFPViewer
                   </MenuItem>
                 ))}
               >
-                Select
+                View
               </Dropdown>
               <Dropdown
                 variant="text"
                 size="small"
+                sx={{ padding: '0.25rem 0.5rem', minWidth: 'fit-content' }}
+                endIcon={undefined}
                 color="secondary"
                 options={[
                   <MenuItem
