@@ -83,6 +83,8 @@ export default function Dropdown({
           'aria-labelledby': buttonId,
         }}
         anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         open={open}
         onClose={handleClose}
       >

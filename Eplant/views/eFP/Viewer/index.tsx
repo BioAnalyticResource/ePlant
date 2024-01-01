@@ -314,9 +314,7 @@ export default class EFPViewer
               position: 'relative',
             }}
           >
-            {/* Dropdown menus for selecting a view and sort options
-            
-            //TODO: Make the dropdown menus appear closer to the button, left aligned and with a max height */}
+            {/* Dropdown menus for selecting a view and sort options */}
             <Box sx={{ marginBottom: 1, display: 'flex', gap: 1 }}>
               <Dropdown
                 color="secondary"
