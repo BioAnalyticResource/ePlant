@@ -13,8 +13,8 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
     <a href="http://bar.utoronto.ca/" rel="noreferrer" target="_blank">
       <svg
         {...props}
-        width="48"
-        height="48"
+        width="42"
+        height="42"
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

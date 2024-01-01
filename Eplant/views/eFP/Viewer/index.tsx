@@ -111,6 +111,7 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
       width={130}
       style={{
         zIndex: 10,
+        scrollbarWidth: 'none',
       }}
       itemData={props}
     >

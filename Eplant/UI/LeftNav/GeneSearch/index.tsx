@@ -43,7 +43,7 @@ export function SearchGroup({
         onChange={(e) =>
           setSpecies(speciesList.find((s) => s.name == e.target.value))
         }
-        label="Species"
+        // label="Species"
         variant="standard"
         inputProps={{
           sx: {
