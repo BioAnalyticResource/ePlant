@@ -247,7 +247,7 @@ export function Collection({
           )}
         </Stack>
       </Card>
-      <Collapse in={open}>
+      <Collapse in={open} sx={{ marginTop: '0px !important' }}>
         <SortableContext items={genes} strategy={verticalListSortingStrategy}>
           <Stack
             direction="column"
@@ -268,15 +268,19 @@ export function Collection({
               ))
             ) : (
               <Stack spacing={1} direction="row">
-                <div style={{ width: '24px' }} />
                 <Typography
                   variant="caption"
                   fontStyle="italic"
                   sx={(theme) => ({
-                    color: theme.palette.text.disabled,
+                    color: theme.palette.background.hover,
+                    padding: '0.25rem 0.75rem',
+                    flexGrow: 1,
+                    border: 'dashed 1px',
+                    borderColor: theme.palette.background.hover,
+                    borderRadius: theme.shape.borderRadius + 'px',
                   })}
                 >
-                  Drag genes here
+                  Drag genes to reorder them
                 </Typography>
               </Stack>
             )}
