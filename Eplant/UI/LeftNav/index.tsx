@@ -44,7 +44,7 @@ export function LeftNav(props: {
     if (uniq.length != geneticElements.length) setGeneticElements(uniq)
   }, [geneticElements])
   return (
-    <Stack gap={4} direction="column" height={'100%'}>
+    <Stack gap={2} direction="column" height={'100%'}>
       <LogoWithText text="ePlant" />
       <SearchGroup
         addGeneticElements={(s) => {
