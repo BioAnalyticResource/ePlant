@@ -43,7 +43,11 @@ export function LogoWithText({
   return (
     <Stack direction={'row'} gap={'12px'} style={{ alignItems: 'center' }}>
       <Logo {...props}></Logo>
-      <Typography variant="h6" color={theme.palette.primary.main}>
+      <Typography
+        variant="h6"
+        color={theme.palette.primary.main}
+        sx={{ paddingBottom: 1 }}
+      >
         {text}
       </Typography>
     </Stack>
