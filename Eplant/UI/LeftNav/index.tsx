@@ -80,7 +80,7 @@ export function LeftNav(props: {
               checked={darkMode}
             />
           }
-          label="Dark Mode"
+          label="Dark mode"
         />
       </FormGroup>
     </Stack>
