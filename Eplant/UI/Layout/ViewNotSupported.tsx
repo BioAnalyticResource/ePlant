@@ -36,6 +36,7 @@ export default function NotSupported(props: {
     <Stack
       gap={2}
       alignItems="center"
+      textAlign="center"
       justifyContent="center"
       direction="column"
       width="100%"
