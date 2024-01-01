@@ -1,5 +1,5 @@
 import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import { Add, CallMade, CallReceived, Close } from '@mui/icons-material'
+import { Add, OpenInNew, CallReceived, Close } from '@mui/icons-material'
 import {
   Box,
   CircularProgress,
@@ -8,6 +8,7 @@ import {
   DrawerProps,
   IconButton,
   LinearProgress,
+  Tooltip,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as FlexLayout from 'flexlayout-react'
@@ -460,16 +461,18 @@ function EplantLayout() {
       </IconButton>
     )
     renderValues.buttons.push(
-      <IconButton
-        onClick={() => {
-          const id = node.getSelectedNode()?.getId()
-          if (id) makePopout(id)
-        }}
-        size="small"
-        key="make-popout"
-      >
-        <CallMade fontSize="inherit" />
-      </IconButton>
+      <Tooltip title="Open in new window">
+        <IconButton
+          onClick={() => {
+            const id = node.getSelectedNode()?.getId()
+            if (id) makePopout(id)
+          }}
+          size="small"
+          key="make-popout"
+        >
+          <OpenInNew fontSize="inherit" />
+        </IconButton>
+      </Tooltip>
     )
   }
 }
