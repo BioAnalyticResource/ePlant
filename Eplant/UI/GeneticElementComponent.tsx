@@ -213,14 +213,21 @@ export default function GeneticElementComponent({
                 : '',
               position: 'absolute',
               userSelect: 'none',
+              top: '2px',
             })}
             ref={textGroupRef}
           >
-            <Typography sx={{ fontWeight: selected ? 'bold' : 'regular' }}>
+            <Typography
+              variant="body2"
+              // sx={{ fontWeight: selected ? 'bold' : 'regular' }}
+            >
               {geneticElement.id}
             </Typography>
             <Divider orientation="vertical" flexItem></Divider>
-            <Typography sx={{ fontWeight: selected ? 'bold' : 'regular' }}>
+            <Typography
+              variant="body2"
+              // sx={{ fontWeight: selected ? 'bold' : 'regular' }}
+            >
               {geneticElement.aliases.join(', ')}
             </Typography>
           </Stack>
