@@ -3,7 +3,7 @@ import PanZoom from '@eplant/util/PanZoom'
 import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
 import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
-import React, { startTransition } from 'react'
+import React, { startTransition, useEffect, useMemo, useState } from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
 import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
@@ -442,19 +442,64 @@ export default class EFPViewer
   )
 
   citation = (props: { activeData?: EFPViewerData, state?: EFPViewerState, gene?: GeneticElement | null }) => {
+    const [xmlData, setXMLData] = useState<string[]>([])
+
     const viewID = props.activeData?.views.find((v) => v.id == props.state?.activeView)?.name
+    const viewXML = props.activeData?.views.find((v) => v.id == props.state?.activeView)?.xmlURL
+    useEffect(() => {
+      const xmlLoad = async () => {
+        let xmlString = ""
+        if (viewXML) {
+          try {
+            const response = await fetch(viewXML)
+            const data = await response.text()
+            xmlString = data
+          } catch (error) {
+            console.error('Error fetching xmlData:', error)
+          }
+        }
+
+        // Extract <li> tags
+        if (xmlString !== "") {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+          const listItems = xmlDoc.querySelectorAll('info li');
+          const itemsArray = Array.from(listItems).map((liElement) => liElement.textContent ? liElement.textContent : "");
+          setXMLData(itemsArray)
+        } else {
+          setXMLData([])
+        }
+      }
+      xmlLoad()
+    }, [viewXML])
+
     if (viewID) {
       const citation = getCitation(viewID)
-      console.log(citation)
+      // Need to set inner HTML to capture nested HTML tags in some citations
       return (
         <div>
-          <br></br>{citation.source ? citation.source : ""}
-          <br></br>{citation.notes ? citation.notes : ""}
-          <br></br>{citation.URL ? citation.notes : ""}
+          <div dangerouslySetInnerHTML={{ __html: citation.source }}></div>
+          <br></br><div dangerouslySetInnerHTML={{ __html: citation.notes }}></div>
+          <br></br>{citation.URL ? citation.URL : ""}
+          {
+            xmlData.length > 0 ?
+              (<ul>
+                {xmlData.map((item, index) => {
+                  if (item) {
+                    return (<li key={index}> {item}</li>)
+                  }
+                }
+                )}
+              </ul>
+              ) :
+              <></>
+          }
+          <br></br> This image was generated with the {viewID} at bar.utoronto.ca/eplant by Waese et al. 2017.
+          <a target="_blank" rel="license oopener noreferrer " href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" src="https://i.creativecommons.org/l/by/4.0/80x15.png" title="The ePlant output for your gene of interest is available under a Creative Commons Attribution 4.0 International License and may be freely used in publications etc." /></a>
         </div>
       )
     } else {
-      return <div></div>
+      return <div>No Citation information provided.</div>
     }
   }
 }

@@ -16,7 +16,7 @@ const views: EFPViewerData['views'] = [
       'https://bar.utoronto.ca/eplant/data/plant/AtGenExpress/Arabidopsis_thaliana.xml',
   },
   {
-    name: 'Klepikova eFP',
+    name: 'Klepikova eFP (RNA-Seq data)',
     id: 'klepikova',
     svgURL:
       'https://bar.utoronto.ca/eplant/data/plant/Klepikova/Arabidopsis_thaliana.svg',
