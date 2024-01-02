@@ -68,31 +68,30 @@ function SVGTooltip(props: {
               backdropFilter: 'blur(7px)',
               boxShadow: theme.shadows[3],
               borderRadius: 1,
+              padding: 0.25,
             })}
           >
             <Table size="small">
               <TableBody>
                 <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Sample name
+                  <TableCell colSpan="2" sx={{ border: 0, fontWeight: 600 }}>
+                    {props.tissue.name}
                   </TableCell>
-                  <TableCell>{props.tissue.name}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell
                     sx={{
                       color: theme.palette.secondary.main,
-                      textAlign: 'right',
+                      border: 0,
+                      paddingTop: 0,
+                      paddingBottom: 0,
                     }}
                   >
                     Level
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{ border: 0, paddingTop: 0, paddingBottom: 0 }}
+                  >
                     {props.tissue.mean.toFixed(2)}±{props.tissue.std.toFixed(2)}
                   </TableCell>
                 </TableRow>
@@ -100,24 +99,40 @@ function SVGTooltip(props: {
                   <TableCell
                     sx={{
                       color: theme.palette.secondary.main,
-                      textAlign: 'right',
+                      border: 0,
+                      paddingTop: 0,
+                      paddingBottom: 0,
                     }}
                   >
                     Samples
                   </TableCell>
-                  <TableCell>{props.tissue.samples}</TableCell>
+                  <TableCell
+                    sx={{ border: 0, paddingTop: 0, paddingBottom: 0 }}
+                  >
+                    {props.tissue.samples}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell
                     sx={{
                       color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                      borderBottom: 'none',
+                      border: 0,
+                      lineHeight: 1.25,
+                      width: 150,
+                      paddingTop: 0,
+                      paddingBottom: 1,
                     }}
                   >
                     Log2 fold change vs control
                   </TableCell>
-                  <TableCell sx={{ borderBottom: 'none' }}>
+                  <TableCell
+                    sx={{
+                      borderBottom: 'none',
+                      verticalAlign: 'top',
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                    }}
+                  >
                     {Math.log2(
                       props.tissue.mean / (props.data.control ?? 1)
                     ).toFixed(2)}
