@@ -40,6 +40,7 @@ export default function Tile({ view }: TileProps) {
         borderColor: theme.palette.background.selected,
         boxShadow: '0px 4px 8px rgb(0,0,0,0.25)',
         height: '100%',
+        marginRight: 1,
       })}
     >
       <CardMedia
