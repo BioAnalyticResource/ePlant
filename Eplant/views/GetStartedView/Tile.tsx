@@ -36,8 +36,9 @@ export default function Tile({ view }: TileProps) {
     <Card
       sx={(theme) => ({
         background: theme.palette.background.paperOverlay,
-        border: theme.palette.background.paperOverlay,
-        boxShadow: '0px 3px 6px rgb(0,0,0,0.25)',
+        border: '1px solid',
+        borderColor: theme.palette.background.selected,
+        boxShadow: '0px 4px 8px rgb(0,0,0,0.25)',
         height: '100%',
       })}
     >
