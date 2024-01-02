@@ -336,6 +336,7 @@ function EplantLayout() {
         right: '0px',
         position: 'absolute',
         margin: theme.spacing(1),
+        marginRight: 0,
         boxSizing: 'border-box',
       })}
     >
