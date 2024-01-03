@@ -10,7 +10,7 @@ interface MaskModalProps {
     onSubmit: (threshhold: number) => void
 }
 
-const MaskModal: React.FC<MaskModalProps> = ({ state, onClose, onSubmit }) => {
+const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
     const [sliderValue, setSliderValue] = useState<number>(state.maskThreshold);
     const theme = useTheme()
     const handleSliderChange = (event: Event, newValue: number | number[]) => {
