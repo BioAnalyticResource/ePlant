@@ -18,6 +18,7 @@ import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
 import GeneDistributionChart from './GeneDistributionChart'
+import MaskModal from './MaskModal'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -31,6 +32,7 @@ type EFPListProps = {
   >['dispatch']
   height: number
   colorMode: 'absolute' | 'relative'
+  maskThreshold: number
 }
 
 const EFPListItem = React.memo(
@@ -50,6 +52,7 @@ const EFPListItem = React.memo(
             gene={data.geneticElement}
             selected={data.views[i].id == data.activeView.id}
             view={data.views[i]}
+            maskThreshold={data.maskThreshold}
             onClick={() => {
               startTransition(() => {
                 data.dispatch({ type: 'set-view', id: data.views[i].id })
@@ -116,6 +119,8 @@ export default class EFPViewer
         zoom: 1,
       },
       sortBy: 'name',
+      maskThreshold: 100,
+      maskModalVisible: false,
     }
   }
   constructor(
@@ -126,7 +131,7 @@ export default class EFPViewer
     public icon: () => JSX.Element,
     public description?: string,
     public thumbnail?: string,
-  ) {}
+  ) { }
   getInitialData = async (
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void,
@@ -157,6 +162,7 @@ export default class EFPViewer
       viewData: viewData,
       efps: this.efps,
       colorMode: 'absolute' as const,
+
     }
   }
   reducer = (state: EFPViewerState, action: EFPViewerAction) => {
@@ -191,6 +197,16 @@ export default class EFPViewer
             state.colorMode == 'absolute'
               ? ('relative' as const)
               : ('absolute' as const),
+        }
+      case 'toggle-mask-modal':
+        return {
+          ...state,
+          maskModalVisible: state.maskModalVisible ? false : true
+        }
+      case 'set-mask-threshold':
+        return {
+          ...state,
+          maskThreshold: action.threshold
         }
       default:
         return state
@@ -238,9 +254,10 @@ export default class EFPViewer
           state={{
             colorMode: props.state.colorMode,
             renderAsThumbnail: false,
+            maskThreshold: props.state.maskThreshold
           }}
           geneticElement={props.geneticElement}
-          dispatch={() => {}}
+          dispatch={() => { }}
         />
       )
     }, [
@@ -249,6 +266,7 @@ export default class EFPViewer
       props.dispatch,
       sortedViewData[activeViewIndex],
       props.state.colorMode,
+      props.state.maskThreshold
     ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
@@ -289,7 +307,7 @@ export default class EFPViewer
             }}
           >
             {/* Dropdown menus for selecting a view and sort options
-            
+
             //TODO: Make the dropdown menus appear closer to the button, left aligned and with a max height */}
             <Box sx={{ marginBottom: 1 }}>
               <Dropdown
@@ -350,6 +368,7 @@ export default class EFPViewer
               geneticElement={props.geneticElement}
               views={sortedEfps}
               colorMode={props.state.colorMode}
+              maskThreshold={props.state.maskThreshold}
             />
           </Box>
           <Box
@@ -365,6 +384,11 @@ export default class EFPViewer
                     data={{ ...props.activeData.viewData[activeViewIndex] }}
                   />
                 )}
+                <MaskModal
+                  state={props.state}
+                  onClose={() => props.dispatch({ type: 'toggle-mask-modal' })}
+                  onSubmit={(threshold) => props.dispatch({ type: 'set-mask-threshold', threshold: threshold })}
+                />
                 <Legend
                   sx={(theme) => ({
                     position: 'absolute',
@@ -378,6 +402,7 @@ export default class EFPViewer
                   state={{
                     colorMode: props.state.colorMode,
                     renderAsThumbnail: false,
+                    maskThreshold: props.state.maskThreshold
                   }}
                 />
                 <PanZoom
@@ -428,6 +453,10 @@ export default class EFPViewer
       action: { type: 'toggle-color-mode' },
       render: (props) => <>Toggle data mode: {props.state.colorMode}</>,
     },
+    {
+      action: { type: 'toggle-mask-modal' },
+      render: () => <>Mask data</>
+    }
   ]
   header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
     props,
