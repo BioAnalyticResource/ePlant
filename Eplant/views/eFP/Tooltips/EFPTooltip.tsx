@@ -60,7 +60,7 @@ function SVGTooltip(props: {
         }
       }
     }
-  }, [props.el])
+  }, [props.el, theme])
   return (
     <Popper transition anchorEl={props.el} open={open}>
       {({ TransitionProps }) => (

@@ -1,6 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { CircularProgress, Typography } from '@mui/material'
-import React from 'react'
 import { View, ViewProps } from '@eplant/View'
 import { useEFPSVG, useStyles } from './svg'
 import {
@@ -15,11 +14,13 @@ import {
 import _ from 'lodash'
 import { ViewDataError } from '@eplant/View/viewData'
 import SVGTooltip from './Tooltips/EFPTooltip'
+import React, { useState, useMemo, useEffect, useLayoutEffect } from 'react'
 
 export default class EFP implements View<EFPData, EFPState, EFPAction> {
   getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
+    maskThreshold: 100
   })
   tooltipComponent: (props: {
     el: SVGElement | null
@@ -27,7 +28,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     tissue: EFPTissue
     data: EFPData
     state: EFPState
-  }) => React.JSX.Element
+  }) => JSX.Element
   constructor(
     public name: string,
     public id: EFPId,
@@ -51,9 +52,8 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     const database = xml.getElementsByTagName('view')[0]?.getAttribute('db')
     let webservice = xml.getElementsByTagName('webservice')[0]?.textContent
     if (!webservice)
-      webservice = `https://bar.utoronto.ca/eplant/cgi-bin/plantefp.cgi?datasource=${
-        database ?? 'atgenexp_plus'
-      }&`
+      webservice = `https://bar.utoronto.ca/eplant/cgi-bin/plantefp.cgi?datasource=${database ?? 'atgenexp_plus'
+        }&`
 
     // Get a list of groups and samples
     const sampleNames: string[] = []
@@ -95,9 +95,9 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         chunks.map((names) =>
           fetch(
             webservice +
-              `id=${gene.id}&samples=${encodeURIComponent(
-                JSON.stringify(names),
-              )}`,
+            `id=${gene.id}&samples=${encodeURIComponent(
+              JSON.stringify(names),
+            )}`,
           )
             .then((res) => res.json())
             .then(
@@ -176,7 +176,6 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         showText: !props.state.renderAsThumbnail,
       },
     )
-
     const { svg } = view ?? {}
     const id =
       'svg-container-' +
@@ -184,9 +183,9 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       '-' +
       (props.geneticElement?.id ?? 'no-gene') +
       '-' +
-      React.useMemo(() => Math.random().toString(16).slice(3), [])
-    const styles = useStyles(id, props.activeData, props.state.colorMode)
-    React.useEffect(() => {
+      useMemo(() => Math.random().toString(16).slice(3), [])
+    const styles = useStyles(id, props.activeData, props.state.colorMode, props.state.maskThreshold)
+    useEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
       document.head.appendChild(el)
@@ -196,7 +195,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     }, [props.activeData.groups, styles])
 
     // Add tooltips to svg
-    const [svgElements, setSvgElements] = React.useState<
+    const [svgElements, setSvgElements] = useState<
       {
         el: SVGElement
         group: EFPGroup
@@ -204,7 +203,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       }[]
     >([])
 
-    const svgDiv = React.useMemo(() => {
+    const svgDiv = useMemo(() => {
       return (
         <div
           style={{
@@ -221,7 +220,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       )
     }, [svg, id])
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
       const elements = Array.from(
         props.activeData.groups.flatMap((group) =>
           group.tissues.map((t) => ({
