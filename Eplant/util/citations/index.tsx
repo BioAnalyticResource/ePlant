@@ -1,6 +1,4 @@
-import GeneticElement from "@eplant/GeneticElement"
-import { citationsAtom, useCitations } from "@eplant/state"
-import { useAtomValue } from "jotai"
+import { useCitations } from "@eplant/state"
 
 export const getCitation = (viewName: string) => {
     const [citations] = useCitations()

@@ -2,9 +2,9 @@ import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import Storage from '@eplant/util/Storage'
-import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
-import * as React from 'react'
+import { atom, SetStateAction, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import * as FlexLayout from 'flexlayout-react'
+import { useState, useEffect, createContext, useContext } from 'react'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
@@ -38,8 +38,8 @@ export const pageLoad = (() => {
 })()
 
 export const usePageLoad = () => {
-  const [progress, setProgress] = React.useState(0)
-  React.useEffect(() => pageLoad.watch(setProgress), [])
+  const [progress, setProgress] = useState(0)
+  useEffect(() => pageLoad.watch(setProgress), [])
   return [progress, progress == 1] as [number, boolean]
 }
 
@@ -74,7 +74,7 @@ export function atomWithStorage<T>(
       //throw loadedValue
       return get(val)
     },
-    (get, set, x: React.SetStateAction<T>) => {
+    (get, set, x: SetStateAction<T>) => {
       const newValue =
         typeof x == 'function' ? (x as (prev: T) => T)(get(val)) : x
       if (get(persistAtom)) {
@@ -118,7 +118,7 @@ function atomWithOptionalStorage<T>(
     (get) => {
       return get(val)
     },
-    (get, set, x: React.SetStateAction<T>) => {
+    (get, set, x: SetStateAction<T>) => {
       const newValue =
         typeof x == 'function' ? (x as (prev: T) => T)(get(val)) : x
       if (get(persistAtom)) {
@@ -131,7 +131,7 @@ function atomWithOptionalStorage<T>(
 }
 
 function useAtomReducer<T, A>(
-  atom: WritableAtom<T, [React.SetStateAction<T>], void>,
+  atom: WritableAtom<T, [SetStateAction<T>], void>,
   reducer: (x: T, action: A) => T,
 ): (action: A) => void {
   const setValue = useSetAtom(atom)
@@ -147,15 +147,19 @@ export const genesAtom = atomWithOptionalStorage<GeneticElement[]>(
 export const useGeneticElements = () => useAtom(genesAtom)
 export const useSetGeneticElements = () => useSetAtom(genesAtom)
 
-export const fetchCitations = async () => {
-  try {
-    const response = await fetch('https://bar.utoronto.ca/eplant/data/citations.json')
-    const data = await response.json()
-    return data
-  } catch (error) {
-    console.error('Error fetching citations:', error)
-  }
-}
+const fetchCitations = () => {
+  return fetch('https://bar.utoronto.ca/eplant/data/citations.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .catch(error => {
+      console.error('Error fetching citations:', error);
+      throw error;
+    });
+};
 export const citationsAtom = atom(await fetchCitations())
 export const useCitations = () => useAtom(citationsAtom)
 
@@ -272,8 +276,8 @@ export const usePanes = () =>
   ]
 export const usePanesDispatch = () => useAtomReducer(panesAtom, panesReducer)
 
-export const ViewIDContext = React.createContext<string>('')
-export const useViewID = () => React.useContext(ViewIDContext)
+export const ViewIDContext = createContext<string>('')
+export const useViewID = () => useContext(ViewIDContext)
 
 export const printingAtom = atom<string | null>(null)
 export const usePrinting = () => useAtom(printingAtom)
