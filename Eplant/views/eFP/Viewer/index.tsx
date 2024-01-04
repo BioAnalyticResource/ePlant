@@ -509,7 +509,7 @@ export default class EFPViewer
         <div>
           <div dangerouslySetInnerHTML={{ __html: citation.source }}></div>
           <br></br><div dangerouslySetInnerHTML={{ __html: citation.notes }}></div>
-          <br></br>{citation.URL ? citation.URL : ""}
+{citation.URL ? <p><a href={citation.URL}>citation.URL</a></p> : ""}
           {
             xmlData.length > 0 ?
               (<ul>
