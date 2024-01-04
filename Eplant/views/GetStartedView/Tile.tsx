@@ -23,6 +23,7 @@ export default function Tile({ view }: TileProps) {
   const [genes, setGenes] = useGeneticElements()
   async function setView() {
     const ABI3 = await arabidopsis.api.searchGene('AT3G24650')
+    console.log(ABI3)
     if (ABI3) {
       setGenes([ABI3, ...genes])
     }

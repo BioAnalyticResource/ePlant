@@ -19,9 +19,15 @@ import {
   TabSetNode,
 } from 'flexlayout-react'
 import * as React from 'react'
-import { Route, Routes, useParams, useSearchParams } from 'react-router-dom'
+import {
+  Route,
+  Routes,
+  generatePath,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 import { useConfig } from './config'
-import GeneticElement from './GeneticElement'
+import GeneticElement, { Species } from './GeneticElement'
 import {
   useGeneticElements,
   usePanes,
@@ -163,6 +169,7 @@ export default function Eplant() {
       <Route path={rootPath}>
         <Route index element={<MainEplant />} />
         <Route path="pane" element={<DirectPane />} />
+        <Route path="/view" element={<EplantView />} />
       </Route>
     </Routes>
   )
@@ -241,6 +248,135 @@ function DirectPane() {
   )
 }
 
+interface EplantNavigationProps {
+  onSelectGene: (gene: GeneticElement) => void
+  selectedGene: string | undefined
+}
+function EplantNavigation(props: EplantNavigationProps) {
+  return (
+    <ResponsiveDrawer
+      variant="persistent"
+      open={true}
+      PaperProps={{
+        sx: {
+          border: 'none',
+          backgroundColor: 'transparent',
+        },
+      }}
+    >
+      <Container
+        disableGutters
+        sx={{
+          height: '100%',
+          padding: '20px',
+          width: `${sideBarWidth}px`,
+          boxSizing: 'border-box',
+        }}
+      >
+        <LeftNav
+          onSelectGene={props.onSelectGene}
+          selectedGene={props.selectedGene}
+        />
+      </Container>
+    </ResponsiveDrawer>
+  )
+}
+
+function EplantBodyContainer(props: { children: React.ReactNode }) {
+  const [globalProgress, loaded] = usePageLoad()
+  return <Box
+    sx={(theme) => ({
+      height: `calc(100% - ${theme.spacing(1)})`,
+      left: `${sideBarWidth}px`,
+      right: '0px',
+      position: 'absolute',
+      margin: theme.spacing(1),
+      boxSizing: 'border-box',
+    })}
+  >
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {loaded ? (
+        props.children
+      ) : (
+        <CircularProgress
+          variant="indeterminate"
+          value={globalProgress * 100}
+        />
+      )}
+    </Box>
+  </Box>
+}
+
+function EplantView() {
+  const [params, setParams] = useSearchParams()
+
+  const geneId: string | null = params.get('gene')
+  const { views, defaultSpecies, defaultView } = useConfig()
+  const viewId: string | null = params.get('view') ?? defaultView
+  // used just in case genId isn't loaded, so we can search for it
+
+  const species: string = params.get('species') ?? defaultSpecies
+
+  const [genes, setGeneticElements] = useGeneticElements()
+  const gene = genes.find((g) => g.id == geneId) ?? null
+
+  const [panes, panesDispatch] = usePanes()
+  
+  React.useEffect(() => {
+    // when the default pane changes update the url
+  }, [panes]);
+
+  React.useEffect(() => {
+    const api = Species.getSpecies(species)?.api
+    if (api) {
+      api.searchGene(geneId ?? '').then((gene) => {
+        console.log('gene', gene);
+        if (gene) {
+          setGeneticElements([gene, ...genes])
+          setParams({ gene: gene.id, view: viewId ?? '' })
+        }
+      }).catch((e) => {
+        console.error(e)
+      })
+    }
+  }, [geneId, species])
+  // If there is no gene selected choose one
+  const view = views.find((v) => v.id == viewId) ?? FallbackView
+
+  return (
+    <>
+      <EplantNavigation
+        onSelectGene={(gene) => {
+          setParams({ gene: gene.id, view: viewId ?? '' })
+        }}
+        selectedGene={gene?.id}
+      />
+      <EplantBodyContainer>
+        <ViewContainer
+          view={view}
+          gene={gene}
+          setView={(view) => {
+            setParams({ gene: geneId ?? '', view: view.id })
+          }}
+          sx={{
+            width: '100%',
+            height: '100%',
+            bgcolor: 'background.paper',
+          }}
+        />
+      </EplantBodyContainer>
+    </>
+  )
+}
+
 /**
  * The main Eplant component. This is the root of the application. It contains the left nav and the layout.
  * @returns {JSX.Element} The rendered Eplant component
@@ -248,40 +384,20 @@ function DirectPane() {
 export function MainEplant() {
   const [activeId] = useActiveId()
   const [panes, panesDispatch] = usePanes()
-  //TODO: Break into more components to prevent unnecessary rerendering
+
   return (
     <>
-      <ResponsiveDrawer
-        variant="persistent"
-        open={true}
-        PaperProps={{
-          sx: {
-            border: 'none',
-            backgroundColor: 'transparent',
-          },
+      <EplantNavigation
+        onSelectGene={(gene: GeneticElement) => {
+          panesDispatch({
+            type: 'set-active-gene',
+            id: activeId,
+            activeGene: gene.id,
+          })
         }}
-      >
-        <Container
-          disableGutters
-          sx={{
-            height: '100%',
-            padding: '20px',
-            width: `${sideBarWidth}px`,
-            boxSizing: 'border-box',
-          }}
-        >
-          <LeftNav
-            onSelectGene={(gene: GeneticElement) =>
-              panesDispatch({
-                type: 'set-active-gene',
-                id: activeId,
-                activeGene: gene.id,
-              })
-            }
-            selectedGene={panes[activeId ?? '']?.activeGene ?? undefined}
-          />
-        </Container>
-      </ResponsiveDrawer>
+        selectedGene={panes[activeId ?? '']?.activeGene ?? undefined}
+      />
+
       <EplantLayout />
     </>
   )
@@ -328,77 +444,49 @@ function EplantLayout() {
   }, [tabHeight, loaded])
 
   return (
-    <Box
-      sx={(theme) => ({
-        height: `calc(100% - ${theme.spacing(1)})`,
-        left: `${sideBarWidth}px`,
-        right: '0px',
-        position: 'absolute',
-        margin: theme.spacing(1),
-        boxSizing: 'border-box',
-      })}
-    >
-      <Box
-        sx={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {loaded ? (
-          <FlexLayout.Layout
-            ref={layout}
-            model={model}
-            factory={(node) => factory(node, model)}
-            onTabSetPlaceHolder={() => (
-              <TabsetPlaceholder addTab={() => addTab({})} />
-            )}
-            onModelChange={(newModel) => {
-              // Update the selected tab
-              const newId = newModel
-                .getActiveTabset()
-                ?.getSelectedNode?.()
-                ?.getId?.()
-              if (newId) setActiveId(newId)
-              storage.set('flexlayout-model', JSON.stringify(model.toJson()))
-            }}
-            onRenderTabSet={onRenderTabSet}
-            onRenderTab={(node, renderValues) => {
-              renderValues.buttons = [
-                <IconButton
-                  key="close"
-                  // Why is this necessary?
-                  // Idk, but flexlayout-react uses it for their close buttons
-                  // And they don't work without it
-                  onMouseDown={(e) => {
-                    e.stopPropagation()
-                  }}
-                  onTouchStart={(e) => {
-                    e.stopPropagation()
-                  }}
-                  onMouseUp={(e) => {
-                    panesDispatch({ type: 'close', id: node.getId() })
-                    model.doAction(Actions.deleteTab(node.getId()))
-                  }}
-                  size="small"
-                >
-                  <Close />
-                </IconButton>,
-              ]
-            }}
-          ></FlexLayout.Layout>
-        ) : (
-          <div>
-            <CircularProgress
-              variant="indeterminate"
-              value={globalProgress * 100}
-            />
-          </div>
+    <EplantBodyContainer>
+      <FlexLayout.Layout
+        ref={layout}
+        model={model}
+        factory={(node) => factory(node, model)}
+        onTabSetPlaceHolder={() => (
+          <TabsetPlaceholder addTab={() => addTab({})} />
         )}
-      </Box>
-    </Box>
+        onModelChange={(newModel) => {
+          // Update the selected tab
+          const newId = newModel
+            .getActiveTabset()
+            ?.getSelectedNode?.()
+            ?.getId?.()
+          if (newId) setActiveId(newId)
+          storage.set('flexlayout-model', JSON.stringify(model.toJson()))
+        }}
+        onRenderTabSet={onRenderTabSet}
+        onRenderTab={(node, renderValues) => {
+          renderValues.buttons = [
+            <IconButton
+              key="close"
+              // Why is this necessary?
+              // Idk, but flexlayout-react uses it for their close buttons
+              // And they don't work without it
+              onMouseDown={(e) => {
+                e.stopPropagation()
+              }}
+              onTouchStart={(e) => {
+                e.stopPropagation()
+              }}
+              onMouseUp={(e) => {
+                panesDispatch({ type: 'close', id: node.getId() })
+                model.doAction(Actions.deleteTab(node.getId()))
+              }}
+              size="small"
+            >
+              <Close />
+            </IconButton>,
+          ]
+        }}
+      ></FlexLayout.Layout>
+    </EplantBodyContainer>
   )
   function addTab({ tabsetId, tabId }: { tabsetId?: string; tabId?: string }) {
     if (!layout.current) return

@@ -13,7 +13,7 @@ import FallbackView from './views/FallbackView'
 import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
 import PublicationViewer from './views/PublicationViewer'
-import { Config } from './config'
+import { Config, EplantConfig } from './config'
 import DebugView from './views/DebugView'
 import PlantEFP from './views/PlantEFP'
 import ExperimentEFP from './views/ExperimentEFP'
@@ -37,12 +37,15 @@ const views = [...genericViews, ...userViews]
 
 const tabHeight = 48
 
-export const defaultConfig = {
+export const defaultConfig: EplantConfig = {
   genericViews,
   userViews,
   views,
   tabHeight,
   rootPath: import.meta.env.BASE_URL,
+
+  defaultSpecies: 'Arabidopsis',
+  defaultView: 'get-started',
 }
 // For some reason this is necessary to make the tabs work, maybe FlexLayout uses a Jotai provider?
 const eplantScope = Symbol('Eplant scope')

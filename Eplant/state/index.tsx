@@ -5,6 +5,7 @@ import Storage from '@eplant/util/Storage'
 import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
 import * as FlexLayout from 'flexlayout-react'
+import { defaultConfig } from '@eplant/main'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
@@ -168,7 +169,7 @@ export const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)
 export const useSetSpecies = () => useSetAtom(speciesAtom)
 
-type Panes = {
+export type Panes = {
   [id: string]: {
     view: string
     activeGene: string | null
@@ -184,10 +185,10 @@ type PanesAction =
   | { type: 'new'; id: string; activeGene: string | null }
   | { type: 'close'; id: string }
 // All open views, and genes if they are associated
-export const panesAtom = atomWithOptionalStorage<Panes>('open-views', {
+const panesAtom = atomWithOptionalStorage<Panes>('open-views', {
   default: {
     activeGene: null,
-    view: 'get-started',
+    view: defaultConfig.defaultView,
     popout: false,
   },
 })
