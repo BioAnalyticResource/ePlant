@@ -87,6 +87,7 @@ export function useViewData<T, S, A>(
   const id = (view?.id ?? 'generic-view') + '-' + useViewID()
   const [viewData, setViewData] = useAtom(getViewAtom(key))
   const [viewState, setViewState] = useAtom(getViewStateAtom(id))
+  // console.log(viewData)
 
   // If there is no cached viewData then load it using the view's loader
   React.useEffect(() => {
