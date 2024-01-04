@@ -1,24 +1,8 @@
 import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { View, ViewProps } from '@eplant/View'
-import {
-  getViewDataKey,
-  useViewData,
-  ViewDataError,
-  viewDataStorage,
-} from '@eplant/View/viewData'
-import {
-  Box,
-  Drawer,
-  FormControl,
-  InputLabel,
-  LinearProgress,
-  MenuItem,
-  Select,
-  Tooltip,
-  Typography,
-  useTheme,
-} from '@mui/material'
+import { ViewDataError } from '@eplant/View/viewData'
+import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
 import React, { startTransition } from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
@@ -28,13 +12,14 @@ import {
   FixedSizeList as List,
   ListChildComponentProps,
 } from 'react-window'
-import _ from 'lodash'
 import useDimensions from '@eplant/util/useDimensions'
-import { EFPData, EFPState } from '../types'
+import { EFPData } from '../types'
 import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
 import { red } from '@mui/material/colors'
+import GeneDistributionChart from './GeneDistributionChart'
+import MaskModal from './MaskModal'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -48,6 +33,7 @@ type EFPListProps = {
   >['dispatch']
   height: number
   colorMode: 'absolute' | 'relative'
+  maskThreshold: number
 }
 
 const EFPListItem = React.memo(
@@ -56,7 +42,7 @@ const EFPListItem = React.memo(
       <Tooltip placement="right" arrow title={<div>{data.views[i].name}</div>}>
         <div>
           <EFPPreview
-            sx={(theme) => ({
+            sx={() => ({
               width: '108px',
               height: '75px',
               zIndex: 100,
@@ -67,6 +53,7 @@ const EFPListItem = React.memo(
             gene={data.geneticElement}
             selected={data.views[i].id == data.activeView.id}
             view={data.views[i]}
+            maskThreshold={data.maskThreshold}
             onClick={() => {
               startTransition(() => {
                 data.dispatch({ type: 'set-view', id: data.views[i].id })
@@ -86,7 +73,7 @@ const EFPListItem = React.memo(
       prev.data.activeView === next.data.activeView &&
       prev.index == next.index
     )
-  }
+  },
 )
 
 const EFPListRow = React.memo(function EFPListRow({
@@ -99,8 +86,7 @@ const EFPListRow = React.memo(function EFPListRow({
       <EFPListItem index={index} data={data} />
     </div>
   )
-},
-areEqual)
+}, areEqual)
 
 export const EFPListMemoized = function EFPList(props: EFPListProps) {
   return (
@@ -135,32 +121,30 @@ export default class EFPViewer
         zoom: 1,
       },
       sortBy: 'name',
+      maskThreshold: 100,
+      maskModalVisible: false,
     }
   }
   constructor(
     public id: string,
     public name: string,
     private views: EFPViewerData['views'],
+    public efps: EFP[],
     public icon: () => JSX.Element,
     public description?: string,
-    public thumbnail?: string
-  ) {}
+    public thumbnail?: string,
+  ) { }
   getInitialData = async (
     gene: GeneticElement | null,
-    loadEvent: (progress: number) => void
+    loadEvent: (progress: number) => void,
   ) => {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     // Load all the views
     const loadingProgress = Array(this.views.length).fill(0)
     let totalLoaded = 0
     const viewData = await Promise.all(
-      this.views.map(async (view, i) => {
-        const data = await new EFP(
-          view.name,
-          view.id,
-          view.svgURL,
-          view.xmlURL
-        ).getInitialData(gene, (progress) => {
+      this.efps.map(async (efp, i) => {
+        const data = efp.getInitialData(gene, (progress) => {
           totalLoaded -= loadingProgress[i]
           loadingProgress[i] = progress
           totalLoaded += loadingProgress[i]
@@ -168,9 +152,8 @@ export default class EFPViewer
         })
         loadingProgress[i] = 1
         return data
-      })
+      }),
     )
-
     return {
       activeView: this.views[0].id,
       views: this.views,
@@ -178,8 +161,10 @@ export default class EFPViewer
         offset: { x: 0, y: 0 },
         zoom: 1,
       },
-      viewData,
+      viewData: viewData,
+      efps: this.efps,
       colorMode: 'absolute' as const,
+
     }
   }
   reducer = (state: EFPViewerState, action: EFPViewerAction) => {
@@ -215,12 +200,22 @@ export default class EFPViewer
               ? ('relative' as const)
               : ('absolute' as const),
         }
+      case 'toggle-mask-modal':
+        return {
+          ...state,
+          maskModalVisible: state.maskModalVisible ? false : true
+        }
+      case 'set-mask-threshold':
+        return {
+          ...state,
+          maskThreshold: action.threshold
+        }
       default:
         return state
     }
   }
   component = (
-    props: ViewProps<EFPViewerData, EFPViewerState, EFPViewerAction>
+    props: ViewProps<EFPViewerData, EFPViewerState, EFPViewerAction>,
   ) => {
     const viewIndices: number[] = [
       ...Array(props.activeData.views.length).keys(),
@@ -228,7 +223,7 @@ export default class EFPViewer
     viewIndices.sort((a, b) => {
       if (props.state.sortBy == 'name')
         return props.activeData.views[a].name.localeCompare(
-          props.activeData.views[b].name
+          props.activeData.views[b].name,
         )
       else {
         return (
@@ -238,28 +233,21 @@ export default class EFPViewer
     })
     const sortedViews = viewIndices.map((i) => props.activeData.views[i])
     const sortedViewData = viewIndices.map((i) => props.activeData.viewData[i])
-
-    const EFPViews = React.useMemo(
-      () =>
-        sortedViews.map(
-          (view) => new EFP(view.name, view.id, view.svgURL, view.xmlURL)
-        ),
-      [...sortedViews.map((v) => v.id)]
-    )
+    const sortedEfps = viewIndices.map((i) => this.efps[i])
 
     let activeViewIndex = React.useMemo(
-      () => EFPViews.findIndex((v) => v.id == props.state.activeView),
-      [props.state.activeView, ...EFPViews.map((v) => v.id)]
+      () => sortedEfps.findIndex((v) => v.id == props.state.activeView),
+      [props.state.activeView, ...sortedEfps.map((v) => v.id)],
     )
     if (activeViewIndex == -1) {
       activeViewIndex = 0
       props.dispatch({
         type: 'set-view',
-        id: EFPViews[0].id,
+        id: sortedEfps[0].id,
       })
     }
     const efp = React.useMemo(() => {
-      const Component = EFPViews[activeViewIndex].component
+      const Component = sortedEfps[activeViewIndex].component
       return (
         <Component
           activeData={{
@@ -268,9 +256,10 @@ export default class EFPViewer
           state={{
             colorMode: props.state.colorMode,
             renderAsThumbnail: false,
+            maskThreshold: props.state.maskThreshold
           }}
           geneticElement={props.geneticElement}
-          dispatch={() => {}}
+          dispatch={() => { }}
         />
       )
     }, [
@@ -279,12 +268,10 @@ export default class EFPViewer
       props.dispatch,
       sortedViewData[activeViewIndex],
       props.state.colorMode,
+      props.state.maskThreshold
     ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
-    {
-      console.log(props)
-    }
 
     if (!props.geneticElement) return <></>
     return (
@@ -375,12 +362,13 @@ export default class EFPViewer
             {/* The actual stack of EFP Previews */}
             <EFPListMemoized
               height={dimensions.height - 5}
-              activeView={EFPViews[activeViewIndex]}
+              activeView={sortedEfps[activeViewIndex]}
               dispatch={props.dispatch}
               viewData={sortedViewData}
               geneticElement={props.geneticElement}
-              views={EFPViews}
+              views={sortedEfps}
               colorMode={props.state.colorMode}
+              maskThreshold={props.state.maskThreshold}
             />
           </Box>
           {/* main canvas area */}
@@ -397,6 +385,16 @@ export default class EFPViewer
           >
             {props.activeData.viewData[activeViewIndex].supported ? (
               <>
+                {props.activeData.views[activeViewIndex].name !== 'cellEFP' && (
+                  <GeneDistributionChart
+                    data={{ ...props.activeData.viewData[activeViewIndex] }}
+                  />
+                )}
+                <MaskModal
+                  state={props.state}
+                  onClose={() => props.dispatch({ type: 'toggle-mask-modal' })}
+                  onSubmit={(threshold) => props.dispatch({ type: 'set-mask-threshold', threshold: threshold })}
+                />
                 <Legend
                   sx={(theme) => ({
                     position: 'absolute',
@@ -410,6 +408,7 @@ export default class EFPViewer
                   state={{
                     colorMode: props.state.colorMode,
                     renderAsThumbnail: false,
+                    maskThreshold: props.state.maskThreshold
                   }}
                 />
                 <PanZoom
@@ -421,7 +420,7 @@ export default class EFPViewer
                     height: '100%',
                     zIndex: 0,
                   })}
-                  initialTransform={props.state.transform}
+                  transform={props.state.transform}
                   onTransformChange={(transform) => {
                     props.dispatch({
                       type: 'set-transform',
@@ -442,7 +441,7 @@ export default class EFPViewer
               >
                 <NotSupported
                   geneticElement={props.geneticElement}
-                  view={EFPViews[activeViewIndex]}
+                  view={sortedEfps[activeViewIndex]}
                 ></NotSupported>
               </div>
             )}
@@ -460,9 +459,13 @@ export default class EFPViewer
       action: { type: 'toggle-color-mode' },
       render: (props) => <>Toggle data mode: {props.state.colorMode}</>,
     },
+    {
+      action: { type: 'toggle-mask-modal' },
+      render: () => <>Mask data</>
+    }
   ]
   header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
-    props
+    props,
   ) => (
     <Typography variant="h6">
       {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}

@@ -69,7 +69,7 @@ export function SearchGroup({
         onSubmit={(terms: string[]) => {
           if (!species) return
           Promise.all(terms.map(species.api.searchGene)).then((a) =>
-            addGeneticElements(a.filter((x) => x != null) as GeneticElement[])
+            addGeneticElements(a.filter((x) => x != null) as GeneticElement[]),
           )
         }}
       ></SearchBar>

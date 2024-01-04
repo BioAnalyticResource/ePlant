@@ -1,10 +1,4 @@
-import {
-  createTheme,
-  PaletteColorOptions,
-  ThemeOptions,
-  TypeBackground,
-} from '@mui/material'
-import React from 'react'
+import { createTheme, PaletteColorOptions } from '@mui/material'
 
 declare module '@mui/material/styles' {
   interface TypeBackground {

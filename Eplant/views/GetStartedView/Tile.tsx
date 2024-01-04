@@ -4,8 +4,6 @@ import {
   CardActions,
   CardContent,
   CardMedia,
-  Link,
-  Stack,
   Typography,
 } from '@mui/material'
 import React from 'react'

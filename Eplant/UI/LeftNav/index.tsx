@@ -1,26 +1,13 @@
-import {
-  useActiveId,
-  useDarkMode,
-  usePanesDispatch,
-  useSpecies,
-} from '@eplant/state'
-import {
-  Box,
-  Divider,
-  FormControlLabel,
-  FormGroup,
-  Switch,
-} from '@mui/material'
-import Button from '@mui/material/Button'
+import { useActiveId, useDarkMode, usePanesDispatch } from '@eplant/state'
+import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { SearchGroup } from './GeneSearch'
 import { LogoWithText } from '../Logo'
 import { useGeneticElements } from '@eplant/state'
-import GeneticElementComponent from '../GeneticElementComponent'
 import { Collections } from './Collections'
 import GeneticElement from '@eplant/GeneticElement'
-import _, { uniq } from 'lodash'
+import _ from 'lodash'
 
 /**
  * The left nav bar in ePlant. Contains a search bar, and list of collections of genes.
@@ -32,7 +19,6 @@ export function LeftNav(props: {
   onSelectGene?: (gene: GeneticElement) => void
   selectedGene?: string
 }) {
-  const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
 
@@ -52,11 +38,11 @@ export function LeftNav(props: {
             geneticElements.concat(
               _.uniqBy(
                 s.filter(
-                  (g) => !geneticElements.find((gene) => g.id == gene.id)
+                  (g) => !geneticElements.find((gene) => g.id == gene.id),
                 ),
-                (a) => a.id
-              )
-            )
+                (a) => a.id,
+              ),
+            ),
           )
           if (s.length > 0) {
             panesDispatch({

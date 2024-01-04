@@ -17,6 +17,7 @@ import { Config } from './config'
 import DebugView from './views/DebugView'
 import PlantEFP from './views/PlantEFP'
 import ExperimentEFP from './views/ExperimentEFP'
+import CellEFP from './views/CellEFP'
 
 // Views that aren't associated with individual genes
 const genericViews = [GetStartedView, FallbackView]
@@ -28,6 +29,7 @@ const userViews = [
   PublicationViewer,
   DebugView,
   PlantEFP,
+  CellEFP,
   ExperimentEFP,
 ]
 
@@ -43,29 +45,22 @@ export const defaultConfig = {
   tabHeight,
   rootPath: import.meta.env.BASE_URL,
 }
-// For some reason this is necessary to make the tabs work, maybe FlexLayout uses a Jotai provider?
-const eplantScope = Symbol('Eplant scope')
-
 function RootApp() {
-  const [darkMode, setDarkMode] = useDarkMode()
   return (
     <React.StrictMode>
       <Provider>
-        <ThemeProvider theme={darkMode ? dark : light}>
-          <CssBaseline />
           <BrowserRouter>
             <Config.Provider value={defaultConfig}>
               <Eplant />
             </Config.Provider>
           </BrowserRouter>
-        </ThemeProvider>
       </Provider>
     </React.StrictMode>
   )
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <RootApp />
+  <RootApp />,
 )
 
 const registerServiceWorker = async () => {

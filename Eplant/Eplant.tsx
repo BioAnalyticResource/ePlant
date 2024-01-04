@@ -4,11 +4,13 @@ import {
   Box,
   CircularProgress,
   Container,
+  CssBaseline,
   Drawer,
   DrawerProps,
   IconButton,
   LinearProgress,
   Tooltip,
+  ThemeProvider,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as FlexLayout from 'flexlayout-react'
@@ -20,7 +22,7 @@ import {
   TabSetNode,
 } from 'flexlayout-react'
 import * as React from 'react'
-import { Route, Routes, useParams, useSearchParams } from 'react-router-dom'
+import { Route, Routes, useSearchParams } from 'react-router-dom'
 import { useConfig } from './config'
 import GeneticElement from './GeneticElement'
 import {
@@ -31,8 +33,8 @@ import {
   getPaneName,
   storage,
   useModel,
-  pageLoad,
   usePageLoad,
+  useDarkMode,
 } from './state'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
@@ -40,6 +42,8 @@ import { LeftNav } from './UI/LeftNav'
 import FallbackView from './views/FallbackView'
 import { Theme } from '@mui/system'
 import ErrorBoundary from './util/ErrorBoundary'
+import { dark, light } from './theme'
+
 
 // TODO: Make this drawer support opening/closing on mobile
 
@@ -87,7 +91,7 @@ function ViewTab(props: {
     }${v ? v.name : 'No view'}`
     if (props.layout && props.layout.node.getName() != targetName) {
       props.layout.model.doAction(
-        Actions.renameTab(props.layout.node.getId(), targetName)
+        Actions.renameTab(props.layout.node.getId(), targetName),
       )
     }
   })
@@ -138,7 +142,7 @@ function ViewTab(props: {
  */
 const factory: (
   node: FlexLayout.TabNode,
-  model: FlexLayout.Model
+  model: FlexLayout.Model,
 ) => JSX.Element | undefined = (node, model) => {
   const id = node.getId() as string
   return (
@@ -159,13 +163,18 @@ const factory: (
 
 export default function Eplant() {
   const { rootPath } = useConfig()
+  const [darkMode, setDarkMode] = useDarkMode()
+
   return (
-    <Routes>
-      <Route path={rootPath}>
-        <Route index element={<MainEplant />} />
-        <Route path="pane" element={<DirectPane />} />
-      </Route>
-    </Routes>
+    <ThemeProvider theme={darkMode ? dark : light}>
+      <CssBaseline />
+      <Routes>
+        <Route path={rootPath}>
+          <Route index element={<MainEplant />} />
+          <Route path="pane" element={<DirectPane />} />
+        </Route>
+      </Routes>
+    </ThemeProvider>
   )
 }
 
@@ -430,7 +439,7 @@ function EplantLayout() {
         component: 'view',
         id,
         type: 'tab',
-      }
+      },
     )
   }
 
@@ -449,7 +458,7 @@ function EplantLayout() {
 
   function onRenderTabSet(
     node: TabSetNode | BorderNode,
-    renderValues: ITabSetRenderValues
+    renderValues: ITabSetRenderValues,
   ) {
     if (node.getChildren().length == 0) return
     renderValues.stickyButtons.push(
@@ -481,7 +490,7 @@ function EplantLayout() {
 function updateColors(theme: Theme) {
   ;(
     Array.from(
-      document.getElementsByClassName('flexlayout__layout')
+      document.getElementsByClassName('flexlayout__layout'),
     ) as HTMLDivElement[]
   ).map((el) => {
     el.style.setProperty('--color-text', theme.palette.text.primary)
@@ -490,7 +499,7 @@ function updateColors(theme: Theme) {
     el.style.setProperty('--color-primary', theme.palette.primary.main)
     el.style.setProperty(
       '--color-primary-light',
-      theme.palette.primary.pale ?? theme.palette.primary.main
+      theme.palette.primary.pale ?? theme.palette.primary.main,
     )
     el.style.setProperty('--color-1', theme.palette.background.default)
     el.style.setProperty('--color-2', theme.palette.background.paper)

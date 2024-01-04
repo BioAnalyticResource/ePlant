@@ -5,9 +5,9 @@ import React, { useEffect, useState } from 'react'
  * @param ref The ref of the DOM node.
  */
 export default function useDimensions(
-  ref: React.MutableRefObject<HTMLElement | null>
+  ref: React.MutableRefObject<HTMLElement | null>,
 ) {
-  const [dimensions, setDimensions] = React.useState({ width: 0, height: 0 })
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   useEffect(() => {
     if (ref && ref.current) {
       const observer = new ResizeObserver((entries) => {
