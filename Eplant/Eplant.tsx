@@ -337,8 +337,9 @@ function EplantView() {
   React.useEffect(() => {
     const api = Species.getSpecies(species)?.api
     if (api) {
+      const done = pageLoad.start();
       api.searchGene(geneId ?? '').then((gene) => {
-        console.log('gene', gene);
+        done()
         if (gene) {
           setGeneticElements([gene, ...genes])
           setParams({ gene: gene.id, view: viewId ?? '' })
@@ -346,6 +347,7 @@ function EplantView() {
       }).catch((e) => {
         console.error(e)
       })
+      return done
     }
   }, [geneId, species])
   // If there is no gene selected choose one

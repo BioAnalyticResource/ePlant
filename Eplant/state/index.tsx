@@ -23,11 +23,13 @@ export const pageLoad = (() => {
     start() {
       waiting++
       watchers.forEach((w) => w(finished / waiting))
-    },
-    done() {
-      finished++
-      console.log(finished / waiting)
-      watchers.forEach((w) => w(finished / waiting))
+      let done = false
+      return () => {
+        if (done) return
+        done = true
+        finished++
+        watchers.forEach((w) => w(finished / waiting))
+      }
     },
     watch(cb: (progress: number) => void) {
       watchers.add(cb)
@@ -103,14 +105,14 @@ function atomWithOptionalStorage<T>(
       else setAtom(initialValue)
     }
     ;(async () => {
-      pageLoad.start()
+      const done = pageLoad.start()
       try {
         const val = await loadedValue
         if (val) {
           setAtom(deserialize(val))
         }
       } finally {
-        pageLoad.done()
+        done()
       }
     })()
     return storage.watch(key, listener)
