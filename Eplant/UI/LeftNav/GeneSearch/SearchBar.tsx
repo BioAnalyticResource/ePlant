@@ -80,7 +80,7 @@ export default function SearchBar(props: {
       renderInput={({ InputProps, ...params }) => (
         <TextField
           sx={(theme) => ({
-            background: theme.palette.background.paper,
+            background: theme.palette.background.paperOverlay,
             borderRadius: 1,
           })}
           placeholder={props.placeholder}

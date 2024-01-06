@@ -36,6 +36,7 @@ export function SearchGroup({
   }, [species])
   return (
     <Stack direction="column" spacing={2}>
+      {/* Species selector */}
       <TextField
         select
         size="small"
@@ -59,7 +60,9 @@ export function SearchGroup({
           </MenuItem>
         ))}
       </TextField>
-      <SearchBar
+
+      {/* Gene selector */}
+      <SearchBar 
         label="Search for genes"
         inputProps={{
           // TODO: Make these clickable
