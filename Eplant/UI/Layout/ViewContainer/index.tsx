@@ -76,7 +76,7 @@ export function ViewContainer<T, S, A>({
         position="sticky"
         elevation={0}
       >
-        <Toolbar sx={(theme) => ({ gap: '8px', padding: 0.5, paddingRight: 16, borderStyle: 'solid', borderWidth: '1px 0px 1px 1px', borderColor: theme.palette.background.edgeLight })}>
+        <Toolbar sx={(theme) => ({ gap: '8px', paddingRight: 16, borderStyle: 'solid', borderWidth: '1px 0px 1px 1px', borderColor: theme.palette.background.edge })}>
           <Stack
             direction="row"
             gap={2}
