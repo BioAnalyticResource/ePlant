@@ -8,6 +8,7 @@ declare module '@mui/material/styles' {
     selected: string
     hover: string
     edge: string
+    edgeLight: string
   }
   interface PaletteColor {
     pale?: string
@@ -43,7 +44,8 @@ export const light = createTheme({
       active: '#fafafa', // active gene bg & toolbar
       selected: '#dddddd', // is this used?
       hover: '#cccccc', // hovered gene
-      edge: '#DDDDDD' // borders
+      edge: '#DDDDDD', // borders around EFP canvas
+      edgeLight: '#EEEEEE' // lighter borders around page views
     },
     hot: {
       main: '#ff0000',
@@ -80,7 +82,8 @@ export const dark = createTheme({
       selected: '#333333',
       active: '#3a3a3a',
       hover: '#444444',
-      edge: '#444444'
+      edge: '#444444',
+      edgeLight: '#333333'
     },
     hot: {
       main: '#ff0000',

@@ -76,7 +76,7 @@ export function ViewContainer<T, S, A>({
         position="sticky"
         elevation={0}
       >
-        <Toolbar style={{ gap: '8px', padding: 8, paddingRight: 16 }}>
+        <Toolbar sx={(theme) => ({ gap: '8px', padding: 0.5, paddingRight: 16, borderStyle: 'solid', borderWidth: '1px 0px 1px 1px', borderColor: theme.palette.background.edgeLight })}>
           <Stack
             direction="row"
             gap={2}
@@ -246,6 +246,9 @@ export function ViewContainer<T, S, A>({
           display: 'flex',
           gap: theme.spacing(4),
           overflow: 'auto',
+          borderStyle: 'solid',
+          borderWidth: '0px 0px 0px 1px',
+          borderColor: theme.palette.background.edgeLight,
           flexDirection: 'column',
           ...(printing == viewId
             ? {
