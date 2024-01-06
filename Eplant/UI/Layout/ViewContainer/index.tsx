@@ -122,13 +122,20 @@ export function ViewContainer<T, S, A>({
                 }}
                 inputProps={{
                   sx: (theme: {
-                    palette: { background: { paperOverlay: any } }
+                    shape: any
+                    palette: { background: { paperOverlay: any, edgeLight: any } }
                   }) => ({
                     display: 'flex',
                     alignItems: 'center',
                     backgroundColor: theme.palette.background.paperOverlay,
-                    padding: 1,
-                    borderRadius: 1,
+                    paddingTop: 0.75,
+                    paddingLeft: 1,
+                    paddingBottom: 0.5,
+                    borderTopLeftRadius: theme.shape.borderRadius,
+                    borderTopRightRadius: theme.shape.borderRadius,
+                    borderStyle: 'solid',
+                    borderWidth: 1,
+                    borderColor: theme.palette.background.edgeLight,
                     ':focus': {
                       backgroundColor: theme.palette.background.paperOverlay,
                       borderRadius: 1,
