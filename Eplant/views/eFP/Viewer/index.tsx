@@ -379,7 +379,7 @@ export default class EFPViewer
               overflow: 'hidden',
               background: theme.palette.background.paperOverlay,
               border: `1px solid`,
-              borderColor: theme.palette.background.active,
+              borderColor: theme.palette.background.edge,
               borderRadius: theme.shape.borderRadius + 'px',
             })}
           >
