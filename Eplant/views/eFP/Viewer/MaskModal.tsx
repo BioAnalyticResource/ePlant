@@ -1,6 +1,6 @@
 // Import necessary dependencies from Material-UI
 import React, { useState } from 'react';
-import { Modal, Slider, Typography, Button, useTheme } from '@mui/material';
+import { Modal, Slider, Typography, Button, useTheme, DialogTitle } from '@mui/material';
 import { EFPViewerState } from './types';
 
 // Modal component with a slider
@@ -30,9 +30,9 @@ const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
     return (
         <Modal open={state.maskModalVisible} onClose={handleClose}>
             <div style={{
-                width: 350,
-                height: 200,
-                padding: 20,
+                width: 500,
+                padding: 16,
+                gap: 16,
                 background: theme.palette.background.paperOverlay,
                 margin: 'auto',
                 marginTop: 100,
@@ -41,8 +41,11 @@ const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
             }}>
+            <DialogTitle sx={{minWidth: '512px', padding: 0}}>
+                Mask data
+            </DialogTitle>
                 <Typography variant="body2" gutterBottom>
-                    Mask samples if the expression level is within a given range of their standard deviation.
+                    Mask samples if the expression level is below a given percentile of the standard deviation.
                 </Typography>
                 <Slider
                     value={sliderValue}
@@ -51,12 +54,13 @@ const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
                     valueLabelFormat={(value) => `${value}%`}
                     min={0}
                     max={100}
+                    sx={{ width: 400}}
                 />
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button onClick={handleClose} style={{ marginRight: 8 }}>
+                    <Button onClick={handleClose} style={{ marginRight: 8, color: theme.palette.secondary.main }}>
                         Cancel
                     </Button>
-                    <Button variant="contained" color="inherit" onClick={handleSubmit}>
+                    <Button variant="contained" sx={{ background: theme.palette.primary.main }} onClick={handleSubmit}>
                         Mask Thresholds
                     </Button>
                 </div>
