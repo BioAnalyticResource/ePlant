@@ -20,7 +20,7 @@ jobs:
         run: npm install
 
       - name: Prettier Check
-        run: npm run prettier . --check
+        run: prettier . --check
 
       - name: ESLint Check
         run: npm run lint
