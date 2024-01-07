@@ -37,7 +37,7 @@ export const light = createTheme({
       contrastText: '#000',
     },
     background: {
-      default: '#f0f5f0', // bottom (left nav & overall page bg)
+      default: '#f0f7f0', // bottom (left nav & overall page bg)
       paper: '#f4f4f4', // middle (bg for all the views & unselected tabs)
       paperOverlay: '#ffffff', // top level (EFP chart bg, etc)
       transparentOverlay: '#fdfdfdDD', // tooltip bg
