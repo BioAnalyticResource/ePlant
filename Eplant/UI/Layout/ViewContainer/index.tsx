@@ -194,10 +194,7 @@ export function ViewContainer<T, S, A>({
         </DialogTitle>
         <DialogContent>
           {view.citation ? (
-            <view.citation
-              state={state}
-              activeData={activeData}
-              gene={gene} />
+            <view.citation state={state} activeData={activeData} gene={gene} />
           ) : (
             <Box>No information provided for this view</Box>
           )}
@@ -218,17 +215,17 @@ export function ViewContainer<T, S, A>({
           flexDirection: 'column',
           ...(printing == viewId
             ? {
-              display: 'block !important',
-              padding: 0,
-              position: 'fixed',
-              left: 0,
-              top: 0,
-              margin: 0,
-              zIndex: 1e9,
-              background: theme.palette.background.paper,
-              width: '100%',
-              minHeight: '100%',
-            }
+                display: 'block !important',
+                padding: 0,
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                margin: 0,
+                zIndex: 1e9,
+                background: theme.palette.background.paper,
+                width: '100%',
+                minHeight: '100%',
+              }
             : {}),
         })}
       >

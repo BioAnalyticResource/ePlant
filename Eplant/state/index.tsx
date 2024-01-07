@@ -2,7 +2,14 @@ import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import Storage from '@eplant/util/Storage'
-import { atom, SetStateAction, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
+import {
+  atom,
+  SetStateAction,
+  useAtom,
+  useAtomValue,
+  useSetAtom,
+  WritableAtom,
+} from 'jotai'
 import * as FlexLayout from 'flexlayout-react'
 import { useState, useEffect, createContext, useContext } from 'react'
 
@@ -56,17 +63,17 @@ export function atomWithStorage<T>(
       if (e) setAtom(e)
       else setAtom(initialValue)
     }
-      ; (async () => {
-        const finished = loading?.()
-        try {
-          const val = await loadedValue
-          if (val) {
-            setAtom(val)
-          }
-        } finally {
-          if (finished) finished()
+    ;(async () => {
+      const finished = loading?.()
+      try {
+        const val = await loadedValue
+        if (val) {
+          setAtom(val)
         }
-      })()
+      } finally {
+        if (finished) finished()
+      }
+    })()
     return storage.watch(key, listener)
   }
   const a = atom(
@@ -101,17 +108,17 @@ function atomWithOptionalStorage<T>(
       if (e) setAtom(deserialize(e))
       else setAtom(initialValue)
     }
-      ; (async () => {
-        pageLoad.start()
-        try {
-          const val = await loadedValue
-          if (val) {
-            setAtom(deserialize(val))
-          }
-        } finally {
-          pageLoad.done()
+    ;(async () => {
+      pageLoad.start()
+      try {
+        const val = await loadedValue
+        if (val) {
+          setAtom(deserialize(val))
         }
-      })()
+      } finally {
+        pageLoad.done()
+      }
+    })()
     return storage.watch(key, listener)
   }
   const a = atom(
@@ -149,17 +156,17 @@ export const useSetGeneticElements = () => useSetAtom(genesAtom)
 
 const fetchCitations = () => {
   return fetch('https://bar.utoronto.ca/eplant/data/citations.json')
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        throw new Error(`HTTP error! Status: ${response.status}`)
       }
-      return response.json();
+      return response.json()
     })
-    .catch(error => {
-      console.error('Error fetching citations:', error);
-      throw error;
-    });
-};
+    .catch((error) => {
+      console.error('Error fetching citations:', error)
+      throw error
+    })
+}
 export const citationsAtom = atom(await fetchCitations())
 export const useCitations = () => useAtom(citationsAtom)
 

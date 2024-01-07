@@ -21,6 +21,7 @@ import GeneDistributionChart from './GeneDistributionChart'
 import { useCitations } from '@eplant/state'
 import { getCitation } from '@eplant/util/citations'
 import MaskModal from './MaskModal'
+import EFPViewerCitation from './EFPViewerCitation'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -133,7 +134,7 @@ export default class EFPViewer
     public icon: () => JSX.Element,
     public description?: string,
     public thumbnail?: string,
-  ) { }
+  ) {}
   getInitialData = async (
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void,
@@ -164,7 +165,6 @@ export default class EFPViewer
       viewData: viewData,
       efps: this.efps,
       colorMode: 'absolute' as const,
-
     }
   }
   reducer = (state: EFPViewerState, action: EFPViewerAction) => {
@@ -203,12 +203,12 @@ export default class EFPViewer
       case 'toggle-mask-modal':
         return {
           ...state,
-          maskModalVisible: state.maskModalVisible ? false : true
+          maskModalVisible: state.maskModalVisible ? false : true,
         }
       case 'set-mask-threshold':
         return {
           ...state,
-          maskThreshold: action.threshold
+          maskThreshold: action.threshold,
         }
       default:
         return state
@@ -256,10 +256,10 @@ export default class EFPViewer
           state={{
             colorMode: props.state.colorMode,
             renderAsThumbnail: false,
-            maskThreshold: props.state.maskThreshold
+            maskThreshold: props.state.maskThreshold,
           }}
           geneticElement={props.geneticElement}
-          dispatch={() => { }}
+          dispatch={() => {}}
         />
       )
     }, [
@@ -268,7 +268,7 @@ export default class EFPViewer
       props.dispatch,
       sortedViewData[activeViewIndex],
       props.state.colorMode,
-      props.state.maskThreshold
+      props.state.maskThreshold,
     ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
@@ -389,7 +389,12 @@ export default class EFPViewer
                 <MaskModal
                   state={props.state}
                   onClose={() => props.dispatch({ type: 'toggle-mask-modal' })}
-                  onSubmit={(threshold) => props.dispatch({ type: 'set-mask-threshold', threshold: threshold })}
+                  onSubmit={(threshold) =>
+                    props.dispatch({
+                      type: 'set-mask-threshold',
+                      threshold: threshold,
+                    })
+                  }
                 />
                 <Legend
                   sx={(theme) => ({
@@ -404,7 +409,7 @@ export default class EFPViewer
                   state={{
                     colorMode: props.state.colorMode,
                     renderAsThumbnail: false,
-                    maskThreshold: props.state.maskThreshold
+                    maskThreshold: props.state.maskThreshold,
                   }}
                 />
                 <PanZoom
@@ -457,8 +462,8 @@ export default class EFPViewer
     },
     {
       action: { type: 'toggle-mask-modal' },
-      render: () => <>Mask data</>
-    }
+      render: () => <>Mask data</>,
+    },
   ]
   header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
     props,
@@ -470,14 +475,22 @@ export default class EFPViewer
     </Typography>
   )
 
-  citation = (props: { activeData?: EFPViewerData, state?: EFPViewerState, gene?: GeneticElement | null }) => {
+  citation = (props: {
+    activeData?: EFPViewerData
+    state?: EFPViewerState
+    gene?: GeneticElement | null
+  }) => {
     const [xmlData, setXMLData] = useState<string[]>([])
 
-    const viewID = props.activeData?.views.find((v) => v.id == props.state?.activeView)?.name
-    const viewXML = props.activeData?.views.find((v) => v.id == props.state?.activeView)?.xmlURL
+    const viewID = props.activeData?.views.find(
+      (v) => v.id == props.state?.activeView,
+    )?.name
+    const viewXML = props.activeData?.views.find(
+      (v) => v.id == props.state?.activeView,
+    )?.xmlURL
     useEffect(() => {
       const xmlLoad = async () => {
-        let xmlString = ""
+        let xmlString = ''
         if (viewXML) {
           try {
             const response = await fetch(viewXML)
@@ -489,11 +502,13 @@ export default class EFPViewer
         }
 
         // Extract <li> tags
-        if (xmlString !== "") {
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
-          const listItems = xmlDoc.querySelectorAll('info li');
-          const itemsArray = Array.from(listItems).map((liElement) => liElement.textContent ? liElement.textContent : "");
+        if (xmlString !== '') {
+          const parser = new DOMParser()
+          const xmlDoc = parser.parseFromString(xmlString, 'text/xml')
+          const listItems = xmlDoc.querySelectorAll('info li')
+          const itemsArray = Array.from(listItems).map((liElement) =>
+            liElement.textContent ? liElement.textContent : '',
+          )
           setXMLData(itemsArray)
         } else {
           setXMLData([])
@@ -503,29 +518,13 @@ export default class EFPViewer
     }, [viewXML])
 
     if (viewID) {
-      const citation = getCitation(viewID)
-      // Need to set inner HTML to capture nested HTML tags in some citations
+      const citation = getCitation(viewID) as { [key: string]: string }
       return (
-        <div>
-          <div dangerouslySetInnerHTML={{ __html: citation.source }}></div>
-{citation.notes ? <div style={{marginTop: '1em'}} dangerouslySetInnerHTML={{ __html: citation.notes }}></div> : ""}
-{citation.URL ? <p><a href={citation.URL}>citation.URL</a></p> : ""}
-          {
-            xmlData.length > 0 ?
-              (<ul>
-                {xmlData.map((item, index) => {
-                  if (item) {
-                    return (<li key={index}> {item}</li>)
-                  }
-                }
-                )}
-              </ul>
-              ) :
-              <></>
-          }
-          <br></br> This image was generated with the {viewID} at bar.utoronto.ca/eplant by Waese et al. 2017.
-          <Link href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" src="https://i.creativecommons.org/l/by/4.0/80x15.png" title="The ePlant output for your gene of interest is available under a Creative Commons Attribution 4.0 International License and may be freely used in publications etc." /></Link>
-        </div>
+        <EFPViewerCitation
+          viewID={viewID}
+          citation={citation}
+          xmlData={xmlData}
+        ></EFPViewerCitation>
       )
     } else {
       return <div>No Citation information provided.</div>
