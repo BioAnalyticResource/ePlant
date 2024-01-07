@@ -202,7 +202,7 @@ export function ViewContainer<T, S, A>({
               setViewingCitations(true)
             }}
           >
-            Get citations
+            Data sources
           </Button>
           <Button
             variant="text"
@@ -228,9 +228,9 @@ export function ViewContainer<T, S, A>({
   return (
     <Box {...props} display="flex" flexDirection="column">
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
-        <DialogTitle>
+        <DialogTitle sx={{minWidth: '512px'}}>
           <Typography variant="h6">
-            Citation and experiment information for {view.name}
+            Data sources for {view.name}
           </Typography>
         </DialogTitle>
         <DialogContent>
