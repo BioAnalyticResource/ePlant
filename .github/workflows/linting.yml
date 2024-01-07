@@ -20,7 +20,7 @@ jobs:
         run: npm install --save-dev
 
       - name: Prettier Check
-        run: npx prettier /Eplant --check
+        run: npx prettier ./Eplant --check
 
       - name: ESLint Check
         if: always()
