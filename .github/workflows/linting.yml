@@ -23,4 +23,5 @@ jobs:
         run: npx prettier . --check
 
       - name: ESLint Check
+        if: always()
         run: npm run lint
