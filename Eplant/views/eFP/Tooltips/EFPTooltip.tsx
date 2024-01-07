@@ -42,6 +42,8 @@ function KeyValueRow(props: {
       color: theme.palette.text.secondary,
       textAlign: 'left',
       border: 'none',
+      paddingTop: 0,
+      paddingBottom: 0,
     })}
   >
     {props.label}
@@ -50,7 +52,9 @@ function KeyValueRow(props: {
       sx={theme => ({
       color: theme.palette.text.primary,
       textAlign: 'right',
-      border: 'none'
+      border: 'none',
+      paddingTop: 0,
+      paddingBottom: 0,
     })}>{props.value}</TableCell>
 </TableRow>
 }
@@ -95,6 +99,7 @@ function SVGTooltip(props: {
               backdropFilter: 'blur(7px)',
               boxShadow: theme.shadows[3],
               borderRadius: 1,
+              paddingBottom: 1.5,
             })}
           >
             <Table size="small">
