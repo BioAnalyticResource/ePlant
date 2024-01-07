@@ -22,6 +22,7 @@ const SecondaryText = styled(Typography)(({ theme }) => ({
 const CodeBody = styled(SecondaryText)(({ theme }) => ({
   fontFamily: 'Roboto Mono',
   wordBreak: 'break-word',
+  fontSize: '.65rem',
 }))
 
 const GeneSequence = ({
@@ -183,11 +184,7 @@ export default function GeneInfoViewer({
       <ViewSwitcher geneticElement={geneticElement} />
       <Stack direction="column" gap={'16px'} flex={4}>
         <div>
-          <Typography variant="body1">Gene</Typography>
-          <SecondaryText>{geneticElement.id}</SecondaryText>
-        </div>
-        <div>
-          <Typography variant="body1">Aliases</Typography>
+          <Typography variant="h5" sx={{fontWeight: 500}}>{geneticElement.id}</Typography>
           <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
         </div>
         <div>
