@@ -1,7 +1,8 @@
 import React from 'react'
 import EFPViewer from '../eFP/Viewer'
 import ExperimentEFPIcon from './icon'
-import Thumbnail from '../../../thumbnails/tissue_efp.png'
+import ThumbnailLight from '../../../thumbnails/experiment-viewer-light.png'
+import ThumbnailDark from '../../../thumbnails/experiment-viewer-dark.png'
 import { EFPViewerData } from '../eFP/Viewer/types'
 import EFP from '../eFP'
 import { makeEfps } from '../eFP/Viewer/util'
@@ -266,5 +267,5 @@ export default new EFPViewer(
   efps,
   () => <ExperimentEFPIcon />,
   'Visualize gene expression across multiple tissues and experiment samples.',
-  Thumbnail,
+  ThumbnailLight,
 )

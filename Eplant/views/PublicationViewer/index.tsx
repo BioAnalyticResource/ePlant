@@ -1,12 +1,14 @@
-import { Link, Tab, Tabs, Typography } from '@mui/material'
+import { Link, Tab, Tabs, Typography} from '@mui/material'
 import * as React from 'react'
 import { View, ViewProps } from '../../View'
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
 import PublicationViewerIcon from './icon'
-import Thumbnail from '../../../thumbnails/publication_viewer.png'
+import ThumbnailLight from '../../../thumbnails/publication-viewer-light.png'
+import ThumbnailDark from '../../../thumbnails/publication-viewer.png'
 import { ViewDataError } from '@eplant/View/viewData'
+
 
 const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication viewer',
@@ -35,7 +37,8 @@ const PublicationViewer: View<PublicationViewerData> = {
   },
   icon: () => <PublicationViewerIcon />,
   description: 'Find publications that mention your gene of interest.',
-  thumbnail: Thumbnail,
+  // TODO: If dark theme is active, use ThumbnailDark
+  thumbnail: ThumbnailLight,
   citation({ gene }) {
     return (
       <div>
