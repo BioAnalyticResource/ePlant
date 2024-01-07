@@ -9,8 +9,8 @@ const Illustration = ({
   ...props
 }: { color: string } & SVGProps<SVGSVGElement>) => (
   <svg
-    width="204"
-    height="386"
+    width="120"
+    height="240"
     viewBox="0 0 204 386"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -31,8 +31,11 @@ export default function FailedToLoad(props: {
 }) {
   const theme = useTheme()
   return (
-    <Stack gap={2} alignItems="center" direction="column" width="100%">
-      <Typography variant="h5" sx={{ textAlign: 'center', maxWidth: 600 }}>
+    <Stack gap={2} alignItems="center" direction="column" width="100%" height="100vh" justifyContent="center">
+      <Illustration
+        color={theme.palette.primary.main}
+      />
+      <Typography variant="h6" sx={{ textAlign: 'center', maxWidth: 600, fontWeight: 400, marginTop: 2 }}>
         {props.geneticElement
           ? `There was an error while trying to load ${props.view.name.toLowerCase()} for ${
               props.geneticElement.id
@@ -52,12 +55,6 @@ export default function FailedToLoad(props: {
           GitHub
         </Link>
       </Typography>
-      <Illustration
-        color={theme.palette.primary.dark}
-        style={{
-          maxHeight: '225px',
-        }}
-      />
     </Stack>
   )
 }
