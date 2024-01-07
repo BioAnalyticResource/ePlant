@@ -17,8 +17,7 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        run: npm install prettier
-        run: npm install eslint
+        run: npm install --save-dev
 
       - name: Prettier Check
         run: npx prettier . --check
