@@ -131,7 +131,7 @@ export default class EFPViewer
     public icon: () => JSX.Element,
     public description?: string,
     public thumbnail?: string,
-  ) { }
+  ) {}
   getInitialData = async (
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void,
@@ -162,7 +162,6 @@ export default class EFPViewer
       viewData: viewData,
       efps: this.efps,
       colorMode: 'absolute' as const,
-
     }
   }
   reducer = (state: EFPViewerState, action: EFPViewerAction) => {
@@ -201,12 +200,12 @@ export default class EFPViewer
       case 'toggle-mask-modal':
         return {
           ...state,
-          maskModalVisible: state.maskModalVisible ? false : true
+          maskModalVisible: state.maskModalVisible ? false : true,
         }
       case 'set-mask-threshold':
         return {
           ...state,
-          maskThreshold: action.threshold
+          maskThreshold: action.threshold,
         }
       default:
         return state
@@ -254,10 +253,10 @@ export default class EFPViewer
           state={{
             colorMode: props.state.colorMode,
             renderAsThumbnail: false,
-            maskThreshold: props.state.maskThreshold
+            maskThreshold: props.state.maskThreshold,
           }}
           geneticElement={props.geneticElement}
-          dispatch={() => { }}
+          dispatch={() => {}}
         />
       )
     }, [
@@ -266,7 +265,7 @@ export default class EFPViewer
       props.dispatch,
       sortedViewData[activeViewIndex],
       props.state.colorMode,
-      props.state.maskThreshold
+      props.state.maskThreshold,
     ])
     const ref = React.useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
@@ -387,7 +386,12 @@ export default class EFPViewer
                 <MaskModal
                   state={props.state}
                   onClose={() => props.dispatch({ type: 'toggle-mask-modal' })}
-                  onSubmit={(threshold) => props.dispatch({ type: 'set-mask-threshold', threshold: threshold })}
+                  onSubmit={(threshold) =>
+                    props.dispatch({
+                      type: 'set-mask-threshold',
+                      threshold: threshold,
+                    })
+                  }
                 />
                 <Legend
                   sx={(theme) => ({
@@ -402,7 +406,7 @@ export default class EFPViewer
                   state={{
                     colorMode: props.state.colorMode,
                     renderAsThumbnail: false,
-                    maskThreshold: props.state.maskThreshold
+                    maskThreshold: props.state.maskThreshold,
                   }}
                 />
                 <PanZoom
@@ -455,8 +459,8 @@ export default class EFPViewer
     },
     {
       action: { type: 'toggle-mask-modal' },
-      render: () => <>Mask data</>
-    }
+      render: () => <>Mask data</>,
+    },
   ]
   header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
     props,

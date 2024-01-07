@@ -41,9 +41,9 @@ export const useEFPSVG = (
     if (!cache[view.id]) return { view: null, loading: true }
     const parser = new DOMParser()
     const svg = parser.parseFromString(cache[view.id].svg, 'text/xml')
-      ;['width', 'height', 'x', 'y', 'id'].map((s) =>
-        svg.documentElement.removeAttribute(s),
-      )
+    ;['width', 'height', 'x', 'y', 'id'].map((s) =>
+      svg.documentElement.removeAttribute(s),
+    )
     svg.documentElement.setAttribute('class', 'eFP-svg')
     // Remove styling from all of the text tags
     for (const text of svg.querySelectorAll('text, tspan')) {
@@ -85,19 +85,20 @@ export function getColor(
   theme: Theme,
   colorMode: ColorMode,
   tissueStd?: number,
-  maskThreshold?: number
+  maskThreshold?: number,
 ): string {
   const extremum = Math.max(
     Math.abs(Math.log2(group.min / control)),
     Math.log2(group.max / control),
     1,
   )
-  const masked = maskThreshold && tissueStd ?
-    isNaN(group.std) || (tissueStd >= value * (maskThreshold / 100)) :
-    false
+  const masked =
+    maskThreshold && tissueStd
+      ? isNaN(group.std) || tissueStd >= value * (maskThreshold / 100)
+      : false
   const norm = Math.log2(value / control) / extremum
   if (masked) {
-    return (theme.palette.secondary.dark)
+    return theme.palette.secondary.dark
   } else if (colorMode === 'relative')
     return norm < 0
       ? mix(theme.palette.neutral.main, theme.palette.cold.main, Math.abs(norm))
@@ -121,7 +122,8 @@ export function useStyles(
     .flatMap((group) =>
       group.tissues.map(
         (tissue) => `
-          #${id} .efp-group-${tissue.id} *, #${id} .efp-group-${tissue.id
+          #${id} .efp-group-${tissue.id} *, #${id} .efp-group-${
+            tissue.id
           } { fill: ${getColor(
             tissue.mean,
             group,
@@ -130,7 +132,7 @@ export function useStyles(
             colorMode,
             tissue.std,
             maskThreshold,
-          )} !important; }`
+          )} !important; }`,
       ),
     )
     .join('\n')
