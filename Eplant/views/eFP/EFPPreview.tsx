@@ -56,10 +56,10 @@ export default function EFPPreview({
           state={{
             renderAsThumbnail: true,
             colorMode: colorModeDeferred,
-            maskThreshold: maskThreshold
+            maskThreshold: maskThreshold,
           }}
           geneticElement={gene}
-          dispatch={() => { }}
+          dispatch={() => {}}
         />
         <div
           style={{

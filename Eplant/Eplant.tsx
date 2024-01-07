@@ -42,7 +42,6 @@ import { Theme } from '@mui/system'
 import ErrorBoundary from './util/ErrorBoundary'
 import { dark, light } from './theme'
 
-
 // TODO: Make this drawer support opening/closing on mobile
 
 const sideBarWidth = 300
