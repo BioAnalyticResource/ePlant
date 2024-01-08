@@ -36,17 +36,15 @@ const columns: GridColDef[] = [
     headerClassName: 'select-none',
     renderCell: (params: GridRenderCellParams<{ [key: string]: unknown }>) => (
       <>
-        <a
+        <Button
           href={params.value}
-          rel="noopener noreferrer"
-          target="_blank"
-          color="inherit"
-          style={{ textDecoration: 'none' }}
+          variant="outlined"
+          color="secondary"
+          size="small"
+          target='_blank'
         >
-          <Button>View paper</Button>
-        </a>
-
-        
+          VIEW PAPER
+        </Button>
       </>
     ),
   },
