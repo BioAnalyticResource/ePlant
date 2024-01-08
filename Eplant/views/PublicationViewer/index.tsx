@@ -1,4 +1,4 @@
-import { Link, Tab, Tabs, Typography} from '@mui/material'
+import { Link, Tab, Tabs, Typography, Theme, useTheme } from '@mui/material'
 import * as React from 'react'
 import { View, ViewProps } from '../../View'
 import { GeneRIFs } from './GeneRIFs'
@@ -18,18 +18,19 @@ const PublicationViewer: View<PublicationViewerData> = {
     activeData,
   }: ViewProps<PublicationViewerData, null, null>) {
     const [tab, setTab] = React.useState<TabValues>('publications')
+    const theme = useTheme()
     return (
       <div>
         <Tabs value={tab} onChange={(e, val: TabValues) => setTab(val)}>
           <Tab label="PUBLICATIONS" value="publications" />
           <Tab label="GENE RIFS" value="geneRIFs" />
         </Tabs>
-        <div hidden={tab !== 'publications'}>
+        <div hidden={tab !== 'publications'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderColor: theme.palette.background.edgeLight}}>
           {tab === 'publications' && (
             <Publications publications={activeData.publications} />
           )}
         </div>
-        <div hidden={tab !== 'geneRIFs'}>
+        <div hidden={tab !== 'geneRIFs'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderColor: theme.palette.background.edgeLight}}>
           {tab === 'geneRIFs' && <GeneRIFs geneRIFs={activeData.geneRIFs} />}
         </div>
       </div>
