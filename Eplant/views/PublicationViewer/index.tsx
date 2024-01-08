@@ -25,12 +25,12 @@ const PublicationViewer: View<PublicationViewerData> = {
           <Tab label="PUBLICATIONS" value="publications" />
           <Tab label="GENE RIFS" value="geneRIFs" />
         </Tabs>
-        <div hidden={tab !== 'publications'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderColor: theme.palette.background.edgeLight}}>
+        <div hidden={tab !== 'publications'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderRadius: theme.shape.borderRadius, borderTopLeftRadius: 0, borderColor: theme.palette.background.edgeLight}}>
           {tab === 'publications' && (
             <Publications publications={activeData.publications} />
           )}
         </div>
-        <div hidden={tab !== 'geneRIFs'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderColor: theme.palette.background.edgeLight}}>
+        <div hidden={tab !== 'geneRIFs'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderRadius: theme.shape.borderRadius, borderTopLeftRadius: 0, borderColor: theme.palette.background.edgeLight}}>
           {tab === 'geneRIFs' && <GeneRIFs geneRIFs={activeData.geneRIFs} />}
         </div>
       </div>
