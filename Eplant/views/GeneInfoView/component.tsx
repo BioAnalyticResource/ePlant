@@ -15,6 +15,7 @@ import { View, ViewProps } from '../../View'
 import { useViewData } from '../../View/viewData'
 import { GeneModel } from './GeneModel'
 import { Box, Button, ButtonProps, LinearProgress } from '@mui/material'
+import { setStroke } from '../eFP/Tooltips/EFPTooltip';
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -180,9 +181,9 @@ export default function GeneInfoViewer({
   }
 
   return (
-    <Stack direction="row" gap={'20px'}>
+    <Stack direction="row" gap={'20px'} >
       <ViewSwitcher geneticElement={geneticElement} />
-      <Stack direction="column" gap={'16px'} flex={4}>
+      <Stack direction="column" gap={'16px'} flex={4} sx={{ background: (theme) => theme.palette.background.paperOverlay, padding: 2, borderRadius: (theme) => theme.shape.borderRadius+'px', border: '1px solid', borderColor:  (theme) => theme.palette.background.edgeLight }}>
         <div>
           <Typography variant="h5" sx={{fontWeight: 500}}>{geneticElement.id}</Typography>
           <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
