@@ -248,7 +248,7 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
             maskThreshold: props.state.maskThreshold,
           }}
           geneticElement={props.geneticElement}
-          dispatch={() => {}}
+          dispatch={() => { }}
         />
       )
     }, [
