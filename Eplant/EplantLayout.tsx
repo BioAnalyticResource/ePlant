@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { usePanes, useActiveId, useModel, usePageLoad} from './state'
 import { Add, CallMade, Close } from '@mui/icons-material'
-import { sidebarWidth } from './Sidebar'
+import { sidebarWidth } from './UI/Sidebar'
 import { useConfig } from './config'
 import { useTheme } from '@mui/material/styles'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
