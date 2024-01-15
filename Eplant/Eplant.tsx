@@ -1,5 +1,5 @@
 // import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import Sidebar from './Sidebar'
+import Sidebar from './UI/Sidebar'
 import EplantLayout from './EplantLayout'
 import DirectPane from './DirectPane'
 import { Route, Routes } from 'react-router-dom'

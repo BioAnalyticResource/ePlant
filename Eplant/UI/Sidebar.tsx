@@ -1,8 +1,8 @@
 import ResponsiveDrawer from './ResponsiveDrawer'
 import {Container} from '@mui/material'
-import SerializedGeneticElement from './GeneticElement'
-import {usePanes, useActiveId} from './state'
-import { LeftNav } from './UI/LeftNav'
+import SerializedGeneticElement from '../GeneticElement'
+import {usePanes, useActiveId} from '../state'
+import { LeftNav } from './LeftNav'
 
 export const sidebarWidth = 300;
 const Sidebar = () => {
