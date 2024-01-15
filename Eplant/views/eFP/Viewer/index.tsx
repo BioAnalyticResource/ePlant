@@ -2,22 +2,13 @@ import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { View, ViewProps } from '@eplant/View'
 import {
-  getViewDataKey,
-  useViewData,
   ViewDataError,
-  viewDataStorage,
 } from '@eplant/View/viewData'
 import {
   Box,
-  Drawer,
-  FormControl,
-  InputLabel,
-  LinearProgress,
   MenuItem,
-  Select,
   Tooltip,
   Typography,
-  useTheme,
 } from '@mui/material'
 import React, { startTransition } from 'react'
 import EFP from '..'
@@ -30,7 +21,7 @@ import {
 } from 'react-window'
 import _ from 'lodash'
 import useDimensions from '@eplant/util/useDimensions'
-import { EFPData, EFPState } from '../types'
+import { EFPData } from '../types'
 import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
@@ -99,7 +90,7 @@ const EFPListRow = React.memo(function EFPListRow({
     </div>
   )
 },
-areEqual)
+  areEqual)
 
 export const EFPListMemoized = function EFPList(props: EFPListProps) {
   return (
@@ -142,7 +133,7 @@ export default class EFPViewer
     public icon: () => JSX.Element,
     public description?: string,
     public thumbnail?: string
-  ) {}
+  ) { }
   getInitialData = async (
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void
@@ -268,7 +259,7 @@ export default class EFPViewer
             renderAsThumbnail: false,
           }}
           geneticElement={props.geneticElement}
-          dispatch={() => {}}
+          dispatch={() => { }}
         />
       )
     }, [
