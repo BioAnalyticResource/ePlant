@@ -1,5 +1,4 @@
 import { styled } from '@mui/material'
-import * as React from 'react'
 export default styled((props) => {
   return (
     <svg
@@ -13,5 +12,7 @@ export default styled((props) => {
     </svg>
   )
 })(({ theme }) => ({
-  fill: theme.palette.text.primary,
+  fill: theme.palette.text.primary
 }))
+
+// This icon is used in the dropdown view selection menu
