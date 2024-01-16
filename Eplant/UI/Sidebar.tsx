@@ -5,42 +5,42 @@ import {usePanes, useActiveId} from '../state'
 import { LeftNav } from './LeftNav'
 
 export const sidebarWidth = 300;
-const Sidebar = () => {
+
+export default function Sidebar(){
   const [panes, panesDispatch] = usePanes()
   const [activeId] = useActiveId()
 
-return(
-  <ResponsiveDrawer
-        variant='persistent'
-        open={true}
-        PaperProps={{
-          sx: {
-            border: 'none',
-            backgroundColor: 'transparent',
-          },
-        }}
-      >
-        <Container
-          disableGutters
-          sx={{
-            height: '100%',
-            padding: '20px',
-            width: `${sidebarWidth}px`,
-            boxSizing: 'border-box',
+  return(
+    <ResponsiveDrawer
+          variant='persistent'
+          open={true}
+          PaperProps={{
+            sx: {
+              border: 'none',
+              backgroundColor: 'transparent',
+            },
           }}
         >
-          <LeftNav
-            onSelectGene={(gene: SerializedGeneticElement) =>
-              panesDispatch({
-                type: 'set-active-gene',
-                id: activeId,
-                activeGene: gene.id,
-              })
-            }
-            selectedGene={panes[activeId ?? '']?.activeGene ?? undefined}
-          />
-        </Container>
-  </ResponsiveDrawer>
-)
+          <Container
+            disableGutters
+            sx={{
+              height: '100%',
+              padding: '20px',
+              width: `${sidebarWidth}px`,
+              boxSizing: 'border-box',
+            }}
+          >
+            <LeftNav
+              onSelectGene={(gene: SerializedGeneticElement) =>
+                panesDispatch({
+                  type: 'set-active-gene',
+                  id: activeId,
+                  activeGene: gene.id,
+                })
+              }
+              selectedGene={panes[activeId ?? '']?.activeGene ?? undefined}
+            />
+          </Container>
+    </ResponsiveDrawer>
+  )
 }
-export default Sidebar;
