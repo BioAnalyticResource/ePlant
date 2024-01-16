@@ -1,9 +1,16 @@
 import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { View, ViewProps } from '@eplant/View'
-import { ViewDataError } from '@eplant/View/viewData'
-import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
-import React, { startTransition } from 'react'
+import {
+  ViewDataError,
+} from '@eplant/View/viewData'
+import {
+  Box,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from '@mui/material'
+import { startTransition, memo, useMemo, useRef } from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
 import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
@@ -36,10 +43,10 @@ type EFPListProps = {
   maskThreshold: number
 }
 
-const EFPListItem = React.memo(
+const EFPListItem = memo(
   function EFPRow({ index: i, data }: { index: number; data: EFPListProps }) {
     return (
-      <Tooltip placement="right" arrow title={<div>{data.views[i].name}</div>}>
+      <Tooltip placement='right' arrow title={<span>{data.views[i].name}</span>}>
         <div>
           <EFPPreview
             sx={() => ({
@@ -76,7 +83,7 @@ const EFPListItem = React.memo(
   },
 )
 
-const EFPListRow = React.memo(function EFPListRow({
+const EFPListRow = memo(function EFPListRow({
   style,
   index,
   data,
@@ -259,7 +266,7 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
       props.state.colorMode,
       props.state.maskThreshold,
     ])
-    const ref = React.useRef<HTMLDivElement>(null)
+    const ref = useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
     {
       // console.log(props)
