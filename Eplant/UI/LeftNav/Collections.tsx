@@ -153,7 +153,7 @@ export function Collection({
 
   return (
     <Stack
-      direction="column"
+      direction='column'
       spacing={1}
       style={{
         justifyContent: 'center',
@@ -174,7 +174,7 @@ export function Collection({
           onClick={() => setOpen(!open)}
           onMouseOver={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
-          direction="row"
+          direction='row'
           gap={1}
           ref={setTopRef}
           sx={(theme) => ({
@@ -197,7 +197,7 @@ export function Collection({
               display: renaming ? undefined : 'none',
               maxHeight: '100%',
             }}
-            size="small"
+            size='small'
             inputRef={inputRef}
             onKeyPress={(e) => {
               if (e.key == 'Enter') rename()
@@ -210,7 +210,7 @@ export function Collection({
               width: '100%',
             }}
           >
-            <div
+            <span
               style={{
                 display: 'flex',
                 flexFlow: 'row',
@@ -222,11 +222,11 @@ export function Collection({
               <span style={{ fontSize: '0.8rem', opacity: '0.5' }}>
                 {genes.length > 0 && !open ? genes.length + ' genes' : ''}
               </span>
-            </div>
+            </span>
           </Typography>
           <div style={{ flex: 1 }} />
           {renaming ? (
-            <IconButton color="primary" onClick={rename}>
+            <IconButton color='primary' onClick={rename}>
               <Check></Check>
             </IconButton>
           ) : (
@@ -249,7 +249,7 @@ export function Collection({
       <Collapse in={open}>
         <SortableContext items={genes} strategy={verticalListSortingStrategy}>
           <Stack
-            direction="column"
+            direction='column'
             spacing={1}
             paddingBottom={2}
             ref={setBottomRef}
@@ -266,11 +266,11 @@ export function Collection({
                 ></SortableGeneticElement>
               ))
             ) : (
-              <Stack spacing={1} direction="row">
+              <Stack spacing={1} direction='row'>
                 <div style={{ width: '24px' }} />
                 <Typography
-                  variant="caption"
-                  fontStyle="italic"
+                  variant='caption'
+                  fontStyle='italic'
                   sx={(theme) => ({
                     color: theme.palette.text.disabled,
                   })}
@@ -406,7 +406,7 @@ export function Collections(props: {
         handleDrag(ev, { finished: true, swapWithinCollection: true })
       }
     >
-      <Stack direction="column" spacing={2}>
+      <Stack direction='column' spacing={2}>
         {collections.map((p, i) => (
           <Collection
             key={i}
@@ -449,9 +449,9 @@ export function Collections(props: {
         ))}
         <Button
           startIcon={<Add />}
-          variant="text"
-          color="secondary"
-          size="small"
+          variant='text'
+          color='secondary'
+          size='small'
           sx={(theme) => ({
             alignSelf: 'start',
           })}
