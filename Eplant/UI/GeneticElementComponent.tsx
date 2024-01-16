@@ -120,7 +120,7 @@ export default function GeneticElementComponent({
     transition: '0.1s ease all',
     color: hover ? theme.palette.text.primary : backgroundColor,
   })
-  const indicator = <SelectedIndicator hover={hover} />
+  const indicator = <SelectedIndicator hover={hover.toString()} />
   const Handle = (
     <DragIndicator
       sx={(theme) => ({
