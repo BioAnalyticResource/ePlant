@@ -26,7 +26,7 @@ function SelectedIndicator(props: BoxProps & { hover: string }) {
   return (
     <Box {...props} position={'relative'}>
       <Box
-        position='absolute'
+        position="absolute"
         sx={(theme) => ({
           left: 0,
           top: 0,
@@ -37,7 +37,7 @@ function SelectedIndicator(props: BoxProps & { hover: string }) {
         })}
       />
       <Box
-        position='absolute'
+        position="absolute"
         sx={(theme) => ({
           left: props.hover ? '0' : '0px',
           top: 0,
@@ -162,10 +162,10 @@ export default function GeneticElementComponent({
       onClick={onClick}
     >
       <Stack
-        direction='row'
+        direction="row"
         gap={1}
         height={24}
-        overflow='hidden'
+        overflow="hidden"
         whiteSpace={'nowrap'}
         sx={(theme) => ({})}
       >
@@ -183,7 +183,7 @@ export default function GeneticElementComponent({
             overflow: 'hidden',
             position: 'relative',
             ':before': {
-              content: '''',
+              content: '""',
               background: `linear-gradient(to right, transparent, 95%, ${
                 selected
                   ? theme.palette.background.selected
@@ -203,7 +203,7 @@ export default function GeneticElementComponent({
           ref={textContainerRef}
         >
           <Stack
-            direction='row'
+            direction="row"
             gap={1}
             sx={(theme) => ({
               animation: textScroll
