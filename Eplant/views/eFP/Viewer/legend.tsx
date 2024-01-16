@@ -2,8 +2,6 @@ import React from 'react'
 import { Box, styled, useTheme } from '@mui/material'
 import { EFPData, EFPState } from '../types'
 import { getColor } from '../svg'
-import useDimensions from '@eplant/util/useDimensions'
-import { reverse } from 'lodash'
 
 const GRADIENT_STEPS = 11
 export default styled(function Legend({
