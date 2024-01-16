@@ -21,7 +21,8 @@ import OptionsButton from './OptionsButton'
  *
  * @param {(BoxProps & { hover: boolean })} props Set hover to whether or not the genetic element component is hovered
  */
-function SelectedIndicator(props: BoxProps & { hover: boolean }) {
+function SelectedIndicator(props: BoxProps & { hover: string }) {
+  const theme = useTheme()
   return (
     <Box {...props} position={'relative'}>
       <Box
