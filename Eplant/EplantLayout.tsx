@@ -1,13 +1,11 @@
 import { useRef, useEffect } from 'react'
-import { usePanes, useActiveId, useModel, usePageLoad} from './state'
+import { usePanes, useActiveId, useModel, usePageLoad, getPaneName, storage} from './state'
 import { Add, CallMade, Close } from '@mui/icons-material'
 import { sidebarWidth } from './UI/Sidebar'
 import { useConfig } from './config'
 import { useTheme } from '@mui/material/styles'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import * as FlexLayout from 'flexlayout-react'
-import {  storage
-} from  './state'
 import {
   Box,
   CircularProgress,
