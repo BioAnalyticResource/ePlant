@@ -10,7 +10,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material'
-import React, { startTransition } from 'react'
+import { startTransition, memo, useMemo, useRef } from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
 import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
@@ -40,14 +40,14 @@ type EFPListProps = {
   colorMode: 'absolute' | 'relative'
 }
 
-const EFPListItem = React.memo(
+const EFPListItem = memo(
   function EFPRow({ index: i, data }: { index: number; data: EFPListProps }) {
     return (
-      <Tooltip placement="right" arrow title={<div>{data.views[i].name}</div>}>
+      <Tooltip placement='right' arrow title={<span>{data.views[i].name}</span>}>
         <div>
           <EFPPreview
             sx={(theme) => ({
-              width: '108px',
+              width: '100%',
               height: '75px',
               zIndex: 100,
             })}
@@ -79,7 +79,7 @@ const EFPListItem = React.memo(
   }
 )
 
-const EFPListRow = React.memo(function EFPListRow({
+const EFPListRow = memo(function EFPListRow({
   style,
   index,
   data,
@@ -228,7 +228,7 @@ export default class EFPViewer
     const sortedViews = viewIndices.map((i) => props.activeData.views[i])
     const sortedViewData = viewIndices.map((i) => props.activeData.viewData[i])
 
-    const EFPViews = React.useMemo(
+    const EFPViews = useMemo(
       () =>
         sortedViews.map(
           (view) => new EFP(view.name, view.id, view.svgURL, view.xmlURL)
@@ -236,7 +236,7 @@ export default class EFPViewer
       [...sortedViews.map((v) => v.id)]
     )
 
-    let activeViewIndex = React.useMemo(
+    let activeViewIndex = useMemo(
       () => EFPViews.findIndex((v) => v.id == props.state.activeView),
       [props.state.activeView, ...EFPViews.map((v) => v.id)]
     )
@@ -247,7 +247,7 @@ export default class EFPViewer
         id: EFPViews[0].id,
       })
     }
-    const efp = React.useMemo(() => {
+    const efp = useMemo(() => {
       const Component = EFPViews[activeViewIndex].component
       return (
         <Component
@@ -269,7 +269,7 @@ export default class EFPViewer
       sortedViewData[activeViewIndex],
       props.state.colorMode,
     ])
-    const ref = React.useRef<HTMLDivElement>(null)
+    const ref = useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
     {
       // console.log(props)
