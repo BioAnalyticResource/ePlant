@@ -139,3 +139,43 @@ If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResou
 **eFP**: Electronic fluorescent pictographic
 
 **GeneRIF**: Gene reference into function; A [standard](https://www.ncbi.nlm.nih.gov/gene/about-generif) that provides a mechanism to allow scientists to add to the functional annotation of genes described in [Gene](https://www.ncbi.nlm.nih.gov/gene).
+
+## Style guide notes
+As we move forward, move toward single quotes (or back ticks if necessary).
+
+👍 Yes!
+```js
+useEffect(()=>{})
+```
+
+👎 No!
+```js
+React.useEffect(()=>{})
+```
+
+Choose function declarations over arrow function expressions.
+👍 Yes!
+```js
+export default function SomeComponent(){}
+```
+
+👎 No!
+```js
+const SomeComponent =()=>{}
+export default SomeComponent
+```
+
+Name interfaces with a preceding I.
+👍 Yes!
+```js
+interface ITestInterface{
+  id: number
+}
+```
+
+👎 No!
+```js
+interface TestInterface{
+  id:number
+}
+```
