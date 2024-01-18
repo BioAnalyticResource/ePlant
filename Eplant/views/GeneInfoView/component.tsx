@@ -14,7 +14,9 @@ import {
 import { View, ViewProps } from '../../View'
 import { useViewData } from '../../View/viewData'
 import { GeneModel } from './GeneModel'
-import { Box, Button, ButtonProps, LinearProgress } from '@mui/material'
+import { Alert, Box, Button, ButtonProps, LinearProgress, Snackbar } from '@mui/material'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { IconButton } from '@mui/material'
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -122,7 +124,11 @@ const GeneSequence = ({
     str += char
     prevStyle = currentStyle
   }
-  return <CodeBody variant="caption">{spans}</CodeBody>
+  return (
+    <>
+      <CodeBody variant="caption">{spans}</CodeBody>
+    </>
+  )
 }
 
 const ViewButton = styled(function ViewButton({
@@ -177,6 +183,13 @@ export default function GeneInfoViewer({
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
+
+  const [snackBarOpen, setSnackBarOpen] = React.useState(false)
+  const copyToClipboard = (text: string) => {
+    setSnackBarOpen(true)
+    navigator.clipboard.writeText(text)
+  }
+
 
   return (
     <Stack direction="row" gap={'20px'}>
@@ -235,6 +248,22 @@ export default function GeneInfoViewer({
                 geneticElement={geneticElement}
                 activeData={activeData}
               ></GeneSequence>
+              <IconButton onClick={() => copyToClipboard(activeData.geneSequence)} color='primary' sx={{ ml: 1 }}>
+                <ContentCopyIcon />
+              </IconButton>
+              <Snackbar
+                anchorOrigin={
+                  {
+                    vertical: 'top',
+                    horizontal: 'center'
+                  }
+                }
+                open={snackBarOpen}
+                onClose={() => setSnackBarOpen(false)}
+                autoHideDuration={2000}
+              >
+                <Alert severity='success'>Copied to clipboard!</Alert>
+              </Snackbar>
             </div>
           </div>
         </div>
@@ -250,11 +279,14 @@ export default function GeneInfoViewer({
               <CodeBody variant="caption" style={{ wordBreak: 'break-word' }}>
                 {activeData.proteinSequence}
               </CodeBody>
+              <IconButton onClick={() => copyToClipboard(activeData.proteinSequence)} color='primary' sx={{ ml: 1 }}>
+                <ContentCopyIcon />
+              </IconButton>
             </div>
           </div>
         ) : undefined}
       </Stack>
-    </Stack>
+    </Stack >
   )
 }
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
