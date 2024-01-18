@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'jotai'
 import { useDarkMode } from '@eplant/state'
 import { CssBaseline, ThemeProvider } from '@mui/material'
-import { dark, light } from './css/theme'
+import { dark, light } from './style/theme'
 
 import FallbackView from './views/FallbackView'
 import GeneInfoView from './views/GeneInfoView'
