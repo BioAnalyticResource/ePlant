@@ -31,6 +31,30 @@ export const setStroke = (
   }
 }
 
+function KeyValueRow(props: {
+  label: string,
+  value: string | number
+}) {
+
+  return <TableRow>
+  <TableCell
+    sx={theme => ({
+      color: theme.palette.text.secondary,
+      textAlign: 'left',
+      border: 'none',
+    })}
+  >
+    {props.label}
+  </TableCell>
+  <TableCell
+      sx={theme => ({
+      color: theme.palette.text.primary,
+      textAlign: 'right',
+      border: 'none'
+    })}>{props.value}</TableCell>
+</TableRow>
+}
+
 function SVGTooltip(props: {
   el: SVGElement | null
   group: EFPGroup
@@ -75,78 +99,19 @@ function SVGTooltip(props: {
           >
             <Table size="small">
               <TableBody>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Sample name
-                  </TableCell>
-                  <TableCell>{props.tissue.name}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Level
-                  </TableCell>
-                  <TableCell>
-                    {props.tissue.mean.toFixed(2)}±{props.tissue.std.toFixed(2)}
+                <TableRow> 
+                  <TableCell colSpan={2} sx={{
+                    fontSize: 'medium',
+                    fontWeight: '500',
+                    border: 'none'
+                  }}>
+                  {props.tissue.name}
                   </TableCell>
                 </TableRow>
-                {props.state.colorMode == 'relative' ? (
-                  <>
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          color: theme.palette.secondary.main,
-                          textAlign: 'right',
-                        }}
-                      >
-                        Samples
-                      </TableCell>
-                      <TableCell>{props.tissue.samples}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          color: theme.palette.secondary.main,
-                          textAlign: 'right',
-                          borderBottom: 'none',
-                        }}
-                      >
-                        Log2 fold change vs control
-                      </TableCell>
-                      <TableCell sx={{ borderBottom: 'none' }}>
-                        {Math.log2(
+                <KeyValueRow label="Level" value={`${props.tissue.mean.toFixed(2)}±${props.tissue.std.toFixed(2)}`}/>
+                <KeyValueRow label="Log2 fold change vs control" value={Math.log2(
                           props.tissue.mean / (props.data.control ?? 1),
-                        ).toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  </>
-                ) : (
-                  <>
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          color: theme.palette.secondary.main,
-                          textAlign: 'right',
-                          borderBottom: 'none',
-                        }}
-                      >
-                        Samples
-                      </TableCell>
-                      <TableCell sx={{ borderBottom: 'none' }}>
-                        {props.tissue.samples}
-                      </TableCell>
-                    </TableRow>
-                  </>
-                )}
+                        ).toFixed(2)}/>
               </TableBody>
             </Table>
           </Box>

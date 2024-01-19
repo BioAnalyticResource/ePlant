@@ -76,17 +76,38 @@ export function ViewContainer<T, S, A>({
         position="sticky"
         elevation={0}
       >
-        <Toolbar style={{ gap: '8px' }}>
+        <Toolbar style={{ gap: '8px', padding: 8, paddingRight: 16 }}>
           <Stack
             direction="row"
             gap={2}
-            sx={{ flexGrow: 1, height: '100%', alignItems: 'center' }}
+            sx={{
+              flexGrow: 1,
+              height: '100%',
+              alignItems: 'center',
+            }}
           >
             {/* View selector dropdown */}
             <FormControl variant="standard">
-              {/* <InputLabel id={idLabel}>View</InputLabel> */}
               <Select
                 value={view.id}
+                renderValue={() => {
+                  if (view.id == 'get-started') {
+                    return <span style={{ paddingLeft: 8 }}>View selector</span>
+                  }
+                  return (
+                    <span
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Box sx={{ paddingRight: 1.5, marginTop: 0.5 }}>
+                        {view.icon && <view.icon />}
+                      </Box>
+                      {view.name}
+                    </span>
+                  )
+                }}
                 labelId={idLabel}
                 label={'View'}
                 id={selectId}
@@ -94,19 +115,32 @@ export function ViewContainer<T, S, A>({
                   const view = views.find((view) => view.id == e?.target?.value)
                   if (view) setView(view)
                 }}
+                sx={{
+                  '& .MuiSelect-select': {
+                    paddingRight: '36px !important',
+                  },
+                }}
                 inputProps={{
-                  sx: {
+                  sx: (theme: {
+                    palette: { background: { paperOverlay: any } }
+                  }) => ({
                     display: 'flex',
                     alignItems: 'center',
-
+                    backgroundColor: theme.palette.background.paperOverlay,
+                    padding: 1,
+                    borderRadius: 1,
                     ':focus': {
-                      backgroundColor: 'transparent',
+                      backgroundColor: theme.palette.background.paperOverlay,
+                      borderRadius: 1,
                     },
                     '& legend': { display: 'none' },
                     '& fieldset': { top: 0 },
-                  },
+                  }),
                 }}
               >
+                <MenuItem disabled value="">
+                  Select a view
+                </MenuItem>
                 {userViews.map((view) => (
                   <MenuItem
                     key={view.id}
@@ -117,7 +151,7 @@ export function ViewContainer<T, S, A>({
                         : 'none',
                       paddingTop: 8,
                       paddingBottom: 8,
-                      marginBottom: 8,
+                      marginBottom: 0,
                     }}
                   >
                     <Box sx={{ paddingRight: 2, marginTop: 0.5 }}>
@@ -207,7 +241,7 @@ export function ViewContainer<T, S, A>({
       {topBar}
       <Box
         sx={(theme) => ({
-          padding: '2rem',
+          padding: '1rem',
           flexGrow: 1,
           display: 'flex',
           gap: theme.spacing(4),
@@ -240,12 +274,12 @@ export function ViewContainer<T, S, A>({
             />
           ) : (
             <>
-              <view.header
+              {/* <view.header
                 state={state}
                 activeData={activeData}
                 dispatch={dispatch}
                 geneticElement={gene}
-              />
+              /> */}
               <view.component
                 state={state}
                 geneticElement={gene}

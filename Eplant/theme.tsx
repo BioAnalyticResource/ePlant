@@ -71,9 +71,9 @@ export const dark = createTheme({
       contrastText: '#fff',
     },
     background: {
-      default: '#111111',
-      paper: '#222222',
-      paperOverlay: '#333333',
+      default: '#181818',
+      paper: '#1F1F1F',
+      paperOverlay: '#2C2C2C',
       transparentOverlay: '#333333DD',
       selected: '#333333',
       active: '#3a3a3a',

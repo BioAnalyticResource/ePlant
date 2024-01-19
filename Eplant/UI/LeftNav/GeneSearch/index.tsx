@@ -43,7 +43,7 @@ export function SearchGroup({
         onChange={(e) =>
           setSpecies(speciesList.find((s) => s.name == e.target.value))
         }
-        label="Species"
+        // label="Species"
         variant="standard"
         inputProps={{
           sx: {
@@ -60,7 +60,7 @@ export function SearchGroup({
         ))}
       </TextField>
       <SearchBar
-        label="Search by gene name"
+        label="Search for genes"
         inputProps={{
           // TODO: Make these clickable
           helperText: <span>Example ABI3 or AT5G60200</span>,

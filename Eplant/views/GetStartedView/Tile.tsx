@@ -34,8 +34,11 @@ export default function Tile({ view }: TileProps) {
     <Card
       sx={(theme) => ({
         background: theme.palette.background.paperOverlay,
-        boxShadow: '0px 3px 6px rgb(0,0,0,0.25)',
+        border: '1px solid',
+        borderColor: theme.palette.background.selected,
+        boxShadow: '0px 4px 8px rgb(0,0,0,0.25)',
         height: '100%',
+        marginRight: 1,
       })}
     >
       <CardMedia
@@ -47,8 +50,13 @@ export default function Tile({ view }: TileProps) {
 
       <CardContent>
         <div>
-          <Typography variant="h5">{view.name}</Typography>
-          <Typography variant="body2">{view.description}</Typography>
+          <Typography variant="h6">{view.name}</Typography>
+          <Typography
+            variant="body2"
+            color={(theme) => theme.palette.secondary.main}
+          >
+            {view.description}
+          </Typography>
         </div>
       </CardContent>
 
