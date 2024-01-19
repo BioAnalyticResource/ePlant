@@ -143,6 +143,7 @@ export function Collection({
   return (
     <Stack
       direction='column'
+      direction='column'
       spacing={1}
       style={{
         justifyContent: 'center',
@@ -163,6 +164,7 @@ export function Collection({
           onClick={() => setOpen(!open)}
           onMouseOver={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
+          direction='row'
           direction='row'
           gap={1}
           ref={setTopRef}
