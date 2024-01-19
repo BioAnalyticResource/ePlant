@@ -1,4 +1,4 @@
-import React from 'react'
+import { KeyboardArrowDown } from '@mui/icons-material'
 import {
   alpha,
   Button,
@@ -7,7 +7,7 @@ import {
   MenuProps,
   styled,
 } from '@mui/material'
-import { KeyboardArrowDown } from '@mui/icons-material'
+import React from 'react'
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu

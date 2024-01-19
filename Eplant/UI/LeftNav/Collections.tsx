@@ -1,7 +1,29 @@
-import { useCollections, useGeneticElements } from '@eplant/state'
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from '@dnd-kit/modifiers'
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import GeneticElement from '@eplant/GeneticElement'
+import { useCollections, useGeneticElements } from '@eplant/state'
 import { Add, Check, ExpandMore } from '@mui/icons-material'
 import {
+  Box,
   Button,
   Card,
   Collapse,
@@ -12,32 +34,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { Box } from '@mui/material'
-import React, { useId, useState, useRef, useEffect } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import GeneticElementComponent, {
   GeneticElementComponentProps,
 } from '../GeneticElementComponent'
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  useSortable,
-} from '@dnd-kit/sortable'
-import {
-  DndContext,
-  DragEndEvent,
-  useDroppable,
-  DragStartEvent,
-  DragOverlay,
-  useSensors,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-} from '@dnd-kit/core'
-import { CSS } from '@dnd-kit/utilities'
-import {
-  restrictToVerticalAxis,
-  restrictToWindowEdges,
-} from '@dnd-kit/modifiers'
 import OptionsButton from '../OptionsButton'
 
 /**
@@ -143,7 +143,6 @@ export function Collection({
   return (
     <Stack
       direction='column'
-      direction='column'
       spacing={1}
       style={{
         justifyContent: 'center',
@@ -164,7 +163,6 @@ export function Collection({
           onClick={() => setOpen(!open)}
           onMouseOver={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
-          direction='row'
           direction='row'
           gap={1}
           ref={setTopRef}
@@ -361,7 +359,7 @@ export function Collections(props: {
     useSensor(KeyboardSensor, {}),
   )
 
-  const [activeId, setActiveId] = React.useState<string | undefined>(undefined)
+  const [activeId, setActiveId] = useState<string | undefined>(undefined)
 
   // If there are genes that aren't in a collection, put them in the first
   useEffect(() => {

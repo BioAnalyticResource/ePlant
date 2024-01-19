@@ -1,13 +1,12 @@
-import { useActiveId, useDarkMode, usePanesDispatch } from '@eplant/state'
+import GeneticElement from '@eplant/GeneticElement'
+import { useActiveId, useDarkMode, useGeneticElements, usePanesDispatch } from '@eplant/state'
 import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import * as React from 'react'
-import { SearchGroup } from './GeneSearch'
-import { LogoWithText } from '../Logo'
-import { useGeneticElements } from '@eplant/state'
-import { Collections } from './Collections'
-import GeneticElement from '@eplant/GeneticElement'
 import _ from 'lodash'
+import * as React from 'react'
+import { LogoWithText } from '../Logo'
+import { Collections } from './Collections'
+import { SearchGroup } from './GeneSearch'
 
 /**
  * The left nav bar in ePlant. Contains a search bar, and list of collections of genes.

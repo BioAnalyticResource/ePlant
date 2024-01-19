@@ -23,7 +23,8 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-uses-react": "off",
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-uses-react': 'off',
+    'unused-imports/no-unused-imports': 'warn'
   },
 }
