@@ -1,32 +1,31 @@
 import GeneticElement from '@eplant/GeneticElement'
-import PanZoom from '@eplant/util/PanZoom'
+import Dropdown from '@eplant/UI/Dropdown'
+import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import { View, ViewProps } from '@eplant/View'
 import {
   ViewDataError,
 } from '@eplant/View/viewData'
+import PanZoom from '@eplant/util/PanZoom'
+import useDimensions from '@eplant/util/useDimensions'
 import {
   Box,
   MenuItem,
   Tooltip,
   Typography,
 } from '@mui/material'
-import { startTransition, memo, useMemo, useRef } from 'react'
-import EFP from '..'
-import EFPPreview from '../EFPPreview'
-import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
+import { memo, startTransition, useMemo, useRef } from 'react'
 import {
-  areEqual,
   FixedSizeList as List,
   ListChildComponentProps,
+  areEqual,
 } from 'react-window'
-import useDimensions from '@eplant/util/useDimensions'
+import EFP from '..'
+import EFPPreview from '../EFPPreview'
 import { EFPData } from '../types'
-import Legend from './legend'
-import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
-import Dropdown from '@eplant/UI/Dropdown'
-import { red } from '@mui/material/colors'
 import GeneDistributionChart from './GeneDistributionChart'
 import MaskModal from './MaskModal'
+import Legend from './legend'
+import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -231,7 +230,7 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
     const sortedViewData = viewIndices.map((i) => props.activeData.viewData[i])
     const sortedEfps = viewIndices.map((i) => this.efps[i])
 
-    let activeViewIndex = React.useMemo(
+    let activeViewIndex = useMemo(
       () => sortedEfps.findIndex((v) => v.id == props.state.activeView),
       [props.state.activeView, ...sortedEfps.map((v) => v.id)],
     )
@@ -242,7 +241,7 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
         id: sortedEfps[0].id,
       })
     }
-    const efp = React.useMemo(() => {
+    const efp = useMemo(() => {
       const Component = sortedEfps[activeViewIndex].component
       return (
         <Component
