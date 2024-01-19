@@ -49,11 +49,11 @@ function RootApp() {
   return (
     <React.StrictMode>
       <Provider>
-          <BrowserRouter>
-            <Config.Provider value={defaultConfig}>
-              <Eplant />
-            </Config.Provider>
-          </BrowserRouter>
+        <BrowserRouter>
+          <Config.Provider value={defaultConfig}>
+            <Eplant />
+          </Config.Provider>
+        </BrowserRouter>
       </Provider>
     </React.StrictMode>
   )

@@ -1,32 +1,32 @@
 // Import necessary dependencies from Material-UI
-import React, { useState } from 'react';
-import { Modal, Slider, Typography, Button, useTheme, DialogTitle } from '@mui/material';
-import { EFPViewerState } from './types';
+import React, { useState } from 'react'
+import { Modal, Slider, Typography, Button, useTheme, DialogTitle } from '@mui/material'
+import { EFPViewerState } from './types'
+
 
 // Modal component with a slider
 interface MaskModalProps {
-    state: EFPViewerState
-    onClose: () => void
-    onSubmit: (threshhold: number) => void
+  state: EFPViewerState
+  onClose: () => void
+  onSubmit: (threshhold: number) => void
 }
 
 const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
-    const [sliderValue, setSliderValue] = useState<number>(state.maskThreshold);
-    const theme = useTheme()
-    const handleSliderChange = (event: Event, newValue: number | number[]) => {
-        setSliderValue(newValue as number);
-    };
+  const [sliderValue, setSliderValue] = useState<number>(state.maskThreshold)
+  const theme = useTheme()
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setSliderValue(newValue as number)
+  }
 
-    const handleClose = () => {
-        setSliderValue(state.maskThreshold)
-        onClose();
-    };
+  const handleClose = () => {
+    setSliderValue(state.maskThreshold)
+    onClose()
+  }
 
-    const handleSubmit = () => {
-        onSubmit(sliderValue);
-        onClose();
-    };
-
+  const handleSubmit = () => {
+    onSubmit(sliderValue)
+    onClose()
+  }
     return (
         <Modal open={state.maskModalVisible} onClose={handleClose}>
             <div style={{
@@ -69,4 +69,4 @@ const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
     );
 };
 
-export default MaskModal;
+export default MaskModal
