@@ -17,6 +17,7 @@ import { GeneModel } from './GeneModel'
 import { Alert, Box, Button, ButtonProps, LinearProgress, Snackbar } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { IconButton } from '@mui/material'
+import { setStroke } from '../eFP/Tooltips/EFPTooltip';
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -24,6 +25,7 @@ const SecondaryText = styled(Typography)(({ theme }) => ({
 const CodeBody = styled(SecondaryText)(({ theme }) => ({
   fontFamily: 'Roboto Mono',
   wordBreak: 'break-word',
+  fontSize: '.65rem',
 }))
 
 const GeneSequence = ({
@@ -192,15 +194,11 @@ export default function GeneInfoViewer({
 
 
   return (
-    <Stack direction="row" gap={'20px'}>
+    <Stack direction="row" gap={'20px'} >
       <ViewSwitcher geneticElement={geneticElement} />
-      <Stack direction="column" gap={'16px'} flex={4}>
+      <Stack direction="column" gap={'16px'} flex={4} sx={{ background: (theme) => theme.palette.background.paperOverlay, padding: 2, borderRadius: (theme) => theme.shape.borderRadius+'px', border: '1px solid', borderColor:  (theme) => theme.palette.background.edgeLight }}>
         <div>
-          <Typography variant="body1">Gene</Typography>
-          <SecondaryText>{geneticElement.id}</SecondaryText>
-        </div>
-        <div>
-          <Typography variant="body1">Aliases</Typography>
+          <Typography variant="h5" sx={{fontWeight: 500}}>{geneticElement.id}</Typography>
           <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
         </div>
         <div>

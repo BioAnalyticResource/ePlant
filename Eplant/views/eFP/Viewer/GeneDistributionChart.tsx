@@ -38,6 +38,7 @@ const GeneDistributionChart = ({ data }: { data: EFPData }) => {
     <div
       style={{
         display: 'flex',
+        flexDirection: 'column',
         position: 'relative',
         zIndex: 10,
         width: '100%',
@@ -61,16 +62,6 @@ const GeneDistributionChart = ({ data }: { data: EFPData }) => {
             stroke="red"
             strokeWidth={6}
           />
-          <text
-            x={400}
-            y={130}
-            fontFamily="'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif"
-            fontSize={150}
-            fill={theme.palette.secondary.contrastText}
-            textAnchor="middle"
-          >
-            {Math.round(parseFloat(geneRanking.percentile))}%
-          </text>
           <path
             fill="none"
             stroke={theme.palette.secondary.contrastText}
@@ -87,6 +78,15 @@ const GeneDistributionChart = ({ data }: { data: EFPData }) => {
       ) : (
         <div></div>
       )}
+      <div style={{
+        fontSize: '12px',
+        marginLeft: '11px',
+      }}> 
+      {geneRanking ? 
+        `${Math.round(parseFloat(geneRanking.percentile))}% expression level`
+        : ''
+      }
+      </div>
     </div>
   )
 }

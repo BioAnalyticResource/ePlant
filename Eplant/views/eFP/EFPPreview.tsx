@@ -9,8 +9,8 @@ const EFPPreviewContainer = styled(
 )(({ theme, selected }) => ({
   border: selected
     ? `2px solid ${theme.palette.primary.main}`
-    : `2px solid ${theme.palette.background.active}`,
-  background: theme.palette.background.paper,
+    : `2px solid ${theme.palette.background.edgeLight}`,
+  background: theme.palette.background.paperOverlay,
   borderRadius: theme.shape.borderRadius,
   padding: `${selected ? 1 : 3}px`,
   boxSizing: 'border-box',
@@ -67,14 +67,13 @@ export default function EFPPreview({
             top: 0,
             width: '100%',
             left: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
           }}
         >
           <Typography
             variant="caption"
             sx={{ marginLeft: '4px', fontWeight: 'light' }}
           >
-            MAX: {Math.round(dataDeferred.max)}
+            Max: {Math.round(dataDeferred.max)}
           </Typography>
         </div>
       </EFPPreviewContainer>
