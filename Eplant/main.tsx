@@ -17,6 +17,7 @@ import { Config, EplantConfig } from './config'
 import DebugView from './views/DebugView'
 import PlantEFP from './views/PlantEFP'
 import ExperimentEFP from './views/ExperimentEFP'
+import CellEFP from './views/CellEFP'
 
 // Views that aren't associated with individual genes
 const genericViews = [GetStartedView, FallbackView]
@@ -29,6 +30,7 @@ const userViews = [
   PublicationViewer,
   DebugView,
   PlantEFP,
+  CellEFP,
   ExperimentEFP,
 ]
 
@@ -47,35 +49,30 @@ export const defaultConfig: EplantConfig = {
   defaultSpecies: 'Arabidopsis',
   defaultView: 'get-started',
 }
-// For some reason this is necessary to make the tabs work, maybe FlexLayout uses a Jotai provider?
-const eplantScope = Symbol('Eplant scope')
-
 function RootApp() {
-  const [darkMode, setDarkMode] = useDarkMode()
   return (
     <React.StrictMode>
       <Provider>
-        <ThemeProvider theme={darkMode ? dark : light}>
-          <CssBaseline />
-          <BrowserRouter>
-            <Config.Provider value={defaultConfig}>
-              <Eplant />
-            </Config.Provider>
-          </BrowserRouter>
-        </ThemeProvider>
+        <BrowserRouter>
+          <Config.Provider value={defaultConfig}>
+            <Eplant />
+          </Config.Provider>
+        </BrowserRouter>
       </Provider>
     </React.StrictMode>
   )
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <RootApp />
+  <RootApp />,
 )
 
 const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register(import.meta.env.BASE_URL + '/sw.js')
+      const registration = await navigator.serviceWorker.register(
+        import.meta.env.BASE_URL + '/sw.js',
+      )
       if (registration.installing) {
         console.log('Service worker installing')
       } else if (registration.waiting) {

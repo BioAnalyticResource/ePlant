@@ -1,6 +1,5 @@
 import * as React from 'react'
 import component from './component'
-import { Info, InfoOutlined } from '@mui/icons-material'
 import { View } from '../../View'
 import { Link, Typography } from '@mui/material'
 import { GeneInfoViewData } from './types'

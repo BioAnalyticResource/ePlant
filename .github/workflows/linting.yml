@@ -1,0 +1,27 @@
+name: Linting and Formatting Check
+
+on:
+  push:
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install --save-dev
+
+      - name: Prettier Check
+        run: npx prettier ./Eplant --check
+
+      - name: ESLint Check
+        if: always()
+        run: npm run lint

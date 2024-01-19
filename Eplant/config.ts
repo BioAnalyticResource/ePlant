@@ -18,9 +18,6 @@ export const Config = React.createContext<EplantConfig>({
   views: [],
   tabHeight: 48,
   rootPath: '',
-
-  defaultSpecies: '',
-  defaultView: '',
 })
 
 export const useConfig = () => React.useContext(Config)

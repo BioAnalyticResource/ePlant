@@ -1,19 +1,11 @@
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  Box,
-  LinearProgress,
-  styled,
-  BoxProps,
-  Typography,
-  Skeleton,
-} from '@mui/material'
+import { Box, styled, BoxProps, Typography, Skeleton } from '@mui/material'
 import * as React from 'react'
 import EFP from '.'
-import { useViewData } from '../../View/viewData'
 import { EFPData } from './types'
 
 const EFPPreviewContainer = styled(
-  (props: BoxProps & { selected: boolean }) => <Box {...props} />
+  (props: BoxProps & { selected: boolean }) => <Box {...props} />,
 )(({ theme, selected }) => ({
   border: selected
     ? `2px solid ${theme.palette.primary.main}`
@@ -34,6 +26,7 @@ export type EFPPreviewProps = {
   selected: boolean
   colorMode: 'absolute' | 'relative'
   data: EFPData
+  maskThreshold: number
 } & BoxProps
 export default function EFPPreview({
   gene,
@@ -41,6 +34,7 @@ export default function EFPPreview({
   selected,
   colorMode,
   data,
+  maskThreshold,
   ...boxProps
 }: EFPPreviewProps) {
   const colorModeDeferred = React.useDeferredValue(colorMode)
@@ -62,6 +56,7 @@ export default function EFPPreview({
           state={{
             renderAsThumbnail: true,
             colorMode: colorModeDeferred,
+            maskThreshold: maskThreshold,
           }}
           geneticElement={gene}
           dispatch={() => {}}
