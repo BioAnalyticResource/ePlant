@@ -2,8 +2,15 @@ import GeneticElement from '@eplant/GeneticElement'
 import PanZoom from '@eplant/util/PanZoom'
 import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
-import { Box, Link, MenuItem, Tooltip, Typography } from '@mui/material'
-import React, { startTransition, useEffect, useMemo, useState } from 'react'
+import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
+import React, {
+  memo,
+  startTransition,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
 import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
@@ -18,7 +25,6 @@ import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
 import GeneDistributionChart from './GeneDistributionChart'
-import { useCitations } from '@eplant/state'
 import { getCitation } from '@eplant/util/citations'
 import MaskModal from './MaskModal'
 import EFPViewerCitation from './EFPViewerCitation'
@@ -38,7 +44,13 @@ type EFPListProps = {
   maskThreshold: number
 }
 
-const EFPListItem = React.memo(
+interface ICitationProps {
+  activeData?: EFPViewerData
+  state?: EFPViewerState
+  gene?: GeneticElement | null
+}
+
+const EFPListItem = memo(
   function EFPRow({ index: i, data }: { index: number; data: EFPListProps }) {
     return (
       <Tooltip placement="right" arrow title={<div>{data.views[i].name}</div>}>
@@ -78,7 +90,7 @@ const EFPListItem = React.memo(
   },
 )
 
-const EFPListRow = React.memo(function EFPListRow({
+const EFPListRow = memo(function EFPListRow({
   style,
   index,
   data,
@@ -235,7 +247,7 @@ export default class EFPViewer
     const sortedViewData = viewIndices.map((i) => props.activeData.viewData[i])
     const sortedEfps = viewIndices.map((i) => this.efps[i])
 
-    let activeViewIndex = React.useMemo(
+    let activeViewIndex = useMemo(
       () => sortedEfps.findIndex((v) => v.id == props.state.activeView),
       [props.state.activeView, ...sortedEfps.map((v) => v.id)],
     )
@@ -246,7 +258,7 @@ export default class EFPViewer
         id: sortedEfps[0].id,
       })
     }
-    const efp = React.useMemo(() => {
+    const efp = useMemo(() => {
       const Component = sortedEfps[activeViewIndex].component
       return (
         <Component
@@ -270,7 +282,7 @@ export default class EFPViewer
       props.state.colorMode,
       props.state.maskThreshold,
     ])
-    const ref = React.useRef<HTMLDivElement>(null)
+    const ref = useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
 
     if (!props.geneticElement) return <></>
@@ -475,19 +487,13 @@ export default class EFPViewer
     </Typography>
   )
 
-  citation = (props: {
-    activeData?: EFPViewerData
-    state?: EFPViewerState
-    gene?: GeneticElement | null
-  }) => {
+  citation = ({ activeData, state, gene }: ICitationProps) => {
     const [xmlData, setXMLData] = useState<string[]>([])
 
-    const viewID = props.activeData?.views.find(
-      (v) => v.id == props.state?.activeView,
-    )?.name
-    const viewXML = props.activeData?.views.find(
-      (v) => v.id == props.state?.activeView,
-    )?.xmlURL
+    const viewID = activeData?.views.find((v) => v.id == state?.activeView)
+      ?.name
+    const viewXML = activeData?.views.find((v) => v.id == state?.activeView)
+      ?.xmlURL
     useEffect(() => {
       const xmlLoad = async () => {
         let xmlString = ''
@@ -527,7 +533,7 @@ export default class EFPViewer
         ></EFPViewerCitation>
       )
     } else {
-      return <div>No Citation information provided.</div>
+      return <p>No Citation information provided.</p>
     }
   }
 }

@@ -1,36 +1,32 @@
-import GeneticElement from '@eplant/GeneticElement'
-import { getCitation } from '@eplant/util/citations'
 import React from 'react'
-import { useState, useEffect } from 'react'
-import { EFPViewerData, EFPViewerState } from './types'
 import { Link } from '@mui/material'
 
-const EFPViewerCitation = (props: {
+interface IEFPViewerCitationProps {
   viewID: string
   citation: { [key: string]: string }
   xmlData: string[]
-}) => {
-  const { viewID, citation, xmlData } = props
+}
+const EFPViewerCitation = ({
+  viewID,
+  citation,
+  xmlData,
+}: IEFPViewerCitationProps) => {
   return (
     // Need to set inner HTML to capture nested HTML tags in some citations
     <div>
-      <div dangerouslySetInnerHTML={{ __html: citation.source }}></div>
-      {citation.notes ? (
-        <div
+      <div dangerouslySetInnerHTML={{ __html: citation.source }} />
+      {citation.notes && (
+        <p
           style={{ marginTop: '1em' }}
           dangerouslySetInnerHTML={{ __html: citation.notes }}
-        ></div>
-      ) : (
-        ''
+        />
       )}
-      {citation.URL ? (
-        <p>
-          <a href={citation.URL}>citation.URL</a>
-        </p>
-      ) : (
-        ''
+      {citation.URL && (
+        <a href={citation.URL}>
+          <p>citation.URL</p>
+        </a>
       )}
-      {xmlData.length > 0 ? (
+      {xmlData.length > 0 && (
         <ul>
           {xmlData.map((item, index) => {
             if (item) {
@@ -38,11 +34,11 @@ const EFPViewerCitation = (props: {
             }
           })}
         </ul>
-      ) : (
-        <></>
       )}
-      <br></br> This image was generated with the {viewID} at
-      bar.utoronto.ca/eplant by Waese et al. 2017.
+      <p>
+        This image was generated with the {viewID} at bar.utoronto.ca/eplant by
+        Waese et al. 2017.
+      </p>
       <Link href="http://creativecommons.org/licenses/by/4.0/">
         <img
           alt="Creative Commons License"
