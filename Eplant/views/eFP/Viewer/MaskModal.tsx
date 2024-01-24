@@ -8,6 +8,14 @@ import {
   useTheme,
   DialogTitle,
 } from '@mui/material'
+import {
+  Modal,
+  Slider,
+  Typography,
+  Button,
+  useTheme,
+  DialogTitle,
+} from '@mui/material'
 import { EFPViewerState } from './types'
 
 // Modal component with a slider
