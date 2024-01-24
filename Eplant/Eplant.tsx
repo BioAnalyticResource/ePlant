@@ -467,7 +467,7 @@ function EplantLayout() {
         key="add-tab"
       >
         <Add fontSize="inherit" />
-      </IconButton>
+      </IconButton>,
     )
     renderValues.buttons.push(
       <Tooltip title="Open in new window">
@@ -481,7 +481,7 @@ function EplantLayout() {
         >
           <OpenInNew fontSize="inherit" />
         </IconButton>
-      </Tooltip>
+      </Tooltip>,
     )
   }
 }

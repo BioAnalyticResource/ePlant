@@ -41,7 +41,7 @@ const columns: GridColDef[] = [
           variant="outlined"
           color="secondary"
           size="small"
-          target='_blank'
+          target="_blank"
         >
           VIEW PAPER
         </Button>

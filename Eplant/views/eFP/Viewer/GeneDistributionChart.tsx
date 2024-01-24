@@ -78,14 +78,17 @@ const GeneDistributionChart = ({ data }: { data: EFPData }) => {
       ) : (
         <div></div>
       )}
-      <div style={{
-        fontSize: '12px',
-        marginLeft: '11px',
-      }}> 
-      {geneRanking ? 
-        `${Math.round(parseFloat(geneRanking.percentile))}% expression level`
-        : ''
-      }
+      <div
+        style={{
+          fontSize: '12px',
+          marginLeft: '11px',
+        }}
+      >
+        {geneRanking
+          ? `${Math.round(
+              parseFloat(geneRanking.percentile),
+            )}% expression level`
+          : ''}
       </div>
     </div>
   )
