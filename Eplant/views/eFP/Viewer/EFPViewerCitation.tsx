@@ -38,11 +38,11 @@ const EFPViewerCitation = ({
         This image was generated with the {viewID} at bar.utoronto.ca/eplant by
         Waese et al. 2017.
       </p>
-      <Link href="http://creativecommons.org/licenses/by/4.0/">
+      <Link href='http://creativecommons.org/licenses/by/4.0/'>
         <img
-          alt="Creative Commons License"
-          src="https://i.creativecommons.org/l/by/4.0/80x15.png"
-          title="The ePlant output for your gene of interest is available under a Creative Commons Attribution 4.0 International License and may be freely used in publications etc."
+          alt='Creative Commons License'
+          src='https://i.creativecommons.org/l/by/4.0/80x15.png'
+          title='The ePlant output for your gene of interest is available under a Creative Commons Attribution 4.0 International License and may be freely used in publications etc.'
         />
       </Link>
     </div>

@@ -69,21 +69,21 @@ export function ViewContainer<T, S, A>({
   const topBar = React.useMemo(
     () => (
       <AppBar
-        variant="elevation"
+        variant='elevation'
         sx={(theme) => ({
           background: theme.palette.background.active,
         })}
-        position="sticky"
+        position='sticky'
         elevation={0}
       >
         <Toolbar style={{ gap: '8px' }}>
           <Stack
-            direction="row"
+            direction='row'
             gap={2}
             sx={{ flexGrow: 1, height: '100%', alignItems: 'center' }}
           >
             {/* View selector dropdown */}
-            <FormControl variant="standard">
+            <FormControl variant='standard'>
               {/* <InputLabel id={idLabel}>View</InputLabel> */}
               <Select
                 value={view.id}
@@ -151,12 +151,12 @@ export function ViewContainer<T, S, A>({
             dispatch={dispatch}
           />
           <Button
-            variant="text"
+            variant='text'
             sx={{
               color: 'secondary.contrastText',
             }}
             disabled={loading}
-            color="secondary"
+            color='secondary'
             onClick={() => {
               setViewingCitations(true)
             }}
@@ -164,12 +164,12 @@ export function ViewContainer<T, S, A>({
             Get citations
           </Button>
           <Button
-            variant="text"
+            variant='text'
             sx={{
               color: 'secondary.contrastText',
             }}
             disabled={loading}
-            color="secondary"
+            color='secondary'
             onClick={() => {
               downloadFile(
                 `${view.id}${gene ? '-' + gene.id : ''}.json`,
@@ -185,10 +185,10 @@ export function ViewContainer<T, S, A>({
     [view.id, gene?.id, loading, activeData, state, dispatch],
   )
   return (
-    <Box {...props} display="flex" flexDirection="column">
+    <Box {...props} display='flex' flexDirection='column'>
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
         <DialogTitle>
-          <Typography variant="h6">
+          <Typography variant='h6'>
             Citation and experiment information for {view.name}
           </Typography>
         </DialogTitle>

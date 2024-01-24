@@ -53,7 +53,7 @@ interface ICitationProps {
 const EFPListItem = memo(
   function EFPRow({ index: i, data }: { index: number; data: EFPListProps }) {
     return (
-      <Tooltip placement="right" arrow title={<div>{data.views[i].name}</div>}>
+      <Tooltip placement='right' arrow title={<div>{data.views[i].name}</div>}>
         <div>
           <EFPPreview
             sx={() => ({
@@ -325,8 +325,8 @@ export default class EFPViewer
             //TODO: Make the dropdown menus appear closer to the button, left aligned and with a max height */}
             <Box sx={{ marginBottom: 1 }}>
               <Dropdown
-                color="secondary"
-                variant="text"
+                color='secondary'
+                variant='text'
                 options={sortedViews.map((view) => (
                   <MenuItem
                     selected={props.state.activeView == view.id ? true : false}
@@ -342,12 +342,12 @@ export default class EFPViewer
                 Select
               </Dropdown>
               <Dropdown
-                variant="text"
-                color="secondary"
+                variant='text'
+                color='secondary'
                 options={[
                   <MenuItem
                     selected={props.state.sortBy == 'name' ? true : false}
-                    key="byName"
+                    key='byName'
                     onClick={() =>
                       props.dispatch({ type: 'sort-by', by: 'name' })
                     }
@@ -358,7 +358,7 @@ export default class EFPViewer
                     selected={
                       props.state.sortBy == 'expression-level' ? true : false
                     }
-                    key="byExpression"
+                    key='byExpression'
                     onClick={() =>
                       props.dispatch({
                         type: 'sort-by',
@@ -480,7 +480,7 @@ export default class EFPViewer
   header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
     props,
   ) => (
-    <Typography variant="h6">
+    <Typography variant='h6'>
       {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}
       {': '}
       {props.geneticElement?.id}
