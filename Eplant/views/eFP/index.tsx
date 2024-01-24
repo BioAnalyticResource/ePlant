@@ -20,7 +20,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
   getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
-    maskThreshold: 100
+    maskThreshold: 100,
   })
   tooltipComponent: (props: {
     el: SVGElement | null
@@ -52,8 +52,9 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     const database = xml.getElementsByTagName('view')[0]?.getAttribute('db')
     let webservice = xml.getElementsByTagName('webservice')[0]?.textContent
     if (!webservice)
-      webservice = `https://bar.utoronto.ca/eplant/cgi-bin/plantefp.cgi?datasource=${database ?? 'atgenexp_plus'
-        }&`
+      webservice = `https://bar.utoronto.ca/eplant/cgi-bin/plantefp.cgi?datasource=${
+        database ?? 'atgenexp_plus'
+      }&`
 
     // Get a list of groups and samples
     const sampleNames: string[] = []
@@ -95,9 +96,9 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         chunks.map((names) =>
           fetch(
             webservice +
-            `id=${gene.id}&samples=${encodeURIComponent(
-              JSON.stringify(names),
-            )}`,
+              `id=${gene.id}&samples=${encodeURIComponent(
+                JSON.stringify(names),
+              )}`,
           )
             .then((res) => res.json())
             .then(
@@ -184,7 +185,12 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       (props.geneticElement?.id ?? 'no-gene') +
       '-' +
       useMemo(() => Math.random().toString(16).slice(3), [])
-    const styles = useStyles(id, props.activeData, props.state.colorMode, props.state.maskThreshold)
+    const styles = useStyles(
+      id,
+      props.activeData,
+      props.state.colorMode,
+      props.state.maskThreshold,
+    )
     useEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles

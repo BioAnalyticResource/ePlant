@@ -1,4 +1,5 @@
-import { Add, CallMade, CallReceived, Close } from '@mui/icons-material'
+import useStateWithStorage from '@eplant/util/useStateWithStorage'
+import { Add, OpenInNew, CallReceived, Close } from '@mui/icons-material'
 import {
   Box,
   CircularProgress,
@@ -8,6 +9,7 @@ import {
   DrawerProps,
   IconButton,
   LinearProgress,
+  Tooltip,
   ThemeProvider,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
@@ -42,10 +44,9 @@ import { Theme } from '@mui/system'
 import ErrorBoundary from './util/ErrorBoundary'
 import { dark, light } from './theme'
 
-
 // TODO: Make this drawer support opening/closing on mobile
 
-const sideBarWidth = 300
+const sideBarWidth = 240
 
 function ResponsiveDrawer(props: DrawerProps) {
   const [open, setOpen] = React.useState(props.open)
@@ -343,6 +344,7 @@ function EplantLayout() {
         right: '0px',
         position: 'absolute',
         margin: theme.spacing(1),
+        marginRight: 0,
         boxSizing: 'border-box',
       })}
     >
@@ -392,7 +394,7 @@ function EplantLayout() {
                   }}
                   size="small"
                 >
-                  <Close />
+                  <Close fontSize="inherit" />
                 </IconButton>,
               ]
             }}
@@ -464,20 +466,22 @@ function EplantLayout() {
         size="small"
         key="add-tab"
       >
-        <Add />
-      </IconButton>,
+        <Add fontSize="inherit" />
+      </IconButton>
     )
     renderValues.buttons.push(
-      <IconButton
-        onClick={() => {
-          const id = node.getSelectedNode()?.getId()
-          if (id) makePopout(id)
-        }}
-        size="small"
-        key="make-popout"
-      >
-        <CallMade />
-      </IconButton>,
+      <Tooltip title="Open in new window">
+        <IconButton
+          onClick={() => {
+            const id = node.getSelectedNode()?.getId()
+            if (id) makePopout(id)
+          }}
+          size="small"
+          key="make-popout"
+        >
+          <OpenInNew fontSize="inherit" />
+        </IconButton>
+      </Tooltip>
     )
   }
 }

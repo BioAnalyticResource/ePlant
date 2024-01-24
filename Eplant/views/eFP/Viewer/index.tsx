@@ -24,6 +24,7 @@ import { EFPData } from '../types'
 import Legend from './legend'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
+import { red } from '@mui/material/colors'
 import GeneDistributionChart from './GeneDistributionChart'
 import { getCitation } from '@eplant/util/citations'
 import MaskModal from './MaskModal'
@@ -111,6 +112,7 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
       width={130}
       style={{
         zIndex: 10,
+        scrollbarWidth: 'none',
       }}
       itemData={props}
     >
@@ -301,29 +303,24 @@ export default class EFPViewer
             flexDirection: 'row',
             alignItems: 'stretch',
             justifyContent: 'stretch',
+            overflow: 'hidden',
           }}
         >
           {/* Left column of EFP Previews */}
           <Box
             sx={{
-              background: (theme) => theme.palette.background.paperOverlay,
-              border: '1px solid',
-              borderRadius: 1,
-              borderColor: (theme) => theme.palette.background.active,
-              padding: 2,
+              padding: 0,
               position: 'relative',
-              left: -16,
-              top: -16,
-              overflow: 'hidden',
             }}
           >
-            {/* Dropdown menus for selecting a view and sort options
-
-            //TODO: Make the dropdown menus appear closer to the button, left aligned and with a max height */}
-            <Box sx={{ marginBottom: 1 }}>
+            {/* Dropdown menus for selecting a view and sort options */}
+            <Box sx={{ marginBottom: 1, display: 'flex', gap: 1 }}>
               <Dropdown
                 color='secondary'
                 variant='text'
+                size='small'
+                sx={{ padding: '0.25rem 0.5rem', minWidth: 'fit-content' }}
+                endIcon={undefined}
                 options={sortedViews.map((view) => (
                   <MenuItem
                     selected={state.activeView == view.id ? true : false}
@@ -334,10 +331,13 @@ export default class EFPViewer
                   </MenuItem>
                 ))}
               >
-                Select
+                View
               </Dropdown>
               <Dropdown
                 variant='text'
+                size='small'
+                sx={{ padding: '0.25rem 0.5rem', minWidth: 'fit-content' }}
+                endIcon={undefined}
                 color='secondary'
                 options={[
                   <MenuItem
@@ -376,8 +376,9 @@ export default class EFPViewer
               maskThreshold={state.maskThreshold}
             />
           </Box>
+          {/* main canvas area */}
           <Box
-            sx={{
+            sx={(theme) => ({
               flexGrow: 1,
               position: 'relative',
             }}
@@ -403,7 +404,7 @@ export default class EFPViewer
                   sx={(theme) => ({
                     position: 'absolute',
                     left: theme.spacing(2),
-                    bottom: 0,
+                    bottom: theme.spacing(2),
                     zIndex: 10,
                   })}
                   data={{
@@ -412,14 +413,14 @@ export default class EFPViewer
                   state={{
                     colorMode: state.colorMode,
                     renderAsThumbnail: false,
-                    maskThreshold: state.maskThreshold,
+                    maskThreshold: props.state.maskThreshold,
                   }}
                 />
                 <PanZoom
                   sx={(theme) => ({
                     position: 'absolute',
-                    top: theme.spacing(4),
-                    left: theme.spacing(2),
+                    top: theme.spacing(0),
+                    left: theme.spacing(0),
                     width: '100%',
                     height: '100%',
                     zIndex: 0,

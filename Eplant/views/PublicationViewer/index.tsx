@@ -1,33 +1,36 @@
-import { Link, Tab, Tabs, Typography } from '@mui/material'
+import { Link, Tab, Tabs, Typography, Theme, useTheme } from '@mui/material'
 import * as React from 'react'
 import { View, ViewProps } from '../../View'
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
 import PublicationViewerIcon from './icon'
-import Thumbnail from '../../../thumbnails/publication_viewer.png'
+import ThumbnailLight from '../../../thumbnails/publication-viewer-light.png'
+import ThumbnailDark from '../../../thumbnails/publication-viewer.png'
 import { ViewDataError } from '@eplant/View/viewData'
 
+
 const PublicationViewer: View<PublicationViewerData> = {
-  name: 'Publication Viewer',
+  name: 'Publication viewer',
   id: 'publication-viewer',
   component({
     geneticElement,
     activeData,
   }: ViewProps<PublicationViewerData, null, null>) {
     const [tab, setTab] = React.useState<TabValues>('publications')
+    const theme = useTheme()
     return (
       <div>
         <Tabs value={tab} onChange={(e, val: TabValues) => setTab(val)}>
           <Tab label="PUBLICATIONS" value="publications" />
           <Tab label="GENE RIFS" value="geneRIFs" />
         </Tabs>
-        <div hidden={tab !== 'publications'}>
+        <div hidden={tab !== 'publications'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderRadius: theme.shape.borderRadius, borderTopLeftRadius: 0, borderColor: theme.palette.background.edgeLight}}>
           {tab === 'publications' && (
             <Publications publications={activeData.publications} />
           )}
         </div>
-        <div hidden={tab !== 'geneRIFs'}>
+        <div hidden={tab !== 'geneRIFs'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderRadius: theme.shape.borderRadius, borderTopLeftRadius: 0, borderColor: theme.palette.background.edgeLight}}>
           {tab === 'geneRIFs' && <GeneRIFs geneRIFs={activeData.geneRIFs} />}
         </div>
       </div>
@@ -35,7 +38,8 @@ const PublicationViewer: View<PublicationViewerData> = {
   },
   icon: () => <PublicationViewerIcon />,
   description: 'Find publications that mention your gene of interest.',
-  thumbnail: Thumbnail,
+  // TODO: If dark theme is active, use ThumbnailDark
+  thumbnail: ThumbnailLight,
   citation({ gene }) {
     return (
       <div>

@@ -210,10 +210,10 @@
 }
 .flexlayout__tab_button {
   display: flex;
-  gap: 0.3em;
+  gap: 0.5em;
   align-items: center;
   box-sizing: border-box;
-  padding: 3px 0.5em;
+  padding: 3px 0.25em 3px 0.75em;
   cursor: pointer;
 }
 .flexlayout__tab_button--selected {

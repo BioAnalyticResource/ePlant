@@ -10,7 +10,7 @@ const Illustration = ({
 }: { color: string } & SVGProps<SVGSVGElement>) => (
   <svg
     width="204"
-    height="386"
+    height="200"
     viewBox="0 0 204 386"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -31,8 +31,18 @@ export default function NotSupported(props: {
 }) {
   const theme = useTheme()
   return (
-    <Stack gap={2} alignItems="center" direction="column" width="100%">
-      <Typography variant="h5">
+    <Stack
+      gap={2}
+      alignItems="center"
+      textAlign="center"
+      justifyContent="center"
+      direction="column"
+      width="100%"
+      minHeight="70vh"
+    >
+      <Illustration color={theme.palette.primary.dark} />
+
+      <Typography variant="h6">
         {props.geneticElement
           ? `Cannot view ${props.view.name.toLowerCase()} for ${
               props.geneticElement.id
@@ -43,20 +53,12 @@ export default function NotSupported(props: {
         variant="body1"
         sx={(theme) => ({
           color: theme.palette.text.secondary,
-          marginBottom: 8,
         })}
       >
         {props.geneticElement
           ? 'No data is available for this gene.'
           : `The ${props.view.name.toLowerCase()} requires a selected gene.`}
       </Typography>
-      <Illustration
-        color={theme.palette.primary.dark}
-        style={{
-          marginTop: 8,
-          maxHeight: '200px',
-        }}
-      />
     </Stack>
   )
 }

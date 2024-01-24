@@ -2,7 +2,8 @@ import React from 'react'
 import EFP from '../eFP'
 import EFPViewer from '../eFP/Viewer'
 import PlantEFPIcon from './icon'
-import Thumbnail from '../../../thumbnails/plant_efp.png'
+import ThumbnailLight from '../../../thumbnails/plant-efp-light.png'
+import ThumbnailDark from '../../../thumbnails/plant-efp-dark.png'
 import { makeEfps } from '../eFP/Viewer/util'
 import { EFPViewerData } from '../eFP/Viewer/types'
 
@@ -33,5 +34,5 @@ export default new EFPViewer(
   efps,
   () => <PlantEFPIcon />,
   'Visualize gene expression over time on a developmental map.',
-  Thumbnail,
+  ThumbnailLight,
 )

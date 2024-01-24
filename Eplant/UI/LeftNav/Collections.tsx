@@ -151,11 +151,11 @@ export function Collection({
       <Card
         elevation={0}
         sx={(theme) => ({
-          borderRadius: theme.shape.borderRadius,
+          borderRadius: theme.shape.borderRadius + 'px',
           color: theme.palette.text.secondary,
           backgroundColor:
             genes.length > 0 && !open
-              ? theme.palette.background.active
+              ? theme.palette.background.paper
               : theme.palette.background.default,
         })}
       >
@@ -202,9 +202,10 @@ export function Collection({
             <div
               style={{
                 display: 'flex',
-                flexFlow: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+                flexFlow: 'column',
+                lineHeight: 'normal',
+                padding: '8px 0px',
+                // justifyContent: 'space-between',
               }}
             >
               <span>{name}</span>
@@ -235,7 +236,7 @@ export function Collection({
           )}
         </Stack>
       </Card>
-      <Collapse in={open}>
+      <Collapse in={open} sx={{ marginTop: '0px !important' }}>
         <SortableContext items={genes} strategy={verticalListSortingStrategy}>
           <Stack
             direction="column"
@@ -256,15 +257,19 @@ export function Collection({
               ))
             ) : (
               <Stack spacing={1} direction="row">
-                <div style={{ width: '24px' }} />
                 <Typography
                   variant="caption"
                   fontStyle="italic"
                   sx={(theme) => ({
-                    color: theme.palette.text.disabled,
+                    color: theme.palette.background.hover,
+                    padding: '0.25rem 0.75rem',
+                    flexGrow: 1,
+                    border: 'dashed 1px',
+                    borderColor: theme.palette.background.hover,
+                    borderRadius: theme.shape.borderRadius + 'px',
                   })}
                 >
-                  Drag genes here
+                  Drag genes to reorder them
                 </Typography>
               </Stack>
             )}

@@ -188,6 +188,7 @@ export default function GeneticElementComponent({
                   ? theme.palette.background.selected
                   : theme.palette.background.default
               })`,
+
               width: '100%',
               height: '100%',
               position: 'absolute',
@@ -195,7 +196,7 @@ export default function GeneticElementComponent({
               zIndex: 5,
             },
             ':hover::before': {
-              background: `linear-gradient(to right, transparent, 95%, ${theme.palette.background.hover})`,
+              background: `linear-gradient(to right, transparent, 95%, ${theme.palette.background.selected})`,
             },
           }}
           ref={textContainerRef}
@@ -211,14 +212,21 @@ export default function GeneticElementComponent({
                 : '',
               position: 'absolute',
               userSelect: 'none',
+              top: '2px',
             })}
             ref={textGroupRef}
           >
-            <Typography sx={{ fontWeight: selected ? 'bold' : 'regular' }}>
+            <Typography
+              variant="body2"
+              // sx={{ fontWeight: selected ? 'bold' : 'regular' }}
+            >
               {geneticElement.id}
             </Typography>
             <Divider orientation="vertical" flexItem></Divider>
-            <Typography sx={{ fontWeight: selected ? 'bold' : 'regular' }}>
+            <Typography
+              variant="body2"
+              // sx={{ fontWeight: selected ? 'bold' : 'regular' }}
+            >
               {geneticElement.aliases.join(', ')}
             </Typography>
           </Stack>

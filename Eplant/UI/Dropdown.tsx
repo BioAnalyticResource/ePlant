@@ -25,6 +25,7 @@ const StyledMenu = styled((props: MenuProps) => (
 ))(({ theme }) => ({
   '& .MuiPaper-root': {
     borderRadius: 3,
+    backgroundColor: theme.palette.background.paperOverlay,
     marginTop: theme.spacing(1),
     minWidth: 180,
     '& .MuiMenuItem-root': {
@@ -83,6 +84,8 @@ export default function Dropdown({
           'aria-labelledby': buttonId,
         }}
         anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         open={open}
         onClose={handleClose}
       >

@@ -14,7 +14,10 @@ import {
 import { View, ViewProps } from '../../View'
 import { useViewData } from '../../View/viewData'
 import { GeneModel } from './GeneModel'
-import { Box, Button, ButtonProps, LinearProgress } from '@mui/material'
+import { Alert, Box, Button, ButtonProps, LinearProgress, Snackbar } from '@mui/material'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { IconButton } from '@mui/material'
+import { setStroke } from '../eFP/Tooltips/EFPTooltip';
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -22,6 +25,7 @@ const SecondaryText = styled(Typography)(({ theme }) => ({
 const CodeBody = styled(SecondaryText)(({ theme }) => ({
   fontFamily: 'Roboto Mono',
   wordBreak: 'break-word',
+  fontSize: '.65rem',
 }))
 
 const GeneSequence = ({
@@ -122,7 +126,11 @@ const GeneSequence = ({
     str += char
     prevStyle = currentStyle
   }
-  return <CodeBody variant="caption">{spans}</CodeBody>
+  return (
+    <>
+      <CodeBody variant="caption">{spans}</CodeBody>
+    </>
+  )
 }
 
 const ViewButton = styled(function ViewButton({
@@ -178,16 +186,19 @@ export default function GeneInfoViewer({
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
 
+  const [snackBarOpen, setSnackBarOpen] = React.useState(false)
+  const copyToClipboard = (text: string) => {
+    setSnackBarOpen(true)
+    navigator.clipboard.writeText(text)
+  }
+
+
   return (
-    <Stack direction="row" gap={'20px'}>
+    <Stack direction="row" gap={'20px'} >
       <ViewSwitcher geneticElement={geneticElement} />
-      <Stack direction="column" gap={'16px'} flex={4}>
+      <Stack direction="column" gap={'16px'} flex={4} sx={{ background: (theme) => theme.palette.background.paperOverlay, padding: 2, borderRadius: (theme) => theme.shape.borderRadius+'px', border: '1px solid', borderColor:  (theme) => theme.palette.background.edgeLight }}>
         <div>
-          <Typography variant="body1">Gene</Typography>
-          <SecondaryText>{geneticElement.id}</SecondaryText>
-        </div>
-        <div>
-          <Typography variant="body1">Aliases</Typography>
+          <Typography variant="h5" sx={{fontWeight: 500}}>{geneticElement.id}</Typography>
           <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
         </div>
         <div>
@@ -235,6 +246,22 @@ export default function GeneInfoViewer({
                 geneticElement={geneticElement}
                 activeData={activeData}
               ></GeneSequence>
+              <IconButton onClick={() => copyToClipboard(activeData.geneSequence)} color='primary' sx={{ ml: 1 }}>
+                <ContentCopyIcon />
+              </IconButton>
+              <Snackbar
+                anchorOrigin={
+                  {
+                    vertical: 'top',
+                    horizontal: 'center'
+                  }
+                }
+                open={snackBarOpen}
+                onClose={() => setSnackBarOpen(false)}
+                autoHideDuration={2000}
+              >
+                <Alert severity='success'>Copied to clipboard!</Alert>
+              </Snackbar>
             </div>
           </div>
         </div>
@@ -250,11 +277,14 @@ export default function GeneInfoViewer({
               <CodeBody variant="caption" style={{ wordBreak: 'break-word' }}>
                 {activeData.proteinSequence}
               </CodeBody>
+              <IconButton onClick={() => copyToClipboard(activeData.proteinSequence)} color='primary' sx={{ ml: 1 }}>
+                <ContentCopyIcon />
+              </IconButton>
             </div>
           </div>
         ) : undefined}
       </Stack>
-    </Stack>
+    </Stack >
   )
 }
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
@@ -267,21 +297,16 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 3,
-          background: (theme) => theme.palette.background.paperOverlay,
-          border: '1px solid',
-          borderRadius: 1,
-          borderColor: (theme) => theme.palette.background.active,
-          padding: 2,
+          gap: 2,
+          padding: 0,
           position: 'relative',
-          left: -16,
-          top: -16,
+          top: -8,
           overflow: 'hidden',
           whiteSpace: 'nowrap',
         }}
       >
         <Typography variant="body2" color="secondary">
-          Views available for this gene
+          Available views
         </Typography>
         {userViews.map((view) => (
           <ViewButton

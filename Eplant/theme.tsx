@@ -7,6 +7,8 @@ declare module '@mui/material/styles' {
     transparentOverlay: string
     selected: string
     hover: string
+    edge: string
+    edgeLight: string
   }
   interface PaletteColor {
     pale?: string
@@ -27,7 +29,7 @@ export const light = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#99CC00',
+      main: '#779E00',
       dark: '#c2e066',
     },
     secondary: {
@@ -35,13 +37,15 @@ export const light = createTheme({
       contrastText: '#000',
     },
     background: {
-      default: '#f6f6f6',
-      paper: '#ffffff',
-      paperOverlay: '#fafafa',
-      transparentOverlay: '#fafafaCC',
-      active: '#eeeeee',
-      selected: '#dddddd',
-      hover: '#cccccc',
+      default: '#f0f7f0', // bottom (left nav & overall page bg)
+      paper: '#f4f4f4', // middle (bg for all the views & unselected tabs)
+      paperOverlay: '#ffffff', // top level (EFP chart bg, etc)
+      transparentOverlay: '#fdfdfdDD', // tooltip bg
+      active: '#fafafa', // active gene bg & toolbar
+      selected: '#dddddd', // is this used?
+      hover: '#cccccc', // hovered gene
+      edge: '#DDDDDD', // borders around EFP canvas
+      edgeLight: '#EEEEEE' // lighter borders around page views
     },
     hot: {
       main: '#ff0000',
@@ -71,13 +75,15 @@ export const dark = createTheme({
       contrastText: '#fff',
     },
     background: {
-      default: '#111111',
-      paper: '#222222',
-      paperOverlay: '#333333',
-      transparentOverlay: '#333333DD',
+      default: '#181c18',
+      paper: '#1F1F1F',
+      paperOverlay: '#2C2C2C',
+      transparentOverlay: '#333333EE',
       selected: '#333333',
       active: '#3a3a3a',
       hover: '#444444',
+      edge: '#444444',
+      edgeLight: '#333333'
     },
     hot: {
       main: '#ff0000',
