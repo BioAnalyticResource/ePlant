@@ -1,39 +1,29 @@
-import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
+import { useConfig } from '@eplant/config'
 import { usePanesDispatch, useViewID } from '@eplant/state'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import {
+  Alert,
+  Box,
+  Button,
+  ButtonProps,
+  IconButton,
+  LinearProgress,
+  Snackbar,
+} from '@mui/material'
 import Stack from '@mui/material/Stack'
-import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
+import { styled, useTheme } from '@mui/material/styles'
 import _ from 'lodash'
 import React from 'react'
+import { View, ViewProps } from '../../View'
+import { useViewData } from '../../View/viewData'
+import { GeneModel } from './GeneModel'
 import {
   GeneInfoViewAction,
   GeneInfoViewData,
   GeneInfoViewState,
 } from './types'
-import { View, ViewProps } from '../../View'
-import { useViewData } from '../../View/viewData'
-import { GeneModel } from './GeneModel'
-import {
-  Alert,
-  Box,
-  Button,
-  ButtonProps,
-  LinearProgress,
-  Snackbar,
-} from '@mui/material'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import {
-  Alert,
-  Box,
-  Button,
-  ButtonProps,
-  LinearProgress,
-  Snackbar,
-} from '@mui/material'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import { IconButton } from '@mui/material'
-import { setStroke } from '../eFP/Tooltips/EFPTooltip'
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -308,7 +298,12 @@ export default function GeneInfoViewer({
                 {activeData.proteinSequence}
               </CodeBody>
               <IconButton
-                onClick={() => copyToClipboard(activeData.proteinSequence)}
+                onClick={() =>{ 
+                    if(activeData.proteinSequence){ 
+                      copyToClipboard(activeData.proteinSequence)
+                    }
+                  }
+                }
                 color='primary'
                 sx={{ ml: 1 }}
               >
