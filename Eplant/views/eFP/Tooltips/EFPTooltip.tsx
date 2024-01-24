@@ -58,33 +58,6 @@ function KeyValueRow(props: { label: string; value: string | number }) {
       </TableCell>
     </TableRow>
   )
-function KeyValueRow(props: { label: string; value: string | number }) {
-  return (
-    <TableRow>
-      <TableCell
-        sx={(theme) => ({
-          color: theme.palette.text.secondary,
-          textAlign: 'left',
-          border: 'none',
-          paddingTop: 0,
-          paddingBottom: 0,
-        })}
-      >
-        {props.label}
-      </TableCell>
-      <TableCell
-        sx={(theme) => ({
-          color: theme.palette.text.primary,
-          textAlign: 'right',
-          border: 'none',
-          paddingTop: 0,
-          paddingBottom: 0,
-        })}
-      >
-        {props.value}
-      </TableCell>
-    </TableRow>
-  )
 }
 
 function SVGTooltip(props: {
