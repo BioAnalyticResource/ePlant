@@ -62,7 +62,7 @@ export function SearchGroup({
       </TextField>
 
       {/* Gene selector */}
-      <SearchBar 
+      <SearchBar
         label="Search for genes"
         inputProps={{
           // TODO: Make these clickable

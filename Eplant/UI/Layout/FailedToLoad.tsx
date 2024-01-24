@@ -31,11 +31,24 @@ export default function FailedToLoad(props: {
 }) {
   const theme = useTheme()
   return (
-    <Stack gap={2} alignItems="center" direction="column" width="100%" height="100vh" justifyContent="center">
-      <Illustration
-        color={theme.palette.primary.main}
-      />
-      <Typography variant="h6" sx={{ textAlign: 'center', maxWidth: 600, fontWeight: 400, marginTop: 2 }}>
+    <Stack
+      gap={2}
+      alignItems="center"
+      direction="column"
+      width="100%"
+      height="100vh"
+      justifyContent="center"
+    >
+      <Illustration color={theme.palette.primary.main} />
+      <Typography
+        variant="h6"
+        sx={{
+          textAlign: 'center',
+          maxWidth: 600,
+          fontWeight: 400,
+          marginTop: 2,
+        }}
+      >
         {props.geneticElement
           ? `There was an error while trying to load ${props.view.name.toLowerCase()} for ${
               props.geneticElement.id

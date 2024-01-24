@@ -31,32 +31,33 @@ export const setStroke = (
   }
 }
 
-function KeyValueRow(props: {
-  label: string,
-  value: string | number
-}) {
-
-  return <TableRow>
-  <TableCell
-    sx={theme => ({
-      color: theme.palette.text.secondary,
-      textAlign: 'left',
-      border: 'none',
-      paddingTop: 0,
-      paddingBottom: 0,
-    })}
-  >
-    {props.label}
-  </TableCell>
-  <TableCell
-      sx={theme => ({
-      color: theme.palette.text.primary,
-      textAlign: 'right',
-      border: 'none',
-      paddingTop: 0,
-      paddingBottom: 0,
-    })}>{props.value}</TableCell>
-</TableRow>
+function KeyValueRow(props: { label: string; value: string | number }) {
+  return (
+    <TableRow>
+      <TableCell
+        sx={(theme) => ({
+          color: theme.palette.text.secondary,
+          textAlign: 'left',
+          border: 'none',
+          paddingTop: 0,
+          paddingBottom: 0,
+        })}
+      >
+        {props.label}
+      </TableCell>
+      <TableCell
+        sx={(theme) => ({
+          color: theme.palette.text.primary,
+          textAlign: 'right',
+          border: 'none',
+          paddingTop: 0,
+          paddingBottom: 0,
+        })}
+      >
+        {props.value}
+      </TableCell>
+    </TableRow>
+  )
 }
 
 function SVGTooltip(props: {
@@ -104,19 +105,30 @@ function SVGTooltip(props: {
           >
             <Table size="small">
               <TableBody>
-                <TableRow> 
-                  <TableCell colSpan={2} sx={{
-                    fontSize: 'medium',
-                    fontWeight: '500',
-                    border: 'none'
-                  }}>
-                  {props.tissue.name}
+                <TableRow>
+                  <TableCell
+                    colSpan={2}
+                    sx={{
+                      fontSize: 'medium',
+                      fontWeight: '500',
+                      border: 'none',
+                    }}
+                  >
+                    {props.tissue.name}
                   </TableCell>
                 </TableRow>
-                <KeyValueRow label="Level" value={`${props.tissue.mean.toFixed(2)}±${props.tissue.std.toFixed(2)}`}/>
-                <KeyValueRow label="Log2 fold change vs control" value={Math.log2(
-                          props.tissue.mean / (props.data.control ?? 1),
-                        ).toFixed(2)}/>
+                <KeyValueRow
+                  label="Level"
+                  value={`${props.tissue.mean.toFixed(
+                    2,
+                  )}±${props.tissue.std.toFixed(2)}`}
+                />
+                <KeyValueRow
+                  label="Log2 fold change vs control"
+                  value={Math.log2(
+                    props.tissue.mean / (props.data.control ?? 1),
+                  ).toFixed(2)}
+                />
               </TableBody>
             </Table>
           </Box>

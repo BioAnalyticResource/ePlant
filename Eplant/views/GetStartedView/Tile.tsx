@@ -48,7 +48,13 @@ export default function Tile({ view }: TileProps) {
         image={view.thumbnail}
         alt={view.name}
         height={'100%'}
-        sx={{ width: 'auto', margin: '1rem 1rem 0 1rem', border: '2px solid', borderColor: (theme) => theme.palette.background.edgeLight, borderRadius: (theme) => theme.shape.borderRadius+"px" }}
+        sx={{
+          width: 'auto',
+          margin: '1rem 1rem 0 1rem',
+          border: '2px solid',
+          borderColor: (theme) => theme.palette.background.edgeLight,
+          borderRadius: (theme) => theme.shape.borderRadius + 'px',
+        }}
       />
 
       <CardContent>

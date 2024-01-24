@@ -76,7 +76,16 @@ export function ViewContainer<T, S, A>({
         position="sticky"
         elevation={0}
       >
-        <Toolbar sx={(theme) => ({ gap: '8px', paddingRight: 16, borderStyle: 'solid', borderWidth: '1px 0px 1px 1px', borderColor: theme.palette.background.edge, borderLeftColor: theme.palette.background.edgeLight })}>
+        <Toolbar
+          sx={(theme) => ({
+            gap: '8px',
+            paddingRight: 16,
+            borderStyle: 'solid',
+            borderWidth: '1px 0px 1px 1px',
+            borderColor: theme.palette.background.edge,
+            borderLeftColor: theme.palette.background.edgeLight,
+          })}
+        >
           <Stack
             direction="row"
             gap={2}
@@ -123,7 +132,9 @@ export function ViewContainer<T, S, A>({
                 inputProps={{
                   sx: (theme: {
                     shape: any
-                    palette: { background: { paperOverlay: any, edgeLight: any } }
+                    palette: {
+                      background: { paperOverlay: any; edgeLight: any }
+                    }
                   }) => ({
                     display: 'flex',
                     alignItems: 'center',
@@ -228,10 +239,8 @@ export function ViewContainer<T, S, A>({
   return (
     <Box {...props} display="flex" flexDirection="column">
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
-        <DialogTitle sx={{minWidth: '512px'}}>
-          <Typography variant="h6">
-            Data sources for {view.name}
-          </Typography>
+        <DialogTitle sx={{ minWidth: '512px' }}>
+          <Typography variant="h6">Data sources for {view.name}</Typography>
         </DialogTitle>
         <DialogContent>
           {view.citation ? (

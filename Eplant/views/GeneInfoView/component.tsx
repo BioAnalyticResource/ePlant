@@ -14,10 +14,17 @@ import {
 import { View, ViewProps } from '../../View'
 import { useViewData } from '../../View/viewData'
 import { GeneModel } from './GeneModel'
-import { Alert, Box, Button, ButtonProps, LinearProgress, Snackbar } from '@mui/material'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import {
+  Alert,
+  Box,
+  Button,
+  ButtonProps,
+  LinearProgress,
+  Snackbar,
+} from '@mui/material'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { IconButton } from '@mui/material'
-import { setStroke } from '../eFP/Tooltips/EFPTooltip';
+import { setStroke } from '../eFP/Tooltips/EFPTooltip'
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -192,13 +199,25 @@ export default function GeneInfoViewer({
     navigator.clipboard.writeText(text)
   }
 
-
   return (
-    <Stack direction="row" gap={'20px'} >
+    <Stack direction="row" gap={'20px'}>
       <ViewSwitcher geneticElement={geneticElement} />
-      <Stack direction="column" gap={'16px'} flex={4} sx={{ background: (theme) => theme.palette.background.paperOverlay, padding: 2, borderRadius: (theme) => theme.shape.borderRadius+'px', border: '1px solid', borderColor:  (theme) => theme.palette.background.edgeLight }}>
+      <Stack
+        direction="column"
+        gap={'16px'}
+        flex={4}
+        sx={{
+          background: (theme) => theme.palette.background.paperOverlay,
+          padding: 2,
+          borderRadius: (theme) => theme.shape.borderRadius + 'px',
+          border: '1px solid',
+          borderColor: (theme) => theme.palette.background.edgeLight,
+        }}
+      >
         <div>
-          <Typography variant="h5" sx={{fontWeight: 500}}>{geneticElement.id}</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 500 }}>
+            {geneticElement.id}
+          </Typography>
           <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
         </div>
         <div>
@@ -246,21 +265,23 @@ export default function GeneInfoViewer({
                 geneticElement={geneticElement}
                 activeData={activeData}
               ></GeneSequence>
-              <IconButton onClick={() => copyToClipboard(activeData.geneSequence)} color='primary' sx={{ ml: 1 }}>
+              <IconButton
+                onClick={() => copyToClipboard(activeData.geneSequence)}
+                color="primary"
+                sx={{ ml: 1 }}
+              >
                 <ContentCopyIcon />
               </IconButton>
               <Snackbar
-                anchorOrigin={
-                  {
-                    vertical: 'top',
-                    horizontal: 'center'
-                  }
-                }
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
                 open={snackBarOpen}
                 onClose={() => setSnackBarOpen(false)}
                 autoHideDuration={2000}
               >
-                <Alert severity='success'>Copied to clipboard!</Alert>
+                <Alert severity="success">Copied to clipboard!</Alert>
               </Snackbar>
             </div>
           </div>
@@ -277,14 +298,18 @@ export default function GeneInfoViewer({
               <CodeBody variant="caption" style={{ wordBreak: 'break-word' }}>
                 {activeData.proteinSequence}
               </CodeBody>
-              <IconButton onClick={() => copyToClipboard(activeData.proteinSequence)} color='primary' sx={{ ml: 1 }}>
+              <IconButton
+                onClick={() => copyToClipboard(activeData.proteinSequence)}
+                color="primary"
+                sx={{ ml: 1 }}
+              >
                 <ContentCopyIcon />
               </IconButton>
             </div>
           </div>
         ) : undefined}
       </Stack>
-    </Stack >
+    </Stack>
   )
 }
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
