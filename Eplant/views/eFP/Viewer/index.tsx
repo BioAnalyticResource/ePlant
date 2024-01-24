@@ -381,7 +381,7 @@ export default class EFPViewer
             sx={(theme) => ({
               flexGrow: 1,
               position: 'relative',
-            }}
+            })}
           >
             {activeData.viewData[activeViewIndex].supported ? (
               <>
@@ -413,7 +413,7 @@ export default class EFPViewer
                   state={{
                     colorMode: state.colorMode,
                     renderAsThumbnail: false,
-                    maskThreshold: props.state.maskThreshold,
+                    maskThreshold: state.maskThreshold,
                   }}
                 />
                 <PanZoom
