@@ -8,7 +8,7 @@ import { makeCellEfps } from '../eFP/Viewer/util'
 
 const views: EFPViewerData['views'] = [
   {
-    name: 'cellEFP',
+    name: 'Cell eFP',
     id: 'cellefp',
     svgURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.svg',
     xmlURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.xml',

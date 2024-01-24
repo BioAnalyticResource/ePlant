@@ -63,7 +63,7 @@ export default function PanZoom({
   return (
     <Box
       {...props}
-      overflow="hidden"
+      overflow='hidden'
       ref={containerRef}
       onMouseDown={(e) => {
         const { x, y } = e.currentTarget.getBoundingClientRect()

@@ -13,23 +13,23 @@ export default function GetStartedView({
   return (
     <Stack spacing={3}>
       <div>
-        <Typography variant="h2">ePlant 3</Typography>
-        <Typography variant="h4" color={theme.palette.secondary.main}>
+        <Typography variant='h2'>ePlant 3</Typography>
+        <Typography variant='h4' color={theme.palette.secondary.main}>
           Bioinformatics evolved
         </Typography>
       </div>
       <Stack spacing={1}>
-        <Typography variant="h5">Start</Typography>
-        <Stack direction="row" spacing={2}>
-          <Filter1 color="primary" />
+        <Typography variant='h5'>Start</Typography>
+        <Stack direction='row' spacing={2}>
+          <Filter1 color='primary' />
           <Typography>Select a species</Typography>
         </Stack>
-        <Stack direction="row" spacing={2}>
-          <Filter2 color="primary" />
+        <Stack direction='row' spacing={2}>
+          <Filter2 color='primary' />
           <Typography>Enter a gene of interest</Typography>
         </Stack>
-        <Stack direction="row" spacing={2}>
-          <Filter3 color="primary" />
+        <Stack direction='row' spacing={2}>
+          <Filter3 color='primary' />
           <Typography>
             Use the view selector to navigate between views
           </Typography>
@@ -38,25 +38,25 @@ export default function GetStartedView({
       <Stack>
         <Typography
           sx={{ width: '100%', maxWidth: 860 }}
-          variant="body2"
+          variant='body2'
           color={theme.palette.secondary.main}
         >
           Built by students in the{' '}
-          <Link href="https://bar.utoronto.ca/" target="_blank">
+          <Link href='https://bar.utoronto.ca/' target='_blank'>
             Provart Lab
           </Link>{' '}
           at the University of Toronto. If you&apos;re interested in
           contributing to the project, visit our{' '}
           <Link
-            href="https://github.com/BioAnalyticResource/ePlant"
-            target="_blank"
+            href='https://github.com/BioAnalyticResource/ePlant'
+            target='_blank'
           >
             GitHub
           </Link>{' '}
           page and reach out to us{' '}
           <Link
-            href="https://github.com/BioAnalyticResource/ePlant/issues"
-            target="_blank"
+            href='https://github.com/BioAnalyticResource/ePlant/issues'
+            target='_blank'
           >
             here
           </Link>

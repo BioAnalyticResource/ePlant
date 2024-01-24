@@ -103,7 +103,7 @@ function SVGTooltip(props: {
               paddingBottom: 1.5,
             })}
           >
-            <Table size="small">
+            <Table size='small'>
               <TableBody>
                 <TableRow>
                   <TableCell
@@ -118,13 +118,13 @@ function SVGTooltip(props: {
                   </TableCell>
                 </TableRow>
                 <KeyValueRow
-                  label="Level"
+                  label='Level'
                   value={`${props.tissue.mean.toFixed(
                     2,
                   )}±${props.tissue.std.toFixed(2)}`}
                 />
                 <KeyValueRow
-                  label="Log2 fold change vs control"
+                  label='Log2 fold change vs control'
                   value={Math.log2(
                     props.tissue.mean / (props.data.control ?? 1),
                   ).toFixed(2)}

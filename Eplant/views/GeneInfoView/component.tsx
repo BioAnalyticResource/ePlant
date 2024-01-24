@@ -23,6 +23,15 @@ import {
   Snackbar,
 } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import {
+  Alert,
+  Box,
+  Button,
+  ButtonProps,
+  LinearProgress,
+  Snackbar,
+} from '@mui/material'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { IconButton } from '@mui/material'
 import { setStroke } from '../eFP/Tooltips/EFPTooltip'
 
@@ -135,7 +144,7 @@ const GeneSequence = ({
   }
   return (
     <>
-      <CodeBody variant="caption">{spans}</CodeBody>
+      <CodeBody variant='caption'>{spans}</CodeBody>
     </>
   )
 }
@@ -169,7 +178,7 @@ const ViewButton = styled(function ViewButton({
           },
         })}
         value={loadingAmount * 100}
-        variant="determinate"
+        variant='determinate'
       />
       <Box
         sx={{
@@ -200,10 +209,10 @@ export default function GeneInfoViewer({
   }
 
   return (
-    <Stack direction="row" gap={'20px'}>
+    <Stack direction='row' gap={'20px'}>
       <ViewSwitcher geneticElement={geneticElement} />
       <Stack
-        direction="column"
+        direction='column'
         gap={'16px'}
         flex={4}
         sx={{
@@ -215,31 +224,31 @@ export default function GeneInfoViewer({
         }}
       >
         <div>
-          <Typography variant="h5" sx={{ fontWeight: 500 }}>
+          <Typography variant='h5' sx={{ fontWeight: 500 }}>
             {geneticElement.id}
           </Typography>
           <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
         </div>
         <div>
-          <Typography variant="body1">Full name</Typography>
+          <Typography variant='body1'>Full name</Typography>
           <SecondaryText>{activeData.name}</SecondaryText>
         </div>
         <div>
-          <Typography variant="body1">Brief description</Typography>
+          <Typography variant='body1'>Brief description</Typography>
           <SecondaryText>{activeData.brief_description}</SecondaryText>
         </div>
         <div>
-          <Typography variant="body1">Computational description</Typography>
+          <Typography variant='body1'>Computational description</Typography>
           <SecondaryText>
             {activeData.computational_description}
           </SecondaryText>{' '}
         </div>
         <div>
-          <Typography variant="body1">Curator summary</Typography>
+          <Typography variant='body1'>Curator summary</Typography>
           <SecondaryText>{activeData.curator_summary}</SecondaryText>
         </div>
         <div>
-          <Typography variant="body1">Location & Gene model</Typography>
+          <Typography variant='body1'>Location & Gene model</Typography>
           <div>
             <SecondaryText>
               {activeData.location}: {activeData.chromosome_start} to{' '}
@@ -253,10 +262,10 @@ export default function GeneInfoViewer({
           </div>
         </div>
         <div>
-          <Typography variant="body1">DNA sequence</Typography>
+          <Typography variant='body1'>DNA sequence</Typography>
           <div>
             <div>
-              <SecondaryText variant="caption" whiteSpace={'nowrap'}>
+              <SecondaryText variant='caption' whiteSpace={'nowrap'}>
                 {'> ' + geneticElement.id}
               </SecondaryText>
             </div>
@@ -267,7 +276,7 @@ export default function GeneInfoViewer({
               ></GeneSequence>
               <IconButton
                 onClick={() => copyToClipboard(activeData.geneSequence)}
-                color="primary"
+                color='primary'
                 sx={{ ml: 1 }}
               >
                 <ContentCopyIcon />
@@ -281,26 +290,26 @@ export default function GeneInfoViewer({
                 onClose={() => setSnackBarOpen(false)}
                 autoHideDuration={2000}
               >
-                <Alert severity="success">Copied to clipboard!</Alert>
+                <Alert severity='success'>Copied to clipboard!</Alert>
               </Snackbar>
             </div>
           </div>
         </div>
         {activeData.geneticElementType == 'protein_coding' ? (
           <div>
-            <Typography variant="body1">Protein sequence</Typography>
+            <Typography variant='body1'>Protein sequence</Typography>
             <div>
-              <SecondaryText variant="caption" whiteSpace={'nowrap'}>
+              <SecondaryText variant='caption' whiteSpace={'nowrap'}>
                 {'> ' + geneticElement.id}
               </SecondaryText>
             </div>
             <div>
-              <CodeBody variant="caption" style={{ wordBreak: 'break-word' }}>
+              <CodeBody variant='caption' style={{ wordBreak: 'break-word' }}>
                 {activeData.proteinSequence}
               </CodeBody>
               <IconButton
                 onClick={() => copyToClipboard(activeData.proteinSequence)}
-                color="primary"
+                color='primary'
                 sx={{ ml: 1 }}
               >
                 <ContentCopyIcon />
@@ -330,12 +339,12 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
           whiteSpace: 'nowrap',
         }}
       >
-        <Typography variant="body2" color="secondary">
+        <Typography variant='body2' color='secondary'>
           Available views
         </Typography>
         {userViews.map((view) => (
           <ViewButton
-            color="secondary"
+            color='secondary'
             sx={{
               textAlign: 'left',
               justifyContent: 'flex-start',

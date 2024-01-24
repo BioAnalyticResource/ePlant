@@ -10,7 +10,7 @@ const FallbackView: View<null> = {
   },
   id: 'fallback',
   header: ({ geneticElement }) => (
-    <Typography variant="h6">{geneticElement?.id}</Typography>
+    <Typography variant='h6'>{geneticElement?.id}</Typography>
   ),
 }
 

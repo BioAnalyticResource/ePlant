@@ -8,6 +8,14 @@ import {
   useTheme,
   DialogTitle,
 } from '@mui/material'
+import {
+  Modal,
+  Slider,
+  Typography,
+  Button,
+  useTheme,
+  DialogTitle,
+} from '@mui/material'
 import { EFPViewerState } from './types'
 
 // Modal component with a slider
@@ -52,14 +60,14 @@ const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
         <DialogTitle sx={{ minWidth: '512px', padding: 0 }}>
           Mask data
         </DialogTitle>
-        <Typography variant="body2" gutterBottom>
+        <Typography variant='body2' gutterBottom>
           Mask samples if the expression level is below a given percentile of
           the standard deviation.
         </Typography>
         <Slider
           value={sliderValue}
           onChange={handleSliderChange}
-          valueLabelDisplay="on"
+          valueLabelDisplay='on'
           valueLabelFormat={(value) => `${value}%`}
           min={0}
           max={100}
@@ -73,7 +81,7 @@ const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
             Cancel
           </Button>
           <Button
-            variant="contained"
+            variant='contained'
             sx={{ background: theme.palette.primary.main }}
             onClick={handleSubmit}
           >

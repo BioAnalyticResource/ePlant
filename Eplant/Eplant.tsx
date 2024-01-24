@@ -170,7 +170,7 @@ export default function Eplant() {
       <Routes>
         <Route path={rootPath}>
           <Route index element={<MainEplant />} />
-          <Route path="pane" element={<DirectPane />} />
+          <Route path='pane' element={<DirectPane />} />
         </Route>
       </Routes>
     </ThemeProvider>
@@ -199,7 +199,7 @@ function DirectPane() {
 
   return loaded ? (
     <div
-      className="flexlayout__layout"
+      className='flexlayout__layout'
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -216,8 +216,8 @@ function DirectPane() {
         }}
         className={id == activeId ? 'flexlayout__tabset-selected' : ''}
       >
-        <div className="flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected">
-          <div className="flexlayout__tab-content">
+        <div className='flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected'>
+          <div className='flexlayout__tab-content'>
             {panes[id]?.activeGene ? panes[id]?.activeGene + ' - ' : ''}
             {views.find((v) => v.id == panes[id]?.view)?.name}
           </div>
@@ -261,7 +261,7 @@ export function MainEplant() {
   return (
     <>
       <ResponsiveDrawer
-        variant="persistent"
+        variant='persistent'
         open={true}
         PaperProps={{
           sx: {
@@ -378,7 +378,7 @@ function EplantLayout() {
             onRenderTab={(node, renderValues) => {
               renderValues.buttons = [
                 <IconButton
-                  key="close"
+                  key='close'
                   // Why is this necessary?
                   // Idk, but flexlayout-react uses it for their close buttons
                   // And they don't work without it
@@ -392,9 +392,9 @@ function EplantLayout() {
                     panesDispatch({ type: 'close', id: node.getId() })
                     model.doAction(Actions.deleteTab(node.getId()))
                   }}
-                  size="small"
+                  size='small'
                 >
-                  <Close fontSize="inherit" />
+                  <Close fontSize='inherit' />
                 </IconButton>,
               ]
             }}
@@ -402,7 +402,7 @@ function EplantLayout() {
         ) : (
           <div>
             <CircularProgress
-              variant="indeterminate"
+              variant='indeterminate'
               value={globalProgress * 100}
             />
           </div>
@@ -463,23 +463,23 @@ function EplantLayout() {
     renderValues.stickyButtons.push(
       <IconButton
         onClick={() => addTab({ tabsetId: node.getId() })}
-        size="small"
-        key="add-tab"
+        size='small'
+        key='add-tab'
       >
-        <Add fontSize="inherit" />
+        <Add fontSize='inherit' />
       </IconButton>,
     )
     renderValues.buttons.push(
-      <Tooltip title="Open in new window">
+      <Tooltip title='Open in new window'>
         <IconButton
           onClick={() => {
             const id = node.getSelectedNode()?.getId()
             if (id) makePopout(id)
           }}
-          size="small"
-          key="make-popout"
+          size='small'
+          key='make-popout'
         >
-          <OpenInNew fontSize="inherit" />
+          <OpenInNew fontSize='inherit' />
         </IconButton>
       </Tooltip>,
     )

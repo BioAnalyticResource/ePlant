@@ -21,8 +21,8 @@ const PublicationViewer: View<PublicationViewerData> = {
     return (
       <div>
         <Tabs value={tab} onChange={(e, val: TabValues) => setTab(val)}>
-          <Tab label="PUBLICATIONS" value="publications" />
-          <Tab label="GENE RIFS" value="geneRIFs" />
+          <Tab label='PUBLICATIONS' value='publications' />
+          <Tab label='GENE RIFS' value='geneRIFs' />
         </Tabs>
         <div
           hidden={tab !== 'publications'}
@@ -63,18 +63,18 @@ const PublicationViewer: View<PublicationViewerData> = {
     return (
       <div>
         Data for this view comes from NCBI{' '}
-        <Link href="ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz">
+        <Link href='ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz'>
           Gene2Pubmed
         </Link>
         . Data for Gene RIFs comes from NCBI{' '}
-        <Link href="ftp://ftp.ncbi.nih.gov/gene/GeneRIF/generifs_basic.gz">
+        <Link href='ftp://ftp.ncbi.nih.gov/gene/GeneRIF/generifs_basic.gz'>
           Gene RIFs
         </Link>
       </div>
     )
   },
   header: ({ geneticElement }) => (
-    <Typography variant="h6">
+    <Typography variant='h6'>
       Publications related to {geneticElement?.id}
     </Typography>
   ),

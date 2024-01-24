@@ -35,17 +35,17 @@ export function SearchGroup({
     if (!species && speciesList.length) setSpecies(speciesList[0])
   }, [species])
   return (
-    <Stack direction="column" spacing={2}>
+    <Stack direction='column' spacing={2}>
       {/* Species selector */}
       <TextField
         select
-        size="small"
+        size='small'
         value={species?.name ?? ''}
         onChange={(e) =>
           setSpecies(speciesList.find((s) => s.name == e.target.value))
         }
         // label="Species"
-        variant="standard"
+        variant='standard'
         inputProps={{
           sx: {
             ':focus': {
@@ -63,7 +63,7 @@ export function SearchGroup({
 
       {/* Gene selector */}
       <SearchBar
-        label="Search for genes"
+        label='Search for genes'
         inputProps={{
           // TODO: Make these clickable
           helperText: <span>Example ABI3 or AT5G60200</span>,

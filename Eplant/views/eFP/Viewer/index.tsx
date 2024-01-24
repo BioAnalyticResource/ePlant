@@ -3,7 +3,14 @@ import PanZoom from '@eplant/util/PanZoom'
 import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
 import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
-import React, { startTransition } from 'react'
+import React, {
+  memo,
+  startTransition,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import EFP from '..'
 import EFPPreview from '../EFPPreview'
 import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
@@ -19,7 +26,9 @@ import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import Dropdown from '@eplant/UI/Dropdown'
 import { red } from '@mui/material/colors'
 import GeneDistributionChart from './GeneDistributionChart'
+import { getCitation } from '@eplant/util/citations'
 import MaskModal from './MaskModal'
+import EFPViewerCitation from './EFPViewerCitation'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -36,10 +45,16 @@ type EFPListProps = {
   maskThreshold: number
 }
 
-const EFPListItem = React.memo(
+interface ICitationProps {
+  activeData?: EFPViewerData
+  state?: EFPViewerState
+  gene?: GeneticElement | null
+}
+
+const EFPListItem = memo(
   function EFPRow({ index: i, data }: { index: number; data: EFPListProps }) {
     return (
-      <Tooltip placement="right" arrow title={<div>{data.views[i].name}</div>}>
+      <Tooltip placement='right' arrow title={<div>{data.views[i].name}</div>}>
         <div>
           <EFPPreview
             sx={() => ({
@@ -76,7 +91,7 @@ const EFPListItem = React.memo(
   },
 )
 
-const EFPListRow = React.memo(function EFPListRow({
+const EFPListRow = memo(function EFPListRow({
   style,
   index,
   data,
@@ -213,39 +228,36 @@ export default class EFPViewer
         return state
     }
   }
-  component = (
-    props: ViewProps<EFPViewerData, EFPViewerState, EFPViewerAction>,
-  ) => {
-    const viewIndices: number[] = [
-      ...Array(props.activeData.views.length).keys(),
-    ]
+  component = ({
+    activeData,
+    state,
+    dispatch,
+    geneticElement,
+  }: ViewProps<EFPViewerData, EFPViewerState, EFPViewerAction>) => {
+    const viewIndices: number[] = [...Array(activeData.views.length).keys()]
     viewIndices.sort((a, b) => {
-      if (props.state.sortBy == 'name')
-        return props.activeData.views[a].name.localeCompare(
-          props.activeData.views[b].name,
-        )
+      if (state.sortBy == 'name')
+        return activeData.views[a].name.localeCompare(activeData.views[b].name)
       else {
-        return (
-          props.activeData.viewData[b].max - props.activeData.viewData[a].max
-        )
+        return activeData.viewData[b].max - activeData.viewData[a].max
       }
     })
-    const sortedViews = viewIndices.map((i) => props.activeData.views[i])
-    const sortedViewData = viewIndices.map((i) => props.activeData.viewData[i])
+    const sortedViews = viewIndices.map((i) => activeData.views[i])
+    const sortedViewData = viewIndices.map((i) => activeData.viewData[i])
     const sortedEfps = viewIndices.map((i) => this.efps[i])
 
-    let activeViewIndex = React.useMemo(
-      () => sortedEfps.findIndex((v) => v.id == props.state.activeView),
-      [props.state.activeView, ...sortedEfps.map((v) => v.id)],
+    let activeViewIndex = useMemo(
+      () => sortedEfps.findIndex((v) => v.id == state.activeView),
+      [state.activeView, ...sortedEfps.map((v) => v.id)],
     )
     if (activeViewIndex == -1) {
       activeViewIndex = 0
-      props.dispatch({
+      dispatch({
         type: 'set-view',
         id: sortedEfps[0].id,
       })
     }
-    const efp = React.useMemo(() => {
+    const efp = useMemo(() => {
       const Component = sortedEfps[activeViewIndex].component
       return (
         <Component
@@ -253,26 +265,26 @@ export default class EFPViewer
             ...sortedViewData[activeViewIndex],
           }}
           state={{
-            colorMode: props.state.colorMode,
+            colorMode: state.colorMode,
             renderAsThumbnail: false,
-            maskThreshold: props.state.maskThreshold,
+            maskThreshold: state.maskThreshold,
           }}
-          geneticElement={props.geneticElement}
+          geneticElement={geneticElement}
           dispatch={() => {}}
         />
       )
     }, [
       activeViewIndex,
-      props.geneticElement?.id,
-      props.dispatch,
+      geneticElement?.id,
+      dispatch,
       sortedViewData[activeViewIndex],
-      props.state.colorMode,
-      props.state.maskThreshold,
+      state.colorMode,
+      state.maskThreshold,
     ])
-    const ref = React.useRef<HTMLDivElement>(null)
+    const ref = useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
 
-    if (!props.geneticElement) return <></>
+    if (!geneticElement) return <></>
     return (
       <Box
         sx={{
@@ -304,17 +316,15 @@ export default class EFPViewer
             {/* Dropdown menus for selecting a view and sort options */}
             <Box sx={{ marginBottom: 1, display: 'flex', gap: 1 }}>
               <Dropdown
-                color="secondary"
-                variant="text"
-                size="small"
+                color='secondary'
+                variant='text'
+                size='small'
                 sx={{ padding: '0.25rem 0.5rem', minWidth: 'fit-content' }}
                 endIcon={undefined}
                 options={sortedViews.map((view) => (
                   <MenuItem
-                    selected={props.state.activeView == view.id ? true : false}
-                    onClick={() =>
-                      props.dispatch({ type: 'set-view', id: view.id })
-                    }
+                    selected={state.activeView == view.id ? true : false}
+                    onClick={() => dispatch({ type: 'set-view', id: view.id })}
                     key={view.id}
                   >
                     {view.name}
@@ -324,28 +334,24 @@ export default class EFPViewer
                 View
               </Dropdown>
               <Dropdown
-                variant="text"
-                size="small"
+                variant='text'
+                size='small'
                 sx={{ padding: '0.25rem 0.5rem', minWidth: 'fit-content' }}
                 endIcon={undefined}
-                color="secondary"
+                color='secondary'
                 options={[
                   <MenuItem
-                    selected={props.state.sortBy == 'name' ? true : false}
-                    key="byName"
-                    onClick={() =>
-                      props.dispatch({ type: 'sort-by', by: 'name' })
-                    }
+                    selected={state.sortBy == 'name' ? true : false}
+                    key='byName'
+                    onClick={() => dispatch({ type: 'sort-by', by: 'name' })}
                   >
                     By name
                   </MenuItem>,
                   <MenuItem
-                    selected={
-                      props.state.sortBy == 'expression-level' ? true : false
-                    }
-                    key="byExpression"
+                    selected={state.sortBy == 'expression-level' ? true : false}
+                    key='byExpression'
                     onClick={() =>
-                      props.dispatch({
+                      dispatch({
                         type: 'sort-by',
                         by: 'expression-level',
                       })
@@ -362,12 +368,12 @@ export default class EFPViewer
             <EFPListMemoized
               height={dimensions.height - 5}
               activeView={sortedEfps[activeViewIndex]}
-              dispatch={props.dispatch}
+              dispatch={dispatch}
               viewData={sortedViewData}
-              geneticElement={props.geneticElement}
+              geneticElement={geneticElement}
               views={sortedEfps}
-              colorMode={props.state.colorMode}
-              maskThreshold={props.state.maskThreshold}
+              colorMode={state.colorMode}
+              maskThreshold={state.maskThreshold}
             />
           </Box>
           {/* main canvas area */}
@@ -375,25 +381,20 @@ export default class EFPViewer
             sx={(theme) => ({
               flexGrow: 1,
               position: 'relative',
-              overflow: 'hidden',
-              background: theme.palette.background.paperOverlay,
-              border: `1px solid`,
-              borderColor: theme.palette.background.edge,
-              borderRadius: theme.shape.borderRadius + 'px',
             })}
           >
-            {props.activeData.viewData[activeViewIndex].supported ? (
+            {activeData.viewData[activeViewIndex].supported ? (
               <>
-                {props.activeData.views[activeViewIndex].name !== 'cellEFP' && (
+                {activeData.views[activeViewIndex].name !== 'cellEFP' && (
                   <GeneDistributionChart
-                    data={{ ...props.activeData.viewData[activeViewIndex] }}
+                    data={{ ...activeData.viewData[activeViewIndex] }}
                   />
                 )}
                 <MaskModal
-                  state={props.state}
-                  onClose={() => props.dispatch({ type: 'toggle-mask-modal' })}
+                  state={state}
+                  onClose={() => dispatch({ type: 'toggle-mask-modal' })}
                   onSubmit={(threshold) =>
-                    props.dispatch({
+                    dispatch({
                       type: 'set-mask-threshold',
                       threshold: threshold,
                     })
@@ -407,12 +408,12 @@ export default class EFPViewer
                     zIndex: 10,
                   })}
                   data={{
-                    ...props.activeData.viewData[activeViewIndex],
+                    ...activeData.viewData[activeViewIndex],
                   }}
                   state={{
-                    colorMode: props.state.colorMode,
+                    colorMode: state.colorMode,
                     renderAsThumbnail: false,
-                    maskThreshold: props.state.maskThreshold,
+                    maskThreshold: state.maskThreshold,
                   }}
                 />
                 <PanZoom
@@ -424,9 +425,9 @@ export default class EFPViewer
                     height: '100%',
                     zIndex: 0,
                   })}
-                  transform={props.state.transform}
+                  transform={state.transform}
                   onTransformChange={(transform) => {
-                    props.dispatch({
+                    dispatch({
                       type: 'set-transform',
                       transform,
                     })
@@ -444,7 +445,7 @@ export default class EFPViewer
                 }}
               >
                 <NotSupported
-                  geneticElement={props.geneticElement}
+                  geneticElement={geneticElement}
                   view={sortedEfps[activeViewIndex]}
                 ></NotSupported>
               </div>
@@ -471,10 +472,60 @@ export default class EFPViewer
   header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
     props,
   ) => (
-    <Typography variant="h6">
+    <Typography variant='h6'>
       {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}
       {': '}
       {props.geneticElement?.id}
     </Typography>
   )
+
+  citation = ({ activeData, state, gene }: ICitationProps) => {
+    const [xmlData, setXMLData] = useState<string[]>([])
+
+    const viewID = activeData?.views.find((v) => v.id == state?.activeView)
+      ?.name
+    const viewXML = activeData?.views.find((v) => v.id == state?.activeView)
+      ?.xmlURL
+    useEffect(() => {
+      const xmlLoad = async () => {
+        let xmlString = ''
+        if (viewXML) {
+          try {
+            const response = await fetch(viewXML)
+            const data = await response.text()
+            xmlString = data
+          } catch (error) {
+            console.error('Error fetching xmlData:', error)
+          }
+        }
+
+        // Extract <li> tags
+        if (xmlString !== '') {
+          const parser = new DOMParser()
+          const xmlDoc = parser.parseFromString(xmlString, 'text/xml')
+          const listItems = xmlDoc.querySelectorAll('info li')
+          const itemsArray = Array.from(listItems).map((liElement) =>
+            liElement.textContent ? liElement.textContent : '',
+          )
+          setXMLData(itemsArray)
+        } else {
+          setXMLData([])
+        }
+      }
+      xmlLoad()
+    }, [viewXML])
+
+    if (viewID) {
+      const citation = getCitation(viewID) as { [key: string]: string }
+      return (
+        <EFPViewerCitation
+          viewID={viewID}
+          citation={citation}
+          xmlData={xmlData}
+        ></EFPViewerCitation>
+      )
+    } else {
+      return <p>No Citation information provided.</p>
+    }
+  }
 }

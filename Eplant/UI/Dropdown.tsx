@@ -70,9 +70,9 @@ export default function Dropdown({
       <Button
         id={buttonId}
         aria-controls={open ? menuId : undefined}
-        aria-haspopup="true"
+        aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
-        variant="contained"
+        variant='contained'
         disableElevation
         onClick={handleClick}
         endIcon={<KeyboardArrowDown />}

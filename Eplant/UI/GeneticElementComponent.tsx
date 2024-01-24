@@ -25,7 +25,7 @@ function SelectedIndicator(props: BoxProps & { hover: boolean }) {
   return (
     <Box {...props} position={'relative'}>
       <Box
-        position="absolute"
+        position='absolute'
         sx={(theme) => ({
           left: 0,
           top: 0,
@@ -36,7 +36,7 @@ function SelectedIndicator(props: BoxProps & { hover: boolean }) {
         })}
       />
       <Box
-        position="absolute"
+        position='absolute'
         sx={(theme) => ({
           left: props.hover ? '0' : '0px',
           top: 0,
@@ -161,10 +161,10 @@ export default function GeneticElementComponent({
       onClick={onClick}
     >
       <Stack
-        direction="row"
+        direction='row'
         gap={1}
         height={24}
-        overflow="hidden"
+        overflow='hidden'
         whiteSpace={'nowrap'}
         sx={(theme) => ({})}
       >
@@ -202,7 +202,7 @@ export default function GeneticElementComponent({
           ref={textContainerRef}
         >
           <Stack
-            direction="row"
+            direction='row'
             gap={1}
             sx={(theme) => ({
               animation: textScroll
@@ -217,14 +217,14 @@ export default function GeneticElementComponent({
             ref={textGroupRef}
           >
             <Typography
-              variant="body2"
+              variant='body2'
               // sx={{ fontWeight: selected ? 'bold' : 'regular' }}
             >
               {geneticElement.id}
             </Typography>
-            <Divider orientation="vertical" flexItem></Divider>
+            <Divider orientation='vertical' flexItem></Divider>
             <Typography
-              variant="body2"
+              variant='body2'
               // sx={{ fontWeight: selected ? 'bold' : 'regular' }}
             >
               {geneticElement.aliases.join(', ')}

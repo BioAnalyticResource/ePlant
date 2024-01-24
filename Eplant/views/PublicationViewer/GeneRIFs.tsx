@@ -19,10 +19,10 @@ const columns: GridColDef[] = [
     renderCell: (params: GridRenderCellParams<{ [key: string]: unknown }>) => (
       <Button
         href={params.value}
-        variant="outlined"
-        color="secondary"
-        size="small"
-        target="_blank"
+        variant='outlined'
+        color='secondary'
+        size='small'
+        target='_blank'
       >
         VIEW PAPER
       </Button>

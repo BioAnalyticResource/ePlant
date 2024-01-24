@@ -27,19 +27,19 @@ const GeneInfoView: View<GeneInfoViewData> = {
     return (
       <div>
         Data for this view comes from TAIR{' '}
-        <Link href="http://www.arabidopsis.org/download_files/Genes/Araport11_genome_release/Araport11_GFF3_genes_transposons.201606.gff.gz">
+        <Link href='http://www.arabidopsis.org/download_files/Genes/Araport11_genome_release/Araport11_GFF3_genes_transposons.201606.gff.gz'>
           GFF3
         </Link>
         , TAIR{' '}
-        <Link href="http://www.arabidopsis.org/download_files/Genes/Araport11_genome_release/Araport11_blastsets/Araport11_genes.201606.pep.fasta.gz">
+        <Link href='http://www.arabidopsis.org/download_files/Genes/Araport11_genome_release/Araport11_blastsets/Araport11_genes.201606.pep.fasta.gz'>
           Protein Sequences
         </Link>
         , TAIR{' '}
-        <Link href="https://www.arabidopsis.org/download_files/Public_Data_Releases/TAIR_Data_20190331/gene_aliases_20190402.txt.gz">
+        <Link href='https://www.arabidopsis.org/download_files/Public_Data_Releases/TAIR_Data_20190331/gene_aliases_20190402.txt.gz'>
           Gene Aliases
         </Link>
         , TAIR{' '}
-        <Link href="https://www.arabidopsis.org/download_files/Public_Data_Releases/TAIR_Data_20190331/Araport11_functional_descriptions_20190402.txt.gz">
+        <Link href='https://www.arabidopsis.org/download_files/Public_Data_Releases/TAIR_Data_20190331/Araport11_functional_descriptions_20190402.txt.gz'>
           Functional description
         </Link>{' '}
         and TAIR10 Genome Sequence.
@@ -47,7 +47,7 @@ const GeneInfoView: View<GeneInfoViewData> = {
     )
   },
   header: ({ geneticElement }) => (
-    <Typography variant="h6">Information on {geneticElement?.id}</Typography>
+    <Typography variant='h6'>Information on {geneticElement?.id}</Typography>
   ),
 }
 

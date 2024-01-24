@@ -70,7 +70,7 @@ export default function EFPPreview({
           }}
         >
           <Typography
-            variant="caption"
+            variant='caption'
             sx={{ marginLeft: '4px', fontWeight: 'light' }}
           >
             Max: {Math.round(dataDeferred.max)}
@@ -83,7 +83,7 @@ export default function EFPPreview({
     component
   ) : (
     <EFPPreviewContainer selected={selected} {...boxProps}>
-      <Skeleton variant="rectangular" width="100%" height="100%" />
+      <Skeleton variant='rectangular' width='100%' height='100%' />
     </EFPPreviewContainer>
   )
 }

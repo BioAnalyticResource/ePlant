@@ -44,7 +44,7 @@ export default function Tile({ view }: TileProps) {
       })}
     >
       <CardMedia
-        component="img"
+        component='img'
         image={view.thumbnail}
         alt={view.name}
         height={'100%'}
@@ -59,9 +59,9 @@ export default function Tile({ view }: TileProps) {
 
       <CardContent>
         <div>
-          <Typography variant="h6">{view.name}</Typography>
+          <Typography variant='h6'>{view.name}</Typography>
           <Typography
-            variant="body2"
+            variant='body2'
             color={(theme) => theme.palette.secondary.main}
           >
             {view.description}
@@ -71,13 +71,13 @@ export default function Tile({ view }: TileProps) {
 
       <CardActions>
         <Typography
-          variant="caption"
+          variant='caption'
           color={(theme) => theme.palette.secondary.main}
           sx={{ ml: 1 }}
         >
           Example{' '}
         </Typography>
-        <Button onClick={setView} size="small">
+        <Button onClick={setView} size='small'>
           AT3G24650 | ABI3
         </Button>
       </CardActions>

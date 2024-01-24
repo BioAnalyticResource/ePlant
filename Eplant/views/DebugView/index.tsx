@@ -79,7 +79,7 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
   ],
   id: 'debug-view',
   header: ({ geneticElement }) => (
-    <Typography variant="h6">Debug view for {geneticElement?.id}</Typography>
+    <Typography variant='h6'>Debug view for {geneticElement?.id}</Typography>
   ),
   icon: () => <BugReportOutlined />,
 }
