@@ -299,7 +299,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     geneticElement,
   }) => {
     return (
-      <Typography variant="h6">
+      <Typography variant='h6'>
         {this.name} for {geneticElement?.id}
       </Typography>
     )

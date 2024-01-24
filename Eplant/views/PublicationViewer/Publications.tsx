@@ -38,9 +38,9 @@ const columns: GridColDef[] = [
       <>
         <Button
           href={params.value}
-          variant="outlined"
-          color="secondary"
-          size="small"
+          variant='outlined'
+          color='secondary'
+          size='small'
           target='_blank'
         >
           VIEW PAPER

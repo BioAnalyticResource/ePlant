@@ -60,7 +60,7 @@ export default function SearchBar(props: {
       options={options}
       freeSolo
       multiple
-      size="small"
+      size='small'
       disableClearable
       onInputChange={(event, value) => setInputValue(value)}
       sx={props.sx}
@@ -70,7 +70,7 @@ export default function SearchBar(props: {
         value.map((option: string, index: number) => (
           <Chip
             label={option}
-            size="small"
+            size='small'
             {...getTagProps({ index })}
             key={index}
             deleteIcon={<CloseIcon />}
@@ -85,7 +85,7 @@ export default function SearchBar(props: {
           })}
           placeholder={props.placeholder}
           label={props.label}
-          variant="outlined"
+          variant='outlined'
           {...params}
           InputProps={{
             ...InputProps,
@@ -101,7 +101,7 @@ export default function SearchBar(props: {
 
             endAdornment: (
               <InputAdornment
-                position="end"
+                position='end'
                 sx={{
                   position: 'absolute',
                   right: '4px',
@@ -123,7 +123,7 @@ export default function SearchBar(props: {
             ),
           }}
           {...params}
-          size="medium"
+          size='medium'
         />
       )}
     />

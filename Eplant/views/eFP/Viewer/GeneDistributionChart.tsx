@@ -47,45 +47,48 @@ const GeneDistributionChart = ({ data }: { data: EFPData }) => {
     >
       {geneRanking ? (
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          xmlSpace="preserve"
+          xmlns='http://www.w3.org/2000/svg'
+          xmlSpace='preserve'
           width={90}
           height={56}
-          viewBox="0 0 960 600"
+          viewBox='0 0 960 600'
         >
-          <path fill="none" stroke="red" strokeWidth={6} d={lineCoords} />
+          <path fill='none' stroke='red' strokeWidth={6} d={lineCoords} />
           <circle
             cx={xVal}
             cy={200}
             r={20}
-            fill="red"
-            stroke="red"
+            fill='red'
+            stroke='red'
             strokeWidth={6}
           />
           <path
-            fill="none"
+            fill='none'
             stroke={theme.palette.secondary.contrastText}
             strokeWidth={10}
-            d="M144 587h580"
+            d='M144 587h580'
           />
           <path
-            fill="none"
+            fill='none'
             stroke={theme.palette.secondary.contrastText}
             strokeWidth={6}
-            d="M144 579c58 0 114-1 172-1 54 0 107-1 161-2 49-1 99-2 149-6 20-1 40-2 59-10 11-4 20-8 26-21 6-11 8-23 9-36 4-32 2-68 3-102V262"
+            d='M144 579c58 0 114-1 172-1 54 0 107-1 161-2 49-1 99-2 149-6 20-1 40-2 59-10 11-4 20-8 26-21 6-11 8-23 9-36 4-32 2-68 3-102V262'
           />
         </svg>
       ) : (
         <div></div>
       )}
-      <div style={{
-        fontSize: '12px',
-        marginLeft: '11px',
-      }}> 
-      {geneRanking ? 
-        `${Math.round(parseFloat(geneRanking.percentile))}% expression level`
-        : ''
-      }
+      <div
+        style={{
+          fontSize: '12px',
+          marginLeft: '11px',
+        }}
+      >
+        {geneRanking
+          ? `${Math.round(
+              parseFloat(geneRanking.percentile),
+            )}% expression level`
+          : ''}
       </div>
     </div>
   )

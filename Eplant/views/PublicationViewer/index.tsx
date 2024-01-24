@@ -9,7 +9,6 @@ import ThumbnailLight from '../../../thumbnails/publication-viewer-light.png'
 import ThumbnailDark from '../../../thumbnails/publication-viewer.png'
 import { ViewDataError } from '@eplant/View/viewData'
 
-
 const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication viewer',
   id: 'publication-viewer',
@@ -22,15 +21,35 @@ const PublicationViewer: View<PublicationViewerData> = {
     return (
       <div>
         <Tabs value={tab} onChange={(e, val: TabValues) => setTab(val)}>
-          <Tab label="PUBLICATIONS" value="publications" />
-          <Tab label="GENE RIFS" value="geneRIFs" />
+          <Tab label='PUBLICATIONS' value='publications' />
+          <Tab label='GENE RIFS' value='geneRIFs' />
         </Tabs>
-        <div hidden={tab !== 'publications'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderRadius: theme.shape.borderRadius, borderTopLeftRadius: 0, borderColor: theme.palette.background.edgeLight}}>
+        <div
+          hidden={tab !== 'publications'}
+          style={{
+            background: theme.palette.background.paperOverlay,
+            padding: '0rem 1rem',
+            border: '1px solid',
+            borderRadius: theme.shape.borderRadius,
+            borderTopLeftRadius: 0,
+            borderColor: theme.palette.background.edgeLight,
+          }}
+        >
           {tab === 'publications' && (
             <Publications publications={activeData.publications} />
           )}
         </div>
-        <div hidden={tab !== 'geneRIFs'} style={{background: theme.palette.background.paperOverlay, padding: '0rem 1rem', border: '1px solid', borderRadius: theme.shape.borderRadius, borderTopLeftRadius: 0, borderColor: theme.palette.background.edgeLight}}>
+        <div
+          hidden={tab !== 'geneRIFs'}
+          style={{
+            background: theme.palette.background.paperOverlay,
+            padding: '0rem 1rem',
+            border: '1px solid',
+            borderRadius: theme.shape.borderRadius,
+            borderTopLeftRadius: 0,
+            borderColor: theme.palette.background.edgeLight,
+          }}
+        >
           {tab === 'geneRIFs' && <GeneRIFs geneRIFs={activeData.geneRIFs} />}
         </div>
       </div>
@@ -44,18 +63,18 @@ const PublicationViewer: View<PublicationViewerData> = {
     return (
       <div>
         Data for this view comes from NCBI{' '}
-        <Link href="ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz">
+        <Link href='ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz'>
           Gene2Pubmed
         </Link>
         . Data for Gene RIFs comes from NCBI{' '}
-        <Link href="ftp://ftp.ncbi.nih.gov/gene/GeneRIF/generifs_basic.gz">
+        <Link href='ftp://ftp.ncbi.nih.gov/gene/GeneRIF/generifs_basic.gz'>
           Gene RIFs
         </Link>
       </div>
     )
   },
   header: ({ geneticElement }) => (
-    <Typography variant="h6">
+    <Typography variant='h6'>
       Publications related to {geneticElement?.id}
     </Typography>
   ),

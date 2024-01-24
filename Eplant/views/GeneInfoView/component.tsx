@@ -14,10 +14,17 @@ import {
 import { View, ViewProps } from '../../View'
 import { useViewData } from '../../View/viewData'
 import { GeneModel } from './GeneModel'
-import { Alert, Box, Button, ButtonProps, LinearProgress, Snackbar } from '@mui/material'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import {
+  Alert,
+  Box,
+  Button,
+  ButtonProps,
+  LinearProgress,
+  Snackbar,
+} from '@mui/material'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { IconButton } from '@mui/material'
-import { setStroke } from '../eFP/Tooltips/EFPTooltip';
+import { setStroke } from '../eFP/Tooltips/EFPTooltip'
 
 const SecondaryText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -128,7 +135,7 @@ const GeneSequence = ({
   }
   return (
     <>
-      <CodeBody variant="caption">{spans}</CodeBody>
+      <CodeBody variant='caption'>{spans}</CodeBody>
     </>
   )
 }
@@ -162,7 +169,7 @@ const ViewButton = styled(function ViewButton({
           },
         })}
         value={loadingAmount * 100}
-        variant="determinate"
+        variant='determinate'
       />
       <Box
         sx={{
@@ -192,35 +199,47 @@ export default function GeneInfoViewer({
     navigator.clipboard.writeText(text)
   }
 
-
   return (
-    <Stack direction="row" gap={'20px'} >
+    <Stack direction='row' gap={'20px'}>
       <ViewSwitcher geneticElement={geneticElement} />
-      <Stack direction="column" gap={'16px'} flex={4} sx={{ background: (theme) => theme.palette.background.paperOverlay, padding: 2, borderRadius: (theme) => theme.shape.borderRadius+'px', border: '1px solid', borderColor:  (theme) => theme.palette.background.edgeLight }}>
+      <Stack
+        direction='column'
+        gap={'16px'}
+        flex={4}
+        sx={{
+          background: (theme) => theme.palette.background.paperOverlay,
+          padding: 2,
+          borderRadius: (theme) => theme.shape.borderRadius + 'px',
+          border: '1px solid',
+          borderColor: (theme) => theme.palette.background.edgeLight,
+        }}
+      >
         <div>
-          <Typography variant="h5" sx={{fontWeight: 500}}>{geneticElement.id}</Typography>
+          <Typography variant='h5' sx={{ fontWeight: 500 }}>
+            {geneticElement.id}
+          </Typography>
           <SecondaryText>{geneticElement.aliases.join(', ')}</SecondaryText>
         </div>
         <div>
-          <Typography variant="body1">Full name</Typography>
+          <Typography variant='body1'>Full name</Typography>
           <SecondaryText>{activeData.name}</SecondaryText>
         </div>
         <div>
-          <Typography variant="body1">Brief description</Typography>
+          <Typography variant='body1'>Brief description</Typography>
           <SecondaryText>{activeData.brief_description}</SecondaryText>
         </div>
         <div>
-          <Typography variant="body1">Computational description</Typography>
+          <Typography variant='body1'>Computational description</Typography>
           <SecondaryText>
             {activeData.computational_description}
           </SecondaryText>{' '}
         </div>
         <div>
-          <Typography variant="body1">Curator summary</Typography>
+          <Typography variant='body1'>Curator summary</Typography>
           <SecondaryText>{activeData.curator_summary}</SecondaryText>
         </div>
         <div>
-          <Typography variant="body1">Location & Gene model</Typography>
+          <Typography variant='body1'>Location & Gene model</Typography>
           <div>
             <SecondaryText>
               {activeData.location}: {activeData.chromosome_start} to{' '}
@@ -234,10 +253,10 @@ export default function GeneInfoViewer({
           </div>
         </div>
         <div>
-          <Typography variant="body1">DNA sequence</Typography>
+          <Typography variant='body1'>DNA sequence</Typography>
           <div>
             <div>
-              <SecondaryText variant="caption" whiteSpace={'nowrap'}>
+              <SecondaryText variant='caption' whiteSpace={'nowrap'}>
                 {'> ' + geneticElement.id}
               </SecondaryText>
             </div>
@@ -246,16 +265,18 @@ export default function GeneInfoViewer({
                 geneticElement={geneticElement}
                 activeData={activeData}
               ></GeneSequence>
-              <IconButton onClick={() => copyToClipboard(activeData.geneSequence)} color='primary' sx={{ ml: 1 }}>
+              <IconButton
+                onClick={() => copyToClipboard(activeData.geneSequence)}
+                color='primary'
+                sx={{ ml: 1 }}
+              >
                 <ContentCopyIcon />
               </IconButton>
               <Snackbar
-                anchorOrigin={
-                  {
-                    vertical: 'top',
-                    horizontal: 'center'
-                  }
-                }
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
                 open={snackBarOpen}
                 onClose={() => setSnackBarOpen(false)}
                 autoHideDuration={2000}
@@ -267,24 +288,28 @@ export default function GeneInfoViewer({
         </div>
         {activeData.geneticElementType == 'protein_coding' ? (
           <div>
-            <Typography variant="body1">Protein sequence</Typography>
+            <Typography variant='body1'>Protein sequence</Typography>
             <div>
-              <SecondaryText variant="caption" whiteSpace={'nowrap'}>
+              <SecondaryText variant='caption' whiteSpace={'nowrap'}>
                 {'> ' + geneticElement.id}
               </SecondaryText>
             </div>
             <div>
-              <CodeBody variant="caption" style={{ wordBreak: 'break-word' }}>
+              <CodeBody variant='caption' style={{ wordBreak: 'break-word' }}>
                 {activeData.proteinSequence}
               </CodeBody>
-              <IconButton onClick={() => copyToClipboard(activeData.proteinSequence)} color='primary' sx={{ ml: 1 }}>
+              <IconButton
+                onClick={() => copyToClipboard(activeData.proteinSequence)}
+                color='primary'
+                sx={{ ml: 1 }}
+              >
                 <ContentCopyIcon />
               </IconButton>
             </div>
           </div>
         ) : undefined}
       </Stack>
-    </Stack >
+    </Stack>
   )
 }
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
@@ -305,12 +330,12 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
           whiteSpace: 'nowrap',
         }}
       >
-        <Typography variant="body2" color="secondary">
+        <Typography variant='body2' color='secondary'>
           Available views
         </Typography>
         {userViews.map((view) => (
           <ViewButton
-            color="secondary"
+            color='secondary'
             sx={{
               textAlign: 'left',
               justifyContent: 'flex-start',

@@ -42,7 +42,7 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
         height / 2 + 5
       } ${width - margin - 10},${height / 2 - 5}`}
       fill={theme.palette.grey[500]}
-      stroke="none"
+      stroke='none'
     ></polyline>
   )
 
@@ -52,11 +52,11 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
         margin + 10
       },${height / 2 - 5}`}
       fill={theme.palette.grey[500]}
-      stroke="none"
+      stroke='none'
     ></polyline>
   )
   return (
-    <Stack direction={'row'} spacing={3} alignItems="center">
+    <Stack direction={'row'} spacing={3} alignItems='center'>
       <Typography variant={'body1'}>{feature.uniqueID}</Typography>
       <div ref={ref} style={{ padding: 0, margin: 0, width: '100%' }}>
         <svg
@@ -72,7 +72,7 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
             y={height / 2 - 1}
             // Subtract a bit from width because there are arrows at the end
             width={Math.max(width - 2 * margin - 4, 0)}
-            stroke="none"
+            stroke='none'
             height={2}
             fill={theme.palette.grey[500]}
           ></rect>
@@ -110,8 +110,8 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
                 <Tooltip
                   key={sf.uniqueID}
                   title={
-                    <Stack direction="column" spacing={1}>
-                      <Typography variant="subtitle1">{sf.type}</Typography>
+                    <Stack direction='column' spacing={1}>
+                      <Typography variant='subtitle1'>{sf.type}</Typography>
                       <div>Start: {sf.start}</div>
                       <div>End: {sf.end}</div>
                       <div>Strand: {sf.strand}</div>
@@ -125,7 +125,7 @@ export const GeneModel = ({ feature, margin }: GeneModelProps) => {
                     y={height / 2 - h / 2}
                     height={h}
                     fill={color}
-                    stroke="none"
+                    stroke='none'
                   ></rect>
                 </Tooltip>
               )
