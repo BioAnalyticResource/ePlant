@@ -12,7 +12,7 @@ import {
 export type EplantProps = Record<string, never>
 export default function Eplant() {
   const { rootPath } = useConfig()
-  const [darkMode, setDarkMode] = useDarkMode()
+  const [darkMode] = useDarkMode()
 
   return (
     <ThemeProvider theme={darkMode ? dark : light}>
