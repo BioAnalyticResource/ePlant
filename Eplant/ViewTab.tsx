@@ -6,7 +6,7 @@ import {
   ViewIDContext,
   useActiveId,
   useGeneticElements,
-  usePanes
+  usePanes,
 } from './state'
 import FallbackView from './views/FallbackView'
 

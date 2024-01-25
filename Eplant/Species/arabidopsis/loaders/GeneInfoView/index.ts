@@ -25,7 +25,10 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
     axios
       .get<{
         features: GeneFeature[]
-      }>(`https://bar.utoronto.ca/webservices/bar_araport/` + `gene_structure_by_locus.php?locus=${geneticElement.id}`)
+      }>(
+        `https://bar.utoronto.ca/webservices/bar_araport/` +
+          `gene_structure_by_locus.php?locus=${geneticElement.id}`,
+      )
       .then((d) => {
         loaded++
         loadEvent(loaded / 4)

@@ -14,7 +14,7 @@ export default function Eplant() {
 
   return (
     <ThemeProvider theme={darkMode ? dark : light}>
-      <CssBaseline/>
+      <CssBaseline />
       <Routes>
         <Route path={rootPath}>
           <Route index element={<MainEplant />} />
