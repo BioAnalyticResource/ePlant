@@ -1,19 +1,7 @@
-import { useRef, useEffect } from 'react'
-import {
-  usePanes,
-  useActiveId,
-  useModel,
-  usePageLoad,
-  getPaneName,
-  storage,
-} from './state'
 import { Add, CallMade, Close } from '@mui/icons-material'
-import { sidebarWidth } from './UI/Sidebar'
-import { useConfig } from './config'
-import { useTheme } from '@mui/material/styles'
-import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
-import * as FlexLayout from 'flexlayout-react'
 import { Box, CircularProgress, IconButton } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+import * as FlexLayout from 'flexlayout-react'
 import {
   Actions,
   BorderNode,
@@ -21,8 +9,20 @@ import {
   Layout,
   TabSetNode,
 } from 'flexlayout-react'
-import { updateColors } from './updateColors'
+import { useEffect, useRef } from 'react'
+import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
+import { sidebarWidth } from './UI/Sidebar'
 import ViewTab from './ViewTab'
+import { useConfig } from './config'
+import {
+  getPaneName,
+  storage,
+  useActiveId,
+  useModel,
+  usePageLoad,
+  usePanes,
+} from './state'
+import { updateColors } from './updateColors'
 
 const EplantLayout = () => {
   const [panes, panesDispatch] = usePanes()

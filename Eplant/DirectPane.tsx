@@ -1,11 +1,11 @@
 import { CallReceived } from '@mui/icons-material'
-import { usePanes, useActiveId, useModel, usePageLoad } from './state'
-import ViewTab from './ViewTab'
 import { Box, CircularProgress, IconButton } from '@mui/material'
-import { useSearchParams } from 'react-router-dom'
 import { useTheme } from '@mui/material/styles'
 import { useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import ViewTab from './ViewTab'
 import { useConfig } from './config'
+import { useActiveId, useModel, usePageLoad, usePanes } from './state'
 import { updateColors } from './updateColors'
 /**
  * Directly render a pane based on its id
