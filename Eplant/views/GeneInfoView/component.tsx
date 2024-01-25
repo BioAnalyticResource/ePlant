@@ -298,12 +298,11 @@ export default function GeneInfoViewer({
                 {activeData.proteinSequence}
               </CodeBody>
               <IconButton
-                onClick={() =>{ 
-                    if(activeData.proteinSequence){ 
-                      copyToClipboard(activeData.proteinSequence)
-                    }
+                onClick={() => {
+                  if (activeData.proteinSequence) {
+                    copyToClipboard(activeData.proteinSequence)
                   }
-                }
+                }}
                 color='primary'
                 sx={{ ml: 1 }}
               >

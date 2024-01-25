@@ -16,20 +16,18 @@ const loader: View<PublicationViewerData>['getInitialData'] = async (
 
   const [publications, geneRIFs] = await Promise.all([
     axios
-      .get<{ result: PublicationData[] }>(
-        `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `publications_by_locus.php?locus=${geneticElement.id}`,
-      )
+      .get<{
+        result: PublicationData[]
+      }>(`https://bar.utoronto.ca/webservices/bar_araport/` + `publications_by_locus.php?locus=${geneticElement.id}`)
       .then((d) => {
         loaded++
         loadEvent(loaded / 2)
         return d.data.result
       }),
     axios
-      .get<{ result: GeneRIFsData[] }>(
-        `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `generifs_by_locus.php?locus=${geneticElement.id}`,
-      )
+      .get<{
+        result: GeneRIFsData[]
+      }>(`https://bar.utoronto.ca/webservices/bar_araport/` + `generifs_by_locus.php?locus=${geneticElement.id}`)
       .then((d) => {
         loaded++
         loadEvent(loaded / 2)

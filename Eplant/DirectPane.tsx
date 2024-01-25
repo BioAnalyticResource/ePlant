@@ -1,19 +1,10 @@
 import { CallReceived } from '@mui/icons-material'
-import {
-  usePanes,
-  useActiveId,
-  useModel,
-  usePageLoad,
-} from './state'
+import { usePanes, useActiveId, useModel, usePageLoad } from './state'
 import ViewTab from './ViewTab'
-import {
-  Box,
-  CircularProgress,
-  IconButton,
-} from '@mui/material'
+import { Box, CircularProgress, IconButton } from '@mui/material'
 import { useSearchParams } from 'react-router-dom'
 import { useTheme } from '@mui/material/styles'
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 import { useConfig } from './config'
 import { updateColors } from './updateColors'
 /**
@@ -38,7 +29,7 @@ function DirectPane() {
 
   return loaded ? (
     <div
-      className="flexlayout__layout"
+      className='flexlayout__layout'
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -55,8 +46,8 @@ function DirectPane() {
         }}
         className={id == activeId ? 'flexlayout__tabset-selected' : ''}
       >
-        <div className="flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected">
-          <div className="flexlayout__tab-content">
+        <div className='flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected'>
+          <div className='flexlayout__tab-content'>
             {panes[id]?.activeGene ? panes[id]?.activeGene + ' - ' : ''}
             {views.find((v) => v.id == panes[id]?.view)?.name}
           </div>

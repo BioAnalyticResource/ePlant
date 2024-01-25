@@ -1,16 +1,19 @@
 import { useRef, useEffect } from 'react'
-import { usePanes, useActiveId, useModel, usePageLoad, getPaneName, storage} from './state'
+import {
+  usePanes,
+  useActiveId,
+  useModel,
+  usePageLoad,
+  getPaneName,
+  storage,
+} from './state'
 import { Add, CallMade, Close } from '@mui/icons-material'
 import { sidebarWidth } from './UI/Sidebar'
 import { useConfig } from './config'
 import { useTheme } from '@mui/material/styles'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import * as FlexLayout from 'flexlayout-react'
-import {
-  Box,
-  CircularProgress,
-  IconButton,
-} from '@mui/material'
+import { Box, CircularProgress, IconButton } from '@mui/material'
 import {
   Actions,
   BorderNode,
@@ -20,7 +23,6 @@ import {
 } from 'flexlayout-react'
 import { updateColors } from './updateColors'
 import ViewTab from './ViewTab'
-
 
 const EplantLayout = () => {
   const [panes, panesDispatch] = usePanes()
@@ -163,7 +165,7 @@ const EplantLayout = () => {
         component: 'view',
         id,
         type: 'tab',
-      }
+      },
     )
   }
 
@@ -182,7 +184,7 @@ const EplantLayout = () => {
 
   function onRenderTabSet(
     node: TabSetNode | BorderNode,
-    renderValues: ITabSetRenderValues
+    renderValues: ITabSetRenderValues,
   ) {
     if (node.getChildren().length == 0) return
     renderValues.stickyButtons.push(
@@ -192,7 +194,7 @@ const EplantLayout = () => {
         key='add-tab'
       >
         <Add />
-      </IconButton>
+      </IconButton>,
     )
     renderValues.buttons.push(
       <IconButton
@@ -204,13 +206,11 @@ const EplantLayout = () => {
         key='make-popout'
       >
         <CallMade />
-      </IconButton>
+      </IconButton>,
     )
   }
 }
-export default EplantLayout;
-
-
+export default EplantLayout
 
 /**
  * The flexlayout factory is a function that takes a layout node and returns the React component that should be rendered there.
@@ -220,7 +220,7 @@ export default EplantLayout;
  */
 const factory: (
   node: FlexLayout.TabNode,
-  model: FlexLayout.Model
+  model: FlexLayout.Model,
 ) => JSX.Element | undefined = (node, model) => {
   const id = node.getId() as string
   return (

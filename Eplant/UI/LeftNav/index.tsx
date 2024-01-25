@@ -1,5 +1,10 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { useActiveId, useDarkMode, useGeneticElements, usePanesDispatch } from '@eplant/state'
+import {
+  useActiveId,
+  useDarkMode,
+  useGeneticElements,
+  usePanesDispatch,
+} from '@eplant/state'
 import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import _ from 'lodash'

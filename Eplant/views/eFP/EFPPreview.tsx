@@ -1,12 +1,12 @@
 import GeneticElement from '@eplant/GeneticElement'
+import { Box, styled, BoxProps, Typography, Skeleton } from '@mui/material'
 import {
-  Box,
-  styled,
-  BoxProps,
-  Typography,
-  Skeleton,
-} from '@mui/material'
-import {useMemo, useState, useEffect, useDeferredValue, startTransition} from 'react'
+  useMemo,
+  useState,
+  useEffect,
+  useDeferredValue,
+  startTransition,
+} from 'react'
 import EFP from '.'
 import { EFPData } from './types'
 

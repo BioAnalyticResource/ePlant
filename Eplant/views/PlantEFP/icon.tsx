@@ -12,7 +12,7 @@ export default styled((props) => {
     </svg>
   )
 })(({ theme }) => ({
-  fill: theme.palette.text.primary
+  fill: theme.palette.text.primary,
 }))
 
 // This icon is used in the dropdown view selection menu
