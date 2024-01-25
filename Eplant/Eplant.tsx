@@ -21,7 +21,6 @@ export default function Eplant() {
         <Route path={rootPath}>
           <Route index element={<MainEplant />} />
           <Route path='pane' element={<DirectPane />} />
-          <Route path='pane' element={<DirectPane />} />
         </Route>
       </Routes>
     </ThemeProvider>
