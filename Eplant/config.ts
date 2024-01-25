@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { type View } from './View'
 
 export type EplantConfig = {

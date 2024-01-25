@@ -1,16 +1,5 @@
-import { useRef, useEffect } from 'react'
-import { usePanes, useActiveId, useModel, usePageLoad, getPaneName, storage} from './state'
-import { Add, CallMade, Close } from '@mui/icons-material'
-import { sidebarWidth } from './UI/Sidebar'
-import { useConfig } from './config'
-import { useTheme } from '@mui/material/styles'
-import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
+import { useEffect, useRef } from 'react'
 import * as FlexLayout from 'flexlayout-react'
-import {
-  Box,
-  CircularProgress,
-  IconButton,
-} from '@mui/material'
 import {
   Actions,
   BorderNode,
@@ -18,9 +7,24 @@ import {
   Layout,
   TabSetNode,
 } from 'flexlayout-react'
+
+import { Add, CallMade, Close } from '@mui/icons-material'
+import { Box, CircularProgress, IconButton } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+
+import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
+import { sidebarWidth } from './UI/Sidebar'
+import { useConfig } from './config'
+import {
+  getPaneName,
+  storage,
+  useActiveId,
+  useModel,
+  usePageLoad,
+  usePanes,
+} from './state'
 import { updateColors } from './updateColors'
 import ViewTab from './ViewTab'
-
 
 const EplantLayout = () => {
   const [panes, panesDispatch] = usePanes()
@@ -208,9 +212,7 @@ const EplantLayout = () => {
     )
   }
 }
-export default EplantLayout;
-
-
+export default EplantLayout
 
 /**
  * The flexlayout factory is a function that takes a layout node and returns the React component that should be rendered there.

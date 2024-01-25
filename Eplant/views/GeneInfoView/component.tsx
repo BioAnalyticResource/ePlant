@@ -1,5 +1,8 @@
-import GeneticElement from '@eplant/GeneticElement'
+import React from 'react'
+import _ from 'lodash'
+
 import { useConfig } from '@eplant/config'
+import GeneticElement from '@eplant/GeneticElement'
 import { usePanesDispatch, useViewID } from '@eplant/state'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import {
@@ -12,12 +15,12 @@ import {
   Snackbar,
 } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import { styled, useTheme } from '@mui/material/styles'
-import _ from 'lodash'
-import React from 'react'
+import Typography from '@mui/material/Typography'
+
 import { View, ViewProps } from '../../View'
 import { useViewData } from '../../View/viewData'
+
 import { GeneModel } from './GeneModel'
 import {
   GeneInfoViewAction,
@@ -44,7 +47,7 @@ const GeneSequence = ({
   const theme = useTheme()
   const spans = []
   const feature = activeData.features.find(
-    (sf) => sf.uniqueID == geneticElement.id + '.1',
+    (sf) => sf.uniqueID == geneticElement.id + '.1'
   )
   // Can't render anything if there is no feature
   if (!feature) return <></>
@@ -66,8 +69,7 @@ const GeneSequence = ({
 
     features
       .filter(
-        (sf: any) =>
-          sf.type == 'five_prime_UTR' || sf.type == 'three_prime_UTR',
+        (sf: any) => sf.type == 'five_prime_UTR' || sf.type == 'three_prime_UTR'
       )
       .map((a: any) => {
         if (
@@ -125,7 +127,7 @@ const GeneSequence = ({
       spans.push(
         <span style={prevStyle} key={spans.length}>
           {str}
-        </span>,
+        </span>
       )
       str = ''
     }
@@ -146,7 +148,7 @@ const ViewButton = styled(function ViewButton({
 }: { geneticElement: GeneticElement; view: View } & ButtonProps) {
   const { loading, error, loadingAmount, activeData } = useViewData(
     view,
-    geneticElement,
+    geneticElement
   )
   return (
     <Button {...props} disabled={!!error || activeData === undefined}>
@@ -298,12 +300,11 @@ export default function GeneInfoViewer({
                 {activeData.proteinSequence}
               </CodeBody>
               <IconButton
-                onClick={() =>{ 
-                    if(activeData.proteinSequence){ 
-                      copyToClipboard(activeData.proteinSequence)
-                    }
+                onClick={() => {
+                  if (activeData.proteinSequence) {
+                    copyToClipboard(activeData.proteinSequence)
                   }
-                }
+                }}
                 color='primary'
                 sx={{ ml: 1 }}
               >

@@ -1,12 +1,3 @@
-import GeneticElement from '@eplant/GeneticElement'
-import Dropdown from '@eplant/UI/Dropdown'
-import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
-import { View, ViewProps } from '@eplant/View'
-import { ViewDataError } from '@eplant/View/viewData'
-import PanZoom from '@eplant/util/PanZoom'
-import { getCitation } from '@eplant/util/citations'
-import useDimensions from '@eplant/util/useDimensions'
-import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
 import {
   memo,
   startTransition,
@@ -16,17 +7,29 @@ import {
   useState,
 } from 'react'
 import {
+  areEqual,
   FixedSizeList as List,
   ListChildComponentProps,
-  areEqual,
 } from 'react-window'
-import EFP from '..'
+
+import GeneticElement from '@eplant/GeneticElement'
+import Dropdown from '@eplant/UI/Dropdown'
+import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
+import { getCitation } from '@eplant/util/citations'
+import PanZoom from '@eplant/util/PanZoom'
+import useDimensions from '@eplant/util/useDimensions'
+import { View, ViewProps } from '@eplant/View'
+import { ViewDataError } from '@eplant/View/viewData'
+import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
+
 import EFPPreview from '../EFPPreview'
 import { EFPData } from '../types'
+import EFP from '..'
+
 import EFPViewerCitation from './EFPViewerCitation'
 import GeneDistributionChart from './GeneDistributionChart'
-import MaskModal from './MaskModal'
 import Legend from './legend'
+import MaskModal from './MaskModal'
 import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
 
 type EFPListProps = {
@@ -87,7 +90,7 @@ const EFPListItem = memo(
       prev.data.activeView === next.data.activeView &&
       prev.index == next.index
     )
-  },
+  }
 )
 
 const EFPListRow = memo(function EFPListRow({
@@ -121,7 +124,7 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
 }
 
 export default class EFPViewer
-implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
+  implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
 {
   getInitialState(): EFPViewerState {
     return {
@@ -146,11 +149,11 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
     public efps: EFP[],
     public icon: () => JSX.Element,
     public description?: string,
-    public thumbnail?: string,
+    public thumbnail?: string
   ) {}
   getInitialData = async (
     gene: GeneticElement | null,
-    loadEvent: (progress: number) => void,
+    loadEvent: (progress: number) => void
   ) => {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     // Load all the views
@@ -166,7 +169,7 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
         })
         loadingProgress[i] = 1
         return data
-      }),
+      })
     )
     return {
       activeView: this.views[0].id,
@@ -182,39 +185,39 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
   }
   reducer = (state: EFPViewerState, action: EFPViewerAction) => {
     switch (action.type) {
-    case 'set-view':
-      return {
-        ...state,
-        activeView: action.id,
-      }
-    case 'sort-by':
-      return {
-        ...state,
-        sortBy: action.by,
-      }
-    case 'reset-transform':
-      return {
-        ...state,
-        transform: {
-          offset: { x: 0, y: 0 },
-          zoom: 1,
-        },
-      }
-    case 'set-transform':
-      return {
-        ...state,
-        transform: action.transform,
-      }
-    case 'toggle-color-mode':
-      return {
-        ...state,
-        colorMode:
+      case 'set-view':
+        return {
+          ...state,
+          activeView: action.id,
+        }
+      case 'sort-by':
+        return {
+          ...state,
+          sortBy: action.by,
+        }
+      case 'reset-transform':
+        return {
+          ...state,
+          transform: {
+            offset: { x: 0, y: 0 },
+            zoom: 1,
+          },
+        }
+      case 'set-transform':
+        return {
+          ...state,
+          transform: action.transform,
+        }
+      case 'toggle-color-mode':
+        return {
+          ...state,
+          colorMode:
             state.colorMode == 'absolute'
               ? ('relative' as const)
               : ('absolute' as const),
-      }
-    default:
-      return state
+        }
+      default:
+        return state
     }
   }
   component = ({
@@ -237,7 +240,7 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
 
     let activeViewIndex = useMemo(
       () => sortedEfps.findIndex((v) => v.id == state.activeView),
-      [state.activeView, ...sortedEfps.map((v) => v.id)],
+      [state.activeView, ...sortedEfps.map((v) => v.id)]
     )
     if (activeViewIndex == -1) {
       activeViewIndex = 0
@@ -462,7 +465,7 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
     },
   ]
   header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
-    props,
+    props
   ) => (
     <Typography variant='h6'>
       {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}
@@ -497,7 +500,7 @@ implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
           const xmlDoc = parser.parseFromString(xmlString, 'text/xml')
           const listItems = xmlDoc.querySelectorAll('info li')
           const itemsArray = Array.from(listItems).map((liElement) =>
-            liElement.textContent ? liElement.textContent : '',
+            liElement.textContent ? liElement.textContent : ''
           )
           setXMLData(itemsArray)
         } else {

@@ -1,10 +1,18 @@
+import * as React from 'react'
+import _ from 'lodash'
+
 import GeneticElement from '@eplant/GeneticElement'
-import { useActiveId, useDarkMode, useGeneticElements, usePanesDispatch } from '@eplant/state'
+import {
+  useActiveId,
+  useDarkMode,
+  useGeneticElements,
+  usePanesDispatch,
+} from '@eplant/state'
 import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import _ from 'lodash'
-import * as React from 'react'
+
 import { LogoWithText } from '../Logo'
+
 import { Collections } from './Collections'
 import { SearchGroup } from './GeneSearch'
 
@@ -37,11 +45,11 @@ export function LeftNav(props: {
             geneticElements.concat(
               _.uniqBy(
                 s.filter(
-                  (g) => !geneticElements.find((gene) => g.id == gene.id),
+                  (g) => !geneticElements.find((gene) => g.id == gene.id)
                 ),
-                (a) => a.id,
-              ),
-            ),
+                (a) => a.id
+              )
+            )
           )
           if (s.length > 0) {
             panesDispatch({

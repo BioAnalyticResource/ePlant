@@ -1,17 +1,19 @@
-import GeneticElement from '@eplant/GeneticElement'
 import {
-  Box,
-  styled,
-  BoxProps,
-  Typography,
-  Skeleton,
-} from '@mui/material'
-import {useMemo, useState, useEffect, useDeferredValue, startTransition} from 'react'
-import EFP from '.'
+  startTransition,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+
+import GeneticElement from '@eplant/GeneticElement'
+import { Box, BoxProps, Skeleton, styled, Typography } from '@mui/material'
+
 import { EFPData } from './types'
+import EFP from '.'
 
 const EFPPreviewContainer = styled(
-  (props: BoxProps & { selected: boolean }) => <Box {...props} />,
+  (props: BoxProps & { selected: boolean }) => <Box {...props} />
 )(({ theme, selected }) => ({
   border: selected
     ? `2px solid ${theme.palette.primary.main}`

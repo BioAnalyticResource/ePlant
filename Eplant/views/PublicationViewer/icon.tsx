@@ -1,5 +1,6 @@
-import { styled } from '@mui/material'
 import * as React from 'react'
+
+import { styled } from '@mui/material'
 export default styled(function PublicationViewerIcon(props) {
   return (
     <svg

@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { Stack, Typography, useTheme } from '@mui/material'
 import { SVGProps } from 'react'
+
+import { Stack, Typography, useTheme } from '@mui/material'
 
 /**
  * The BAR logo in ePlant.

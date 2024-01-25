@@ -1,8 +1,9 @@
+import React from 'react'
+
 import GeneticElement from '@eplant/GeneticElement'
+import Dropdown from '@eplant/UI/Dropdown'
 import { View, ViewDispatch } from '@eplant/View'
 import { MenuItem } from '@mui/material'
-import React from 'react'
-import Dropdown from '@eplant/UI/Dropdown'
 
 export default function ViewOptions<T, S, A>({
   view,

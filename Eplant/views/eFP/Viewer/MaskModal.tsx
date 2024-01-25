@@ -1,4 +1,6 @@
 // Import necessary dependencies from Material-UI
+import { useState } from 'react'
+
 import {
   Button,
   DialogTitle,
@@ -7,7 +9,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { useState } from 'react'
+
 import { EFPViewerState } from './types'
 
 // Modal component with a slider

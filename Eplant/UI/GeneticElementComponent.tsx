@@ -1,3 +1,5 @@
+import React, { useEffect, useId, useRef, useState } from 'react'
+
 import GeneticElement from '@eplant/GeneticElement'
 import { DragIndicator } from '@mui/icons-material'
 import {
@@ -13,7 +15,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import React, { useEffect, useId, useRef, useState } from 'react'
+
 import OptionsButton from './OptionsButton'
 
 /**

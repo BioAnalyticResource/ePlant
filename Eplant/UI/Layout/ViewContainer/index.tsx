@@ -1,10 +1,12 @@
+import * as React from 'react'
+
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { usePrinting, useViewID } from '@eplant/state'
-
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
+import { useViewData } from '@eplant/View/viewData'
 import {
   AppBar,
   Button,
@@ -21,9 +23,8 @@ import {
 } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
 
-import * as React from 'react'
 import { View } from '../../../View'
-import { useViewData } from '@eplant/View/viewData'
+
 import LoadingPage from './LoadingPage'
 import ViewOptions from './ViewOptions'
 
@@ -225,7 +226,7 @@ export function ViewContainer<T, S, A>({
             onClick={() => {
               downloadFile(
                 `${view.id}${gene ? '-' + gene.id : ''}.json`,
-                JSON.stringify(activeData, null, 2),
+                JSON.stringify(activeData, null, 2)
               )
             }}
           >
@@ -234,7 +235,7 @@ export function ViewContainer<T, S, A>({
         </Toolbar>
       </AppBar>
     ),
-    [view.id, gene?.id, loading, activeData, state, dispatch],
+    [view.id, gene?.id, loading, activeData, state, dispatch]
   )
   return (
     <Box {...props} display='flex' flexDirection='column'>

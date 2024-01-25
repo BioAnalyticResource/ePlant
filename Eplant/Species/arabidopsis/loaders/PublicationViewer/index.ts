@@ -1,14 +1,15 @@
 import axios from 'axios'
+
+import { View } from '@eplant/View'
 import {
-  PublicationData,
   GeneRIFsData,
+  PublicationData,
   PublicationViewerData,
 } from '@eplant/views/PublicationViewer/types'
-import { View } from '@eplant/View'
 
 const loader: View<PublicationViewerData>['getInitialData'] = async (
   geneticElement,
-  loadEvent,
+  loadEvent
 ) => {
   if (!geneticElement)
     throw new TypeError('A gene must be provided for the publication viewer')
@@ -16,9 +17,11 @@ const loader: View<PublicationViewerData>['getInitialData'] = async (
 
   const [publications, geneRIFs] = await Promise.all([
     axios
-      .get<{ result: PublicationData[] }>(
+      .get<{
+        result: PublicationData[]
+      }>(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `publications_by_locus.php?locus=${geneticElement.id}`,
+          `publications_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {
         loaded++
@@ -26,9 +29,11 @@ const loader: View<PublicationViewerData>['getInitialData'] = async (
         return d.data.result
       }),
     axios
-      .get<{ result: GeneRIFsData[] }>(
+      .get<{
+        result: GeneRIFsData[]
+      }>(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `generifs_by_locus.php?locus=${geneticElement.id}`,
+          `generifs_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {
         loaded++

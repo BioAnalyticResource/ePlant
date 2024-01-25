@@ -1,10 +1,12 @@
 import React from 'react'
+
+import Thumbnail from '../../../thumbnails/plant_efp.png'
 import EFP from '../eFP'
 import EFPViewer from '../eFP/Viewer'
-import CellEFPIcon from './icon'
-import Thumbnail from '../../../thumbnails/plant_efp.png'
 import { EFPViewerData } from '../eFP/Viewer/types'
 import { makeCellEfps } from '../eFP/Viewer/util'
+
+import CellEFPIcon from './icon'
 
 const views: EFPViewerData['views'] = [
   {
@@ -23,5 +25,5 @@ export default new EFPViewer(
   efps,
   () => <CellEFPIcon />,
   'Visualize gene expression over time on a developmental map.',
-  Thumbnail,
+  Thumbnail
 )

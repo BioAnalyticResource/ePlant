@@ -1,9 +1,11 @@
-import GeneticElement from '@eplant/GeneticElement'
-import { atom, useAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
-import { View, ViewDispatch } from './index'
-import Storage from '@eplant/util/Storage'
+import { atom, useAtom, WritableAtom } from 'jotai'
+
+import GeneticElement from '@eplant/GeneticElement'
 import { atomWithStorage, useViewID } from '@eplant/state'
+import Storage from '@eplant/util/Storage'
+
+import { View, ViewDispatch } from './index'
 
 export enum ViewDataError {
   UNSUPPORTED_GENE = 'Unsupported gene',
@@ -18,7 +20,7 @@ type ViewDataType<T> = {
 }
 
 export const viewDataStorage = new Storage<string, ViewDataType<unknown>>(
-  'view-data',
+  'view-data'
 )
 export const viewStateStorage = new Storage<string, unknown>('view-state')
 
@@ -81,7 +83,7 @@ export function getViewDataKey(viewId: string, gene: GeneticElement | null) {
 
 export function useViewData<T, S, A>(
   view: View<T, S, A>,
-  gene: GeneticElement | null,
+  gene: GeneticElement | null
 ): UseViewDataType<T, S, A> {
   const key = getViewDataKey(view.id, gene)
   const id = (view?.id ?? 'generic-view') + '-' + useViewID()
@@ -147,10 +149,10 @@ export function useViewData<T, S, A>(
       setViewState((viewState: S) =>
         view.reducer && viewState !== undefined
           ? view.reducer(viewState, action)
-          : viewState,
+          : viewState
       )
     },
-    [setViewState, view.id, id],
+    [setViewState, view.id, id]
   )
 
   // Reset viewData when the key changes

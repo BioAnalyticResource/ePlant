@@ -1,3 +1,5 @@
+import React from 'react'
+
 import {
   Box,
   Grow,
@@ -8,13 +10,13 @@ import {
   TableRow,
   useTheme,
 } from '@mui/material'
-import React from 'react'
-import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
+
+import { EFPData, EFPGroup, EFPState, EFPTissue } from '../types'
 
 export const setStroke = (
   el: Element | null,
   colour: string,
-  width: string,
+  width: string
 ) => {
   // For multigroup SVGs, recursively sets stroke of all path elements
   if (el) {
@@ -120,13 +122,13 @@ function SVGTooltip(props: {
                 <KeyValueRow
                   label='Level'
                   value={`${props.tissue.mean.toFixed(
-                    2,
+                    2
                   )}±${props.tissue.std.toFixed(2)}`}
                 />
                 <KeyValueRow
                   label='Log2 fold change vs control'
                   value={Math.log2(
-                    props.tissue.mean / (props.data.control ?? 1),
+                    props.tissue.mean / (props.data.control ?? 1)
                   ).toFixed(2)}
                 />
               </TableBody>

@@ -1,5 +1,6 @@
+import React, { SetStateAction, useEffect, useState } from 'react'
+
 import { storage, usePersist } from '@eplant/state'
-import React, { SetStateAction, useState, useEffect } from 'react'
 
 /**
  * A a hook like `useState` that stores the state in local storage.
@@ -13,7 +14,7 @@ export default function useStateWithStorage<T>(
   key: string,
   initial: T,
   serialize: (val: T) => string = JSON.stringify,
-  deserialize: (val: string) => T = JSON.parse,
+  deserialize: (val: string) => T = JSON.parse
 ): [T, (a: SetStateAction<T>) => void, boolean] {
   const persist = usePersist()[0]
   const [val, setVal] = useState<T>(initial)

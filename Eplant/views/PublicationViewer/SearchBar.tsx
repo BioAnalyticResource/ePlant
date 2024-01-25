@@ -1,5 +1,6 @@
-import { GridToolbarQuickFilter } from '@mui/x-data-grid'
 import * as React from 'react'
+
+import { GridToolbarQuickFilter } from '@mui/x-data-grid'
 
 export const SearchBar = () => {
   return (

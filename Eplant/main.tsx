@@ -1,12 +1,8 @@
-import { Provider } from 'jotai'
 import * as React from 'react'
+import { Provider } from 'jotai'
 import * as ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import Eplant from './Eplant'
-import './css/flexlayout.css'
-import './css/index.css'
 
-import { Config } from './config'
 import CellEFP from './views/CellEFP'
 import DebugView from './views/DebugView'
 import ExperimentEFP from './views/ExperimentEFP'
@@ -15,6 +11,11 @@ import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
+import { Config } from './config'
+import Eplant from './Eplant'
+
+import './css/flexlayout.css'
+import './css/index.css'
 
 // Views that aren't associated with individual genes
 const genericViews = [GetStartedView, FallbackView]
@@ -57,14 +58,14 @@ function RootApp() {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <RootApp />,
+  <RootApp />
 )
 
 const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register(
-        import.meta.env.BASE_URL + '/sw.js',
+        import.meta.env.BASE_URL + '/sw.js'
       )
       if (registration.installing) {
         // console.log('Service worker installing')

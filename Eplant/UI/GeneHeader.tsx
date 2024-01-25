@@ -1,6 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { Box, Divider, Typography } from '@mui/material'
-import * as React from 'react'
 
 export default function GeneHeader({
   geneticElement,

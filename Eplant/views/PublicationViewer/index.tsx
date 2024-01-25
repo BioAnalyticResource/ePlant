@@ -1,13 +1,16 @@
-import { Link, Tab, Tabs, Typography, Theme, useTheme } from '@mui/material'
 import * as React from 'react'
+
+import { ViewDataError } from '@eplant/View/viewData'
+import { Link, Tab, Tabs, Theme, Typography, useTheme } from '@mui/material'
+
+import ThumbnailDark from '../../../thumbnails/publication-viewer.png'
+import ThumbnailLight from '../../../thumbnails/publication-viewer-light.png'
 import { View, ViewProps } from '../../View'
+
 import { GeneRIFs } from './GeneRIFs'
+import PublicationViewerIcon from './icon'
 import { Publications } from './Publications'
 import { PublicationViewerData, TabValues } from './types'
-import PublicationViewerIcon from './icon'
-import ThumbnailLight from '../../../thumbnails/publication-viewer-light.png'
-import ThumbnailDark from '../../../thumbnails/publication-viewer.png'
-import { ViewDataError } from '@eplant/View/viewData'
 
 const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication viewer',

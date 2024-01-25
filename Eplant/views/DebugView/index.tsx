@@ -1,4 +1,7 @@
+import React from 'react'
+
 import { useViewID } from '@eplant/state'
+import { viewDataStorage, viewStateStorage } from '@eplant/View/viewData'
 import { BugReportOutlined } from '@mui/icons-material'
 import {
   Button,
@@ -9,9 +12,8 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import React from 'react'
+
 import { View } from '../../View'
-import { viewDataStorage, viewStateStorage } from '@eplant/View/viewData'
 
 type DebugViewState = {
   testToggle: boolean

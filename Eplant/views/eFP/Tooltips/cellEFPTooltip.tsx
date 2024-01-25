@@ -1,15 +1,18 @@
+import React from 'react'
+
 import {
-  Popper,
-  Grow,
   Box,
+  Grow,
+  Popper,
   Table,
   TableBody,
-  TableRow,
   TableCell,
+  TableRow,
   useTheme,
 } from '@mui/material'
-import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
-import React from 'react'
+
+import { EFPData, EFPGroup, EFPState, EFPTissue } from '../types'
+
 import { setStroke } from './EFPTooltip'
 
 function CellSVGTooltip(props: {

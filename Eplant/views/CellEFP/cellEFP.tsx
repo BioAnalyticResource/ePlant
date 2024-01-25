@@ -1,10 +1,12 @@
+import React from 'react'
+import _ from 'lodash'
+
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewDataError } from '@eplant/View/viewData'
+
 import EFP, { getEFPSampleData } from '../eFP'
-import _ from 'lodash'
-import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../eFP/types'
-import React from 'react'
 import CellSVGTooltip from '../eFP/Tooltips/cellEFPTooltip'
+import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../eFP/types'
 
 export default class CellEFP extends EFP {
   tooltipComponent: (props: {
@@ -18,7 +20,7 @@ export default class CellEFP extends EFP {
     public name: string,
     public id: EFPId,
     public svgURL: string,
-    public xmlURL: string,
+    public xmlURL: string
   ) {
     super(name, id, svgURL, xmlURL)
     this.tooltipComponent = CellSVGTooltip
@@ -26,12 +28,12 @@ export default class CellEFP extends EFP {
 
   getInitialData = async (
     gene: GeneticElement | null,
-    loadEvent: (val: number) => void,
+    loadEvent: (val: number) => void
   ): Promise<EFPData> => {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     const parser = new DOMParser()
     const xml = await fetch(this.xmlURL).then(async (res) =>
-      parser.parseFromString(await res.text(), 'text/xml'),
+      parser.parseFromString(await res.text(), 'text/xml')
     )
     const webservice = 'https://bar.utoronto.ca/eplant/cgi-bin/groupsuba4.php'
 
@@ -41,7 +43,7 @@ export default class CellEFP extends EFP {
     const groups = Array.from(xml.getElementsByTagName('image')).map(
       (groupData) => {
         const tissues = Array.from(
-          groupData.getElementsByTagName('subcellular'),
+          groupData.getElementsByTagName('subcellular')
         )
         return {
           name: groupData.getAttribute('id') || '',
@@ -55,7 +57,7 @@ export default class CellEFP extends EFP {
             }
           }),
         }
-      },
+      }
     )
 
     // Fetch sample data by making POST to webservice
@@ -86,7 +88,7 @@ export default class CellEFP extends EFP {
           ...getEFPSampleData(
             tissue.samples
               .map((name) => data[name.toLowerCase()] || 0)
-              .filter((n) => Number.isFinite(n)),
+              .filter((n) => Number.isFinite(n))
           ),
         }))
         const tissueValues = tissues.map((tissue) => tissue.mean)

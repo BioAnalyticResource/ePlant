@@ -1,8 +1,10 @@
-import { useSpecies } from '@eplant/state'
+import * as React from 'react'
+
 import GeneticElement, { Species } from '@eplant/GeneticElement'
+import { useSpecies } from '@eplant/state'
 import { Button, MenuItem, styled, TextField } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import * as React from 'react'
+
 import SearchBar from './SearchBar'
 
 export const MenuButton = styled(Button)(({ theme }) => ({
@@ -72,7 +74,7 @@ export function SearchGroup({
         onSubmit={(terms: string[]) => {
           if (!species) return
           Promise.all(terms.map(species.api.searchGene)).then((a) =>
-            addGeneticElements(a.filter((x) => x != null) as GeneticElement[]),
+            addGeneticElements(a.filter((x) => x != null) as GeneticElement[])
           )
         }}
       ></SearchBar>

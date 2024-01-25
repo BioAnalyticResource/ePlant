@@ -1,13 +1,16 @@
+import { useEffect } from 'react'
 import * as FlexLayout from 'flexlayout-react'
-import { usePanes, useActiveId, useModel, usePageLoad, useGeneticElements, ViewIDContext} from "./state"
-import {useEffect } from "react"
-import { useConfig } from './config'
-import FallbackView from './views/FallbackView'
-import { ViewContainer } from './UI/Layout/ViewContainer'
+import { Actions } from 'flexlayout-react'
 
+import { ViewContainer } from './UI/Layout/ViewContainer'
+import FallbackView from './views/FallbackView'
+import { useConfig } from './config'
 import {
-  Actions
-} from 'flexlayout-react'
+  useActiveId,
+  useGeneticElements,
+  usePanes,
+  ViewIDContext,
+} from './state'
 
 /**
  * Rendered in each tab. Contains a view container.
@@ -82,4 +85,4 @@ function ViewTab(props: {
   )
 }
 
-export default ViewTab;
+export default ViewTab

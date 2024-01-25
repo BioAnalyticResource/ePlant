@@ -1,12 +1,13 @@
-import IconButton from '@mui/material/IconButton'
-import SearchIcon from '@mui/icons-material/Search'
-import Autocomplete from '@mui/material/Autocomplete'
-import TextField, { TextFieldProps } from '@mui/material/TextField'
-import { debounce } from 'lodash'
 import * as React from 'react'
-import { Theme, SxProps } from '@mui/material'
-import { Chip, InputAdornment } from '@mui/material'
+import { debounce } from 'lodash'
+
 import CloseIcon from '@mui/icons-material/Close'
+import SearchIcon from '@mui/icons-material/Search'
+import { SxProps, Theme } from '@mui/material'
+import { Chip, InputAdornment } from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
+import IconButton from '@mui/material/IconButton'
+import TextField, { TextFieldProps } from '@mui/material/TextField'
 /**
  * The search bar in ePlant. Supports async autocomplete and searching for multiple genes at once.
  * @param props.label The label of the search bar
