@@ -3,7 +3,9 @@ import Dropdown from '@eplant/UI/Dropdown'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
+import PanZoom from '@eplant/util/PanZoom'
 import { getCitation } from '@eplant/util/citations'
+import useDimensions from '@eplant/util/useDimensions'
 import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
 import {
   memo,
@@ -24,6 +26,7 @@ import { EFPData } from '../types'
 import EFPViewerCitation from './EFPViewerCitation'
 import GeneDistributionChart from './GeneDistributionChart'
 import MaskModal from './MaskModal'
+import Legend from './legend'
 import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
 
 type EFPListProps = {
