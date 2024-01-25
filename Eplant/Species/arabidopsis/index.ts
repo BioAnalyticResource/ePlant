@@ -15,7 +15,7 @@ async function autocomplete(s: string) {
   return (
     await axios.get(
       'https://bar.utoronto.ca/eplant/cgi-bin/idautocomplete.cgi?species=Arabidopsis_thaliana&term=' +
-        s,
+        s
     )
   ).data
 }
@@ -24,7 +24,7 @@ async function searchGene(s: string) {
   const data = (
     await axios.get(
       'https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=' +
-        s,
+        s
     )
   ).data
   if (!data.id || !data.annotation || !data.aliases) return null
@@ -32,7 +32,7 @@ async function searchGene(s: string) {
     data.id,
     data.annotation,
     arabidopsis,
-    data.aliases,
+    data.aliases
   )
   return gene
 }

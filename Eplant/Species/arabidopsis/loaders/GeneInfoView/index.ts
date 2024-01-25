@@ -4,7 +4,7 @@ import { View } from '@eplant/View'
 
 const loader: View<GeneInfoViewData>['getInitialData'] = async (
   geneticElement,
-  loadEvent,
+  loadEvent
 ) => {
   if (!geneticElement)
     throw new TypeError('A gene must be provided for the GeneInfoView')
@@ -14,7 +14,7 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
     axios
       .get(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `gene_summary_by_locus.php?locus=${geneticElement.id}`,
+          `gene_summary_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {
         loaded++
@@ -27,7 +27,7 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
         features: GeneFeature[]
       }>(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `gene_structure_by_locus.php?locus=${geneticElement.id}`,
+          `gene_structure_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {
         loaded++
@@ -39,7 +39,7 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
     axios
       .get(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `get_sequence_by_identifier.php?locus=${geneticElement.id}`,
+          `get_sequence_by_identifier.php?locus=${geneticElement.id}`
       )
       .then((d) => {
         loaded++
@@ -78,7 +78,7 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
     proteinSequence = (
       await axios.get(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `get_protein_sequence_by_identifier.php?locus=${geneticElement.id}.1`,
+          `get_protein_sequence_by_identifier.php?locus=${geneticElement.id}.1`
       )
     ).data.result[0].sequence
     loadEvent(1)

@@ -42,7 +42,7 @@ function ViewTab(props: {
     }${v ? v.name : 'No view'}`
     if (props.layout && props.layout.node.getName() != targetName) {
       props.layout.model.doAction(
-        Actions.renameTab(props.layout.node.getId(), targetName),
+        Actions.renameTab(props.layout.node.getId(), targetName)
       )
     }
   })

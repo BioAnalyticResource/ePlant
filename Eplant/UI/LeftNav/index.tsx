@@ -42,11 +42,11 @@ export function LeftNav(props: {
             geneticElements.concat(
               _.uniqBy(
                 s.filter(
-                  (g) => !geneticElements.find((gene) => g.id == gene.id),
+                  (g) => !geneticElements.find((gene) => g.id == gene.id)
                 ),
-                (a) => a.id,
-              ),
-            ),
+                (a) => a.id
+              )
+            )
           )
           if (s.length > 0) {
             panesDispatch({

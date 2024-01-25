@@ -165,7 +165,7 @@ const EplantLayout = () => {
         component: 'view',
         id,
         type: 'tab',
-      },
+      }
     )
   }
 
@@ -184,7 +184,7 @@ const EplantLayout = () => {
 
   function onRenderTabSet(
     node: TabSetNode | BorderNode,
-    renderValues: ITabSetRenderValues,
+    renderValues: ITabSetRenderValues
   ) {
     if (node.getChildren().length == 0) return
     renderValues.stickyButtons.push(
@@ -194,7 +194,7 @@ const EplantLayout = () => {
         key='add-tab'
       >
         <Add />
-      </IconButton>,
+      </IconButton>
     )
     renderValues.buttons.push(
       <IconButton
@@ -206,7 +206,7 @@ const EplantLayout = () => {
         key='make-popout'
       >
         <CallMade />
-      </IconButton>,
+      </IconButton>
     )
   }
 }
@@ -220,7 +220,7 @@ export default EplantLayout
  */
 const factory: (
   node: FlexLayout.TabNode,
-  model: FlexLayout.Model,
+  model: FlexLayout.Model
 ) => JSX.Element | undefined = (node, model) => {
   const id = node.getId() as string
   return (

@@ -267,5 +267,5 @@ export default new EFPViewer(
   efps,
   () => <ExperimentEFPIcon />,
   'Visualize gene expression across multiple tissues and experiment samples.',
-  ThumbnailLight,
+  ThumbnailLight
 )

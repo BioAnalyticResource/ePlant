@@ -54,7 +54,7 @@ export function atomWithStorage<T>(
   storage: Storage<string, T>,
   key: string,
   initialValue: T,
-  loading?: () => () => void,
+  loading?: () => () => void
 ) {
   const val = atom<T>(initialValue)
   const loadedValue = storage.get(key)
@@ -88,7 +88,7 @@ export function atomWithStorage<T>(
         storage.set(key, newValue)
       }
       set(val, newValue)
-    },
+    }
   )
   return a
 }
@@ -99,7 +99,7 @@ function atomWithOptionalStorage<T>(
   key: string,
   initialValue: T,
   serialize: (value: T) => string = JSON.stringify,
-  deserialize: (value: string) => T = JSON.parse,
+  deserialize: (value: string) => T = JSON.parse
 ) {
   const val = atom<T>(initialValue)
   const loadedValue = storage.get(key)
@@ -132,14 +132,14 @@ function atomWithOptionalStorage<T>(
         storage.set(key, serialize(newValue))
       }
       set(val, newValue)
-    },
+    }
   )
   return a
 }
 
 function useAtomReducer<T, A>(
   atom: WritableAtom<T, [SetStateAction<T>], void>,
-  reducer: (x: T, action: A) => T,
+  reducer: (x: T, action: A) => T
 ): (action: A) => void {
   const setValue = useSetAtom(atom)
   return (action: A) => setValue((value) => reducer(value, action))
@@ -149,7 +149,7 @@ export const genesAtom = atomWithOptionalStorage<GeneticElement[]>(
   'genes',
   [],
   (genes) => JSON.stringify(genes.map(GeneticElement.serialize)),
-  (genes) => JSON.parse(genes).map(GeneticElement.deserialize),
+  (genes) => JSON.parse(genes).map(GeneticElement.deserialize)
 )
 export const useGeneticElements = () => useAtom(genesAtom)
 export const useSetGeneticElements = () => useSetAtom(genesAtom)
@@ -182,7 +182,7 @@ export const collectionsAtom = atomWithOptionalStorage<
     },
   ],
   (collections) => JSON.stringify(collections),
-  (collections) => JSON.parse(collections),
+  (collections) => JSON.parse(collections)
 )
 export const useCollections = () => useAtom(collectionsAtom)
 export const useSetCollections = () => useSetAtom(collectionsAtom)
@@ -218,7 +218,7 @@ export const panesAtom = atomWithOptionalStorage<Panes>('open-views', {
 // TODO: Test this
 export const panesReducer: (prev: Panes, action: PanesAction) => Panes = (
   prev: Panes,
-  action: PanesAction,
+  action: PanesAction
 ) => {
   const def = {
     view: 'get-started',
@@ -329,7 +329,7 @@ export const modelAtom = atomWithOptionalStorage<FlexLayout.Model>(
     },
   }),
   (model) => JSON.stringify(model.toJson()),
-  (model) => FlexLayout.Model.fromJson(JSON.parse(model)),
+  (model) => FlexLayout.Model.fromJson(JSON.parse(model))
 )
 export const useModel = () => useAtom(modelAtom)
 export const useSetModel = () => useSetAtom(modelAtom)

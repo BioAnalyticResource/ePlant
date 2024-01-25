@@ -8,7 +8,7 @@ import { View } from '@eplant/View'
 
 const loader: View<PublicationViewerData>['getInitialData'] = async (
   geneticElement,
-  loadEvent,
+  loadEvent
 ) => {
   if (!geneticElement)
     throw new TypeError('A gene must be provided for the publication viewer')
@@ -20,7 +20,7 @@ const loader: View<PublicationViewerData>['getInitialData'] = async (
         result: PublicationData[]
       }>(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `publications_by_locus.php?locus=${geneticElement.id}`,
+          `publications_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {
         loaded++
@@ -32,7 +32,7 @@ const loader: View<PublicationViewerData>['getInitialData'] = async (
         result: GeneRIFsData[]
       }>(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
-          `generifs_by_locus.php?locus=${geneticElement.id}`,
+          `generifs_by_locus.php?locus=${geneticElement.id}`
       )
       .then((d) => {
         loaded++

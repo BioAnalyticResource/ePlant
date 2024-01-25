@@ -38,7 +38,7 @@ export default class HookMenu<EntryType> {
       {
         idOrdering: [],
         entries: {},
-      },
+      }
     )
     return (
       <this.context.Provider value={[value, dispatch]}>
@@ -71,7 +71,7 @@ export default class HookMenu<EntryType> {
 
   private reducer(
     state: Entries<EntryType>,
-    action: HookMenuAction<EntryType>,
+    action: HookMenuAction<EntryType>
   ) {
     const { [action.id]: old, ...rest } = state.entries
     switch (action.type) {

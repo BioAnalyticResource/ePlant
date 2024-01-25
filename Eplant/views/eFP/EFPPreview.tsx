@@ -11,7 +11,7 @@ import EFP from '.'
 import { EFPData } from './types'
 
 const EFPPreviewContainer = styled(
-  (props: BoxProps & { selected: boolean }) => <Box {...props} />,
+  (props: BoxProps & { selected: boolean }) => <Box {...props} />
 )(({ theme, selected }) => ({
   border: selected
     ? `2px solid ${theme.palette.primary.main}`

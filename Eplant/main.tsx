@@ -57,14 +57,14 @@ function RootApp() {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <RootApp />,
+  <RootApp />
 )
 
 const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register(
-        import.meta.env.BASE_URL + '/sw.js',
+        import.meta.env.BASE_URL + '/sw.js'
       )
       if (registration.installing) {
         // console.log('Service worker installing')

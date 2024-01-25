@@ -225,7 +225,7 @@ export function ViewContainer<T, S, A>({
             onClick={() => {
               downloadFile(
                 `${view.id}${gene ? '-' + gene.id : ''}.json`,
-                JSON.stringify(activeData, null, 2),
+                JSON.stringify(activeData, null, 2)
               )
             }}
           >
@@ -234,7 +234,7 @@ export function ViewContainer<T, S, A>({
         </Toolbar>
       </AppBar>
     ),
-    [view.id, gene?.id, loading, activeData, state, dispatch],
+    [view.id, gene?.id, loading, activeData, state, dispatch]
   )
   return (
     <Box {...props} display='flex' flexDirection='column'>

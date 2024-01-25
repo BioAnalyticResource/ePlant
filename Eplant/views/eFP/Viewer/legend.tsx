@@ -22,7 +22,7 @@ export default styled(function Legend({
         const extremum = Math.max(
           Math.abs(Math.log2(data.min / control)),
           Math.log2(data.max / control),
-          1,
+          1
         )
         const [lo, hi] = [-extremum, extremum]
         const val = lo + (hi - lo) * ratio
@@ -41,8 +41,8 @@ export default styled(function Legend({
         data,
         data.control ?? 1,
         theme,
-        state.colorMode,
-      ),
+        state.colorMode
+      )
     )
     .map((color, i) => (
       <Box
