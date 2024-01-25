@@ -1,23 +1,20 @@
+import { Provider } from 'jotai'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import './flexlayout.css'
-import './index.css'
-import Eplant from './Eplant'
 import { BrowserRouter } from 'react-router-dom'
-import { Provider } from 'jotai'
-import { useDarkMode } from '@eplant/state'
-import { CssBaseline, ThemeProvider } from '@mui/material'
-import { dark, light } from './theme'
+import Eplant from './Eplant'
+import './css/flexlayout.css'
+import './css/index.css'
 
+import { Config } from './config'
+import CellEFP from './views/CellEFP'
+import DebugView from './views/DebugView'
+import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
 import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
-import PublicationViewer from './views/PublicationViewer'
-import { Config } from './config'
-import DebugView from './views/DebugView'
 import PlantEFP from './views/PlantEFP'
-import ExperimentEFP from './views/ExperimentEFP'
-import CellEFP from './views/CellEFP'
+import PublicationViewer from './views/PublicationViewer'
 
 // Views that aren't associated with individual genes
 const genericViews = [GetStartedView, FallbackView]
@@ -70,11 +67,11 @@ const registerServiceWorker = async () => {
         import.meta.env.BASE_URL + '/sw.js',
       )
       if (registration.installing) {
-        console.log('Service worker installing')
+        // console.log('Service worker installing')
       } else if (registration.waiting) {
-        console.log('Service worker installed')
+        // console.log('Service worker installed')
       } else if (registration.active) {
-        console.log('Service worker active')
+        // console.log('Service worker active')
       }
     } catch (error) {
       console.error(`Registration failed with ${error}`)

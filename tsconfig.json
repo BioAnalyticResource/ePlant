@@ -3,8 +3,7 @@
     "baseUrl": ".",
     "jsx": "react-jsx",
     "paths": {
-      "@eplant/*": ["Eplant/*"],
-      "@stories/*": ["stories/*"]
+      "@eplant/*": ["Eplant/*"]
     },
     "strict": true,
     "sourceMap": true,
@@ -21,5 +20,5 @@
     "isolatedModules": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "stories"]
+  "exclude": ["node_modules"]
 }

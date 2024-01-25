@@ -1,9 +1,13 @@
 import GeneticElement from '@eplant/GeneticElement'
-import PanZoom from '@eplant/util/PanZoom'
+import Dropdown from '@eplant/UI/Dropdown'
+import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
+import PanZoom from '@eplant/util/PanZoom'
+import { getCitation } from '@eplant/util/citations'
+import useDimensions from '@eplant/util/useDimensions'
 import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
-import React, {
+import {
   memo,
   startTransition,
   useEffect,
@@ -11,24 +15,19 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import EFP from '..'
-import EFPPreview from '../EFPPreview'
-import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
 import {
-  areEqual,
   FixedSizeList as List,
   ListChildComponentProps,
+  areEqual,
 } from 'react-window'
-import useDimensions from '@eplant/util/useDimensions'
+import EFP from '..'
+import EFPPreview from '../EFPPreview'
 import { EFPData } from '../types'
-import Legend from './legend'
-import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
-import Dropdown from '@eplant/UI/Dropdown'
-import { red } from '@mui/material/colors'
-import GeneDistributionChart from './GeneDistributionChart'
-import { getCitation } from '@eplant/util/citations'
-import MaskModal from './MaskModal'
 import EFPViewerCitation from './EFPViewerCitation'
+import GeneDistributionChart from './GeneDistributionChart'
+import MaskModal from './MaskModal'
+import Legend from './legend'
+import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -122,7 +121,7 @@ export const EFPListMemoized = function EFPList(props: EFPListProps) {
 }
 
 export default class EFPViewer
-  implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
+implements View<EFPViewerData, EFPViewerState, EFPViewerAction>
 {
   getInitialState(): EFPViewerState {
     return {
@@ -183,49 +182,39 @@ export default class EFPViewer
   }
   reducer = (state: EFPViewerState, action: EFPViewerAction) => {
     switch (action.type) {
-      case 'set-view':
-        return {
-          ...state,
-          activeView: action.id,
-        }
-      case 'sort-by':
-        return {
-          ...state,
-          sortBy: action.by,
-        }
-      case 'reset-transform':
-        return {
-          ...state,
-          transform: {
-            offset: { x: 0, y: 0 },
-            zoom: 1,
-          },
-        }
-      case 'set-transform':
-        return {
-          ...state,
-          transform: action.transform,
-        }
-      case 'toggle-color-mode':
-        return {
-          ...state,
-          colorMode:
+    case 'set-view':
+      return {
+        ...state,
+        activeView: action.id,
+      }
+    case 'sort-by':
+      return {
+        ...state,
+        sortBy: action.by,
+      }
+    case 'reset-transform':
+      return {
+        ...state,
+        transform: {
+          offset: { x: 0, y: 0 },
+          zoom: 1,
+        },
+      }
+    case 'set-transform':
+      return {
+        ...state,
+        transform: action.transform,
+      }
+    case 'toggle-color-mode':
+      return {
+        ...state,
+        colorMode:
             state.colorMode == 'absolute'
               ? ('relative' as const)
               : ('absolute' as const),
-        }
-      case 'toggle-mask-modal':
-        return {
-          ...state,
-          maskModalVisible: state.maskModalVisible ? false : true,
-        }
-      case 'set-mask-threshold':
-        return {
-          ...state,
-          maskThreshold: action.threshold,
-        }
-      default:
-        return state
+      }
+    default:
+      return state
     }
   }
   component = ({
@@ -283,6 +272,9 @@ export default class EFPViewer
     ])
     const ref = useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
+    {
+      // console.log(props)
+    }
 
     if (!geneticElement) return <></>
     return (

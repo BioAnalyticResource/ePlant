@@ -1,6 +1,12 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { Box, styled, BoxProps, Typography, Skeleton } from '@mui/material'
-import * as React from 'react'
+import {
+  Box,
+  styled,
+  BoxProps,
+  Typography,
+  Skeleton,
+} from '@mui/material'
+import {useMemo, useState, useEffect, useDeferredValue, startTransition} from 'react'
 import EFP from '.'
 import { EFPData } from './types'
 
@@ -20,6 +26,7 @@ const EFPPreviewContainer = styled(
   justifyContent: 'center',
   display: 'flex',
 }))
+
 export type EFPPreviewProps = {
   gene: GeneticElement
   view: EFP
@@ -28,6 +35,7 @@ export type EFPPreviewProps = {
   data: EFPData
   maskThreshold: number
 } & BoxProps
+
 export default function EFPPreview({
   gene,
   view,
@@ -37,16 +45,16 @@ export default function EFPPreview({
   maskThreshold,
   ...boxProps
 }: EFPPreviewProps) {
-  const colorModeDeferred = React.useDeferredValue(colorMode)
-  const dataDeferred = React.useDeferredValue(data)
-  const [draw, setDraw] = React.useState(false)
-  React.useEffect(() => {
+  const colorModeDeferred = useDeferredValue(colorMode)
+  const dataDeferred = useDeferredValue(data)
+  const [draw, setDraw] = useState(false)
+  useEffect(() => {
     if (!draw)
-      React.startTransition(() => {
+      startTransition(() => {
         setDraw(true)
       })
   }, [draw])
-  const component = React.useMemo(() => {
+  const component = useMemo(() => {
     return (
       <EFPPreviewContainer selected={selected} {...boxProps}>
         <view.component
