@@ -1,4 +1,5 @@
 import { Theme } from '@mui/system'
+
 export function updateColors(theme: Theme) {
   ;(
     Array.from(
