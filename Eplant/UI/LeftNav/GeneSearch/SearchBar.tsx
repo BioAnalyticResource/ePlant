@@ -3,7 +3,7 @@ import { debounce } from 'lodash'
 
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
-import { SxProps,Theme } from '@mui/material'
+import { SxProps, Theme } from '@mui/material'
 import { Chip, InputAdornment } from '@mui/material'
 import Autocomplete from '@mui/material/Autocomplete'
 import IconButton from '@mui/material/IconButton'

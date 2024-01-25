@@ -1,7 +1,7 @@
 import React from 'react'
 
 import arabidopsis from '@eplant/Species/arabidopsis'
-import { useGeneticElements,usePanesDispatch, useViewID } from '@eplant/state'
+import { useGeneticElements, usePanesDispatch, useViewID } from '@eplant/state'
 import { View } from '@eplant/View'
 import {
   Button,

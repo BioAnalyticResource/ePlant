@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect,useMemo, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'

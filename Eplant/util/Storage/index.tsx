@@ -1,4 +1,4 @@
-import { DBSchema,IDBPDatabase, openDB } from 'idb'
+import { DBSchema, IDBPDatabase, openDB } from 'idb'
 
 import delayed from '../delayed'
 

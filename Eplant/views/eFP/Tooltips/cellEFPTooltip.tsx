@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@mui/material'
 
-import { EFPData, EFPGroup, EFPState,EFPTissue } from '../types'
+import { EFPData, EFPGroup, EFPState, EFPTissue } from '../types'
 
 import { setStroke } from './EFPTooltip'
 

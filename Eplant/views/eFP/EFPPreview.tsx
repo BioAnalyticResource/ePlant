@@ -7,7 +7,7 @@ import {
 } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { Box, BoxProps, Skeleton, styled,Typography } from '@mui/material'
+import { Box, BoxProps, Skeleton, styled, Typography } from '@mui/material'
 
 import { EFPData } from './types'
 import EFP from '.'

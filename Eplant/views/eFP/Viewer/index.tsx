@@ -477,12 +477,10 @@ export default class EFPViewer
   citation = ({ activeData, state, gene }: ICitationProps) => {
     const [xmlData, setXMLData] = useState<string[]>([])
 
-    const viewID = activeData?.views.find(
-      (v) => v.id == state?.activeView
-    )?.name
-    const viewXML = activeData?.views.find(
-      (v) => v.id == state?.activeView
-    )?.xmlURL
+    const viewID = activeData?.views.find((v) => v.id == state?.activeView)
+      ?.name
+    const viewXML = activeData?.views.find((v) => v.id == state?.activeView)
+      ?.xmlURL
     useEffect(() => {
       const xmlLoad = async () => {
         let xmlString = ''
