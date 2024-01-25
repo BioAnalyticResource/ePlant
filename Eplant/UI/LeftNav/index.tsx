@@ -1,3 +1,6 @@
+import * as React from 'react'
+import _ from 'lodash'
+
 import GeneticElement from '@eplant/GeneticElement'
 import {
   useActiveId,
@@ -7,9 +10,9 @@ import {
 } from '@eplant/state'
 import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import _ from 'lodash'
-import * as React from 'react'
+
 import { LogoWithText } from '../Logo'
+
 import { Collections } from './Collections'
 import { SearchGroup } from './GeneSearch'
 

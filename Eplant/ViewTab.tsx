@@ -1,16 +1,16 @@
-import * as FlexLayout from 'flexlayout-react'
 import { useEffect } from 'react'
+import * as FlexLayout from 'flexlayout-react'
+import { Actions } from 'flexlayout-react'
+
 import { ViewContainer } from './UI/Layout/ViewContainer'
+import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
 import {
-  ViewIDContext,
   useActiveId,
   useGeneticElements,
   usePanes,
+  ViewIDContext,
 } from './state'
-import FallbackView from './views/FallbackView'
-
-import { Actions } from 'flexlayout-react'
 
 /**
  * Rendered in each tab. Contains a view container.

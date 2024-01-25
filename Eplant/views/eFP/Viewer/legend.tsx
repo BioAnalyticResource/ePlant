@@ -1,7 +1,9 @@
 import React from 'react'
+
 import { Box, styled, useTheme } from '@mui/material'
-import { EFPData, EFPState } from '../types'
+
 import { getColor } from '../svg'
+import { EFPData, EFPState } from '../types'
 
 const GRADIENT_STEPS = 11
 export default styled(function Legend({

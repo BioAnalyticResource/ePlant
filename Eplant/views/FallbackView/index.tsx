@@ -1,5 +1,7 @@
-import { Typography } from '@mui/material'
 import React from 'react'
+
+import { Typography } from '@mui/material'
+
 import { View } from '../../View'
 
 const FallbackView: View<null> = {

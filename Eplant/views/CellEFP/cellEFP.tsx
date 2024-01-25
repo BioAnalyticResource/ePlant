@@ -1,10 +1,12 @@
+import React from 'react'
+import _ from 'lodash'
+
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewDataError } from '@eplant/View/viewData'
+
 import EFP, { getEFPSampleData } from '../eFP'
-import _ from 'lodash'
-import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../eFP/types'
-import React from 'react'
 import CellSVGTooltip from '../eFP/Tooltips/cellEFPTooltip'
+import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../eFP/types'
 
 export default class CellEFP extends EFP {
   tooltipComponent: (props: {

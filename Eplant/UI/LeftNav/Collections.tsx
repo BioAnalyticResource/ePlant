@@ -1,3 +1,5 @@
+import { useEffect, useId, useRef, useState } from 'react'
+
 import {
   DndContext,
   DragEndEvent,
@@ -34,7 +36,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { useEffect, useId, useRef, useState } from 'react'
+
 import GeneticElementComponent, {
   GeneticElementComponentProps,
 } from '../GeneticElementComponent'

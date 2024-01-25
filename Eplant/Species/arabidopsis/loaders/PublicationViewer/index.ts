@@ -1,10 +1,11 @@
 import axios from 'axios'
+
+import { View } from '@eplant/View'
 import {
-  PublicationData,
   GeneRIFsData,
+  PublicationData,
   PublicationViewerData,
 } from '@eplant/views/PublicationViewer/types'
-import { View } from '@eplant/View'
 
 const loader: View<PublicationViewerData>['getInitialData'] = async (
   geneticElement,

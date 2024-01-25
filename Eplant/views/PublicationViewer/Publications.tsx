@@ -1,6 +1,8 @@
+import * as React from 'react'
+
 import { Box, Button } from '@mui/material'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import * as React from 'react'
+
 import { SearchBar } from './SearchBar'
 import { PublicationData } from './types'
 

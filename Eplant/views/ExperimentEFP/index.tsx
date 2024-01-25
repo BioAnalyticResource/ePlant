@@ -1,11 +1,13 @@
 import React from 'react'
-import EFPViewer from '../eFP/Viewer'
-import ExperimentEFPIcon from './icon'
-import ThumbnailLight from '../../../thumbnails/experiment-viewer-light.png'
+
 import ThumbnailDark from '../../../thumbnails/experiment-viewer-dark.png'
-import { EFPViewerData } from '../eFP/Viewer/types'
+import ThumbnailLight from '../../../thumbnails/experiment-viewer-light.png'
 import EFP from '../eFP'
+import EFPViewer from '../eFP/Viewer'
+import { EFPViewerData } from '../eFP/Viewer/types'
 import { makeEfps } from '../eFP/Viewer/util'
+
+import ExperimentEFPIcon from './icon'
 
 const views: EFPViewerData['views'] = [
   {

@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { SVGProps, useEffect, useMemo, useState } from 'react'
-import { EFPData } from '../types'
+
 import { useDarkMode } from '@eplant/state'
-import { useTheme } from '@mui/material'
 import { Mail } from '@mui/icons-material'
+import { useTheme } from '@mui/material'
+
+import { EFPData } from '../types'
 
 const GeneDistributionChart = ({ data }: { data: EFPData }) => {
   const theme = useTheme()

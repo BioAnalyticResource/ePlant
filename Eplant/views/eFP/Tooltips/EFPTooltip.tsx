@@ -1,3 +1,5 @@
+import React from 'react'
+
 import {
   Box,
   Grow,
@@ -8,8 +10,8 @@ import {
   TableRow,
   useTheme,
 } from '@mui/material'
-import React from 'react'
-import { EFPGroup, EFPTissue, EFPData, EFPState } from '../types'
+
+import { EFPData, EFPGroup, EFPState,EFPTissue } from '../types'
 
 export const setStroke = (
   el: Element | null,

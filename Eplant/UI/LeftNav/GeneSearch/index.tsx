@@ -1,8 +1,10 @@
-import { useSpecies } from '@eplant/state'
+import * as React from 'react'
+
 import GeneticElement, { Species } from '@eplant/GeneticElement'
+import { useSpecies } from '@eplant/state'
 import { Button, MenuItem, styled, TextField } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import * as React from 'react'
+
 import SearchBar from './SearchBar'
 
 export const MenuButton = styled(Button)(({ theme }) => ({

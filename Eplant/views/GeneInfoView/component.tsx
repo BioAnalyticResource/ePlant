@@ -1,5 +1,8 @@
-import GeneticElement from '@eplant/GeneticElement'
+import React from 'react'
+import _ from 'lodash'
+
 import { useConfig } from '@eplant/config'
+import GeneticElement from '@eplant/GeneticElement'
 import { usePanesDispatch, useViewID } from '@eplant/state'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import {
@@ -12,12 +15,12 @@ import {
   Snackbar,
 } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import { styled, useTheme } from '@mui/material/styles'
-import _ from 'lodash'
-import React from 'react'
+import Typography from '@mui/material/Typography'
+
 import { View, ViewProps } from '../../View'
 import { useViewData } from '../../View/viewData'
+
 import { GeneModel } from './GeneModel'
 import {
   GeneInfoViewAction,

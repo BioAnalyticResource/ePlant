@@ -1,7 +1,5 @@
-import GeneticElement from '@eplant/GeneticElement'
-import { Species } from '@eplant/GeneticElement'
-import arabidopsis from '@eplant/Species/arabidopsis'
-import Storage from '@eplant/util/Storage'
+import { createContext, useContext,useEffect, useState } from 'react'
+import * as FlexLayout from 'flexlayout-react'
 import {
   atom,
   SetStateAction,
@@ -10,8 +8,11 @@ import {
   useSetAtom,
   WritableAtom,
 } from 'jotai'
-import * as FlexLayout from 'flexlayout-react'
-import { useState, useEffect, createContext, useContext } from 'react'
+
+import GeneticElement from '@eplant/GeneticElement'
+import { Species } from '@eplant/GeneticElement'
+import arabidopsis from '@eplant/Species/arabidopsis'
+import Storage from '@eplant/util/Storage'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)

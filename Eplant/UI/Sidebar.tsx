@@ -1,6 +1,8 @@
 import { Container } from '@mui/material'
+
 import SerializedGeneticElement from '../GeneticElement'
 import { useActiveId, usePanes } from '../state'
+
 import { LeftNav } from './LeftNav'
 import ResponsiveDrawer from './ResponsiveDrawer'
 

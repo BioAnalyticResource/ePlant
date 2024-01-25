@@ -1,9 +1,11 @@
-import { Grid, Link, Stack, Typography, useTheme } from '@mui/material'
-import { Filter1, Filter2, Filter3 } from '@mui/icons-material'
-import { ViewProps } from '@eplant/View'
 import React from 'react'
-import Tile from './Tile'
+
 import { useConfig } from '@eplant/config'
+import { ViewProps } from '@eplant/View'
+import { Filter1, Filter2, Filter3 } from '@mui/icons-material'
+import { Grid, Link, Stack, Typography, useTheme } from '@mui/material'
+
+import Tile from './Tile'
 
 export default function GetStartedView({
   geneticElement,

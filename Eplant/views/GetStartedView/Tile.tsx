@@ -1,3 +1,8 @@
+import React from 'react'
+
+import arabidopsis from '@eplant/Species/arabidopsis'
+import { useGeneticElements,usePanesDispatch, useViewID } from '@eplant/state'
+import { View } from '@eplant/View'
 import {
   Button,
   Card,
@@ -6,10 +11,6 @@ import {
   CardMedia,
   Typography,
 } from '@mui/material'
-import React from 'react'
-import { usePanesDispatch, useViewID, useGeneticElements } from '@eplant/state'
-import arabidopsis from '@eplant/Species/arabidopsis'
-import { View } from '@eplant/View'
 
 export type TileProps = {
   view: View

@@ -1,11 +1,13 @@
 // import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import { CssBaseline, ThemeProvider } from '@mui/material'
 import { Route, Routes } from 'react-router-dom'
-import DirectPane from './DirectPane'
-import EplantLayout from './EplantLayout'
+
+import { CssBaseline, ThemeProvider } from '@mui/material'
+
+import { dark, light } from './css/theme'
 import Sidebar from './UI/Sidebar'
 import { useConfig } from './config'
-import { dark, light } from './css/theme'
+import DirectPane from './DirectPane'
+import EplantLayout from './EplantLayout'
 import { useDarkMode } from './state'
 export type EplantProps = Record<string, never>
 export default function Eplant() {

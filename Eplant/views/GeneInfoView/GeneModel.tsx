@@ -1,6 +1,8 @@
 import * as React from 'react'
-import { useTheme } from '@mui/material/styles'
+
 import { Stack, Tooltip, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+
 import { GeneFeature } from './types'
 
 type GeneModelProps = {

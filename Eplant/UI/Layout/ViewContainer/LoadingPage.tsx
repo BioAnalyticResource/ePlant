@@ -1,8 +1,10 @@
-import GeneticElement from '@eplant/GeneticElement'
-import { Box, LinearProgress, Stack, Typography, useTheme } from '@mui/material'
 import React, { SVGProps } from 'react'
-import { ViewDataError } from '@eplant/View/viewData'
+
+import GeneticElement from '@eplant/GeneticElement'
 import { View } from '@eplant/View'
+import { ViewDataError } from '@eplant/View/viewData'
+import { Box, LinearProgress, Stack, Typography, useTheme } from '@mui/material'
+
 import FailedToLoad from '../FailedToLoad'
 import NotSupported from '../ViewNotSupported'
 

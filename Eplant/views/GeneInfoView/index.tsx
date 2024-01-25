@@ -1,10 +1,13 @@
 import * as React from 'react'
-import component from './component'
-import { View } from '../../View'
-import { Link, Typography } from '@mui/material'
-import { GeneInfoViewData } from './types'
-import GeneInfoViewIcon from './icon'
+
 import { ViewDataError } from '@eplant/View/viewData'
+import { Link, Typography } from '@mui/material'
+
+import { View } from '../../View'
+
+import component from './component'
+import GeneInfoViewIcon from './icon'
+import { GeneInfoViewData } from './types'
 
 /**
  * Show information about a gene, including its sequence and features.

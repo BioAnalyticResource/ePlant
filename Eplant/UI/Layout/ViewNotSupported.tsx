@@ -1,8 +1,10 @@
 import React from 'react'
-import { View } from '../../View'
-import { Stack, useTheme, Typography } from '@mui/material'
 import { SVGProps } from 'react'
+
 import GeneticElement from '@eplant/GeneticElement'
+import { Stack, Typography,useTheme } from '@mui/material'
+
+import { View } from '../../View'
 
 const Illustration = ({
   color,

@@ -1,6 +1,12 @@
+import React, { useEffect, useLayoutEffect,useMemo, useState } from 'react'
+import _ from 'lodash'
+
 import GeneticElement from '@eplant/GeneticElement'
-import { CircularProgress, Typography } from '@mui/material'
 import { View, ViewProps } from '@eplant/View'
+import { ViewDataError } from '@eplant/View/viewData'
+import { CircularProgress, Typography } from '@mui/material'
+
+import SVGTooltip from './Tooltips/EFPTooltip'
 import { useEFPSVG, useStyles } from './svg'
 import {
   EFPAction,
@@ -11,10 +17,6 @@ import {
   EFPState,
   EFPTissue,
 } from './types'
-import _ from 'lodash'
-import { ViewDataError } from '@eplant/View/viewData'
-import SVGTooltip from './Tooltips/EFPTooltip'
-import React, { useState, useMemo, useEffect, useLayoutEffect } from 'react'
 
 export default class EFP implements View<EFPData, EFPState, EFPAction> {
   getInitialState: () => EFPState = () => ({

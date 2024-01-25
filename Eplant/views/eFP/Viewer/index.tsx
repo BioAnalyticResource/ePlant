@@ -1,12 +1,3 @@
-import GeneticElement from '@eplant/GeneticElement'
-import Dropdown from '@eplant/UI/Dropdown'
-import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
-import { View, ViewProps } from '@eplant/View'
-import { ViewDataError } from '@eplant/View/viewData'
-import PanZoom from '@eplant/util/PanZoom'
-import { getCitation } from '@eplant/util/citations'
-import useDimensions from '@eplant/util/useDimensions'
-import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
 import {
   memo,
   startTransition,
@@ -16,17 +7,29 @@ import {
   useState,
 } from 'react'
 import {
+  areEqual,
   FixedSizeList as List,
   ListChildComponentProps,
-  areEqual,
 } from 'react-window'
-import EFP from '..'
+
+import GeneticElement from '@eplant/GeneticElement'
+import Dropdown from '@eplant/UI/Dropdown'
+import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
+import { getCitation } from '@eplant/util/citations'
+import PanZoom from '@eplant/util/PanZoom'
+import useDimensions from '@eplant/util/useDimensions'
+import { View, ViewProps } from '@eplant/View'
+import { ViewDataError } from '@eplant/View/viewData'
+import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
+
 import EFPPreview from '../EFPPreview'
 import { EFPData } from '../types'
+import EFP from '..'
+
 import EFPViewerCitation from './EFPViewerCitation'
 import GeneDistributionChart from './GeneDistributionChart'
-import MaskModal from './MaskModal'
 import Legend from './legend'
+import MaskModal from './MaskModal'
 import { EFPViewerAction, EFPViewerData, EFPViewerState } from './types'
 
 type EFPListProps = {

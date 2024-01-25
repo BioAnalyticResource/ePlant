@@ -1,9 +1,11 @@
-import GeneticElement from '@eplant/GeneticElement'
-import { atom, useAtom, WritableAtom } from 'jotai'
 import * as React from 'react'
-import { View, ViewDispatch } from './index'
-import Storage from '@eplant/util/Storage'
+import { atom, useAtom, WritableAtom } from 'jotai'
+
+import GeneticElement from '@eplant/GeneticElement'
 import { atomWithStorage, useViewID } from '@eplant/state'
+import Storage from '@eplant/util/Storage'
+
+import { View, ViewDispatch } from './index'
 
 export enum ViewDataError {
   UNSUPPORTED_GENE = 'Unsupported gene',

@@ -1,11 +1,13 @@
 import React from 'react'
+
+import ThumbnailDark from '../../../thumbnails/plant-efp-dark.png'
+import ThumbnailLight from '../../../thumbnails/plant-efp-light.png'
 import EFP from '../eFP'
 import EFPViewer from '../eFP/Viewer'
-import PlantEFPIcon from './icon'
-import ThumbnailLight from '../../../thumbnails/plant-efp-light.png'
-import ThumbnailDark from '../../../thumbnails/plant-efp-dark.png'
-import { makeEfps } from '../eFP/Viewer/util'
 import { EFPViewerData } from '../eFP/Viewer/types'
+import { makeEfps } from '../eFP/Viewer/util'
+
+import PlantEFPIcon from './icon'
 
 const views: EFPViewerData['views'] = [
   {

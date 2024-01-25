@@ -1,6 +1,7 @@
-import EFP from '..'
-import { EFPViewerData } from './types'
 import CellEFP from '../../CellEFP/cellEFP'
+import EFP from '..'
+
+import { EFPViewerData } from './types'
 
 export function makeEfps(views: EFPViewerData['views']) {
   return views.map((view) => {
