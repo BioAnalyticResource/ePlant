@@ -29,8 +29,8 @@ export function LeftNav(props: {
     if (uniq.length != geneticElements.length) setGeneticElements(uniq)
   }, [geneticElements])
   return (
-    <Stack gap={2} direction="column" height={'100%'}>
-      <LogoWithText text="ePlant" />
+    <Stack gap={2} direction='column' height={'100%'}>
+      <LogoWithText text='ePlant' />
       <SearchGroup
         addGeneticElements={(s) => {
           setGeneticElements(
@@ -65,7 +65,7 @@ export function LeftNav(props: {
               checked={darkMode}
             />
           }
-          label="Dark mode"
+          label='Dark mode'
         />
       </FormGroup>
     </Stack>

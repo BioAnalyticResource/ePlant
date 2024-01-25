@@ -15,13 +15,12 @@ export function LoadingImage(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
-      id="loading-plant"
-      fill="#000000"
-      shapeRendering="geometricPrecision"
-      textRendering="geometricPrecision"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 101"
-
+      id='loading-plant'
+      fill='#000000'
+      shapeRendering='geometricPrecision'
+      textRendering='geometricPrecision'
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 100 101'
     >
       {/* 
       // OLD IMAGE (the watering can)
@@ -48,24 +47,23 @@ export function LoadingImage(props: SVGProps<SVGSVGElement>) {
 
       <style>
         {
-          "@keyframes loading-plant-s-g1_ts__ts{0%,73.666667%,to{transform:translate(50px,96.336008px) scale(1,1)}33.666667%{transform:translate(50px,96.336008px) scale(1,1);animation-timing-function:cubic-bezier(0,0,.58,1)}53.666667%{transform:translate(50px,96.336008px) scale(1.05,1.05)}}@keyframes loading-plant-s-path2_to__to{0%{transform:translate(85.0355px,-14.598999px)}33.333333%,to{transform:translate(85.0355px,35.358801px)}}@keyframes loading-plant-s-path2_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path3_to__to{0%{transform:translate(85.0355px,-39.3128px)}33.333333%,to{transform:translate(85.0355px,10.645px)}}@keyframes loading-plant-s-path3_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path4_to__to{0%{transform:translate(75.025501px,-19.986899px)}33.333333%,to{transform:translate(75.025501px,29.970901px)}}@keyframes loading-plant-s-path4_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path5_to__to{0%{transform:translate(75.025501px,-36.6763px)}33.333333%,to{transform:translate(75.025501px,13.2815px)}}@keyframes loading-plant-s-path5_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path6_to__to{0%{transform:translate(65.015499px,-24.682px)}33.333333%,to{transform:translate(65.015499px,25.2758px)}}@keyframes loading-plant-s-path6_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path7_to__to{0%{transform:translate(65.015499px,-41.7413px)}33.333333%,to{transform:translate(65.015499px,8.2165px)}}@keyframes loading-plant-s-path7_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path8_to__to{0%{transform:translate(55.005499px,-18.7635px)}33.333333%,to{transform:translate(55.005499px,31.1943px)}}@keyframes loading-plant-s-path8_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path9_to__to{0%{transform:translate(55.005499px,-35.5828px)}33.333333%,to{transform:translate(55.005499px,14.375px)}}@keyframes loading-plant-s-path9_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path10_to__to{0%{transform:translate(44.994501px,-24.296001px)}33.333333%,to{transform:translate(44.994501px,25.661799px)}}@keyframes loading-plant-s-path10_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path11_to__to{0%{transform:translate(44.994501px,-40.9208px)}33.333333%,to{transform:translate(44.994501px,9.037px)}}@keyframes loading-plant-s-path11_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path12_to__to{0%{transform:translate(34.984499px,-19.143801px)}33.333333%,to{transform:translate(34.984499px,30.813999px)}}@keyframes loading-plant-s-path12_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path13_to__to{0%{transform:translate(34.984499px,-35.5828px)}33.333333%,to{transform:translate(34.984499px,14.375px)}}@keyframes loading-plant-s-path13_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path14_to__to{0%{transform:translate(24.975px,-22.4964px)}33.333333%,to{transform:translate(24.975px,27.4614px)}}@keyframes loading-plant-s-path14_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path15_to__to{0%{transform:translate(24.975px,-39.6348px)}33.333333%,to{transform:translate(24.975px,10.323px)}}@keyframes loading-plant-s-path15_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path16_to__to{0%{transform:translate(14.9645px,-6.365799px)}33.333333%,to{transform:translate(14.9645px,43.592001px)}}@keyframes loading-plant-s-path16_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path17_to__to{0%{transform:translate(14.9645px,-31.4653px)}33.333333%,to{transform:translate(14.9645px,18.4925px)}}@keyframes loading-plant-s-path17_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}"
+          '@keyframes loading-plant-s-g1_ts__ts{0%,73.666667%,to{transform:translate(50px,96.336008px) scale(1,1)}33.666667%{transform:translate(50px,96.336008px) scale(1,1);animation-timing-function:cubic-bezier(0,0,.58,1)}53.666667%{transform:translate(50px,96.336008px) scale(1.05,1.05)}}@keyframes loading-plant-s-path2_to__to{0%{transform:translate(85.0355px,-14.598999px)}33.333333%,to{transform:translate(85.0355px,35.358801px)}}@keyframes loading-plant-s-path2_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path3_to__to{0%{transform:translate(85.0355px,-39.3128px)}33.333333%,to{transform:translate(85.0355px,10.645px)}}@keyframes loading-plant-s-path3_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path4_to__to{0%{transform:translate(75.025501px,-19.986899px)}33.333333%,to{transform:translate(75.025501px,29.970901px)}}@keyframes loading-plant-s-path4_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path5_to__to{0%{transform:translate(75.025501px,-36.6763px)}33.333333%,to{transform:translate(75.025501px,13.2815px)}}@keyframes loading-plant-s-path5_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path6_to__to{0%{transform:translate(65.015499px,-24.682px)}33.333333%,to{transform:translate(65.015499px,25.2758px)}}@keyframes loading-plant-s-path6_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path7_to__to{0%{transform:translate(65.015499px,-41.7413px)}33.333333%,to{transform:translate(65.015499px,8.2165px)}}@keyframes loading-plant-s-path7_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path8_to__to{0%{transform:translate(55.005499px,-18.7635px)}33.333333%,to{transform:translate(55.005499px,31.1943px)}}@keyframes loading-plant-s-path8_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path9_to__to{0%{transform:translate(55.005499px,-35.5828px)}33.333333%,to{transform:translate(55.005499px,14.375px)}}@keyframes loading-plant-s-path9_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path10_to__to{0%{transform:translate(44.994501px,-24.296001px)}33.333333%,to{transform:translate(44.994501px,25.661799px)}}@keyframes loading-plant-s-path10_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path11_to__to{0%{transform:translate(44.994501px,-40.9208px)}33.333333%,to{transform:translate(44.994501px,9.037px)}}@keyframes loading-plant-s-path11_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path12_to__to{0%{transform:translate(34.984499px,-19.143801px)}33.333333%,to{transform:translate(34.984499px,30.813999px)}}@keyframes loading-plant-s-path12_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path13_to__to{0%{transform:translate(34.984499px,-35.5828px)}33.333333%,to{transform:translate(34.984499px,14.375px)}}@keyframes loading-plant-s-path13_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path14_to__to{0%{transform:translate(24.975px,-22.4964px)}33.333333%,to{transform:translate(24.975px,27.4614px)}}@keyframes loading-plant-s-path14_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path15_to__to{0%{transform:translate(24.975px,-39.6348px)}33.333333%,to{transform:translate(24.975px,10.323px)}}@keyframes loading-plant-s-path15_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path16_to__to{0%{transform:translate(14.9645px,-6.365799px)}33.333333%,to{transform:translate(14.9645px,43.592001px)}}@keyframes loading-plant-s-path16_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}@keyframes loading-plant-s-path17_to__to{0%{transform:translate(14.9645px,-31.4653px)}33.333333%,to{transform:translate(14.9645px,18.4925px)}}@keyframes loading-plant-s-path17_c_o{0%,50%{opacity:1}96.666667%,to{opacity:0}}'
         }
       </style>
       <g
         style={{
           animation:
-            "loading-plant-s-g1_ts__ts 3000ms linear infinite normal forwards",
+            'loading-plant-s-g1_ts__ts 3000ms linear infinite normal forwards',
         }}
-        transform="translate(50 96.336)"
+        transform='translate(50 96.336)'
       >
-        <g id="loading-plant-s-g1" transform="translate(-50 -95)">
+        <g id='loading-plant-s-g1' transform='translate(-50 -95)'>
           <path
-            id="loading-plant-s-path1"
-            d="M82.532 93.421h-6.184c-1.915-4.336-5.995-7.333-10.809-7.846a13.186 13.186 0 0 0-1.613-.076c-.503-5.348-4.305-10.038-9.498-11.614a.938.938 0 0 0-.281-.127l.004-.003a16.014 16.014 0 0 0-2.242-.41c-.38-.043-.746-.009-1.12-.024v-8.333c.111.06.22.13.343.13.021 0 .034-.024.056-.024.009 0 .016.012.027.012 0 0 .256.013.716.013 2.488 0 11.003-.416 16.008-5.785 5.845-6.267 4.647-16.65 4.593-17.088a.794.794 0 0 0-.743-.694c.003-.003-10.794-.586-16.725 5.773-3.037 3.257-4.166 7.62-4.549 11.127-.139-.126-.315-.215-.515-.215s-.373.09-.515.213c-.383-3.507-1.512-7.87-4.549-11.127-5.931-6.359-16.724-5.776-16.724-5.773a.792.792 0 0 0-.743.694c-.056.438-1.252 10.821 4.592 17.088 5.005 5.37 13.522 5.785 16.011 5.785.46 0 .716-.013.716-.013.013 0 .019-.012.027-.012.021 0 .034.024.056.024.12 0 .229-.07.34-.126v8.305c-6.069.484-11.097 5.008-12.163 11.222-5.928-.259-11.456 3.343-13.511 8.903h-6.068a.79.79 0 0 0 0 1.58h65.063a.79.79 0 0 0 0-1.579ZM56.217 48.402c4.54-4.869 12.413-5.279 14.806-5.285.154 2.355.297 10.275-4.237 15.136-4.089 4.388-10.849 5.15-13.905 5.261l8.493-9.798a.786.786 0 0 0-.077-1.113.793.793 0 0 0-1.113.077l-8.25 9.52c-.05-3.229.394-9.628 4.283-13.798Zm-17.59 5.314 8.496 9.801c-3.057-.114-9.816-.876-13.908-5.264-4.524-4.852-4.389-12.78-4.234-15.136 2.393.006 10.263.416 14.803 5.285 3.879 4.16 4.329 10.563 4.283 13.791l-8.249-9.514a.787.787 0 0 0-1.113-.077.787.787 0 0 0-.078 1.114ZM25.246 93.421c2.051-4.805 7.053-7.842 12.394-7.27a.8.8 0 0 0 .867-.695c.783-6.648 6.596-11.277 13.224-10.544.69.081 1.344.198 1.899.34.077.05.16.093.225.111 4.87 1.421 8.383 5.936 8.543 10.98a.776.776 0 0 0 .259.557c.157.142.364.2.58.207.752-.047 1.538-.034 2.121.04 4.021.426 7.454 2.8 9.249 6.275H25.246Z"
+            id='loading-plant-s-path1'
+            d='M82.532 93.421h-6.184c-1.915-4.336-5.995-7.333-10.809-7.846a13.186 13.186 0 0 0-1.613-.076c-.503-5.348-4.305-10.038-9.498-11.614a.938.938 0 0 0-.281-.127l.004-.003a16.014 16.014 0 0 0-2.242-.41c-.38-.043-.746-.009-1.12-.024v-8.333c.111.06.22.13.343.13.021 0 .034-.024.056-.024.009 0 .016.012.027.012 0 0 .256.013.716.013 2.488 0 11.003-.416 16.008-5.785 5.845-6.267 4.647-16.65 4.593-17.088a.794.794 0 0 0-.743-.694c.003-.003-10.794-.586-16.725 5.773-3.037 3.257-4.166 7.62-4.549 11.127-.139-.126-.315-.215-.515-.215s-.373.09-.515.213c-.383-3.507-1.512-7.87-4.549-11.127-5.931-6.359-16.724-5.776-16.724-5.773a.792.792 0 0 0-.743.694c-.056.438-1.252 10.821 4.592 17.088 5.005 5.37 13.522 5.785 16.011 5.785.46 0 .716-.013.716-.013.013 0 .019-.012.027-.012.021 0 .034.024.056.024.12 0 .229-.07.34-.126v8.305c-6.069.484-11.097 5.008-12.163 11.222-5.928-.259-11.456 3.343-13.511 8.903h-6.068a.79.79 0 0 0 0 1.58h65.063a.79.79 0 0 0 0-1.579ZM56.217 48.402c4.54-4.869 12.413-5.279 14.806-5.285.154 2.355.297 10.275-4.237 15.136-4.089 4.388-10.849 5.15-13.905 5.261l8.493-9.798a.786.786 0 0 0-.077-1.113.793.793 0 0 0-1.113.077l-8.25 9.52c-.05-3.229.394-9.628 4.283-13.798Zm-17.59 5.314 8.496 9.801c-3.057-.114-9.816-.876-13.908-5.264-4.524-4.852-4.389-12.78-4.234-15.136 2.393.006 10.263.416 14.803 5.285 3.879 4.16 4.329 10.563 4.283 13.791l-8.249-9.514a.787.787 0 0 0-1.113-.077.787.787 0 0 0-.078 1.114ZM25.246 93.421c2.051-4.805 7.053-7.842 12.394-7.27a.8.8 0 0 0 .867-.695c.783-6.648 6.596-11.277 13.224-10.544.69.081 1.344.198 1.899.34.077.05.16.093.225.111 4.87 1.421 8.383 5.936 8.543 10.98a.776.776 0 0 0 .259.557c.157.142.364.2.58.207.752-.047 1.538-.034 2.121.04 4.021.426 7.454 2.8 9.249 6.275H25.246Z'
           />
         </g>
       </g>
-
     </svg>
   )
 }
@@ -91,8 +89,8 @@ export default function LoadingPage(props: {
     return <FailedToLoad geneticElement={props.gene} view={props.view} />
   return (
     <Stack gap={4}>
-      <LinearProgress variant="determinate" value={props.loadingAmount * 100} />
-      <Box display="flex" alignItems={'center'} justifyContent={'center'}>
+      <LinearProgress variant='determinate' value={props.loadingAmount * 100} />
+      <Box display='flex' alignItems={'center'} justifyContent={'center'}>
         <LoadingImage
           style={{
             marginTop: '80px',
@@ -102,7 +100,7 @@ export default function LoadingPage(props: {
           fill={theme.palette.primary.dark}
         />
       </Box>
-      <Typography variant="h5" align="center">
+      <Typography variant='h5' align='center'>
         Loading{' '}
         {props.gene
           ? props.gene.id + ' data for ' + props.view.name

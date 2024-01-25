@@ -45,7 +45,7 @@ export const light = createTheme({
       selected: '#dddddd', // is this used?
       hover: '#cccccc', // hovered gene
       edge: '#DDDDDD', // borders around EFP canvas
-      edgeLight: '#EEEEEE' // lighter borders around page views
+      edgeLight: '#EEEEEE', // lighter borders around page views
     },
     hot: {
       main: '#ff0000',
@@ -83,7 +83,7 @@ export const dark = createTheme({
       active: '#3a3a3a',
       hover: '#444444',
       edge: '#444444',
-      edgeLight: '#333333'
+      edgeLight: '#333333',
     },
     hot: {
       main: '#ff0000',

@@ -22,8 +22,8 @@ export default function ViewOptions<T, S, A>({
   return (
     <>
       <Dropdown
-        variant="text"
-        color="secondary"
+        variant='text'
+        color='secondary'
         sx={{
           color: 'secondary.contrastText',
         }}

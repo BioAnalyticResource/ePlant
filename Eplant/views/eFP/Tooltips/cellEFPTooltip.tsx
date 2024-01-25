@@ -55,7 +55,7 @@ function CellSVGTooltip(props: {
               borderRadius: 1,
             })}
           >
-            <Table size="small">
+            <Table size='small'>
               <TableBody>
                 <TableRow>
                   <TableCell>

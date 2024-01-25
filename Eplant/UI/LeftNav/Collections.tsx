@@ -256,7 +256,7 @@ export function Collection({
                 ></SortableGeneticElement>
               ))
             ) : (
-              <Stack spacing={1} direction="row">
+              <Stack spacing={1} direction='row'>
                 <Typography
                   variant='caption'
                   fontStyle='italic'
