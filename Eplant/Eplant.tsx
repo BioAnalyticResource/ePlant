@@ -1,10 +1,12 @@
 // import useStateWithStorage from '@eplant/util/useStateWithStorage'
+
+import { createContext, useState } from 'react';
 import { Route, Routes } from 'react-router-dom'
 
 import { CssBaseline, ThemeProvider } from '@mui/material'
 
 import { dark, light } from './css/theme'
-import Sidebar from './UI/Sidebar'
+import SideBar from './UI/Sidebar'
 import { useConfig } from './config'
 import DirectPane from './DirectPane'
 import EplantLayout from './EplantLayout'
@@ -30,11 +32,28 @@ export default function Eplant() {
  * The main Eplant component. This is the root of the application. It contains the left nav and the layout.
  * @returns {JSX.Element} The rendered Eplant component
  */
+
+// createContext type
+export type CollapseContent = {
+  collapse: boolean,
+  setCollapse: (c: boolean) => void
+}
+
+// exporting the createContext
+export const collapseContext = createContext<CollapseContent>({
+  collapse: false,
+  setCollapse: () => { }
+})
+
+// Adding context to SideBar and EplantLayout children
 export function MainEplant() {
+  const [collapse, setCollapse] = useState(false)
   return (
     <>
-      <Sidebar />
-      <EplantLayout />
+      <collapseContext.Provider value={{ collapse: collapse, setCollapse: setCollapse }}>
+        <SideBar />
+        <EplantLayout />
+      </collapseContext.Provider >
     </>
   )
 }

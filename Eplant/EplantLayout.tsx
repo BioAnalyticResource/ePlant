@@ -159,9 +159,9 @@ const EplantLayout = () => {
 
     layout.current.addTabToTabSet(
       tabsetId ??
-        model.getActiveTabset()?.getId?.() ??
-        model.getRoot().getChildren()[0]?.getId() ??
-        '',
+      model.getActiveTabset()?.getId?.() ??
+      model.getRoot().getChildren()[0]?.getId() ??
+      '',
       {
         name: name,
         component: 'view',
