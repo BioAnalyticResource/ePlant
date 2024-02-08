@@ -1,10 +1,9 @@
-import GeneticElement from '@eplant/GeneticElement'
-import { View, ViewProps, ViewDispatch } from '@eplant/View'
-import { useViewData } from '@eplant/View/viewData'
-import { CircularProgress, Divider, MenuItem } from '@mui/material'
 import React from 'react'
+
+import GeneticElement from '@eplant/GeneticElement'
 import Dropdown from '@eplant/UI/Dropdown'
-import delayed from '@eplant/util/delayed'
+import { View, ViewDispatch } from '@eplant/View'
+import { MenuItem } from '@mui/material'
 
 export default function ViewOptions<T, S, A>({
   view,
@@ -24,8 +23,8 @@ export default function ViewOptions<T, S, A>({
   return (
     <>
       <Dropdown
-        variant="text"
-        color="secondary"
+        variant='text'
+        color='secondary'
         sx={{
           color: 'secondary.contrastText',
         }}

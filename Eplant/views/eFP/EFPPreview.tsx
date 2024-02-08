@@ -1,24 +1,24 @@
-import GeneticElement from '@eplant/GeneticElement'
 import {
-  Box,
-  LinearProgress,
-  styled,
-  BoxProps,
-  Typography,
-  Skeleton,
-} from '@mui/material'
-import * as React from 'react'
-import EFP from '.'
-import { useViewData } from '../../View/viewData'
+  startTransition,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+
+import GeneticElement from '@eplant/GeneticElement'
+import { Box, BoxProps, Skeleton, styled, Typography } from '@mui/material'
+
 import { EFPData } from './types'
+import EFP from '.'
 
 const EFPPreviewContainer = styled(
   (props: BoxProps & { selected: boolean }) => <Box {...props} />
 )(({ theme, selected }) => ({
   border: selected
     ? `2px solid ${theme.palette.primary.main}`
-    : `2px solid ${theme.palette.background.active}`,
-  background: theme.palette.background.paper,
+    : `2px solid ${theme.palette.background.edgeLight}`,
+  background: theme.palette.background.paperOverlay,
   borderRadius: theme.shape.borderRadius,
   padding: `${selected ? 1 : 3}px`,
   boxSizing: 'border-box',
@@ -28,31 +28,35 @@ const EFPPreviewContainer = styled(
   justifyContent: 'center',
   display: 'flex',
 }))
+
 export type EFPPreviewProps = {
   gene: GeneticElement
   view: EFP
   selected: boolean
   colorMode: 'absolute' | 'relative'
   data: EFPData
+  maskThreshold: number
 } & BoxProps
+
 export default function EFPPreview({
   gene,
   view,
   selected,
   colorMode,
   data,
+  maskThreshold,
   ...boxProps
 }: EFPPreviewProps) {
-  const colorModeDeferred = React.useDeferredValue(colorMode)
-  const dataDeferred = React.useDeferredValue(data)
-  const [draw, setDraw] = React.useState(false)
-  React.useEffect(() => {
+  const colorModeDeferred = useDeferredValue(colorMode)
+  const dataDeferred = useDeferredValue(data)
+  const [draw, setDraw] = useState(false)
+  useEffect(() => {
     if (!draw)
-      React.startTransition(() => {
+      startTransition(() => {
         setDraw(true)
       })
   }, [draw])
-  const component = React.useMemo(() => {
+  const component = useMemo(() => {
     return (
       <EFPPreviewContainer selected={selected} {...boxProps}>
         <view.component
@@ -62,6 +66,7 @@ export default function EFPPreview({
           state={{
             renderAsThumbnail: true,
             colorMode: colorModeDeferred,
+            maskThreshold: maskThreshold,
           }}
           geneticElement={gene}
           dispatch={() => {}}
@@ -72,14 +77,13 @@ export default function EFPPreview({
             top: 0,
             width: '100%',
             left: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
           }}
         >
           <Typography
-            variant="caption"
+            variant='caption'
             sx={{ marginLeft: '4px', fontWeight: 'light' }}
           >
-            MAX: {Math.round(dataDeferred.max)}
+            Max: {Math.round(dataDeferred.max)}
           </Typography>
         </div>
       </EFPPreviewContainer>
@@ -89,7 +93,7 @@ export default function EFPPreview({
     component
   ) : (
     <EFPPreviewContainer selected={selected} {...boxProps}>
-      <Skeleton variant="rectangular" width="100%" height="100%" />
+      <Skeleton variant='rectangular' width='100%' height='100%' />
     </EFPPreviewContainer>
   )
 }

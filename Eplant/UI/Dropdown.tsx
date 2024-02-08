@@ -1,4 +1,6 @@
 import React from 'react'
+
+import { KeyboardArrowDown } from '@mui/icons-material'
 import {
   alpha,
   Button,
@@ -7,7 +9,6 @@ import {
   MenuProps,
   styled,
 } from '@mui/material'
-import { KeyboardArrowDown } from '@mui/icons-material'
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -25,6 +26,7 @@ const StyledMenu = styled((props: MenuProps) => (
 ))(({ theme }) => ({
   '& .MuiPaper-root': {
     borderRadius: 3,
+    backgroundColor: theme.palette.background.paperOverlay,
     marginTop: theme.spacing(1),
     minWidth: 180,
     '& .MuiMenuItem-root': {
@@ -69,9 +71,9 @@ export default function Dropdown({
       <Button
         id={buttonId}
         aria-controls={open ? menuId : undefined}
-        aria-haspopup="true"
+        aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
-        variant="contained"
+        variant='contained'
         disableElevation
         onClick={handleClick}
         endIcon={<KeyboardArrowDown />}
@@ -83,6 +85,8 @@ export default function Dropdown({
           'aria-labelledby': buttonId,
         }}
         anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         open={open}
         onClose={handleClose}
       >

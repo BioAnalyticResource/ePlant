@@ -58,7 +58,11 @@ export interface View<Data = any, State = any, Action = any> {
   /**
    * The react component that renders citations for a gene
    */
-  citation?: (props: { gene: GeneticElement | null }) => JSX.Element
+  citation?: (props: {
+    state?: State
+    activeData?: Data
+    gene?: GeneticElement | null
+  }) => JSX.Element
   /**
    * Return the title of this view's tab
    */

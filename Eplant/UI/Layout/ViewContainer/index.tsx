@@ -1,40 +1,32 @@
+import * as React from 'react'
+
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { usePrinting, useViewID } from '@eplant/state'
-import GeneHeader from '@eplant/UI/GeneHeader'
-import { styled, useTheme } from '@mui/material/styles'
-
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
+import { useViewData } from '@eplant/View/viewData'
 import {
   AppBar,
   Button,
-  ButtonProps,
-  Container,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
-  InputLabel,
-  ListItemIcon,
   ListItemText,
   MenuItem,
-  MenuList,
   Select,
   Stack,
   Toolbar,
   Typography,
 } from '@mui/material'
 import Box, { BoxProps } from '@mui/material/Box'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
-import * as React from 'react'
-import { View, ViewProps } from '../../../View'
-import { useViewData } from '@eplant/View/viewData'
+import { View } from '../../../View'
+
 import LoadingPage from './LoadingPage'
 import ViewOptions from './ViewOptions'
-import { flexbox } from '@mui/system'
 
 /**
  * Wraps a view in a container that provides a toolbar and a download button. It also manages loading the view's data.
@@ -56,7 +48,6 @@ export function ViewContainer<T, S, A>({
 } & BoxProps) {
   const { activeData, error, loading, loadingAmount, dispatch, state } =
     useViewData(view, gene)
-
   const idLabel = React.useId()
   const selectId = React.useId()
   const [printing, setPrinting] = usePrinting()
@@ -76,30 +67,57 @@ export function ViewContainer<T, S, A>({
     }
   }, [printing])
 
-  //
-  const showToolbarButtons = useMediaQuery('(min-width:1024px)')
-
   const topBar = React.useMemo(
     () => (
       <AppBar
-        variant="elevation"
+        variant='elevation'
         sx={(theme) => ({
           background: theme.palette.background.active,
         })}
-        position="sticky"
+        position='sticky'
         elevation={0}
       >
-        <Toolbar style={{ gap: '8px' }}>
+        <Toolbar
+          sx={(theme) => ({
+            gap: '8px',
+            paddingRight: 16,
+            borderStyle: 'solid',
+            borderWidth: '1px 0px 1px 1px',
+            borderColor: theme.palette.background.edge,
+            borderLeftColor: theme.palette.background.edgeLight,
+          })}
+        >
           <Stack
-            direction="row"
+            direction='row'
             gap={2}
-            sx={{ flexGrow: 1, height: '100%', alignItems: 'center' }}
+            sx={{
+              flexGrow: 1,
+              height: '100%',
+              alignItems: 'center',
+            }}
           >
             {/* View selector dropdown */}
-            <FormControl variant="standard">
-              {/* <InputLabel id={idLabel}>View</InputLabel> */}
+            <FormControl variant='standard'>
               <Select
                 value={view.id}
+                renderValue={() => {
+                  if (view.id == 'get-started') {
+                    return <span style={{ paddingLeft: 8 }}>View selector</span>
+                  }
+                  return (
+                    <span
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Box sx={{ paddingRight: 1.5, marginTop: 0.5 }}>
+                        {view.icon && <view.icon />}
+                      </Box>
+                      {view.name}
+                    </span>
+                  )
+                }}
                 labelId={idLabel}
                 label={'View'}
                 id={selectId}
@@ -107,19 +125,41 @@ export function ViewContainer<T, S, A>({
                   const view = views.find((view) => view.id == e?.target?.value)
                   if (view) setView(view)
                 }}
+                sx={{
+                  '& .MuiSelect-select': {
+                    paddingRight: '36px !important',
+                  },
+                }}
                 inputProps={{
-                  sx: {
+                  sx: (theme: {
+                    shape: any
+                    palette: {
+                      background: { paperOverlay: any; edgeLight: any }
+                    }
+                  }) => ({
                     display: 'flex',
                     alignItems: 'center',
-
+                    backgroundColor: theme.palette.background.paperOverlay,
+                    paddingTop: 0.75,
+                    paddingLeft: 1,
+                    paddingBottom: 0.5,
+                    borderTopLeftRadius: theme.shape.borderRadius,
+                    borderTopRightRadius: theme.shape.borderRadius,
+                    borderStyle: 'solid',
+                    borderWidth: 1,
+                    borderColor: theme.palette.background.edgeLight,
                     ':focus': {
-                      backgroundColor: 'transparent',
+                      backgroundColor: theme.palette.background.paperOverlay,
+                      borderRadius: 1,
                     },
                     '& legend': { display: 'none' },
                     '& fieldset': { top: 0 },
-                  },
+                  }),
                 }}
               >
+                <MenuItem disabled value=''>
+                  Select a view
+                </MenuItem>
                 {userViews.map((view) => (
                   <MenuItem
                     key={view.id}
@@ -130,7 +170,7 @@ export function ViewContainer<T, S, A>({
                         : 'none',
                       paddingTop: 8,
                       paddingBottom: 8,
-                      marginBottom: 8,
+                      marginBottom: 0,
                     }}
                   >
                     <Box sx={{ paddingRight: 2, marginTop: 0.5 }}>
@@ -164,25 +204,25 @@ export function ViewContainer<T, S, A>({
             dispatch={dispatch}
           />
           <Button
-            variant="text"
+            variant='text'
             sx={{
               color: 'secondary.contrastText',
             }}
             disabled={loading}
-            color="secondary"
+            color='secondary'
             onClick={() => {
               setViewingCitations(true)
             }}
           >
-            Get citations
+            Data sources
           </Button>
           <Button
-            variant="text"
+            variant='text'
             sx={{
               color: 'secondary.contrastText',
             }}
             disabled={loading}
-            color="secondary"
+            color='secondary'
             onClick={() => {
               downloadFile(
                 `${view.id}${gene ? '-' + gene.id : ''}.json`,
@@ -198,16 +238,14 @@ export function ViewContainer<T, S, A>({
     [view.id, gene?.id, loading, activeData, state, dispatch]
   )
   return (
-    <Box {...props} display="flex" flexDirection="column">
+    <Box {...props} display='flex' flexDirection='column'>
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
-        <DialogTitle>
-          <Typography variant="h6">
-            Citation and experiment information for {view.name}
-          </Typography>
+        <DialogTitle sx={{ minWidth: '512px' }}>
+          <Typography variant='h6'>Data sources for {view.name}</Typography>
         </DialogTitle>
         <DialogContent>
           {view.citation ? (
-            <view.citation gene={gene} />
+            <view.citation state={state} activeData={activeData} gene={gene} />
           ) : (
             <Box>No information provided for this view</Box>
           )}
@@ -220,11 +258,14 @@ export function ViewContainer<T, S, A>({
       {topBar}
       <Box
         sx={(theme) => ({
-          padding: '2rem',
+          padding: '1rem',
           flexGrow: 1,
           display: 'flex',
           gap: theme.spacing(4),
           overflow: 'auto',
+          borderStyle: 'solid',
+          borderWidth: '0px 0px 0px 1px',
+          borderColor: theme.palette.background.edgeLight,
           flexDirection: 'column',
           ...(printing == viewId
             ? {
@@ -253,12 +294,12 @@ export function ViewContainer<T, S, A>({
             />
           ) : (
             <>
-              <view.header
+              {/* <view.header
                 state={state}
                 activeData={activeData}
                 dispatch={dispatch}
                 geneticElement={gene}
-              />
+              /> */}
               <view.component
                 state={state}
                 geneticElement={gene}

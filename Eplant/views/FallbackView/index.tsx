@@ -1,5 +1,7 @@
-import { Typography } from '@mui/material'
 import React from 'react'
+
+import { Typography } from '@mui/material'
+
 import { View } from '../../View'
 
 const FallbackView: View<null> = {
@@ -10,7 +12,7 @@ const FallbackView: View<null> = {
   },
   id: 'fallback',
   header: ({ geneticElement }) => (
-    <Typography variant="h6">{geneticElement?.id}</Typography>
+    <Typography variant='h6'>{geneticElement?.id}</Typography>
   ),
 }
 

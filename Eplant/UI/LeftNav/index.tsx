@@ -1,26 +1,20 @@
+import * as React from 'react'
+import _ from 'lodash'
+
+import GeneticElement from '@eplant/GeneticElement'
 import {
   useActiveId,
   useDarkMode,
+  useGeneticElements,
   usePanesDispatch,
-  useSpecies,
 } from '@eplant/state'
-import {
-  Box,
-  Divider,
-  FormControlLabel,
-  FormGroup,
-  Switch,
-} from '@mui/material'
-import Button from '@mui/material/Button'
+import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import * as React from 'react'
-import { SearchGroup } from './GeneSearch'
+
 import { LogoWithText } from '../Logo'
-import { useGeneticElements } from '@eplant/state'
-import GeneticElementComponent from '../GeneticElementComponent'
+
 import { Collections } from './Collections'
-import GeneticElement from '@eplant/GeneticElement'
-import _, { uniq } from 'lodash'
+import { SearchGroup } from './GeneSearch'
 
 /**
  * The left nav bar in ePlant. Contains a search bar, and list of collections of genes.
@@ -32,7 +26,6 @@ export function LeftNav(props: {
   onSelectGene?: (gene: GeneticElement) => void
   selectedGene?: string
 }) {
-  const [species, setSpecies] = useSpecies()
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
 
@@ -44,8 +37,8 @@ export function LeftNav(props: {
     if (uniq.length != geneticElements.length) setGeneticElements(uniq)
   }, [geneticElements])
   return (
-    <Stack gap={4} direction="column" height={'100%'}>
-      <LogoWithText text="ePlant" />
+    <Stack gap={2} direction='column' height={'100%'}>
+      <LogoWithText text='ePlant' />
       <SearchGroup
         addGeneticElements={(s) => {
           setGeneticElements(
@@ -80,7 +73,7 @@ export function LeftNav(props: {
               checked={darkMode}
             />
           }
-          label="Dark Mode"
+          label='Dark mode'
         />
       </FormGroup>
     </Stack>

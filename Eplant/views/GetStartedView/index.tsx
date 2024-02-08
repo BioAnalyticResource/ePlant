@@ -1,7 +1,9 @@
 import * as React from 'react'
+
 import { View } from '@eplant/View'
-import component from './component'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
+
+import component from './component'
 
 const GetStartedView: View = {
   name: 'Get started',

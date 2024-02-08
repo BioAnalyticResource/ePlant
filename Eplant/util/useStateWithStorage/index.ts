@@ -1,5 +1,6 @@
+import React, { SetStateAction, useEffect, useState } from 'react'
+
 import { storage, usePersist } from '@eplant/state'
-import React, { SetStateAction, useState, useEffect } from 'react'
 
 /**
  * A a hook like `useState` that stores the state in local storage.

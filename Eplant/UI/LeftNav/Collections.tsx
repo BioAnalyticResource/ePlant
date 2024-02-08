@@ -1,55 +1,46 @@
-import { useCollections, useGeneticElements } from '@eplant/state'
+import { useEffect, useId, useRef, useState } from 'react'
+
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from '@dnd-kit/modifiers'
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import GeneticElement from '@eplant/GeneticElement'
+import { useCollections, useGeneticElements } from '@eplant/state'
+import { Add, Check, ExpandMore } from '@mui/icons-material'
 import {
-  Add,
-  Check,
-  ExpandMore,
-  MoreVert,
-  SignalCellularNoSimOutlined,
-} from '@mui/icons-material'
-import {
+  Box,
   Button,
   Card,
   Collapse,
   IconButton,
   Menu,
   MenuItem,
-  Paper,
   Stack,
   TextField,
   Typography,
 } from '@mui/material'
-import { Box } from '@mui/material'
-import React, { useId, useState, useRef, useEffect } from 'react'
+
 import GeneticElementComponent, {
   GeneticElementComponentProps,
 } from '../GeneticElementComponent'
-import {
-  SortableContext,
-  arrayMove,
-  verticalListSortingStrategy,
-  useSortable,
-} from '@dnd-kit/sortable'
-import {
-  DndContext,
-  DragEndEvent,
-  useDroppable,
-  DragOverEvent,
-  DragStartEvent,
-  DragOverlay,
-  useSensors,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-} from '@dnd-kit/core'
-import { CSS } from '@dnd-kit/utilities'
-import _, { truncate } from 'lodash'
-import {
-  restrictToVerticalAxis,
-  restrictToWindowEdges,
-} from '@dnd-kit/modifiers'
 import OptionsButton from '../OptionsButton'
-import useStateWithStorage from '@eplant/util/useStateWithStorage'
 
 /**
  * A draggable/sortable version of {@link GeneticElementComponent}
@@ -153,7 +144,7 @@ export function Collection({
 
   return (
     <Stack
-      direction="column"
+      direction='column'
       spacing={1}
       style={{
         justifyContent: 'center',
@@ -162,11 +153,11 @@ export function Collection({
       <Card
         elevation={0}
         sx={(theme) => ({
-          borderRadius: theme.shape.borderRadius,
+          borderRadius: theme.shape.borderRadius + 'px',
           color: theme.palette.text.secondary,
           backgroundColor:
             genes.length > 0 && !open
-              ? theme.palette.background.active
+              ? theme.palette.background.paper
               : theme.palette.background.default,
         })}
       >
@@ -174,7 +165,7 @@ export function Collection({
           onClick={() => setOpen(!open)}
           onMouseOver={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
-          direction="row"
+          direction='row'
           gap={1}
           ref={setTopRef}
           sx={(theme) => ({
@@ -197,7 +188,7 @@ export function Collection({
               display: renaming ? undefined : 'none',
               maxHeight: '100%',
             }}
-            size="small"
+            size='small'
             inputRef={inputRef}
             onKeyPress={(e) => {
               if (e.key == 'Enter') rename()
@@ -210,23 +201,24 @@ export function Collection({
               width: '100%',
             }}
           >
-            <div
+            <span
               style={{
                 display: 'flex',
-                flexFlow: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+                flexFlow: 'column',
+                lineHeight: 'normal',
+                padding: '8px 0px',
+                // justifyContent: 'space-between',
               }}
             >
               <span>{name}</span>
               <span style={{ fontSize: '0.8rem', opacity: '0.5' }}>
                 {genes.length > 0 && !open ? genes.length + ' genes' : ''}
               </span>
-            </div>
+            </span>
           </Typography>
           <div style={{ flex: 1 }} />
           {renaming ? (
-            <IconButton color="primary" onClick={rename}>
+            <IconButton color='primary' onClick={rename}>
               <Check></Check>
             </IconButton>
           ) : (
@@ -246,10 +238,10 @@ export function Collection({
           )}
         </Stack>
       </Card>
-      <Collapse in={open}>
+      <Collapse in={open} sx={{ marginTop: '0px !important' }}>
         <SortableContext items={genes} strategy={verticalListSortingStrategy}>
           <Stack
-            direction="column"
+            direction='column'
             spacing={1}
             paddingBottom={2}
             ref={setBottomRef}
@@ -266,16 +258,20 @@ export function Collection({
                 ></SortableGeneticElement>
               ))
             ) : (
-              <Stack spacing={1} direction="row">
-                <div style={{ width: '24px' }} />
+              <Stack spacing={1} direction='row'>
                 <Typography
-                  variant="caption"
-                  fontStyle="italic"
+                  variant='caption'
+                  fontStyle='italic'
                   sx={(theme) => ({
-                    color: theme.palette.text.disabled,
+                    color: theme.palette.background.hover,
+                    padding: '0.25rem 0.75rem',
+                    flexGrow: 1,
+                    border: 'dashed 1px',
+                    borderColor: theme.palette.background.hover,
+                    borderRadius: theme.shape.borderRadius + 'px',
                   })}
                 >
-                  Drag genes here
+                  Drag genes to reorder them
                 </Typography>
               </Stack>
             )}
@@ -365,7 +361,7 @@ export function Collections(props: {
     useSensor(KeyboardSensor, {})
   )
 
-  const [activeId, setActiveId] = React.useState<string | undefined>(undefined)
+  const [activeId, setActiveId] = useState<string | undefined>(undefined)
 
   // If there are genes that aren't in a collection, put them in the first
   useEffect(() => {
@@ -406,7 +402,7 @@ export function Collections(props: {
         handleDrag(ev, { finished: true, swapWithinCollection: true })
       }
     >
-      <Stack direction="column" spacing={2}>
+      <Stack direction='column' spacing={2}>
         {collections.map((p, i) => (
           <Collection
             key={i}
@@ -449,9 +445,9 @@ export function Collections(props: {
         ))}
         <Button
           startIcon={<Add />}
-          variant="text"
-          color="secondary"
-          size="small"
+          variant='text'
+          color='secondary'
+          size='small'
           sx={(theme) => ({
             alignSelf: 'start',
           })}

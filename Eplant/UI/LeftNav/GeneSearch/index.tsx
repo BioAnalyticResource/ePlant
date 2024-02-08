@@ -1,8 +1,10 @@
-import { useSpecies } from '@eplant/state'
+import * as React from 'react'
+
 import GeneticElement, { Species } from '@eplant/GeneticElement'
+import { useSpecies } from '@eplant/state'
 import { Button, MenuItem, styled, TextField } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import * as React from 'react'
+
 import SearchBar from './SearchBar'
 
 export const MenuButton = styled(Button)(({ theme }) => ({
@@ -35,16 +37,17 @@ export function SearchGroup({
     if (!species && speciesList.length) setSpecies(speciesList[0])
   }, [species])
   return (
-    <Stack direction="column" spacing={2}>
+    <Stack direction='column' spacing={2}>
+      {/* Species selector */}
       <TextField
         select
-        size="small"
+        size='small'
         value={species?.name ?? ''}
         onChange={(e) =>
           setSpecies(speciesList.find((s) => s.name == e.target.value))
         }
-        label="Species"
-        variant="standard"
+        // label="Species"
+        variant='standard'
         inputProps={{
           sx: {
             ':focus': {
@@ -59,8 +62,10 @@ export function SearchGroup({
           </MenuItem>
         ))}
       </TextField>
+
+      {/* Gene selector */}
       <SearchBar
-        label="Search by gene name"
+        label='Search for genes'
         inputProps={{
           // TODO: Make these clickable
           helperText: <span>Example ABI3 or AT5G60200</span>,

@@ -1,3 +1,5 @@
+import React, { useEffect, useId, useRef, useState } from 'react'
+
 import GeneticElement from '@eplant/GeneticElement'
 import { DragIndicator } from '@mui/icons-material'
 import {
@@ -10,11 +12,10 @@ import {
   Paper,
   Stack,
   Theme,
-  ThemeProvider,
   Typography,
   useTheme,
 } from '@mui/material'
-import React, { SVGProps, useEffect, useId, useRef, useState } from 'react'
+
 import OptionsButton from './OptionsButton'
 
 /**
@@ -22,12 +23,12 @@ import OptionsButton from './OptionsButton'
  *
  * @param {(BoxProps & { hover: boolean })} props Set hover to whether or not the genetic element component is hovered
  */
-function SelectedIndicator(props: BoxProps & { hover: boolean }) {
+function SelectedIndicator(props: BoxProps & { hover: string }) {
   const theme = useTheme()
   return (
     <Box {...props} position={'relative'}>
       <Box
-        position="absolute"
+        position='absolute'
         sx={(theme) => ({
           left: 0,
           top: 0,
@@ -38,7 +39,7 @@ function SelectedIndicator(props: BoxProps & { hover: boolean }) {
         })}
       />
       <Box
-        position="absolute"
+        position='absolute'
         sx={(theme) => ({
           left: props.hover ? '0' : '0px',
           top: 0,
@@ -120,7 +121,7 @@ export default function GeneticElementComponent({
     transition: '0.1s ease all',
     color: hover ? theme.palette.text.primary : backgroundColor,
   })
-  const indicator = <SelectedIndicator hover={hover} />
+  const indicator = <SelectedIndicator hover={hover.toString()} />
   const Handle = (
     <DragIndicator
       sx={(theme) => ({
@@ -163,10 +164,10 @@ export default function GeneticElementComponent({
       onClick={onClick}
     >
       <Stack
-        direction="row"
+        direction='row'
         gap={1}
         height={24}
-        overflow="hidden"
+        overflow='hidden'
         whiteSpace={'nowrap'}
         sx={(theme) => ({})}
       >
@@ -190,6 +191,7 @@ export default function GeneticElementComponent({
                   ? theme.palette.background.selected
                   : theme.palette.background.default
               })`,
+
               width: '100%',
               height: '100%',
               position: 'absolute',
@@ -197,13 +199,13 @@ export default function GeneticElementComponent({
               zIndex: 5,
             },
             ':hover::before': {
-              background: `linear-gradient(to right, transparent, 95%, ${theme.palette.background.hover})`,
+              background: `linear-gradient(to right, transparent, 95%, ${theme.palette.background.selected})`,
             },
           }}
           ref={textContainerRef}
         >
           <Stack
-            direction="row"
+            direction='row'
             gap={1}
             sx={(theme) => ({
               animation: textScroll
@@ -213,14 +215,21 @@ export default function GeneticElementComponent({
                 : '',
               position: 'absolute',
               userSelect: 'none',
+              top: '2px',
             })}
             ref={textGroupRef}
           >
-            <Typography sx={{ fontWeight: selected ? 'bold' : 'regular' }}>
+            <Typography
+              variant='body2'
+              // sx={{ fontWeight: selected ? 'bold' : 'regular' }}
+            >
               {geneticElement.id}
             </Typography>
-            <Divider orientation="vertical" flexItem></Divider>
-            <Typography sx={{ fontWeight: selected ? 'bold' : 'regular' }}>
+            <Divider orientation='vertical' flexItem></Divider>
+            <Typography
+              variant='body2'
+              // sx={{ fontWeight: selected ? 'bold' : 'regular' }}
+            >
               {geneticElement.aliases.join(', ')}
             </Typography>
           </Stack>

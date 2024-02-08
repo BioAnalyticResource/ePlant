@@ -1,19 +1,11 @@
-import { Theme, useTheme } from '@mui/material'
-import DOMPurify from 'dompurify'
+import * as React from 'react'
+import { mix } from 'color2k'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import * as React from 'react'
-import { ViewProps } from '../../View'
-import {
-  ColorMode,
-  EFPAction,
-  EFPData,
-  EFPGroup,
-  EFPId,
-  EFPSampleData,
-  EFPSVGCache,
-} from './types'
-import { mix } from 'color2k'
+
+import { Theme, useTheme } from '@mui/material'
+
+import { ColorMode, EFPData, EFPId, EFPSampleData, EFPSVGCache } from './types'
 
 const cacheAtom = atomWithStorage<EFPSVGCache>('eFP_cache', {})
 
@@ -93,15 +85,23 @@ export function getColor(
   group: EFPSampleData,
   control: number,
   theme: Theme,
-  colorMode: ColorMode
+  colorMode: ColorMode,
+  tissueStd?: number,
+  maskThreshold?: number
 ): string {
   const extremum = Math.max(
     Math.abs(Math.log2(group.min / control)),
     Math.log2(group.max / control),
     1
   )
+  const masked =
+    maskThreshold && tissueStd
+      ? isNaN(group.std) || tissueStd >= value * (maskThreshold / 100)
+      : false
   const norm = Math.log2(value / control) / extremum
-  if (colorMode === 'relative')
+  if (masked) {
+    return theme.palette.secondary.dark
+  } else if (colorMode === 'relative')
     return norm < 0
       ? mix(theme.palette.neutral.main, theme.palette.cold.main, Math.abs(norm))
       : mix(theme.palette.neutral.main, theme.palette.hot.main, Math.abs(norm))
@@ -116,14 +116,14 @@ export function getColor(
 export function useStyles(
   id: string,
   { groups, control }: EFPData,
-  colorMode: ColorMode
+  colorMode: ColorMode,
+  maskThreshold?: number
 ) {
   const theme = useTheme()
   const samples = groups
     .flatMap((group) =>
       group.tissues.map(
-        (tissue) =>
-          `
+        (tissue) => `
           #${id} .efp-group-${tissue.id} *, #${id} .efp-group-${
             tissue.id
           } { fill: ${getColor(
@@ -131,7 +131,9 @@ export function useStyles(
             group,
             control ?? 1,
             theme,
-            colorMode
+            colorMode,
+            tissue.std,
+            maskThreshold
           )} !important; }`
       )
     )

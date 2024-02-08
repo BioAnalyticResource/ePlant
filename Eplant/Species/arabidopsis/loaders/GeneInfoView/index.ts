@@ -1,6 +1,7 @@
 import axios from 'axios'
-import { GeneFeature, GeneInfoViewData } from '@eplant/views/GeneInfoView/types'
+
 import { View } from '@eplant/View'
+import { GeneFeature, GeneInfoViewData } from '@eplant/views/GeneInfoView/types'
 
 const loader: View<GeneInfoViewData>['getInitialData'] = async (
   geneticElement,
@@ -23,7 +24,9 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
       }),
     // Get features of the gene (used for gene model and sequence highlighting)
     axios
-      .get<{ features: GeneFeature[] }>(
+      .get<{
+        features: GeneFeature[]
+      }>(
         `https://bar.utoronto.ca/webservices/bar_araport/` +
           `gene_structure_by_locus.php?locus=${geneticElement.id}`
       )
@@ -61,7 +64,8 @@ const loader: View<GeneInfoViewData>['getInitialData'] = async (
   }
 
   // Find the type of the genetic element
-  let geneticElementType: GeneInfoViewData['geneticElementType'] = parentFeatType as GeneInfoViewData['geneticElementType']
+  let geneticElementType: GeneInfoViewData['geneticElementType'] =
+    parentFeatType as GeneInfoViewData['geneticElementType']
   if (parentFeatType == 'gene') {
     geneticElementType = 'non_coding'
     if (childFeatType == 'mRNA') geneticElementType = 'protein_coding'

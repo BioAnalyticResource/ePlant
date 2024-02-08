@@ -1,20 +1,12 @@
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import _ from 'lodash'
+
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  Box,
-  CircularProgress,
-  Fade,
-  Grow,
-  Popper,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Tooltip,
-  Typography,
-  useTheme,
-} from '@mui/material'
-import React, { ReactPropTypes, useId, useMemo } from 'react'
 import { View, ViewProps } from '@eplant/View'
+import { ViewDataError } from '@eplant/View/viewData'
+import { CircularProgress, Typography } from '@mui/material'
+
+import SVGTooltip from './Tooltips/EFPTooltip'
 import { useEFPSVG, useStyles } from './svg'
 import {
   EFPAction,
@@ -25,116 +17,20 @@ import {
   EFPState,
   EFPTissue,
 } from './types'
-import _ from 'lodash'
-import { useViewID } from '@eplant/state'
-import { ViewDataError } from '@eplant/View/viewData'
-
-function SVGTooltip(props: {
-  el: SVGElement | null
-  group: EFPGroup
-  tissue: EFPTissue
-  data: EFPData
-}) {
-  const [open, setOpen] = React.useState(false)
-  const theme = useTheme()
-  React.useEffect(() => {
-    const enterListener = () => {
-      setOpen(true)
-    }
-    const leaveListener = () => {
-      setOpen(false)
-    }
-    if (props.el) {
-      props.el.addEventListener('mouseenter', enterListener)
-      props.el.addEventListener('mouseleave', leaveListener)
-      return () => {
-        if (props.el) {
-          props.el.removeEventListener('mouseenter', enterListener)
-          props.el.removeEventListener('mouseleave', leaveListener)
-          setOpen(false)
-        }
-      }
-    }
-  }, [props.el])
-  return (
-    <Popper transition anchorEl={props.el} open={open}>
-      {({ TransitionProps }) => (
-        <Grow {...TransitionProps} timeout={350}>
-          <Box
-            sx={(theme) => ({
-              backgroundColor: theme.palette.background.transparentOverlay,
-              backdropFilter: 'blur(7px)',
-              boxShadow: theme.shadows[3],
-              borderRadius: 1,
-            })}
-          >
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Sample name
-                  </TableCell>
-                  <TableCell>{props.tissue.name}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Level
-                  </TableCell>
-                  <TableCell>
-                    {props.tissue.mean.toFixed(2)}±{props.tissue.std.toFixed(2)}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                    }}
-                  >
-                    Samples
-                  </TableCell>
-                  <TableCell>{props.tissue.samples}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.secondary.main,
-                      textAlign: 'right',
-                      borderBottom: 'none',
-                    }}
-                  >
-                    Log2 fold change vs control
-                  </TableCell>
-                  <TableCell sx={{ borderBottom: 'none' }}>
-                    {Math.log2(
-                      props.tissue.mean / (props.data.control ?? 1)
-                    ).toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Box>
-        </Grow>
-      )}
-    </Popper>
-  )
-}
 
 export default class EFP implements View<EFPData, EFPState, EFPAction> {
   getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
+    maskThreshold: 100,
   })
+  tooltipComponent: (props: {
+    el: SVGElement | null
+    group: EFPGroup
+    tissue: EFPTissue
+    data: EFPData
+    state: EFPState
+  }) => JSX.Element
   constructor(
     public name: string,
     public id: EFPId,
@@ -142,6 +38,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     public xmlURL: string
   ) {
     this.component = this.component.bind(this)
+    this.tooltipComponent = SVGTooltip
   }
   //TODO: Reimplement this once the new BAR API is ready
   getInitialData = async (
@@ -272,7 +169,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     return out
   }
   component(props: ViewProps<EFPData, EFPState, EFPAction>): JSX.Element {
-    const { view, loading } = useEFPSVG(
+    const { view } = useEFPSVG(
       {
         svgURL: this.svgURL,
         xmlURL: this.xmlURL,
@@ -282,7 +179,6 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         showText: !props.state.renderAsThumbnail,
       }
     )
-
     const { svg } = view ?? {}
     const id =
       'svg-container-' +
@@ -290,9 +186,14 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       '-' +
       (props.geneticElement?.id ?? 'no-gene') +
       '-' +
-      React.useMemo(() => Math.random().toString(16).slice(3), [])
-    const styles = useStyles(id, props.activeData, props.state.colorMode)
-    React.useEffect(() => {
+      useMemo(() => Math.random().toString(16).slice(3), [])
+    const styles = useStyles(
+      id,
+      props.activeData,
+      props.state.colorMode,
+      props.state.maskThreshold
+    )
+    useEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
       document.head.appendChild(el)
@@ -302,7 +203,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     }, [props.activeData.groups, styles])
 
     // Add tooltips to svg
-    const [svgElements, setSvgElements] = React.useState<
+    const [svgElements, setSvgElements] = useState<
       {
         el: SVGElement
         group: EFPGroup
@@ -310,20 +211,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       }[]
     >([])
 
-    React.useLayoutEffect(() => {
-      const elements = Array.from(
-        props.activeData.groups.flatMap((group) =>
-          group.tissues.map((t) => ({
-            el: document.querySelector(`#${id} .efp-group-${t.id}`),
-            group,
-            tissue: t,
-          }))
-        )
-      )
-      setSvgElements(elements as any)
-    }, [props.activeData.groups, id])
-
-    const svgDiv = React.useMemo(() => {
+    const svgDiv = useMemo(() => {
       return (
         <div
           style={{
@@ -339,6 +227,19 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         />
       )
     }, [svg, id])
+
+    useLayoutEffect(() => {
+      const elements = Array.from(
+        props.activeData.groups.flatMap((group) =>
+          group.tissues.map((t) => ({
+            el: document.querySelector(`#${id} .efp-group-${t.id}`),
+            group,
+            tissue: t,
+          }))
+        )
+      )
+      setSvgElements(elements as any)
+    }, [props.activeData.groups, id, svgDiv])
 
     if (!svg) {
       return (
@@ -384,12 +285,13 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         {svgDiv}
         {!props.state.renderAsThumbnail &&
           svgElements.map(({ el, group, tissue }) => (
-            <SVGTooltip
+            <this.tooltipComponent
               data={props.activeData}
               key={tissue.id}
               el={el}
               group={group}
               tissue={tissue}
+              state={props.state}
             />
           ))}
       </div>
@@ -399,14 +301,14 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     geneticElement,
   }) => {
     return (
-      <Typography variant="h6">
+      <Typography variant='h6'>
         {this.name} for {geneticElement?.id}
       </Typography>
     )
   }
 }
 
-function getEFPSampleData(samples: number[]): EFPSampleData {
+export function getEFPSampleData(samples: number[]): EFPSampleData {
   const mean = _.mean(samples)
   return {
     max: Math.max(...samples),
