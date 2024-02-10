@@ -3,7 +3,6 @@ import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
 import {
-  useActiveId,
   useDarkMode,
   useGeneticElements,
   useSetActiveGeneId,
@@ -30,7 +29,6 @@ export function LeftNav(props: {
   const [darkMode, setDarkMode] = useDarkMode()
 
   const setActiveGeneId = useSetActiveGeneId()
-  const activeID = useActiveId()[0]
 
   React.useEffect(() => {
     const uniq = _.uniqBy(geneticElements, (g) => g.id)

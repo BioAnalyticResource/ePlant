@@ -1,7 +1,7 @@
 import { Container } from '@mui/material'
 
 import SerializedGeneticElement from '../GeneticElement'
-import { useActiveGeneId,useActiveId } from '../state'
+import { useActiveGeneId } from '../state'
 
 import { LeftNav } from './LeftNav'
 import ResponsiveDrawer from './ResponsiveDrawer'
@@ -10,7 +10,6 @@ export const sidebarWidth = 300
 
 export default function Sidebar() {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
-  const [activeId] = useActiveId()
 
   return (
     <ResponsiveDrawer

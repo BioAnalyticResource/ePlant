@@ -9,18 +9,17 @@ import { ViewContainer } from './UI/Layout/ViewContainer'
 import { sidebarWidth } from './UI/Sidebar'
 import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
-import GeneticElement from './GeneticElement'
+import GeneticElement, { Species } from './GeneticElement'
 import { defaultConfig } from './main'
 import {
+  pageLoad,
   useActiveGeneId,
-  useActiveId,
   useActiveViewId,
   useGeneticElements,
   usePageLoad,
   useSpecies,
 } from './state'
 import { updateColors } from './updateColors'
-import { View } from './View'
 
 const EplantLayout = () => {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
@@ -28,12 +27,10 @@ const EplantLayout = () => {
 
   const [genes] = useGeneticElements()
 
-  const [activeId, setActiveId] = useActiveId()
   const theme = useTheme()
   const [globalProgress, loaded] = usePageLoad()
 
   const config = useConfig()
-  console.log(config, activeGeneId, activeViewId)
 
   useEffect(() => {
     if (loaded) {

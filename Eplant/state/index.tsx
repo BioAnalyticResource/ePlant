@@ -1,11 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import {
-  atom,
-  SetStateAction,
-  useAtom,
-  useSetAtom,
-  WritableAtom,
-} from 'jotai'
+import { atom, SetStateAction, useAtom, useSetAtom, WritableAtom } from 'jotai'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
@@ -88,6 +82,44 @@ export function atomWithStorage<T>(
       if (get(persistAtom)) {
         storage.set(key, newValue)
       }
+      set(val, newValue)
+    }
+  )
+  return a
+}
+
+export function atomWithUrlStorage<T>(
+  key: string,
+  initialValue: T,
+  serialize: (value: T) => string = JSON.stringify,
+  deserialize: (value: string) => T = JSON.parse
+) {
+  const parse = () => {
+    const url = new URL(window.location.href)
+    const value = url.searchParams.get(key)
+    if (value === null) return initialValue
+    return deserialize(value)
+  }
+  const val = atom<T>(parse())
+  val.onMount = (setAtom) => {
+    const listener = () => {
+      setAtom(parse())
+    }
+    window.addEventListener('locationchange', listener)
+    return () => {
+      window.removeEventListener('locationchange', listener)
+    }
+  }
+  const a = atom(
+    (get) => {
+      return get(val)
+    },
+    (get, set, x: SetStateAction<T>) => {
+      const newValue =
+        typeof x == 'function' ? (x as (prev: T) => T)(get(val)) : x
+      const url = new URL(window.location.href)
+      url.searchParams.set(key, serialize(newValue))
+      window.history.pushState({}, '', url.toString())
       set(val, newValue)
     }
   )
@@ -193,11 +225,11 @@ const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)
 export const useSetSpecies = () => useSetAtom(speciesAtom)
 
-const activeGeneIdAtom = atom<string | undefined>(undefined);
+const activeGeneIdAtom = atomWithUrlStorage('gene', undefined)
 export const useActiveGeneId = () => useAtom(activeGeneIdAtom)
 export const useSetActiveGeneId = () => useSetAtom(activeGeneIdAtom)
 
-const activeViewIdAtom = atom<string | undefined>(undefined)
+const activeViewIdAtom = atomWithUrlStorage('view', undefined)
 export const useActiveViewId = () => useAtom(activeViewIdAtom)
 export const useSetActiveViewId = () => useSetAtom(activeViewIdAtom)
 
@@ -208,6 +240,3 @@ export const useSetPrinting = () => useSetAtom(printingAtom)
 const darkModeAtom = atomWithOptionalStorage<boolean>('dark-mode', true)
 export const useDarkMode = () => useAtom(darkModeAtom)
 export const useSetDarkMode = () => useSetAtom(darkModeAtom)
-
-const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
-export const useActiveId = () => useAtom(activeIdAtom)
