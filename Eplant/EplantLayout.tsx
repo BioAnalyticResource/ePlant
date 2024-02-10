@@ -7,21 +7,33 @@ import { useTheme } from '@mui/material/styles'
 import TabsetPlaceholder from './UI/Layout/TabsetPlaceholder'
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import { sidebarWidth } from './UI/Sidebar'
+import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
 import GeneticElement from './GeneticElement'
 import { defaultConfig } from './main'
-import { useActiveId, usePageLoad } from './state'
+import {
+  useActiveGeneId,
+  useActiveId,
+  useActiveViewId,
+  useGeneticElements,
+  usePageLoad,
+  useSpecies,
+} from './state'
 import { updateColors } from './updateColors'
 import { View } from './View'
 
 const EplantLayout = () => {
-  const [activeGene, setActiveGene] = useState<GeneticElement | null>(null)
-  const [activeView, setActiveView] = useState<View>(
-    defaultConfig.views.find((v) => v.id == defaultConfig.defaultView) as View
-  )
+  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
+  const [activeViewId, setActiveViewId] = useActiveViewId()
+
+  const [genes] = useGeneticElements()
+
   const [activeId, setActiveId] = useActiveId()
   const theme = useTheme()
   const [globalProgress, loaded] = usePageLoad()
+
+  const config = useConfig()
+  console.log(config, activeGeneId, activeViewId)
 
   useEffect(() => {
     if (loaded) {
@@ -50,9 +62,15 @@ const EplantLayout = () => {
       >
         {loaded ? (
           <ViewContainer
-            gene={activeGene}
-            view={activeView}
-            setView={setActiveView}
+            gene={genes.find((gene) => gene.id === activeGeneId) ?? null}
+            view={
+              config.views.find(
+                (view) => view.id === (activeViewId ?? config.defaultView)
+              ) ?? FallbackView
+            }
+            setView={(view) => {
+              setActiveViewId(view.id)
+            }}
             sx={{
               width: '100%',
               height: '100%',

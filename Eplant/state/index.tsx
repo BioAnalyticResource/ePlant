@@ -3,14 +3,12 @@ import {
   atom,
   SetStateAction,
   useAtom,
-  useAtomValue,
   useSetAtom,
   WritableAtom,
 } from 'jotai'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
-import { defaultConfig } from '@eplant/main'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import Storage from '@eplant/util/Storage'
 
