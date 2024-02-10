@@ -225,11 +225,11 @@ const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)
 export const useSetSpecies = () => useSetAtom(speciesAtom)
 
-const activeGeneIdAtom = atomWithUrlStorage('gene', undefined)
+const activeGeneIdAtom = atomWithUrlStorage<string | undefined>('gene', undefined)
 export const useActiveGeneId = () => useAtom(activeGeneIdAtom)
 export const useSetActiveGeneId = () => useSetAtom(activeGeneIdAtom)
 
-const activeViewIdAtom = atomWithUrlStorage('view', undefined)
+const activeViewIdAtom = atomWithUrlStorage<string | undefined>('view', undefined)
 export const useActiveViewId = () => useAtom(activeViewIdAtom)
 export const useSetActiveViewId = () => useSetAtom(activeViewIdAtom)
 
