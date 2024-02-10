@@ -1,9 +1,11 @@
-import GeneticElement from '@eplant/GeneticElement'
-import { atom, useAtom, useAtomValue, WritableAtom } from 'jotai'
 import * as React from 'react'
-import { View, ViewDispatch } from './index'
-import Storage from '@eplant/util/Storage'
+import { atom, useAtom, WritableAtom } from 'jotai'
+
+import GeneticElement from '@eplant/GeneticElement'
 import { atomWithStorage, useViewID } from '@eplant/state'
+import Storage from '@eplant/util/Storage'
+
+import { View, ViewDispatch } from './index'
 
 export enum ViewDataError {
   UNSUPPORTED_GENE = 'Unsupported gene',
@@ -75,7 +77,6 @@ function getViewStateAtom(key: string) {
   return viewStateAtoms[key]
 }
 
-
 export function getViewDataKey(viewId: string, gene: GeneticElement | null) {
   return `${viewId}-${gene?.id ?? 'generic-view'}`
 }
@@ -88,6 +89,7 @@ export function useViewData<T, S, A>(
   const id = (view?.id ?? 'generic-view') + '-' + useViewID()
   const [viewData, setViewData] = useAtom(getViewAtom(key))
   const [viewState, setViewState] = useAtom(getViewStateAtom(id))
+  // console.log(viewData)
 
   // If there is no cached viewData then load it using the view's loader
   React.useEffect(() => {

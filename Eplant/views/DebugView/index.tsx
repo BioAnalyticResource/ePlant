@@ -1,5 +1,8 @@
+import React from 'react'
+
 import { useViewID } from '@eplant/state'
-import { BugReport, BugReportOutlined } from '@mui/icons-material'
+import { viewDataStorage, viewStateStorage } from '@eplant/View/viewData'
+import { BugReportOutlined } from '@mui/icons-material'
 import {
   Button,
   Table,
@@ -9,11 +12,8 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import React from 'react'
-import EFPPreview from '../eFP/EFPPreview'
-import { AtGenExpress } from '../PlantEFP'
+
 import { View } from '../../View'
-import { viewDataStorage, viewStateStorage } from '@eplant/View/viewData'
 
 type DebugViewState = {
   testToggle: boolean
@@ -81,7 +81,7 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
   ],
   id: 'debug-view',
   header: ({ geneticElement }) => (
-    <Typography variant="h6">Debug view for {geneticElement?.id}</Typography>
+    <Typography variant='h6'>Debug view for {geneticElement?.id}</Typography>
   ),
   icon: () => <BugReportOutlined />,
 }

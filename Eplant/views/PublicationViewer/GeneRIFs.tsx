@@ -1,9 +1,10 @@
+import * as React from 'react'
+
 import { Box, Button } from '@mui/material'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import * as React from 'react'
+
 import { SearchBar } from './SearchBar'
 import { GeneRIFsData } from './types'
-
 
 const columns: GridColDef[] = [
   {
@@ -17,12 +18,13 @@ const columns: GridColDef[] = [
     headerName: 'Link',
     width: 130,
     headerClassName: 'select-none',
-    renderCell: (params: GridRenderCellParams<{[key:string]: unknown}>) => (
+    renderCell: (params: GridRenderCellParams<{ [key: string]: unknown }>) => (
       <Button
         href={params.value}
-        variant="outlined"
-        color="secondary"
-        size="small"
+        variant='outlined'
+        color='secondary'
+        size='small'
+        target='_blank'
       >
         VIEW PAPER
       </Button>

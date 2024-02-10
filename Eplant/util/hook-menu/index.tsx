@@ -12,7 +12,7 @@ type HookMenuAction<Entry> =
 
 type HookMenuContextValue<Entry> = [
   Entries<Entry>,
-  React.Dispatch<HookMenuAction<Entry>>
+  React.Dispatch<HookMenuAction<Entry>>,
 ]
 /**
  * Generates a list of entries by calling a hook in order.

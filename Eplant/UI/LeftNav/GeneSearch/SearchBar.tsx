@@ -1,12 +1,13 @@
-import IconButton from '@mui/material/IconButton'
-import SearchIcon from '@mui/icons-material/Search'
-import Autocomplete from '@mui/material/Autocomplete'
-import TextField, { TextFieldProps } from '@mui/material/TextField'
-import { debounce } from 'lodash'
 import * as React from 'react'
-import { Theme, SxProps, useTheme } from '@mui/material'
-import { Chip, InputAdornment } from '@mui/material'
+import { debounce } from 'lodash'
+
 import CloseIcon from '@mui/icons-material/Close'
+import SearchIcon from '@mui/icons-material/Search'
+import { SxProps, Theme } from '@mui/material'
+import { Chip, InputAdornment } from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
+import IconButton from '@mui/material/IconButton'
+import TextField, { TextFieldProps } from '@mui/material/TextField'
 /**
  * The search bar in ePlant. Supports async autocomplete and searching for multiple genes at once.
  * @param props.label The label of the search bar
@@ -30,13 +31,12 @@ export default function SearchBar(props: {
   const [options, setOptions] = React.useState<string[]>([])
   const [focused, setFocused] = React.useState<boolean>(false)
   const updateOptions = React.useRef<(text: string) => void>()
-  const theme = useTheme()
 
-  function handleChange(input: string[]){
-    if(input.length > 0){
-      // If input is a comma seperated list, will split into seperate genes 
-      setValue([...input.slice(0, -1), ...input.slice(-1)[0].split(",")])
-    }else{
+  function handleChange(input: string[]) {
+    if (input.length > 0) {
+      // If input is a comma seperated list, will split into seperate genes
+      setValue([...input.slice(0, -1), ...input.slice(-1)[0].split(',')])
+    } else {
       setValue(input)
     }
   }
@@ -44,7 +44,7 @@ export default function SearchBar(props: {
   React.useEffect(() => {
     updateOptions.current = debounce(async (newValue) => {
       const newoptions = await props.complete?.(newValue)
-      setOptions(newoptions?.length ? newoptions: [])
+      setOptions(newoptions?.length ? newoptions : [])
     }, 100)
   }, [props.complete])
   const id = React.useId()
@@ -61,7 +61,7 @@ export default function SearchBar(props: {
       options={options}
       freeSolo
       multiple
-      size="small"
+      size='small'
       disableClearable
       onInputChange={(event, value) => setInputValue(value)}
       sx={props.sx}
@@ -71,7 +71,7 @@ export default function SearchBar(props: {
         value.map((option: string, index: number) => (
           <Chip
             label={option}
-            size="small"
+            size='small'
             {...getTagProps({ index })}
             key={index}
             deleteIcon={<CloseIcon />}
@@ -81,12 +81,12 @@ export default function SearchBar(props: {
       renderInput={({ InputProps, ...params }) => (
         <TextField
           sx={(theme) => ({
-            background: theme.palette.background.paper,
+            background: theme.palette.background.paperOverlay,
             borderRadius: 1,
           })}
           placeholder={props.placeholder}
           label={props.label}
-          variant="outlined"
+          variant='outlined'
           {...params}
           InputProps={{
             ...InputProps,
@@ -102,7 +102,7 @@ export default function SearchBar(props: {
 
             endAdornment: (
               <InputAdornment
-                position="end"
+                position='end'
                 sx={{
                   position: 'absolute',
                   right: '4px',
@@ -124,7 +124,7 @@ export default function SearchBar(props: {
             ),
           }}
           {...params}
-          size="medium"
+          size='medium'
         />
       )}
     />

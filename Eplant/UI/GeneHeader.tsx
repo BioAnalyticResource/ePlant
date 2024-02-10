@@ -1,6 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { Box, Divider, Typography } from '@mui/material'
-import * as React from 'react'
 
 export default function GeneHeader({
   geneticElement,
@@ -17,10 +16,10 @@ export default function GeneHeader({
     >
       {geneticElement ? (
         <>
-          <Typography variant="h6">{geneticElement.id}</Typography>
+          <Typography variant='h6'>{geneticElement.id}</Typography>
           <Divider
-            orientation="vertical"
-            variant="middle"
+            orientation='vertical'
+            variant='middle'
             sx={{
               borderColor: (theme) => theme.palette.text.secondary,
               borderRightWidth: '3px',
@@ -28,12 +27,12 @@ export default function GeneHeader({
             }}
             flexItem
           />
-          <Typography variant="h6">
+          <Typography variant='h6'>
             {geneticElement.aliases.join(', ')}
           </Typography>
         </>
       ) : (
-        <Typography variant="h4">No gene selected</Typography>
+        <Typography variant='h4'>No gene selected</Typography>
       )}
     </Box>
   )

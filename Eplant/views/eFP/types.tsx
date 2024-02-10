@@ -25,6 +25,7 @@ export type ColorMode = 'absolute' | 'relative'
 export type EFPState = {
   colorMode: 'absolute' | 'relative'
   renderAsThumbnail: boolean
+  maskThreshold: number
 }
 
 export type EFPSVG = { svg: string; xml: string; id: EFPId }

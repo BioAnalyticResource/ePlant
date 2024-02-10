@@ -1,4 +1,5 @@
-import { openDB, deleteDB, wrap, unwrap, IDBPDatabase, DBSchema } from 'idb'
+import { DBSchema, IDBPDatabase, openDB } from 'idb'
+
 import delayed from '../delayed'
 
 type UpdateEvent<T> = { type: 'update'; key: T }
@@ -64,7 +65,7 @@ export default class KeyValDB<K extends string, V> {
   }
 
   async clear() {
-    console.log(await this.keys())
+    // console.log(await this.keys())
     ;(await this.keys()).forEach((key: K) => this.delete(key))
   }
 

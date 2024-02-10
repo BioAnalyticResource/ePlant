@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 export default function useDimensions(
   ref: React.MutableRefObject<HTMLElement | null>
 ) {
-  const [dimensions, setDimensions] = React.useState({ width: 0, height: 0 })
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   useEffect(() => {
     if (ref && ref.current) {
       const observer = new ResizeObserver((entries) => {

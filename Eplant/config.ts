@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { type View } from './View'
 
 export type EplantConfig = {
@@ -18,7 +19,6 @@ export const Config = React.createContext<EplantConfig>({
   views: [],
   tabHeight: 48,
   rootPath: '',
-
   defaultSpecies: '',
   defaultView: '',
 })
