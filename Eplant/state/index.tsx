@@ -178,7 +178,7 @@ function useAtomReducer<T, A>(
   return (action: A) => setValue((value) => reducer(value, action))
 }
 
-export const genesAtom = atomWithOptionalStorage<GeneticElement[]>(
+export const genesAtom = atomWithUrlStorage<GeneticElement[]>(
   'genes',
   [],
   (genes) => JSON.stringify(genes.map(GeneticElement.serialize)),
