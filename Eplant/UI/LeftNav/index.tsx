@@ -6,7 +6,7 @@ import {
   useActiveId,
   useDarkMode,
   useGeneticElements,
-  usePanesDispatch,
+  useSetActiveGeneId,
 } from '@eplant/state'
 import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
@@ -29,7 +29,7 @@ export function LeftNav(props: {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
 
-  const panesDispatch = usePanesDispatch()
+  const setActiveGeneId = useSetActiveGeneId()
   const activeID = useActiveId()[0]
 
   React.useEffect(() => {
@@ -52,11 +52,7 @@ export function LeftNav(props: {
             )
           )
           if (s.length > 0) {
-            panesDispatch({
-              type: 'set-active-gene',
-              id: activeID,
-              activeGene: s[0].id,
-            })
+            setActiveGeneId(s[0].id)
           }
         }}
       />

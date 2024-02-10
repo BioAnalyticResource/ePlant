@@ -1,7 +1,11 @@
 import React from 'react'
 
 import arabidopsis from '@eplant/Species/arabidopsis'
-import { useGeneticElements, usePanesDispatch, useViewID } from '@eplant/state'
+import {
+  useGeneticElements,
+  useSetActiveGeneId,
+  useSetActiveViewId,
+} from '@eplant/state'
 import { View } from '@eplant/View'
 import {
   Button,
@@ -17,20 +21,22 @@ export type TileProps = {
 }
 
 export default function Tile({ view }: TileProps) {
-  const id = useViewID()
-  const panesDispatch = usePanesDispatch()
+  const setActiveViewId = useSetActiveViewId()
+  const setActiveGeneId = useSetActiveGeneId()
   const [genes, setGenes] = useGeneticElements()
+
+  // TODO: The gene to load should be a prop
   async function setView() {
     const ABI3 = await arabidopsis.api.searchGene('AT3G24650')
     console.log(ABI3)
     if (ABI3) {
       setGenes([ABI3, ...genes])
+      setActiveGeneId(ABI3.id)
     }
-    panesDispatch({
-      type: 'set-view',
-      id: id,
-      view: view.id,
-    })
+    else {
+      console.error("Failed to load gene for tile")
+    }
+    setActiveViewId(view.id)
   }
   return (
     <Card

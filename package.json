@@ -28,7 +28,6 @@
     "axios": "^1.5.1",
     "color2k": "^2.0.2",
     "dompurify": "^3.0.6",
-    "flexlayout-react": "^0.7.11",
     "idb": "^7.1.1",
     "jotai": "^2.4.3",
     "lodash": "^4.17.21",

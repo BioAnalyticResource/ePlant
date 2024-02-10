@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useViewID } from '@eplant/state'
+import { useActiveGeneId, useActiveViewId } from '@eplant/state'
 import { viewDataStorage, viewStateStorage } from '@eplant/View/viewData'
 import { BugReportOutlined } from '@mui/icons-material'
 import {
@@ -27,7 +27,8 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
     testToggle: false,
   }),
   component: (props) => {
-    const viewID = useViewID()
+    const [activeViewId, setActiveViewId] = useActiveViewId()
+    const [activeGeneId, setActiveGeneId] = useActiveGeneId()
     return (
       <div>
         <Table>
@@ -44,7 +45,11 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
             </TableRow>
             <TableRow>
               <TableCell>View ID</TableCell>
-              <TableCell>{viewID}</TableCell>
+              <TableCell>{activeViewId}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Gene ID</TableCell>
+              <TableCell>{activeGeneId}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import * as FlexLayout from 'flexlayout-react'
 import {
   atom,
   SetStateAction,
@@ -11,9 +10,9 @@ import {
 
 import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
+import { defaultConfig } from '@eplant/main'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import Storage from '@eplant/util/Storage'
-import { defaultConfig } from '@eplant/main'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
@@ -188,152 +187,29 @@ export const collectionsAtom = atomWithOptionalStorage<
   (collections) => JSON.stringify(collections),
   (collections) => JSON.parse(collections)
 )
+
 export const useCollections = () => useAtom(collectionsAtom)
 export const useSetCollections = () => useSetAtom(collectionsAtom)
 
-export const speciesAtom = atom<Species[]>([arabidopsis])
+const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)
 export const useSetSpecies = () => useSetAtom(speciesAtom)
 
-export type Panes = {
-  [id: string]: {
-    view: string
-    activeGene: string | null
-    popout: boolean
-  }
-}
+const activeGeneIdAtom = atom<string | undefined>(undefined);
+export const useActiveGeneId = () => useAtom(activeGeneIdAtom)
+export const useSetActiveGeneId = () => useSetAtom(activeGeneIdAtom)
 
-type PanesAction =
-  | { type: 'set-view'; id: string; view: string }
-  | { type: 'set-active-gene'; id: string; activeGene: string | null }
-  | { type: 'make-popout'; id: string }
-  | { type: 'close-popout'; id: string }
-  | { type: 'new'; id: string; activeGene: string | null }
-  | { type: 'close'; id: string }
-// All open views, and genes if they are associated
-const panesAtom = atomWithOptionalStorage<Panes>('open-views', {
-  default: {
-    activeGene: null,
-    view: defaultConfig.defaultView,
-    popout: false,
-  },
-})
+const activeViewIdAtom = atom<string | undefined>(undefined)
+export const useActiveViewId = () => useAtom(activeViewIdAtom)
+export const useSetActiveViewId = () => useSetAtom(activeViewIdAtom)
 
-// TODO: Test this
-export const panesReducer: (prev: Panes, action: PanesAction) => Panes = (
-  prev: Panes,
-  action: PanesAction
-) => {
-  const def = {
-    view: 'get-started',
-    activeGene: null,
-    popout: false,
-  }
-  const { [action.id]: _, ...rest } = prev
-  switch (action.type) {
-    case 'set-view':
-      return {
-        ...prev,
-        [action.id]: {
-          ...def,
-          ...prev[action.id],
-          view: action.view,
-        },
-      }
-    case 'set-active-gene':
-      return {
-        ...prev,
-        [action.id]: {
-          ...def,
-          ...prev[action.id],
-          activeGene: action.activeGene,
-        },
-      }
-    case 'make-popout':
-      return {
-        ...prev,
-        [action.id]: {
-          ...def,
-          ...prev[action.id],
-          popout: true,
-        },
-      }
-    case 'close-popout':
-      return {
-        ...prev,
-        [action.id]: {
-          ...def,
-          ...prev[action.id],
-          popout: false,
-        },
-      }
-    case 'new':
-      return {
-        ...prev,
-        [action.id]: {
-          ...def,
-          activeGene: action.activeGene,
-        },
-      }
-    case 'close':
-      return rest
-  }
-}
-
-export const usePanes = () =>
-  [useAtomValue(panesAtom), useAtomReducer(panesAtom, panesReducer)] as [
-    Panes,
-    (action: PanesAction) => void,
-  ]
-export const usePanesDispatch = () => useAtomReducer(panesAtom, panesReducer)
-
-export const ViewIDContext = createContext<string>('')
-export const useViewID = () => useContext(ViewIDContext)
-
-export const printingAtom = atom<string | null>(null)
+const printingAtom = atom<boolean>(false)
 export const usePrinting = () => useAtom(printingAtom)
 export const useSetPrinting = () => useSetAtom(printingAtom)
 
-export const darkModeAtom = atomWithOptionalStorage<boolean>('dark-mode', true)
+const darkModeAtom = atomWithOptionalStorage<boolean>('dark-mode', true)
 export const useDarkMode = () => useAtom(darkModeAtom)
 export const useSetDarkMode = () => useSetAtom(darkModeAtom)
 
-export const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
+const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
 export const useActiveId = () => useAtom(activeIdAtom)
-
-export function getPaneName(pane: Panes[string]) {
-  return `${pane.activeGene ? pane.activeGene + ' - ' : ''}${pane.view}`
-}
-
-export const modelAtom = atomWithOptionalStorage<FlexLayout.Model>(
-  'flexlayout-model',
-  FlexLayout.Model.fromJson({
-    global: {
-      tabSetTabStripHeight: 48,
-      tabEnableRename: false,
-      tabEnableClose: false,
-      tabSetEnableMaximize: false,
-    },
-    borders: [],
-    layout: {
-      type: 'row',
-      weight: 100,
-      children: [
-        {
-          type: 'tabset',
-          active: true,
-          children: [
-            {
-              type: 'tab',
-              id: 'default',
-            },
-          ],
-        },
-      ],
-    },
-  }),
-  (model) => JSON.stringify(model.toJson()),
-  (model) => FlexLayout.Model.fromJson(JSON.parse(model))
-)
-export const useModel = () => useAtom(modelAtom)
-export const useSetModel = () => useSetAtom(modelAtom)

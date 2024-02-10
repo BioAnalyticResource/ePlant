@@ -1,7 +1,7 @@
 import { Container } from '@mui/material'
 
 import SerializedGeneticElement from '../GeneticElement'
-import { useActiveId, usePanes } from '../state'
+import { useActiveGeneId,useActiveId } from '../state'
 
 import { LeftNav } from './LeftNav'
 import ResponsiveDrawer from './ResponsiveDrawer'
@@ -9,7 +9,7 @@ import ResponsiveDrawer from './ResponsiveDrawer'
 export const sidebarWidth = 300
 
 export default function Sidebar() {
-  const [panes, panesDispatch] = usePanes()
+  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [activeId] = useActiveId()
 
   return (
@@ -34,13 +34,9 @@ export default function Sidebar() {
       >
         <LeftNav
           onSelectGene={(gene: SerializedGeneticElement) =>
-            panesDispatch({
-              type: 'set-active-gene',
-              id: activeId,
-              activeGene: gene.id,
-            })
+            setActiveGeneId(gene.id)
           }
-          selectedGene={panes[activeId ?? '']?.activeGene ?? undefined}
+          selectedGene={activeGeneId}
         />
       </Container>
     </ResponsiveDrawer>

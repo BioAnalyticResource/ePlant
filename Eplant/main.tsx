@@ -37,7 +37,6 @@ export const defaultConfig: EplantConfig = {
   genericViews,
   userViews,
   views,
-  tabHeight,
   rootPath: import.meta.env.BASE_URL,
 
   defaultSpecies: 'Arabidopsis',

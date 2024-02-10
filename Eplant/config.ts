@@ -6,7 +6,6 @@ export type EplantConfig = {
   readonly genericViews: View[]
   readonly userViews: View[]
   readonly views: View[]
-  readonly tabHeight: number
   readonly rootPath: string
 
   readonly defaultSpecies: string
@@ -17,7 +16,7 @@ export const Config = React.createContext<EplantConfig>({
   genericViews: [],
   userViews: [],
   views: [],
-  tabHeight: 48,
+
   rootPath: '',
   defaultSpecies: '',
   defaultView: '',
