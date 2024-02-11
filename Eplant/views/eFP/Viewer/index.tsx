@@ -216,6 +216,16 @@ export default class EFPViewer
               ? ('relative' as const)
               : ('absolute' as const),
         }
+      case 'toggle-mask-modal':
+        return {
+          ...state,
+          maskModalVisible: !state.maskModalVisible,
+        }
+      case 'set-mask-threshold':
+        return {
+          ...state,
+          maskThreshold: action.threshold,
+        }
       default:
         return state
     }
