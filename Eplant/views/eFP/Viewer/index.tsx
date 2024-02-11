@@ -254,7 +254,7 @@ export default class EFPViewer
       return (
         <>
           <Typography variant='h6'>
-            {activeData.views.find((v) => v.id == state.activeView)?.name}
+            {activeData.views.find((v) => v.id === state.activeView)?.name}
             {': '}
             {geneticElement?.id}
           </Typography>
