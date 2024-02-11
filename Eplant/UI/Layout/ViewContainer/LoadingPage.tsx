@@ -15,12 +15,12 @@ import NotSupported from '../ViewNotSupported'
  */
 export function LoadingImage(props: SVGProps<SVGSVGElement>) {
   const theme = useTheme()
-  const colour = theme.palette.secondary.contrastText
+  const color = theme.palette.secondary.contrastText
   return (
     <svg
       {...props}
       id='loading-plant'
-      fill={colour}
+      fill={color}
       shapeRendering='geometricPrecision'
       textRendering='geometricPrecision'
       xmlns='http://www.w3.org/2000/svg'
