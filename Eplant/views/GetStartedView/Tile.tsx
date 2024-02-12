@@ -32,9 +32,8 @@ export default function Tile({ view }: TileProps) {
     if (ABI3) {
       setGenes([ABI3, ...genes])
       setActiveGeneId(ABI3.id)
-    }
-    else {
-      console.error("Failed to load gene for tile")
+    } else {
+      console.error('Failed to load gene for tile')
     }
     setActiveViewId(view.id)
   }
