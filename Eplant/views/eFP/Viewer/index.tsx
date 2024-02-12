@@ -376,6 +376,10 @@ export default class EFPViewer
             sx={(theme) => ({
               flexGrow: 1,
               position: 'relative',
+              backgroundColor: theme.palette.background.paperOverlay,
+              border: '1px solid',
+              borderColor: theme.palette.background.edge,
+              borderRadius: 1,
             })}
           >
             {activeData.viewData[activeViewIndex].supported ? (
