@@ -6,7 +6,8 @@ import { useActiveId, usePanes } from '../state'
 import { LeftNav } from './LeftNav'
 import ResponsiveDrawer from './ResponsiveDrawer'
 
-export const sidebarWidth = 300
+export const sidebarWidth = 240
+// Jamie: The sidebar should not use too much space. 240 is a good number.
 
 export default function Sidebar() {
   const [panes, panesDispatch] = usePanes()
