@@ -12,9 +12,6 @@ const GetStartedView: View = {
     return null
   },
   id: 'get-started',
-  header() {
-    return <></>
-  },
   icon: () => <HomeOutlinedIcon />,
 }
 
