@@ -63,8 +63,4 @@ export interface View<Data = any, State = any, Action = any> {
     activeData?: Data
     gene?: GeneticElement | null
   }) => JSX.Element
-  /**
-   * Return the title of this view's tab
-   */
-  header: (props: ViewProps<Data, State, Action>) => JSX.Element
 }
