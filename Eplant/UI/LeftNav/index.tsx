@@ -53,10 +53,16 @@ export function LeftNav(props: {
   }, [geneticElements])
   return (
     <Stack gap={2} direction='column' height={'100%'}>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         {!collapse ? <LogoWithText text='ePlant' /> : <LogoWithText text='' />}
-        <button style={!collapse ? { backgroundColor: 'transparent', border: 'none', transform: 'translateX(+325%)', transition: 'all 1s ease-out' } : { backgroundColor: 'transparent', border: 'none', transform: 'translateX(-30%)', transition: 'all 1s ease-out' }} onClick={() => toggleCollapse()}>
-          {collapse ? <ArrowRight sx={{ '&:hover': { cursor: 'pointer' } }} color='primary' /> : <ArrowLeft sx={{ '&:hover': { cursor: 'pointer', animation: 'pulse 1s infinite', animationTimingFunction: 'linear' } }} color='primary' />}
+        <button style={
+          !collapse ? { backgroundColor: 'transparent', border: 'none', transform: 'translateX(+20%)' } : { backgroundColor: 'transparent', border: 'none', transform: 'translateX(-30%)', transition: 'all 1s ease-out' }
+        } onClick={() => toggleCollapse()}>
+          {collapse ? <ArrowRight sx={
+            { '&:hover': { cursor: 'pointer', transform: 'scale(1.5)' } }
+          } color='primary' /> : <ArrowLeft sx={
+            { '&:hover': { cursor: 'pointer', transform: 'scale(1.5)' } }
+          } color='primary' />}
         </button>
       </div>
       {!collapse && <><SearchGroup
@@ -86,8 +92,8 @@ export function LeftNav(props: {
         /> </>}
 
       {collapse && <>
-        <div onClick={() => setCollapse(false)}>
-          <SearchIcon />
+        <div onClick={() => setCollapse(false)} style={{ marginLeft: '10px' }}>
+          <SearchIcon sx={{ '&:hover': { cursor: 'pointer', transform: 'scale(1.1)' } }} />
         </div>
       </>}
       <Box flexGrow={1} />
@@ -103,7 +109,7 @@ export function LeftNav(props: {
         />
       </FormGroup> */}
       <div style={{ display: 'flex', justifyContent: 'center' }} onClick={() => setDarkMode(!darkMode)}>
-        <DarkModeIcon sx={darkMode ? { '&:hover': { cursor: 'pointer', color: 'white' } } : { '&:hover': { cursor: 'pointer', color: 'black' } }} color={darkMode ? 'primary' : 'secondary'} />
+        <DarkModeIcon sx={darkMode ? { '&:hover': { cursor: 'pointer', color: 'white', transform: 'scale(1.1)' } } : { '&:hover': { cursor: 'pointer', color: 'black', transform: 'scale(1.1)' } }} color={darkMode ? 'primary' : 'secondary'} />
       </div>
     </Stack>
   )

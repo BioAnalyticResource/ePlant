@@ -69,9 +69,9 @@ export default function SideBar() {
             selectedGene={panes[activeId ?? '']?.activeGene ?? undefined}
           />
         </Container>
-        <button style={{ backgroundColor: 'transparent', border: 'none' }} onClick={() => toggleCollapse()}>
+        {/* <button style={{ backgroundColor: 'transparent', border: 'none' }} onClick={() => toggleCollapse()}>
           {collapse ? <ArrowCircleRightIcon sx={{ '&:hover': { cursor: 'pointer' } }} color='primary' /> : <ArrowCircleLeftIcon sx={{ '&:hover': { cursor: 'pointer', animation: 'pulse 1s infinite', animationTimingFunction: 'linear' } }} color='primary' />}
-        </button>
+        </button> */}
 
       </ResponsiveDrawer>
     </div>
