@@ -35,6 +35,7 @@ export function LeftNav(props: {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
 
+  //Grabbing collapse state and setter function from useContext hook
   const context = useContext(collapseContext)
   const collapse = context.collapse
   const setCollapse = context.setCollapse

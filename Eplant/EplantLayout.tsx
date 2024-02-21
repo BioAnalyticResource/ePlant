@@ -10,10 +10,6 @@ import {
 
 import { collapseContext } from '@eplant/Eplant'
 import { Add, CallMade, Close } from '@mui/icons-material'
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { Box, CircularProgress, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
@@ -71,16 +67,9 @@ const EplantLayout = () => {
     setModel(FlexLayout.Model.fromJson(json))
   }, [tabHeight, loaded])
 
+  //Grabbing collapse state from useContext hook
   const context = useContext(collapseContext)
   const collapse = context.collapse
-  const setCollapse = context.setCollapse
-
-  const [transform, setTransform] = useState('translateX(+325%')
-
-  const toggleCollapse = () => {
-    setCollapse(!collapse)
-
-  }
 
   return (
     <Box

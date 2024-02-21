@@ -24,15 +24,9 @@ export default function SideBar() {
   const [panes, panesDispatch] = usePanes()
   const [activeId] = useActiveId()
 
-
+  //Grabbing collapse state from useContext hook
   const context = useContext(collapseContext)
   const collapse = context.collapse
-  const setCollapse = context.setCollapse
-
-  const [width, setWidth] = useState(sidebarWidth)
-  const toggleCollapse = () => {
-    setCollapse(!collapse)
-  }
 
   return (
     <div>
@@ -69,9 +63,6 @@ export default function SideBar() {
             selectedGene={panes[activeId ?? '']?.activeGene ?? undefined}
           />
         </Container>
-        {/* <button style={{ backgroundColor: 'transparent', border: 'none' }} onClick={() => toggleCollapse()}>
-          {collapse ? <ArrowCircleRightIcon sx={{ '&:hover': { cursor: 'pointer' } }} color='primary' /> : <ArrowCircleLeftIcon sx={{ '&:hover': { cursor: 'pointer', animation: 'pulse 1s infinite', animationTimingFunction: 'linear' } }} color='primary' />}
-        </button> */}
 
       </ResponsiveDrawer>
     </div>
