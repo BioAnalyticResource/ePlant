@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import * as FlexLayout from 'flexlayout-react'
 import {
   Actions,
@@ -8,7 +8,12 @@ import {
   TabSetNode,
 } from 'flexlayout-react'
 
+import { collapseContext } from '@eplant/Eplant'
 import { Add, CallMade, Close } from '@mui/icons-material'
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { Box, CircularProgress, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
@@ -66,15 +71,27 @@ const EplantLayout = () => {
     setModel(FlexLayout.Model.fromJson(json))
   }, [tabHeight, loaded])
 
+  const context = useContext(collapseContext)
+  const collapse = context.collapse
+  const setCollapse = context.setCollapse
+
+  const [transform, setTransform] = useState('translateX(+325%')
+
+  const toggleCollapse = () => {
+    setCollapse(!collapse)
+
+  }
+
   return (
     <Box
       sx={(theme) => ({
         height: `calc(100% - ${theme.spacing(1)})`,
-        left: `${sidebarWidth}px`,
+        left: `${collapse ? 100 : sidebarWidth}px`,
         right: '0px',
         position: 'absolute',
         margin: theme.spacing(1),
         boxSizing: 'border-box',
+        transition: 'all 1s ease-out',
       })}
     >
       <Box

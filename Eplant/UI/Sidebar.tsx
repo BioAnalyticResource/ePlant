@@ -4,6 +4,8 @@ import { Sidebar } from 'react-pro-sidebar'
 import { Menu } from 'react-pro-sidebar'
 
 import { collapseContext } from '@eplant/Eplant'
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { Container } from '@mui/material'
 import { Box } from '@mui/material'
 
@@ -51,8 +53,9 @@ export default function SideBar() {
           sx={{
             height: '100%',
             padding: '20px',
-            width: `${collapse ? 0 : sidebarWidth}px`,
+            width: `${collapse ? 100 : sidebarWidth}px`,
             boxSizing: 'border-box',
+            transition: 'all 1s ease-out'
           }}
         >
           <LeftNav
@@ -66,7 +69,9 @@ export default function SideBar() {
             selectedGene={panes[activeId ?? '']?.activeGene ?? undefined}
           />
         </Container>
-        <button onClick={() => toggleCollapse()}>Collapse</button>
+        <button style={{ backgroundColor: 'transparent', border: 'none' }} onClick={() => toggleCollapse()}>
+          {collapse ? <ArrowCircleRightIcon sx={{ '&:hover': { cursor: 'pointer' } }} color='primary' /> : <ArrowCircleLeftIcon sx={{ '&:hover': { cursor: 'pointer', animation: 'pulse 1s infinite', animationTimingFunction: 'linear' } }} color='primary' />}
+        </button>
 
       </ResponsiveDrawer>
     </div>

@@ -1,6 +1,8 @@
 import * as React from 'react'
+import { useContext } from 'react'
 import _ from 'lodash'
 
+import { collapseContext } from '@eplant/Eplant'
 import GeneticElement from '@eplant/GeneticElement'
 import {
   useActiveId,
@@ -8,6 +10,10 @@ import {
   useGeneticElements,
   usePanesDispatch,
 } from '@eplant/state'
+import ArrowLeft from '@mui/icons-material/ArrowLeft';
+import ArrowRight from '@mui/icons-material/ArrowRight';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import SearchIcon from '@mui/icons-material/Search';
 import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
 
@@ -29,6 +35,15 @@ export function LeftNav(props: {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
 
+  const context = useContext(collapseContext)
+  const collapse = context.collapse
+  const setCollapse = context.setCollapse
+
+
+  const toggleCollapse = () => {
+    setCollapse(!collapse)
+  }
+
   const panesDispatch = usePanesDispatch()
   const activeID = useActiveId()[0]
 
@@ -38,8 +53,13 @@ export function LeftNav(props: {
   }, [geneticElements])
   return (
     <Stack gap={2} direction='column' height={'100%'}>
-      <LogoWithText text='ePlant' />
-      <SearchGroup
+      <div style={{ display: 'flex' }}>
+        {!collapse ? <LogoWithText text='ePlant' /> : <LogoWithText text='' />}
+        <button style={!collapse ? { backgroundColor: 'transparent', border: 'none', transform: 'translateX(+325%)', transition: 'all 1s ease-out' } : { backgroundColor: 'transparent', border: 'none', transform: 'translateX(-30%)', transition: 'all 1s ease-out' }} onClick={() => toggleCollapse()}>
+          {collapse ? <ArrowRight sx={{ '&:hover': { cursor: 'pointer' } }} color='primary' /> : <ArrowLeft sx={{ '&:hover': { cursor: 'pointer', animation: 'pulse 1s infinite', animationTimingFunction: 'linear' } }} color='primary' />}
+        </button>
+      </div>
+      {!collapse && <><SearchGroup
         addGeneticElements={(s) => {
           setGeneticElements(
             geneticElements.concat(
@@ -60,12 +80,18 @@ export function LeftNav(props: {
           }
         }}
       />
-      <Collections
-        onSelectGene={props.onSelectGene}
-        selectedGene={props.selectedGene}
-      />
+        <Collections
+          onSelectGene={props.onSelectGene}
+          selectedGene={props.selectedGene}
+        /> </>}
+
+      {collapse && <>
+        <div onClick={() => setCollapse(false)}>
+          <SearchIcon />
+        </div>
+      </>}
       <Box flexGrow={1} />
-      <FormGroup>
+      {/* <FormGroup>
         <FormControlLabel
           control={
             <Switch
@@ -75,7 +101,10 @@ export function LeftNav(props: {
           }
           label='Dark mode'
         />
-      </FormGroup>
+      </FormGroup> */}
+      <div style={{ display: 'flex', justifyContent: 'center' }} onClick={() => setDarkMode(!darkMode)}>
+        <DarkModeIcon sx={darkMode ? { '&:hover': { cursor: 'pointer', color: 'white' } } : { '&:hover': { cursor: 'pointer', color: 'black' } }} color={darkMode ? 'primary' : 'secondary'} />
+      </div>
     </Stack>
   )
 }
