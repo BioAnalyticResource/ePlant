@@ -78,20 +78,22 @@ const EplantLayout = () => {
         left: `${collapse ? 100 : sidebarWidth}px`,
         right: '0px',
         position: 'absolute',
-        margin: theme.spacing(1),
+        marginTop: '0.5rem',
+        // margin: theme.spacing(1),
         boxSizing: 'border-box',
         transition: 'all 1s ease-out',
       })}
     >
       <Box
         sx={{
-          width: '100%',
+          width: '50%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
+        <div style={{color: 'red'}} />
         {loaded ? (
           <FlexLayout.Layout
             ref={layout}

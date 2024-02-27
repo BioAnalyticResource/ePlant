@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import _ from 'lodash'
 
 import { collapseContext } from '@eplant/Eplant'
@@ -14,7 +14,7 @@ import ArrowLeft from '@mui/icons-material/ArrowLeft';
 import ArrowRight from '@mui/icons-material/ArrowRight';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
+import { Box, FormControlLabel, FormGroup, Switch, useTheme } from '@mui/material'
 import Stack from '@mui/material/Stack'
 
 import { LogoWithText } from '../Logo'
@@ -34,12 +34,14 @@ export function LeftNav(props: {
 }) {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
+  const theme = useTheme()
 
   //Grabbing collapse state and setter function from useContext hook
   const context = useContext(collapseContext)
   const collapse = context.collapse
   const setCollapse = context.setCollapse
 
+  const [tabWidth, setTabWidth] = useState('30px')
 
   const toggleCollapse = () => {
     setCollapse(!collapse)
@@ -56,15 +58,11 @@ export function LeftNav(props: {
     <Stack gap={2} direction='column' height={'100%'}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         {!collapse ? <LogoWithText text='ePlant' /> : <LogoWithText text='' />}
-        <button style={
-          !collapse ? { backgroundColor: 'transparent', border: 'none', transform: 'translateX(+20%)' } : { backgroundColor: 'transparent', border: 'none', transform: 'translateX(-30%)', transition: 'all 1s ease-out' }
-        } onClick={() => toggleCollapse()}>
-          {collapse ? <ArrowRight sx={
-            { '&:hover': { cursor: 'pointer', transform: 'scale(1.5)' } }
-          } color='primary' /> : <ArrowLeft sx={
-            { '&:hover': { cursor: 'pointer', transform: 'scale(1.5)' } }
-          } color='primary' />}
-        </button>
+        <div style={
+          !collapse ? {cursor: 'pointer', height: '25px', width: `${tabWidth}`, marginRight: '-20px',backgroundColor: `${theme.palette.primary.main}`, borderRadius: '20px 0px 0px 20px', transform: 'translateX(+20%)', transition: 'all 1s ease-out'} : {cursor: 'pointer', height: '25px', width: `${tabWidth}`, marginRight: '-37px', backgroundColor: `${theme.palette.primary.main}`, borderRadius: '20px 0px 0px 20px', transform: 'translateX(-30%)', transition: 'all 1s ease-out' }
+        } onClick={() => toggleCollapse()} onMouseEnter={() => setTabWidth('40px')} onMouseLeave={() => setTabWidth('30px')}>
+          {collapse ? <ArrowRight sx={darkMode ? {color: 'primary'} : {color: 'secondary'}}/> : <ArrowLeft/>}
+        </div>
       </div>
       {!collapse && <><SearchGroup
         addGeneticElements={(s) => {
