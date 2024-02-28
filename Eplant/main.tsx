@@ -27,7 +27,7 @@ const userViews = [
   PublicationViewer,
   DebugView,
   PlantEFP,
-  CelleFP,
+  CellEFP,
   ExperimentEFP,
 ]
 
