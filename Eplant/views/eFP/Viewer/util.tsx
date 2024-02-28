@@ -1,4 +1,4 @@
-import CellEFP from '@eplant/views/CelleFP/cellEFP'
+import CellEFP from '@eplant/views/CellEFP/cellEFP'
 
 import EFP from '..'
 
