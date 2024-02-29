@@ -3,7 +3,7 @@ import { Provider } from 'jotai'
 import * as ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 
-import CellEFP from './views/CellEFP'
+import X from './views/CellEFP'
 import DebugView from './views/DebugView'
 import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
@@ -27,7 +27,7 @@ const userViews = [
   PublicationViewer,
   DebugView,
   PlantEFP,
-  CellEFP,
+  X,
   ExperimentEFP,
 ]
 
