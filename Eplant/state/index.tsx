@@ -295,7 +295,7 @@ export const useSetActiveViewId = () => useSetAtom(activeViewIdAtom)
 export const ViewIDContext = createContext<string>('')
 export const useViewID = () => useContext(ViewIDContext)
 
-export const printingAtom = atom<string | null>(null)
+export const printingAtom = atom<boolean>(false)
 export const usePrinting = () => useAtom(printingAtom)
 export const useSetPrinting = () => useSetAtom(printingAtom)
 
