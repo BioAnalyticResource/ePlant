@@ -2,7 +2,7 @@ import {SetStateAction,useEffect,useMemo} from 'react'
 import { atom, useAtom, WritableAtom } from 'jotai'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { atomWithStorage, useViewID } from '@eplant/state'
+import { atomWithStorage } from '@eplant/state'
 import Storage from '@eplant/util/Storage'
 
 import { View, ViewDispatch } from './index'
@@ -86,7 +86,7 @@ export function useViewData<T, S, A>(
   gene: GeneticElement | null
 ): UseViewDataType<T, S, A> {
   const key = getViewDataKey(view.id, gene)
-  const id = (view?.id ?? 'generic-view') + '-' + useViewID()
+  const id = view?.id ?? 'generic-view'
   const [viewData, setViewData] = useAtom(getViewAtom(key))
   const [viewState, setViewState] = useAtom(getViewStateAtom(id))
   // console.log(viewData)
