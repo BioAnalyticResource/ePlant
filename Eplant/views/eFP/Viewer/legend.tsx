@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Box, styled, useTheme } from '@mui/material'
 
 import { getColor } from '../svg'
@@ -39,7 +37,7 @@ export default styled(function Legend({
     .reverse()
     .map((g) =>
       getColor(
-        state.colorMode == 'absolute' ? g : 2 ** g * control,
+        state.colorMode === 'absolute' ? g : 2 ** g * control,
         data,
         data.control ?? 1,
         theme,
@@ -57,7 +55,6 @@ export default styled(function Legend({
         }}
       ></Box>
     ))
-
   return (
     <Box
       {...rest}
@@ -77,6 +74,15 @@ export default styled(function Legend({
         }}
       >
         {gradient}
+        <Box
+          sx={{
+            width: '15px',
+            height: '15px',
+            backgroundColor: 'gray',
+            display: 'inline-block',
+            fontSize: 10,
+          }}
+        ></Box>
       </Box>
       <Box
         sx={{
@@ -85,12 +91,16 @@ export default styled(function Legend({
           justifyContent: 'space-between',
         }}
       >
-        <Box sx={{ fontSize: 12 }}>{values[0].toFixed(0)}</Box>
-
-        <Box sx={{ fontSize: 12 }}>
-          {state.colorMode == 'absolute' ? '' : '0'}
-        </Box>
-        <Box sx={{ fontSize: 12 }}>{values[values.length - 1].toFixed(0)}</Box>
+        {values.map((value) => {
+          return (
+            <Box key={value} sx={{ fontSize: 10 }}>
+              {value.toFixed(2)}
+            </Box>
+          )
+        })}
+        <Box
+          sx={{ fontSize: 10 }}
+        >{`Masked (≥${state.maskThreshold}% RSE)`}</Box>
       </Box>
     </Box>
   )

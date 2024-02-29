@@ -1,4 +1,5 @@
-import CellEFP from '../../CellEFP/cellEFP'
+import CellEFP from '@eplant/views/CellEFP/cellEFP'
+
 import EFP from '..'
 
 import { EFPViewerData } from './types'
