@@ -121,7 +121,7 @@ export function useViewData<T, S, A>(
       setViewData(newData)
       viewDataStorage.set(key, newData)
     } catch (e) {
-      const newData = {
+      const errorData = {
         ...defaultViewData,
         error:
           e instanceof Error
@@ -129,7 +129,7 @@ export function useViewData<T, S, A>(
             : (e as ViewDataError),
         loading: false,
       }
-      setViewData(newData)
+      setViewData(errorData)
     }
   }
 
