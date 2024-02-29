@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { useContext } from 'react'
-import { Sidebar } from 'react-pro-sidebar'
-import { Menu } from 'react-pro-sidebar'
 
 import { collapseContext } from '@eplant/Eplant'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
@@ -20,7 +18,7 @@ import ResponsiveDrawer from './ResponsiveDrawer'
 export const sidebarWidth = 300
 
 
-export default function SideBar() {
+export default function Sidebar() {
   const [panes, panesDispatch] = usePanes()
   const [activeId] = useActiveId()
 

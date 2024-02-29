@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 
 import { dark, light } from './css/theme'
-import SideBar from './UI/Sidebar'
+import Sidebar from './UI/Sidebar'
 import { useConfig } from './config'
 import DirectPane from './DirectPane'
 import EplantLayout from './EplantLayout'
@@ -51,7 +51,7 @@ export function MainEplant() {
   return (
     <>
       <collapseContext.Provider value={{ collapse: collapse, setCollapse: setCollapse }}>
-        <SideBar />
+        <Sidebar />
         <EplantLayout />
       </collapseContext.Provider >
     </>

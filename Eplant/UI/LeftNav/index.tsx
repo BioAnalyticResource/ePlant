@@ -57,9 +57,9 @@ export function LeftNav(props: {
   return (
     <Stack gap={2} direction='column' height={'100%'}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        {!collapse ? <LogoWithText text='ePlant' /> : <LogoWithText text='' />}
+        {collapse ? <LogoWithText text='' /> : <LogoWithText text='ePlant' />}
         <div style={
-          !collapse ? {cursor: 'pointer', height: '25px', width: `${tabWidth}`, marginRight: '-20px',backgroundColor: `${theme.palette.primary.main}`, borderRadius: '20px 0px 0px 20px', transform: 'translateX(+20%)', transition: 'all 1s ease-out'} : {cursor: 'pointer', height: '25px', width: `${tabWidth}`, marginRight: '-37px', backgroundColor: `${theme.palette.primary.main}`, borderRadius: '20px 0px 0px 20px', transform: 'translateX(-30%)', transition: 'all 1s ease-out' }
+          collapse ? {cursor: 'pointer', height: '25px', width: `${tabWidth}`, marginRight: '-39px', backgroundColor: `${theme.palette.primary.main}`, borderRadius: '20px 0px 0px 20px', transform: 'translateX(-30%)', transition: 'all 0.5s ease-out' } : {cursor: 'pointer', height: '25px', width: `${tabWidth}`, marginRight: '-20px',backgroundColor: `${theme.palette.primary.main}`, borderRadius: '20px 0px 0px 20px', transform: 'translateX(+20%)', transition: 'all 0.5s ease-out'}
         } onClick={() => toggleCollapse()} onMouseEnter={() => setTabWidth('40px')} onMouseLeave={() => setTabWidth('30px')}>
           {collapse ? <ArrowRight sx={darkMode ? {color: '#181c18'} : {color: '#f0f7f0'}}/> : <ArrowLeft sx={darkMode ? {color: '#181c18'} : {color: '#f0f7f0'}}/>}
         </div>
