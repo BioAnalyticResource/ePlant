@@ -3,7 +3,7 @@ import { Provider } from 'jotai'
 import * as ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 
-import CelleFP from './views/CelleFP'
+import CellEFP from './views/CellEFP'
 import DebugView from './views/DebugView'
 import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
