@@ -59,6 +59,7 @@ export default function EFPPreview({
       })
   }, [draw])
   const component = useMemo(() => {
+    console.log('got here')
     return (
       <EFPPreviewContainer selected={selected} {...boxProps}>
         <view.component
@@ -91,7 +92,15 @@ export default function EFPPreview({
         </div>
       </EFPPreviewContainer>
     )
-  }, [gene, view.id, colorModeDeferred, dataDeferred, selected])
+  }, [
+    gene,
+    view.id,
+    colorModeDeferred,
+    dataDeferred,
+    selected,
+    maskThreshold,
+    maskingEnabled,
+  ])
   return draw ? (
     component
   ) : (

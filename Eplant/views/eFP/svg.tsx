@@ -96,7 +96,7 @@ export function getColor(
     1
   )
   const masked =
-    maskingEnabled && maskThreshold && tissueStd
+    maskingEnabled && maskThreshold !== undefined && tissueStd
       ? isNaN(group.std) || tissueStd >= value * (maskThreshold / 100)
       : false
   const norm = Math.log2(value / control) / extremum

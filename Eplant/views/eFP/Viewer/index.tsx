@@ -90,7 +90,9 @@ const EFPListItem = memo(
       prev.data.colorMode === next.data.colorMode &&
       prev.data.geneticElement.id === next.data.geneticElement.id &&
       prev.data.activeView === next.data.activeView &&
-      prev.index == next.index
+      prev.index == next.index &&
+      prev.data.maskingEnabled == next.data.maskingEnabled &&
+      prev.data.maskThreshold == next.data.maskThreshold
     )
   }
 )
