@@ -45,6 +45,7 @@ type EFPListProps = {
   height: number
   colorMode: 'absolute' | 'relative'
   maskThreshold: number
+  maskingEnabled: boolean
 }
 
 interface ICitationProps {
@@ -77,6 +78,7 @@ const EFPListItem = memo(
               })
             }}
             colorMode={data.colorMode}
+            maskingEnabled={data.maskingEnabled}
           />
         </div>
       </Tooltip>
@@ -395,6 +397,7 @@ export default class EFPViewer
               views={sortedEfps}
               colorMode={state.colorMode}
               maskThreshold={state.maskThreshold}
+              maskingEnabled={state.maskingEnabled}
             />
           </Box>
           {/* main canvas area */}
