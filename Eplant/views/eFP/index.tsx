@@ -23,6 +23,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     colorMode: 'absolute',
     renderAsThumbnail: false,
     maskThreshold: 100,
+    maskingEnabled: false,
   })
   tooltipComponent: (props: {
     el: SVGElement | null
@@ -191,7 +192,8 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       id,
       props.activeData,
       props.state.colorMode,
-      props.state.maskThreshold
+      props.state.maskThreshold,
+      props.state.maskingEnabled
     )
     useEffect(() => {
       const el = document.createElement('style')

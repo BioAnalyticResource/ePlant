@@ -65,7 +65,6 @@ export default class KeyValDB<K extends string, V> {
   }
 
   async clear() {
-    // console.log(await this.keys())
     ;(await this.keys()).forEach((key: K) => this.delete(key))
   }
 

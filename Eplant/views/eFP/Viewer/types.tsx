@@ -18,6 +18,7 @@ export type EFPViewerState = {
   transform: Transform
   colorMode: ColorMode
   sortBy: EFPViewerSortTypes
+  maskingEnabled: boolean
   maskModalVisible: boolean
   maskThreshold: number
 }
@@ -28,5 +29,6 @@ export type EFPViewerAction =
   | { type: 'set-transform'; transform: Transform }
   | { type: 'toggle-color-mode' }
   | { type: 'sort-by'; by: EFPViewerSortTypes }
+  | { type: 'toggle-masking' }
   | { type: 'toggle-mask-modal' }
   | { type: 'set-mask-threshold'; threshold: number }

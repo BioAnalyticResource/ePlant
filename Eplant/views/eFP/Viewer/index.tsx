@@ -138,6 +138,7 @@ export default class EFPViewer
         zoom: 1,
       },
       sortBy: 'name',
+      maskingEnabled: false,
       maskThreshold: 100,
       maskModalVisible: false,
     }
@@ -217,14 +218,23 @@ export default class EFPViewer
               : ('absolute' as const),
         }
       case 'toggle-mask-modal':
-        return {
-          ...state,
-          maskModalVisible: !state.maskModalVisible,
+        if (state.maskingEnabled) {
+          return {
+            ...state,
+            maskingEnabled: !state.maskingEnabled,
+          }
+        } else {
+          return {
+            ...state,
+            maskModalVisible: !state.maskModalVisible,
+          }
         }
       case 'set-mask-threshold':
         return {
           ...state,
           maskThreshold: action.threshold,
+          maskingEnabled: !state.maskingEnabled,
+          maskModalVisible: !state.maskModalVisible,
         }
       default:
         return state
@@ -276,6 +286,7 @@ export default class EFPViewer
               colorMode: state.colorMode,
               renderAsThumbnail: false,
               maskThreshold: state.maskThreshold,
+              maskingEnabled: state.maskingEnabled,
             }}
             geneticElement={geneticElement}
             dispatch={() => {}}
@@ -289,12 +300,10 @@ export default class EFPViewer
       sortedViewData[activeViewIndex],
       state.colorMode,
       state.maskThreshold,
+      state.maskingEnabled,
     ])
     const ref = useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
-    {
-      // console.log(props)
-    }
 
     if (!geneticElement) return <></>
     return (
@@ -430,6 +439,7 @@ export default class EFPViewer
                     colorMode: state.colorMode,
                     renderAsThumbnail: false,
                     maskThreshold: state.maskThreshold,
+                    maskingEnabled: state.maskingEnabled,
                   }}
                 />
                 <PanZoom
