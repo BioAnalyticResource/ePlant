@@ -15,8 +15,8 @@ export type EplantConfig = {
   readonly userViews: View[]
   readonly views: View[]
   readonly rootPath: string
-  readonly defaultView:string
-  readonly defaultSpecies:string
+  readonly defaultView: string
+  readonly defaultSpecies: string
 }
 
 // Views that aren't associated with individual genes
@@ -41,8 +41,8 @@ export const defaultConfig = {
   userViews,
   views,
   rootPath: import.meta.env.BASE_URL,
-  defaultView:'gene-info',
-  defaultSpecies:''
+  defaultView: 'gene-info',
+  defaultSpecies: '',
 }
 
 export const Config = React.createContext<EplantConfig>(defaultConfig)

@@ -54,7 +54,6 @@ export function ViewContainer<T, S, A>({
 
   const [viewingCitations, setViewingCitations] = React.useState(false)
 
-
   const { userViews, views, genericViews } = useConfig()
 
   React.useEffect(() => {

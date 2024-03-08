@@ -15,7 +15,8 @@ import {
   useActiveViewId,
   useGeneticElements,
   usePageLoad,
-  useSpecies} from './state'
+  useSpecies} 
+from './state'
 import { updateColors } from './updateColors'
 
 const EplantLayout = () => {
