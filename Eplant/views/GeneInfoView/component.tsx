@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import { usePanesDispatch, useViewID } from '@eplant/state'
+import { useSetActiveViewId } from '@eplant/state'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import {
   Alert,
@@ -268,7 +268,7 @@ export default function GeneInfoViewer({
               ></GeneSequence>
               <IconButton
                 onClick={() => copyToClipboard(activeData.geneSequence)}
-                color='primary'
+                color='secondary'
                 sx={{ ml: 1 }}
               >
                 <ContentCopyIcon />
@@ -305,7 +305,7 @@ export default function GeneInfoViewer({
                     copyToClipboard(activeData.proteinSequence)
                   }
                 }}
-                color='primary'
+                color='secondary'
                 sx={{ ml: 1 }}
               >
                 <ContentCopyIcon />
@@ -318,8 +318,7 @@ export default function GeneInfoViewer({
   )
 }
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
-  const id = useViewID()
-  const panesDispatch = usePanesDispatch()
+  const setActiveViewId = useSetActiveViewId()
   const { userViews } = useConfig()
   return (
     <Stack sx={{ marginTop: 1 }}>
@@ -380,10 +379,6 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   )
 
   function switchViews(view: View) {
-    panesDispatch({
-      type: 'set-view',
-      id: id,
-      view: view.id,
-    })
+    setActiveViewId(view.id)
   }
 }

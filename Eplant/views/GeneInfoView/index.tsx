@@ -29,6 +29,7 @@ const GeneInfoView: View<GeneInfoViewData> = {
   citation({ gene }) {
     return (
       <div>
+        <Typography variant='h6'>Information on {gene?.id}</Typography>
         Data for this view comes from TAIR{' '}
         <Link href='http://www.arabidopsis.org/download_files/Genes/Araport11_genome_release/Araport11_GFF3_genes_transposons.201606.gff.gz'>
           GFF3
@@ -49,9 +50,6 @@ const GeneInfoView: View<GeneInfoViewData> = {
       </div>
     )
   },
-  header: ({ geneticElement }) => (
-    <Typography variant='h6'>Information on {geneticElement?.id}</Typography>
-  ),
 }
 
 export default GeneInfoView
