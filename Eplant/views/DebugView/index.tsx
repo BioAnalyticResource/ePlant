@@ -29,6 +29,9 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
     const [activeGeneId, setActiveGeneId] = useActiveGeneId()
     return (
       <div>
+        <Typography variant='h6'>
+          Debug view for {props.geneticElement?.id}
+        </Typography>
         <Table>
           <TableHead>
             <TableRow>
@@ -82,9 +85,6 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
     },
   ],
   id: 'debug-view',
-  header: ({ geneticElement }) => (
-    <Typography variant='h6'>Debug view for {geneticElement?.id}</Typography>
-  ),
   icon: () => <BugReportOutlined />,
 }
 
