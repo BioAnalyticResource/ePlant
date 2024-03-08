@@ -45,7 +45,7 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
               <TableCell>{props.state.testToggle ? 'true' : 'false'}</TableCell>
             </TableRow>
             <TableRow>
-            <TableCell>{activeViewId}</TableCell>
+              <TableCell>{activeViewId}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Gene ID</TableCell>

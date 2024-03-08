@@ -3,7 +3,7 @@ import { Provider } from 'jotai'
 import * as ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 
-import {Config, defaultConfig } from './config'
+import { Config, defaultConfig } from './config'
 import Eplant from './Eplant'
 
 import './css/index.css'
@@ -23,9 +23,7 @@ function RootApp() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(
-  <RootApp />
-)
+root.render(<RootApp />)
 
 const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {

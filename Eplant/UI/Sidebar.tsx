@@ -34,7 +34,8 @@ export default function Sidebar() {
           onSelectGene={(gene: SerializedGeneticElement) =>
             setActiveGeneId(gene.id)
           }
-          selectedGene={activeGeneId}        />
+          selectedGene={activeGeneId}
+        />
       </Container>
     </ResponsiveDrawer>
   )

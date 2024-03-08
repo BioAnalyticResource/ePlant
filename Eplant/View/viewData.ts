@@ -1,4 +1,4 @@
-import {SetStateAction,useEffect,useMemo} from 'react'
+import { SetStateAction, useEffect, useMemo } from 'react'
 import { atom, useAtom, WritableAtom } from 'jotai'
 
 import GeneticElement from '@eplant/GeneticElement'
@@ -93,7 +93,8 @@ export function useViewData<T, S, A>(
 
   // If there is no cached viewData then load it using the view's loader
   const loadData = async () => {
-    const loader = await gene?.species.api.loaders[view.id] ?? view.getInitialData;
+    const loader =
+      (await gene?.species.api.loaders[view.id]) ?? view.getInitialData
     // Guaranteed to work even though types are broken because if gene is null then view.getInitialData (which accepts null) is always used
     try {
       // If there already is data then don't load it again
@@ -136,7 +137,7 @@ export function useViewData<T, S, A>(
   useEffect(() => {
     // Don't load data if the view data and they key aren't synced
     if (!viewData.loading && !viewData.error) {
-      loadData();
+      loadData()
     }
   }, [viewData, loadData])
 
