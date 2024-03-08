@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import * as React from 'react'
 import { mix } from 'color2k'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
@@ -37,10 +37,9 @@ export const useEFPSVG = (
         }))
       })
   }
-  const svgInformation = [...Object.values(cache[view.id] ?? {})];
 
   // Reset the styles of all of the text tags in the svg
-  return useMemo(() => {
+  return React.useMemo(() => {
     if (!cache[view.id]) return { view: null, loading: true }
     const parser = new DOMParser()
     const svg = parser.parseFromString(cache[view.id].svg, 'text/xml')
@@ -78,7 +77,7 @@ export const useEFPSVG = (
     }
 
     return { view: out, loading: false }
-  }, [svgInformation, view.id, options.showText])
+  }, [...Object.values(cache[view.id] ?? {}), view.id, options.showText])
 }
 
 export function getColor(

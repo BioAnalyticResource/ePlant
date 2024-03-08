@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import { useSetActiveViewId } from '@eplant/state'
+import { usePanesDispatch, useViewID } from '@eplant/state'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import {
   Alert,
@@ -318,7 +318,8 @@ export default function GeneInfoViewer({
   )
 }
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
-  const setActiveViewId = useSetActiveViewId()
+  const id = useViewID()
+  const panesDispatch = usePanesDispatch()
   const { userViews } = useConfig()
   return (
     <Stack sx={{ marginTop: 1 }}>
@@ -379,6 +380,10 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
   )
 
   function switchViews(view: View) {
-    setActiveViewId(view.id)
+    panesDispatch({
+      type: 'set-view',
+      id: id,
+      view: view.id,
+    })
   }
 }

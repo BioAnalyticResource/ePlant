@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import { usePrinting } from '@eplant/state'
+import { usePrinting, useViewID } from '@eplant/state'
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
@@ -54,14 +54,15 @@ export function ViewContainer<T, S, A>({
 
   const [viewingCitations, setViewingCitations] = React.useState(false)
 
+  const viewId = useViewID()
 
   const { userViews, views, genericViews } = useConfig()
 
   React.useEffect(() => {
-    if (printing) {
+    if (printing == viewId) {
       setTimeout(() => {
         window.print()
-        setPrinting(false)
+        setPrinting(null)
       }, 100)
     }
   }, [printing])
@@ -266,7 +267,7 @@ export function ViewContainer<T, S, A>({
           borderWidth: '0px 0px 0px 1px',
           borderColor: theme.palette.background.edgeLight,
           flexDirection: 'column',
-          ...(printing
+          ...(printing == viewId
             ? {
                 display: 'block !important',
                 padding: 0,

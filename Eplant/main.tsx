@@ -57,8 +57,7 @@ function RootApp() {
   )
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <RootApp />
 )
 

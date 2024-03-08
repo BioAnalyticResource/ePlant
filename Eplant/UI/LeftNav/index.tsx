@@ -3,9 +3,10 @@ import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
 import {
+  useActiveId,
   useDarkMode,
   useGeneticElements,
-  useSetActiveGeneId,
+  usePanesDispatch,
 } from '@eplant/state'
 import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
@@ -28,7 +29,8 @@ export function LeftNav(props: {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
 
-  const setActiveGeneId = useSetActiveGeneId()
+  const panesDispatch = usePanesDispatch()
+  const activeID = useActiveId()[0]
 
   React.useEffect(() => {
     const uniq = _.uniqBy(geneticElements, (g) => g.id)
@@ -50,7 +52,11 @@ export function LeftNav(props: {
             )
           )
           if (s.length > 0) {
-            setActiveGeneId(s[0].id)
+            panesDispatch({
+              type: 'set-active-gene',
+              id: activeID,
+              activeGene: s[0].id,
+            })
           }
         }}
       />
