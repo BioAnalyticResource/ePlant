@@ -1,21 +1,18 @@
-import { useEffect} from 'react'
+import { useEffect } from 'react'
 
-import { Add, CallMade, Close } from '@mui/icons-material'
-import { Box, CircularProgress, IconButton } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import { sidebarWidth } from './UI/Sidebar'
 import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
-import GeneticElement, { Species } from './GeneticElement'
 import {
-  pageLoad,
   useActiveGeneId,
   useActiveViewId,
   useGeneticElements,
   usePageLoad,
-  useSpecies} from './state'
+} from './state'
 import { updateColors } from './updateColors'
 
 const EplantLayout = () => {
