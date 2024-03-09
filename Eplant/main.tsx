@@ -1,8 +1,18 @@
 import * as React from 'react'
 import { Provider } from 'jotai'
 import * as ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import {
+  BrowserRouter,
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from 'react-router-dom'
 
+import { CssBaseline, ThemeProvider } from '@mui/material'
+
+import { dark, light } from './css/theme'
+import Sidebar from './UI/Sidebar'
 import CellEFP from './views/CellEFP'
 import DebugView from './views/DebugView'
 import ExperimentEFP from './views/ExperimentEFP'
@@ -11,8 +21,9 @@ import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
-import { Config, EplantConfig } from './config'
+import { Config, EplantConfig, useConfig } from './config'
 import Eplant from './Eplant'
+import { useDarkMode } from './state'
 
 // Views that aren't associated with individual genes
 const genericViews = [GetStartedView, FallbackView]
@@ -42,16 +53,30 @@ export const defaultConfig: EplantConfig = {
   defaultSpecies: 'Arabidopsis',
   defaultView: 'get-started',
 }
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path={defaultConfig.rootPath} element={<Eplant />}>
+      <Route path={'/:viewId'} element={<Eplant />}>
+        <Route path={':geneId'} element={<Eplant />}></Route>
+      </Route>
+    </Route>
+  )
+)
+
 function RootApp() {
+  const { rootPath } = useConfig()
+  const [darkMode] = useDarkMode()
   return (
     <React.StrictMode>
-      <Provider>
-        <BrowserRouter>
+      <ThemeProvider theme={darkMode ? dark : light}>
+        <CssBaseline />
+        <Provider>
           <Config.Provider value={defaultConfig}>
-            <Eplant />
+            <RouterProvider router={router} />
           </Config.Provider>
-        </BrowserRouter>
-      </Provider>
+        </Provider>
+      </ThemeProvider>
     </React.StrictMode>
   )
 }

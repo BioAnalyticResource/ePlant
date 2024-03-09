@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
@@ -38,7 +39,6 @@ import ViewOptions from './ViewOptions'
  */
 export function ViewContainer<T, S, A>({
   view,
-  setView,
   gene,
   ...props
 }: {
@@ -119,10 +119,6 @@ export function ViewContainer<T, S, A>({
                 labelId={idLabel}
                 label={'View'}
                 id={selectId}
-                onChange={(e) => {
-                  const view = views.find((view) => view.id == e?.target?.value)
-                  if (view) setView(view)
-                }}
                 sx={{
                   '& .MuiSelect-select': {
                     paddingRight: '36px !important',
@@ -159,7 +155,12 @@ export function ViewContainer<T, S, A>({
                   Select a view
                 </MenuItem>
                 {userViews.map((view) => (
+                  // :O
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
                   <MenuItem
+                    component={Link}
+                    to={`/${view.id}/${gene?.id ?? ''}` + window.location.search}
                     key={view.id}
                     value={view.id}
                     style={{
@@ -182,9 +183,6 @@ export function ViewContainer<T, S, A>({
                         fontWeight: 'regular',
                       }}
                       key={view.name}
-                      onClick={(e) => {
-                        if (view) setView(view)
-                      }}
                     >
                       {view.name}
                     </ListItemText>

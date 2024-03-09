@@ -3,7 +3,6 @@ import _ from 'lodash'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import { useSetActiveViewId } from '@eplant/state'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import {
   Alert,
@@ -318,7 +317,6 @@ export default function GeneInfoViewer({
   )
 }
 function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
-  const setActiveViewId = useSetActiveViewId()
   const { userViews } = useConfig()
   return (
     <Stack sx={{ marginTop: 1 }}>
@@ -339,6 +337,8 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
         </Typography>
         {userViews.map((view) => (
           <ViewButton
+            component={Link}
+            to={`/${view.id}/${geneticElement.id}`}
             color='secondary'
             sx={{
               textAlign: 'left',
@@ -377,8 +377,4 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
       </Box>
     </Stack>
   )
-
-  function switchViews(view: View) {
-    setActiveViewId(view.id)
-  }
 }

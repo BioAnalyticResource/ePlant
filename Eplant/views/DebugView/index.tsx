@@ -1,6 +1,6 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 
-import { useActiveGeneId, useActiveViewId } from '@eplant/state'
 import { viewDataStorage, viewStateStorage } from '@eplant/View/viewData'
 import { BugReportOutlined } from '@mui/icons-material'
 import {
@@ -27,8 +27,7 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
     testToggle: false,
   }),
   component: (props) => {
-    const [activeViewId, setActiveViewId] = useActiveViewId()
-    const [activeGeneId, setActiveGeneId] = useActiveGeneId()
+    const {viewId, geneId} = useParams()
     return (
       <div>
         <Table>
@@ -45,11 +44,11 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
             </TableRow>
             <TableRow>
               <TableCell>View ID</TableCell>
-              <TableCell>{activeViewId}</TableCell>
+              <TableCell>{viewId}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Gene ID</TableCell>
-              <TableCell>{activeGeneId}</TableCell>
+              <TableCell>{geneId}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

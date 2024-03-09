@@ -1,7 +1,8 @@
+import { useNavigate, useParams } from 'react-router-dom'
+
 import { Container } from '@mui/material'
 
 import SerializedGeneticElement from '../GeneticElement'
-import { useActiveGeneId } from '../state'
 
 import { LeftNav } from './LeftNav'
 import ResponsiveDrawer from './ResponsiveDrawer'
@@ -9,7 +10,8 @@ import ResponsiveDrawer from './ResponsiveDrawer'
 export const sidebarWidth = 300
 
 export default function Sidebar() {
-  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
+  const {viewId, geneId} = useParams()
+  const navigate = useNavigate();
 
   return (
     <ResponsiveDrawer
@@ -33,9 +35,9 @@ export default function Sidebar() {
       >
         <LeftNav
           onSelectGene={(gene: SerializedGeneticElement) =>
-            setActiveGeneId(gene.id)
+            navigate(`/${viewId}/${gene.id}` + window.location.search)
           }
-          selectedGene={activeGeneId}
+          selectedGene={geneId}
         />
       </Container>
     </ResponsiveDrawer>

@@ -8,6 +8,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [eslint(), tsconfigPaths(), react()],
   base: process.env.BASE_URL ?? '/',
+  appType: 'spa',
   build: {
     target:'ES2022',
     sourcemap: true,

@@ -178,12 +178,14 @@ function useAtomReducer<T, A>(
   return (action: A) => setValue((value) => reducer(value, action))
 }
 
-export const genesAtom = atomWithUrlStorage<GeneticElement[]>(
+export const genesAtom = atom<GeneticElement[]>(
+  []
+) /*atomWithUrlStorage<GeneticElement[]>(
   'genes',
   [],
   (genes) => JSON.stringify(genes.map(GeneticElement.serialize)),
   (genes) => JSON.parse(genes).map(GeneticElement.deserialize)
-)
+)*/
 export const useGeneticElements = () => useAtom(genesAtom)
 export const useSetGeneticElements = () => useSetAtom(genesAtom)
 
@@ -224,20 +226,6 @@ export const useSetCollections = () => useSetAtom(collectionsAtom)
 const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)
 export const useSetSpecies = () => useSetAtom(speciesAtom)
-
-const activeGeneIdAtom = atomWithUrlStorage<string | undefined>(
-  'gene',
-  undefined
-)
-export const useActiveGeneId = () => useAtom(activeGeneIdAtom)
-export const useSetActiveGeneId = () => useSetAtom(activeGeneIdAtom)
-
-const activeViewIdAtom = atomWithUrlStorage<string | undefined>(
-  'view',
-  undefined
-)
-export const useActiveViewId = () => useAtom(activeViewIdAtom)
-export const useSetActiveViewId = () => useSetAtom(activeViewIdAtom)
 
 const printingAtom = atom<boolean>(false)
 export const usePrinting = () => useAtom(printingAtom)

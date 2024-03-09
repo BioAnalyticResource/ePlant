@@ -19,7 +19,7 @@ export const Config = React.createContext<EplantConfig>({
 
   rootPath: '',
   defaultSpecies: '',
-  defaultView: '',
+  defaultView: 'get-started',
 })
 
 export const useConfig = () => React.useContext(Config)

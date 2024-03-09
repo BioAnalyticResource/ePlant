@@ -2,7 +2,7 @@ import * as React from 'react'
 import { atom, useAtom, WritableAtom } from 'jotai'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { atomWithStorage } from '@eplant/state'
+import { atomWithStorage, atomWithUrlStorage } from '@eplant/state'
 import Storage from '@eplant/util/Storage'
 
 import { View, ViewDispatch } from './index'
@@ -71,7 +71,8 @@ function getViewAtom(key: string) {
   return viewDataAtoms[key]
 }
 
-function getViewStateAtom(key: string) {
+function getViewStateAtom(key: string, urlState: boolean) {
+  //if (urlState) return atomWithUrlStorage(key, undefined)
   if (viewStateAtoms[key]) return viewStateAtoms[key]
   viewStateAtoms[key] = atomWithStorage(viewStateStorage, key, undefined)
   return viewStateAtoms[key]
@@ -83,12 +84,13 @@ export function getViewDataKey(viewId: string, gene: GeneticElement | null) {
 
 export function useViewData<T, S, A>(
   view: View<T, S, A>,
-  gene: GeneticElement | null
+  gene: GeneticElement | null,
+  urlState?: boolean
 ): UseViewDataType<T, S, A> {
   const key = getViewDataKey(view.id, gene)
   const id = view?.id ?? 'generic-view'
   const [viewData, setViewData] = useAtom(getViewAtom(key))
-  const [viewState, setViewState] = useAtom(getViewStateAtom(id))
+  const [viewState, setViewState] = useAtom(getViewStateAtom(id, urlState ?? false))
   // console.log(viewData)
 
   // If there is no cached viewData then load it using the view's loader
