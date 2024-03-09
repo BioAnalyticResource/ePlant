@@ -263,14 +263,6 @@ export default class EFPViewer
       const Component = sortedEfps[activeViewIndex].component
       return (
         <>
-          {/* <Typography
-            variant='h6'
-            style={{ position: 'relative', top: '12px', left: '12px' }}
-          >
-            {activeData.views.find((v) => v.id === state.activeView)?.name}
-            {': '}
-            {geneticElement?.id}
-          </Typography> */}
           <Component
             activeData={{
               ...sortedViewData[activeViewIndex],
