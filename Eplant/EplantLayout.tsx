@@ -32,12 +32,13 @@ const EplantLayout = () => {
   return (
     <Box
       sx={(theme) => ({
-        height: `calc(100% - ${theme.spacing(1)})`,
+        height: `100%`,
         left: `${sidebarWidth}px`,
         right: '0px',
         position: 'absolute',
-        margin: theme.spacing(1),
+        margin: theme.spacing(0),
         boxSizing: 'border-box',
+        backgroundColor: theme.palette.background.paper,
       })}
     >
       <Box
