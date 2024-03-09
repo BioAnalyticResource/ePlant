@@ -263,11 +263,14 @@ export default class EFPViewer
       const Component = sortedEfps[activeViewIndex].component
       return (
         <>
-          <Typography variant='h6'>
+          {/* <Typography
+            variant='h6'
+            style={{ position: 'relative', top: '12px', left: '12px' }}
+          >
             {activeData.views.find((v) => v.id === state.activeView)?.name}
             {': '}
             {geneticElement?.id}
-          </Typography>
+          </Typography> */}
           <Component
             activeData={{
               ...sortedViewData[activeViewIndex],
@@ -401,11 +404,25 @@ export default class EFPViewer
           >
             {activeData.viewData[activeViewIndex].supported ? (
               <>
-                {activeData.views[activeViewIndex].name !== 'cellEFP' && (
-                  <GeneDistributionChart
-                    data={{ ...activeData.viewData[activeViewIndex] }}
-                  />
-                )}
+                <div>
+                  <Typography
+                    variant='h6'
+                    style={{ position: 'relative', top: '12px', left: '12px' }}
+                  >
+                    {
+                      activeData.views.find((v) => v.id === state.activeView)
+                        ?.name
+                    }
+                    {': '}
+                    {geneticElement?.id}
+                  </Typography>
+
+                  {activeData.views[activeViewIndex].name !== 'cellEFP' && (
+                    <GeneDistributionChart
+                      data={{ ...activeData.viewData[activeViewIndex] }}
+                    />
+                  )}
+                </div>
                 <MaskModal
                   state={state}
                   onClose={() => dispatch({ type: 'toggle-mask-modal' })}
