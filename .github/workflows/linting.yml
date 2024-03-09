@@ -2,6 +2,9 @@ name: Linting and Formatting Check
 
 on:
   push:
+    branches:
+      - main
+      - staging
 
 jobs:
   lint-and-format:
