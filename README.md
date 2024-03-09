@@ -1,4 +1,4 @@
-# ePlantAAAAAAA
+# ePlant
 ePlant is a gene-centric visualization tool for plant genomes.
 
 ## Using ePlant
@@ -66,9 +66,11 @@ If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResou
 12. Choose your fork as the head repository and `https://github.com/BioAnalyticResource/ePlant/` as the base repository.
 13. Give the pull request a descriptive title so that someone who didn't work on it will know what you did. Link the issue if possible.
 
-### Reviewing a pull request
-
-
+### Recommended VSCode extensions
+* ES7+ React/Redux/React-Native snippets
+* Prettier
+* Markdown All in One
+* GitHub Actions
 
 
 ## Glossary
