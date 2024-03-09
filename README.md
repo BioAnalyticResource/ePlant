@@ -1,4 +1,4 @@
-# ePlant
+# ePlantAAAAAAA
 ePlant is a gene-centric visualization tool for plant genomes.
 
 ## Using ePlant
