@@ -23,6 +23,9 @@ const PublicationViewer: View<PublicationViewerData> = {
     const theme = useTheme()
     return (
       <div>
+        <Typography variant='h6'>
+          Publications related to {geneticElement?.id}
+        </Typography>
         <Tabs value={tab} onChange={(e, val: TabValues) => setTab(val)}>
           <Tab label='PUBLICATIONS' value='publications' />
           <Tab label='GENE RIFS' value='geneRIFs' />
@@ -76,11 +79,6 @@ const PublicationViewer: View<PublicationViewerData> = {
       </div>
     )
   },
-  header: ({ geneticElement }) => (
-    <Typography variant='h6'>
-      Publications related to {geneticElement?.id}
-    </Typography>
-  ),
   async getInitialData() {
     // Loader override for the genes species must be undefined if getInitialData is being called
     throw ViewDataError.UNSUPPORTED_GENE

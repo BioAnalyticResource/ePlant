@@ -376,15 +376,33 @@ export default class EFPViewer
             sx={(theme) => ({
               flexGrow: 1,
               position: 'relative',
+              backgroundColor: theme.palette.background.paperOverlay,
+              border: '1px solid',
+              borderColor: theme.palette.background.edge,
+              borderRadius: 1,
             })}
           >
             {activeData.viewData[activeViewIndex].supported ? (
               <>
-                {activeData.views[activeViewIndex].name !== 'cell EFP' && (
-                  <GeneDistributionChart
-                    data={{ ...activeData.viewData[activeViewIndex] }}
-                  />
-                )}
+                <div>
+                  <Typography
+                    variant='h6'
+                    style={{ position: 'relative', top: '12px', left: '12px' }}
+                  >
+                    {
+                      activeData.views.find((v) => v.id === state.activeView)
+                        ?.name
+                    }
+                    {': '}
+                    {geneticElement?.id}
+                  </Typography>
+
+                  {activeData.views[activeViewIndex].name !== 'cellEFP' && (
+                    <GeneDistributionChart
+                      data={{ ...activeData.viewData[activeViewIndex] }}
+                    />
+                  )}
+                </div>
                 <MaskModal
                   state={state}
                   onClose={() => dispatch({ type: 'toggle-mask-modal' })}
