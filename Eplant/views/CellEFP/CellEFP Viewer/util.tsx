@@ -1,5 +1,5 @@
 import CellEFP from '../../CellEFP/cellEFP'
-import EFP from '..'
+import EFP from '../../eFP'
 
 import { EFPViewerData } from './types'
 

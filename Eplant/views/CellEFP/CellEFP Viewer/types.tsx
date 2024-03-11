@@ -2,12 +2,6 @@ import { Transform } from '@eplant/util/PanZoom'
 import { ColorMode, EFPData, EFPId } from '@eplant/views/eFP/types'
 
 export type CellEFPViewerData = {
-  views: {
-    svgURL: string
-    xmlURL: string
-    id: EFPId
-    name: string
-  }[]
   viewData: EFPData[]
 }
 

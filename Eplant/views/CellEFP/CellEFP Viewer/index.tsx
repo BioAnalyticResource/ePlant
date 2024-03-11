@@ -22,22 +22,26 @@ import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
 import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
 
-import EFPPreview from '../EFPPreview'
-import { EFPData } from '../types'
-import EFP from '..'
-
-import Legend from './legend'
-import MaskModal from './MaskModal'
-import { EFPListMemoized } from '../Viewer'
-import EFPViewerCitation from '../Viewer/EFPViewerCitation'
-import GeneDistributionChart from '../Viewer/GeneDistributionChart'
-import { EFPViewerData, EFPViewerState } from '../Viewer/types'
+import EFP from '../../eFP'
+import EFPPreview from '../../eFP/EFPPreview'
+import { EFPData } from '../../eFP/types'
+import { EFPListMemoized } from '../../eFP/Viewer'
+import EFPViewerCitation from '../../eFP/Viewer/EFPViewerCitation'
+import GeneDistributionChart from '../../eFP/Viewer/GeneDistributionChart'
 import {
   EFPViewerAction,
+  EFPViewerData,
+  EFPViewerState,
+} from '../../eFP/Viewer/types'
+import CellEFP from '..'
+
+import {
+  CellEFPViewerAction,
   CellEFPViewerData,
   CellEFPViewerState,
-  CellEFPViewerAction,
 } from './types'
+import MaskModal from './MaskModal'
+import Legend from './legend'
 
 type EFPListProps = {
   geneticElement: GeneticElement
@@ -60,10 +64,16 @@ interface ICitationProps {
   gene?: GeneticElement | null
 }
 
-export default class CellEFPViewer
-  implements View<CellEFPViewerData, CellEFPViewerState, CellEFPViewerAction>
-{
-  getInitialState(): CellEFPViewerState {
+const CellEFPViewer: View<
+  CellEFPViewerData,
+  CellEFPViewerState,
+  CellEFPViewerAction
+> = {
+  id: 'cell efp',
+  name: 'CellEFP',
+  icon: () => <CellEFPIcon />,
+  efp: new CellEFP(),
+  getInitialState() {
     return {
       transform: {
         offset: {
@@ -73,20 +83,11 @@ export default class CellEFPViewer
         zoom: 1,
       },
     }
-  }
-  constructor(
-    public id: string,
-    public name: string,
-    private view: CellEFPViewerData['view'],
-    public efp: EFP,
-    public icon: () => JSX.Element,
-    public description?: string,
-    public thumbnail?: string
-  ) {}
-  getInitialData = async (
+  },
+  async getInitialData(
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void
-  ) => {
+  ) {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     // Load all the views
     let loadingProgress = 0
@@ -107,7 +108,7 @@ export default class CellEFPViewer
       viewData: viewData,
       efp: this.efp,
     }
-  }
+  },
   reducer = (state: CellEFPViewerState, action: CellEFPViewerAction) => {
     switch (action.type) {
       case 'reset-transform':
@@ -126,8 +127,8 @@ export default class CellEFPViewer
       default:
         return state
     }
-  }
-  component = ({
+  },
+  component: ({
     activeData,
     state,
     dispatch,
@@ -319,22 +320,26 @@ export default class CellEFPViewer
         </Box>
       </Box>
     )
-  }
-  actions: View<EFPViewerData, EFPViewerState, EFPViewerAction>['actions'] = [
+  },
+  actions: [
     {
       action: { type: 'reset-transform' },
       render: () => <>Reset pan/zoom</>,
     },
-  ]
-  header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
-    props
-  ) => (
-    <Typography variant='h6'>
-      {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}
-      {': '}
-      {props.geneticElement?.id}
-    </Typography>
-  )
+  ],
+
+  header: (props) => {
+    return (
+      <Typography variant='h6'>
+        {
+          props.activeData.views.find((v) => v.id == props.state.activeView)
+            ?.name
+        }
+        {': '}
+        {props.geneticElement?.id}
+      </Typography>
+    )
+  },
 
   citation = ({ activeData, state, gene }: ICitationProps) => {
     const [xmlData, setXMLData] = useState<string[]>([])
@@ -384,5 +389,5 @@ export default class CellEFPViewer
     } else {
       return <p>No Citation information provided.</p>
     }
-  }
+  },
 }

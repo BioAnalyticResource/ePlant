@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
@@ -7,36 +7,39 @@ import { ViewDataError } from '@eplant/View/viewData'
 import EFP, { getEFPSampleData } from '../eFP'
 import CellSVGTooltip from '../eFP/Tooltips/cellEFPTooltip'
 import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../eFP/types'
+import { CircularProgress, Typography } from '@mui/material'
+import { useEFPSVG, useStyles } from '../eFP/svg'
+import { CellEFPViewerData, CellEFPViewerState } from './CelleFP Viewer/types'
 
-export default class CellEFP extends EFP {
-  tooltipComponent: (props: {
-    el: SVGElement | null
-    group: EFPGroup
-    tissue: EFPTissue
-    data: EFPData
-    state: EFPState
-  }) => React.JSX.Element
-  constructor(
-    public name: string,
-    public id: EFPId,
-    public svgURL: string,
-    public xmlURL: string
-  ) {
-    super(name, id, svgURL, xmlURL)
-    this.tooltipComponent = CellSVGTooltip
-  }
-
-  getInitialData = async (
+interface ICellEFPComponentProps {
+  geneticElement: any
+  state: CellEFPViewerState
+  data: CellEFPViewerData
+}
+interface ICellEFP {
+  id: string
+  svgURL: string
+  xmlURL: string
+  getInitialData: (
     gene: GeneticElement | null,
     loadEvent: (val: number) => void
-  ): Promise<EFPData> => {
+  ) => Promise<EFPData>
+  component: (props: ICellEFPComponentProps) => Element
+}
+
+const CellEFP: ICellEFP = {
+  svgURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.svg',
+  xmlURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.xml',
+  async getInitialData(
+    gene: GeneticElement | null,
+    loadEvent: (val: number) => void
+  ): Promise<EFPData> {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     const parser = new DOMParser()
     const xml = await fetch(this.xmlURL).then(async (res) =>
       parser.parseFromString(await res.text(), 'text/xml')
     )
     const webservice = 'https://bar.utoronto.ca/eplant/cgi-bin/groupsuba4.php'
-
     const sampleNames: string[] = []
 
     // Should only be one group
@@ -114,5 +117,140 @@ export default class CellEFP extends EFP {
         groupData.length > 0,
     }
     return out
-  }
+  },
+  component(props: ICellEFPComponentProps) {
+    const { view } = useEFPSVG(
+      {
+        svgURL: this.svgURL,
+        xmlURL: this.xmlURL,
+        id: this.id,
+      },
+      {
+        showText: true,
+      }
+    )
+    const { svg } = view ?? {}
+    const id =
+      'svg-container-' +
+      this.id +
+      '-' +
+      (props.geneticElement?.id ?? 'no-gene') +
+      '-' +
+      useMemo(() => Math.random().toString(16).slice(3), [])
+    const styles = useStyles(id, props.data.viewData, 'absolute')
+    useEffect(() => {
+      const el = document.createElement('style')
+      el.innerHTML = styles
+      document.head.appendChild(el)
+      return () => {
+        document.head.removeChild(el)
+      }
+    }, [props.activeData.groups, styles])
+
+    // Add tooltips to svg
+    const [svgElements, setSvgElements] = useState<
+      {
+        el: SVGElement
+        group: EFPGroup
+        tissue: EFPTissue
+      }[]
+    >([])
+
+    const svgDiv = useMemo(() => {
+      return (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'flex',
+          }}
+          id={id}
+          dangerouslySetInnerHTML={{ __html: svg ?? '' }}
+        />
+      )
+    }, [svg, id])
+
+    useLayoutEffect(() => {
+      const elements = Array.from(
+        props.activeData.groups.flatMap((group) =>
+          group.tissues.map((t) => ({
+            el: document.querySelector(`#${id} .efp-group-${t.id}`),
+            group,
+            tissue: t,
+          }))
+        )
+      )
+      setSvgElements(elements as any)
+    }, [props.activeData.groups, id, svgDiv])
+
+    if (!svg) {
+      return (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )
+    }
+    if (!props.activeData.supported) {
+      return (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography>N/A</Typography>
+        </div>
+      )
+    }
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          alignSelf: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        {svgDiv}
+        {!props.state.renderAsThumbnail &&
+          svgElements.map(({ el, group, tissue }) => (
+            <this.tooltipComponent
+              data={props.activeData}
+              key={tissue.id}
+              el={el}
+              group={group}
+              tissue={tissue}
+              state={props.state}
+            />
+          ))}
+      </div>
+    )
+  },
+}
+
+interface IDummy {
+  key1: string
+  func1: () => void
+}
+const dummyObj: IDummy = {
+  key1: 'key1',
+  func1() {
+    console.log(this.key1)
+  },
 }
