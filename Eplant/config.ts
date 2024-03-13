@@ -1,6 +1,6 @@
 import React from 'react'
 
-import CellEFP from './views/CellEFP'
+import CellEFP from './views/CellEFP Viewer/CellEFPDataObject'
 import DebugView from './views/DebugView'
 import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'

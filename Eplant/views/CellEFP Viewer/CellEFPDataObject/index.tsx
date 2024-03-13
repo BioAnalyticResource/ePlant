@@ -3,31 +3,30 @@ import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewDataError } from '@eplant/View/viewData'
-
-import EFP, { getEFPSampleData } from '../eFP'
-import CellSVGTooltip from '../eFP/Tooltips/cellEFPTooltip'
-import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../eFP/types'
 import { CircularProgress, Typography } from '@mui/material'
-import { useEFPSVG, useStyles } from '../eFP/svg'
-import { CellEFPViewerData, CellEFPViewerState } from './CelleFP Viewer/types'
 
-interface ICellEFPComponentProps {
-  geneticElement: any
-  state: CellEFPViewerState
+import EFP, { getEFPSampleData } from '../../eFP'
+import { useEFPSVG, useStyles } from '../../eFP/svg'
+import CellSVGTooltip from '../../eFP/Tooltips/cellEFPTooltip'
+import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../../eFP/types'
+
+import { CellEFPViewerData, CellEFPViewerState } from '../types'
+
+interface ICellEFPDataObjectComponentProps {
+  geneticElement: GeneticElement | null
   data: CellEFPViewerData
 }
-interface ICellEFP {
-  id: string
+interface ICellEFPDataObject {
   svgURL: string
   xmlURL: string
   getInitialData: (
     gene: GeneticElement | null,
     loadEvent: (val: number) => void
   ) => Promise<EFPData>
-  component: (props: ICellEFPComponentProps) => Element
+  component: (props: ICellEFPDataObjectComponentProps) => JSX.Element
 }
 
-const CellEFP: ICellEFP = {
+export const CellEFPDataObject: ICellEFPDataObject = {
   svgURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.svg',
   xmlURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.xml',
   async getInitialData(
@@ -118,12 +117,12 @@ const CellEFP: ICellEFP = {
     }
     return out
   },
-  component(props: ICellEFPComponentProps) {
+  component(props: ICellEFPDataObjectComponentProps) {
     const { view } = useEFPSVG(
       {
         svgURL: this.svgURL,
         xmlURL: this.xmlURL,
-        id: this.id,
+        id: 'Cell EFP',
       },
       {
         showText: true,
@@ -145,7 +144,7 @@ const CellEFP: ICellEFP = {
       return () => {
         document.head.removeChild(el)
       }
-    }, [props.activeData.groups, styles])
+    }, [props.data, styles])
 
     // Add tooltips to svg
     const [svgElements, setSvgElements] = useState<
@@ -175,7 +174,7 @@ const CellEFP: ICellEFP = {
 
     useLayoutEffect(() => {
       const elements = Array.from(
-        props.activeData.groups.flatMap((group) =>
+        props.data.viewData.groups.flatMap((group) =>
           group.tissues.map((t) => ({
             el: document.querySelector(`#${id} .efp-group-${t.id}`),
             group,
@@ -184,7 +183,7 @@ const CellEFP: ICellEFP = {
         )
       )
       setSvgElements(elements as any)
-    }, [props.activeData.groups, id, svgDiv])
+    }, [props.data.viewData.groups, id, svgDiv])
 
     if (!svg) {
       return (
@@ -201,7 +200,7 @@ const CellEFP: ICellEFP = {
         </div>
       )
     }
-    if (!props.activeData.supported) {
+    if (!props.data.viewData.supported) {
       return (
         <div
           style={{
@@ -228,29 +227,16 @@ const CellEFP: ICellEFP = {
         }}
       >
         {svgDiv}
-        {!props.state.renderAsThumbnail &&
-          svgElements.map(({ el, group, tissue }) => (
-            <this.tooltipComponent
-              data={props.activeData}
-              key={tissue.id}
-              el={el}
-              group={group}
-              tissue={tissue}
-              state={props.state}
-            />
-          ))}
+        {svgElements.map(({ el, group, tissue }) => (
+          <CellSVGTooltip
+            data={props.data.viewData}
+            key={tissue.id}
+            el={el}
+            group={group}
+            tissue={tissue}
+          />
+        ))}
       </div>
     )
-  },
-}
-
-interface IDummy {
-  key1: string
-  func1: () => void
-}
-const dummyObj: IDummy = {
-  key1: 'key1',
-  func1() {
-    console.log(this.key1)
   },
 }

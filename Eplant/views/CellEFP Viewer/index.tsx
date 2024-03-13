@@ -22,41 +22,26 @@ import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
 import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
 
-import EFP from '../../eFP'
-import EFPPreview from '../../eFP/EFPPreview'
-import { EFPData } from '../../eFP/types'
-import { EFPListMemoized } from '../../eFP/Viewer'
-import EFPViewerCitation from '../../eFP/Viewer/EFPViewerCitation'
-import GeneDistributionChart from '../../eFP/Viewer/GeneDistributionChart'
+import EFP from '../eFP'
+import EFPPreview from '../eFP/EFPPreview'
+import { EFPData } from '../eFP/types'
+import { EFPListMemoized } from '../eFP/Viewer'
+import EFPViewerCitation from '../eFP/Viewer/EFPViewerCitation'
+import GeneDistributionChart from '../eFP/Viewer/GeneDistributionChart'
 import {
   EFPViewerAction,
   EFPViewerData,
   EFPViewerState,
-} from '../../eFP/Viewer/types'
-import CellEFP from '..'
+} from '../eFP/Viewer/types'
 
+import CellEFP, { CellEFPDataObject } from './CellEFPDataObject'
+import Legend from './legend'
+import MaskModal from './MaskModal'
 import {
   CellEFPViewerAction,
   CellEFPViewerData,
   CellEFPViewerState,
 } from './types'
-import MaskModal from './MaskModal'
-import Legend from './legend'
-
-type EFPListProps = {
-  geneticElement: GeneticElement
-  views: EFP[]
-  viewData: EFPData[]
-  activeView: EFP
-  dispatch: ViewProps<
-    EFPViewerData,
-    EFPViewerState,
-    EFPViewerAction
-  >['dispatch']
-  height: number
-  colorMode: 'absolute' | 'relative'
-  maskThreshold: number
-}
 
 interface ICitationProps {
   activeData?: EFPViewerData
@@ -69,10 +54,9 @@ const CellEFPViewer: View<
   CellEFPViewerState,
   CellEFPViewerAction
 > = {
-  id: 'cell efp',
-  name: 'CellEFP',
+  id: 'Cell EFP',
+  name: 'Cell EFP',
   icon: () => <CellEFPIcon />,
-  efp: new CellEFP(),
   getInitialState() {
     return {
       transform: {
@@ -89,27 +73,27 @@ const CellEFPViewer: View<
     loadEvent: (progress: number) => void
   ) {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
-    // Load all the views
     let loadingProgress = 0
     let totalLoaded = 0
-    const viewData = await this.efp.getInitialData(gene, (progress) => {
-      totalLoaded -= loadingProgress
-      loadingProgress = progress
-      totalLoaded += loadingProgress
-      loadEvent(totalLoaded)
-    })
+    const viewData = await CellEFPDataObject.getInitialData(
+      gene,
+      (progress) => {
+        totalLoaded -= loadingProgress
+        loadingProgress = progress
+        totalLoaded += loadingProgress
+        loadEvent(totalLoaded)
+      }
+    )
     return {
-      activeView: this.view.id,
-      view: this.view,
+      activeView: this.id,
       transform: {
         offset: { x: 0, y: 0 },
         zoom: 1,
       },
       viewData: viewData,
-      efp: this.efp,
     }
   },
-  reducer = (state: CellEFPViewerState, action: CellEFPViewerAction) => {
+  reducer(state: CellEFPViewerState, action: CellEFPViewerAction) {
     switch (action.type) {
       case 'reset-transform':
         return {
@@ -128,25 +112,16 @@ const CellEFPViewer: View<
         return state
     }
   },
-  component: ({
+  component({
     activeData,
     state,
     dispatch,
     geneticElement,
-  }: ViewProps<CellEFPViewerData, CellEFPViewerState, CellEFPViewerAction>) => {
+  }: ViewProps<CellEFPViewerData, CellEFPViewerState, CellEFPViewerAction>) {
     const efp = useMemo(() => {
-      const Component = this.efp.component
-      return (
-        <Component
-          activeData={activeData}
-          state={{
-            renderAsThumbnail: false,
-          }}
-          geneticElement={geneticElement}
-          dispatch={() => {}}
-        />
-      )
-    }, [geneticElement?.id, dispatch])
+      const Component = CellEFPDataObject.component
+      return <Component data={activeData} geneticElement={geneticElement} />
+    }, [geneticElement?.id])
     const ref = useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
 
@@ -172,76 +147,6 @@ const CellEFPViewer: View<
             overflow: 'hidden',
           }}
         >
-          {/* Left column of EFP Previews */}
-          <Box
-            sx={{
-              padding: 0,
-              position: 'relative',
-            }}
-          >
-            {/* Dropdown menus for selecting a view and sort options */}
-            <Box sx={{ marginBottom: 1, display: 'flex', gap: 1 }}>
-              <Dropdown
-                color='secondary'
-                variant='text'
-                size='small'
-                sx={{ padding: '0.25rem 0.5rem', minWidth: 'fit-content' }}
-                endIcon={undefined}
-                options={sortedViews.map((view) => (
-                  <MenuItem
-                    selected={state.activeView == view.id ? true : false}
-                    onClick={() => dispatch({ type: 'set-view', id: view.id })}
-                    key={view.id}
-                  >
-                    {view.name}
-                  </MenuItem>
-                ))}
-              >
-                View
-              </Dropdown>
-              <Dropdown
-                variant='text'
-                size='small'
-                sx={{ padding: '0.25rem 0.5rem', minWidth: 'fit-content' }}
-                endIcon={undefined}
-                color='secondary'
-                options={[
-                  <MenuItem
-                    selected={state.sortBy == 'name' ? true : false}
-                    key='byName'
-                    onClick={() => dispatch({ type: 'sort-by', by: 'name' })}
-                  >
-                    By name
-                  </MenuItem>,
-                  <MenuItem
-                    selected={state.sortBy == 'expression-level' ? true : false}
-                    key='byExpression'
-                    onClick={() =>
-                      dispatch({
-                        type: 'sort-by',
-                        by: 'expression-level',
-                      })
-                    }
-                  >
-                    By expression level
-                  </MenuItem>,
-                ]}
-              >
-                Sort
-              </Dropdown>
-            </Box>
-            {/* The actual stack of EFP Previews */}
-            <EFPListMemoized
-              height={dimensions.height - 5}
-              activeView={sortedEfps[activeViewIndex]}
-              dispatch={dispatch}
-              viewData={sortedViewData}
-              geneticElement={geneticElement}
-              views={sortedEfps}
-              colorMode={state.colorMode}
-              maskThreshold={state.maskThreshold}
-            />
-          </Box>
           {/* main canvas area */}
           <Box
             sx={(theme) => ({
@@ -249,23 +154,8 @@ const CellEFPViewer: View<
               position: 'relative',
             })}
           >
-            {activeData.viewData[activeViewIndex].supported ? (
+            {activeData.viewData.supported ? (
               <>
-                {activeData.views[activeViewIndex].name !== 'cell EFP' && (
-                  <GeneDistributionChart
-                    data={{ ...activeData.viewData[activeViewIndex] }}
-                  />
-                )}
-                <MaskModal
-                  state={state}
-                  onClose={() => dispatch({ type: 'toggle-mask-modal' })}
-                  onSubmit={(threshold) =>
-                    dispatch({
-                      type: 'set-mask-threshold',
-                      threshold: threshold,
-                    })
-                  }
-                />
                 <Legend
                   sx={(theme) => ({
                     position: 'absolute',
@@ -274,10 +164,10 @@ const CellEFPViewer: View<
                     zIndex: 10,
                   })}
                   data={{
-                    ...activeData.viewData[activeViewIndex],
+                    ...activeData.viewData,
                   }}
                   state={{
-                    colorMode: state.colorMode,
+                    colorMode: 'absolute',
                     renderAsThumbnail: false,
                     maskThreshold: state.maskThreshold,
                   }}
