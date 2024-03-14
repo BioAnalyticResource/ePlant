@@ -9,7 +9,6 @@ import {
 } from 'flexlayout-react'
 import { useAtom } from 'jotai'
 
-import { collapseContext } from '@eplant/Eplant'
 import { isCollapse as isCollapseState } from '@eplant/Eplant'
 import { Add, CallMade, Close } from '@mui/icons-material'
 import { Box, CircularProgress, IconButton } from '@mui/material'
@@ -69,11 +68,7 @@ const EplantLayout = () => {
     setModel(FlexLayout.Model.fromJson(json))
   }, [tabHeight, loaded])
 
-  //Grabbing collapse state from useContext hook
-  const context = useContext(collapseContext)
-  const collapse = context.collapse
-
-  //trying out jotai
+  //Initializing isCollapse variable to isCollapse jotai atom state
   const [isCollapse] = useAtom(isCollapseState)
 
   return (
@@ -98,7 +93,7 @@ const EplantLayout = () => {
           justifyContent: 'center',
         }}
       >
-        <div style={{color: 'red'}} />
+        <div style={{ color: 'red' }} />
         {loaded ? (
           <FlexLayout.Layout
             ref={layout}
@@ -172,9 +167,9 @@ const EplantLayout = () => {
 
     layout.current.addTabToTabSet(
       tabsetId ??
-      model.getActiveTabset()?.getId?.() ??
-      model.getRoot().getChildren()[0]?.getId() ??
-      '',
+        model.getActiveTabset()?.getId?.() ??
+        model.getRoot().getChildren()[0]?.getId() ??
+        '',
       {
         name: name,
         component: 'view',

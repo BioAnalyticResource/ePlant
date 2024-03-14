@@ -1,6 +1,6 @@
 // import useStateWithStorage from '@eplant/util/useStateWithStorage'
-import { createContext, useState } from 'react';
-import { atom, useAtom } from 'jotai';
+import { createContext, useState } from 'react'
+import { atom, useAtom } from 'jotai'
 import { Route, Routes } from 'react-router-dom'
 
 import { CssBaseline, ThemeProvider } from '@mui/material'
@@ -33,32 +33,18 @@ export default function Eplant() {
  * @returns {JSX.Element} The rendered Eplant component
  */
 
+// Setting the sidebar collapse state with jotai
 export const isCollapse = atom(false)
 export const changeCollapse = atom(null, (get, set) => {
   set(isCollapse, !get(isCollapse))
 })
 
-// createContext type
-export type CollapseContent = {
-  collapse: boolean,
-  setCollapse: (c: boolean) => void
-}
-
-// exporting the createContext
-export const collapseContext = createContext<CollapseContent>({
-  collapse: false,
-  setCollapse: () => { }
-})
-
-// Adding context to SideBar and EplantLayout children
+// SideBar and EplantLayout children
 export function MainEplant() {
-  const [collapse, setCollapse] = useState(false)
   return (
     <>
-      <collapseContext.Provider value={{ collapse: collapse, setCollapse: setCollapse }}>
-        <Sidebar />
-        <EplantLayout />
-      </collapseContext.Provider >
+      <Sidebar />
+      <EplantLayout />
     </>
   )
 }
