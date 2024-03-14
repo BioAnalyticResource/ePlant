@@ -53,7 +53,7 @@ const EplantLayout = () => {
         marginTop: '0.5rem',
         // margin: theme.spacing(1),
         boxSizing: 'border-box',
-        transition: 'all 1s ease-out',
+        transition: 'left 1s ease-out',
         backgroundColor: theme.palette.background.paper,
       })}
     >
