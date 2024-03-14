@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import {Link} from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
@@ -336,9 +337,8 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
           Available views
         </Typography>
         {userViews.map((view) => (
+          <Link to={`/${view.id}/${geneticElement.id}`} key={view.name}>
           <ViewButton
-            component={Link}
-            to={`/${view.id}/${geneticElement.id}`}
             color='secondary'
             sx={{
               textAlign: 'left',
@@ -366,13 +366,12 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
                 </div>
               ) : undefined
             }
-            key={view.name}
             view={view}
             geneticElement={geneticElement}
-            onClick={() => switchViews(view)}
           >
             {view.name}
           </ViewButton>
+          </Link>
         ))}
       </Box>
     </Stack>
