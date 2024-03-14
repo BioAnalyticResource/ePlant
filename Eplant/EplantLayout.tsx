@@ -7,8 +7,10 @@ import {
   Layout,
   TabSetNode,
 } from 'flexlayout-react'
+import { useAtom } from 'jotai'
 
 import { collapseContext } from '@eplant/Eplant'
+import { isCollapse as isCollapseState } from '@eplant/Eplant'
 import { Add, CallMade, Close } from '@mui/icons-material'
 import { Box, CircularProgress, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
@@ -71,11 +73,14 @@ const EplantLayout = () => {
   const context = useContext(collapseContext)
   const collapse = context.collapse
 
+  //trying out jotai
+  const [isCollapse] = useAtom(isCollapseState)
+
   return (
     <Box
       sx={(theme) => ({
         height: `calc(100% - ${theme.spacing(1)})`,
-        left: `${collapse ? 100 : sidebarWidth}px`,
+        left: `${isCollapse ? 100 : sidebarWidth}px`,
         right: '0px',
         position: 'absolute',
         marginTop: '0.5rem',

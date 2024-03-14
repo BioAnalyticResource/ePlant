@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useContext } from 'react'
+import { useAtom } from 'jotai';
 
 import { collapseContext } from '@eplant/Eplant'
+import { changeCollapse,isCollapse as isCollapseState } from '@eplant/Eplant';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { Container } from '@mui/material'
@@ -26,6 +28,8 @@ export default function Sidebar() {
   const context = useContext(collapseContext)
   const collapse = context.collapse
 
+  // trying out jotai
+  const [isCollapse] = useAtom(isCollapseState)
   return (
     <div>
 
@@ -45,7 +49,7 @@ export default function Sidebar() {
           sx={{
             height: '100%',
             padding: '20px',
-            width: `${collapse ? 100 : sidebarWidth}px`,
+            width: `${isCollapse ? 100 : sidebarWidth}px`,
             boxSizing: 'border-box',
             transition: 'all 1s ease-out'
           }}
