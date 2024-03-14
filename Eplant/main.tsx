@@ -12,7 +12,6 @@ import {
 import { CssBaseline, ThemeProvider } from '@mui/material'
 
 import { dark, light } from './css/theme'
-import Sidebar from './UI/Sidebar'
 import CellEFP from './views/CellEFP'
 import DebugView from './views/DebugView'
 import ExperimentEFP from './views/ExperimentEFP'

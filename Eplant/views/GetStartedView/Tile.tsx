@@ -1,5 +1,4 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import arabidopsis from '@eplant/Species/arabidopsis'
 import { useGeneticElements } from '@eplant/state'
@@ -68,9 +67,9 @@ export default function Tile({ view }: TileProps) {
         >
           Example{' '}
         </Typography>
-        <Button component={Link} to={`/${view.id}/AT3G24650`} size='small'>
-          AT3G24650 | ABI3
-        </Button>
+        <Link to={`/${view.id}/AT3G24650`}>
+          <Button size='small'>AT3G24650 | ABI3</Button>
+        </Link>
       </CardActions>
     </Card>
   )
