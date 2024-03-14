@@ -59,7 +59,7 @@ const EplantLayout = () => {
     >
       <Box
         sx={{
-          width: '50%',
+          width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'stretch',
