@@ -27,7 +27,7 @@ const DebugView: View<null, DebugViewState, DebugViewAction> = {
     testToggle: false,
   }),
   component: (props) => {
-    const {viewId, geneId} = useParams()
+    const { viewId, geneId } = useParams()
     return (
       <div>
         <Typography variant='h6'>

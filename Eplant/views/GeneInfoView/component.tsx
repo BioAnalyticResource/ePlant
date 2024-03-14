@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
@@ -338,39 +338,39 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
         </Typography>
         {userViews.map((view) => (
           <Link to={`/${view.id}/${geneticElement.id}`} key={view.name}>
-          <ViewButton
-            color='secondary'
-            sx={{
-              textAlign: 'left',
-              justifyContent: 'flex-start',
-              color: 'secondary.contrastText',
-              textTransform: 'none',
-              fontWeight: 'regular',
-              '&:hover': {
-                backgroundColor: (theme) => theme.palette.primary.dark,
-              },
-            }}
-            startIcon={
-              view.icon ? (
-                <div
-                  style={{
-                    transform: 'scale(1.2)',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    display: 'flex',
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                  }}
-                >
-                  <view.icon />
-                </div>
-              ) : undefined
-            }
-            view={view}
-            geneticElement={geneticElement}
-          >
-            {view.name}
-          </ViewButton>
+            <ViewButton
+              color='secondary'
+              sx={{
+                textAlign: 'left',
+                justifyContent: 'flex-start',
+                color: 'secondary.contrastText',
+                textTransform: 'none',
+                fontWeight: 'regular',
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.primary.dark,
+                },
+              }}
+              startIcon={
+                view.icon ? (
+                  <div
+                    style={{
+                      transform: 'scale(1.2)',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      display: 'flex',
+                      paddingLeft: 8,
+                      paddingRight: 8,
+                    }}
+                  >
+                    <view.icon />
+                  </div>
+                ) : undefined
+              }
+              view={view}
+              geneticElement={geneticElement}
+            >
+              {view.name}
+            </ViewButton>
           </Link>
         ))}
       </Box>

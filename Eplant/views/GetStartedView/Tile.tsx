@@ -2,9 +2,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 
 import arabidopsis from '@eplant/Species/arabidopsis'
-import {
-  useGeneticElements,
-} from '@eplant/state'
+import { useGeneticElements } from '@eplant/state'
 import { View } from '@eplant/View'
 import {
   Button,
@@ -20,7 +18,7 @@ export type TileProps = {
 }
 
 export default function Tile({ view }: TileProps) {
-  const {geneId, viewId} = useParams();
+  const { geneId, viewId } = useParams()
   const [genes, setGenes] = useGeneticElements()
 
   return (
@@ -70,11 +68,7 @@ export default function Tile({ view }: TileProps) {
         >
           Example{' '}
         </Typography>
-        <Button
-          component={Link}
-          to={`/${view.id}/AT3G24650`}
-          size='small'
-        >
+        <Button component={Link} to={`/${view.id}/AT3G24650`} size='small'>
           AT3G24650 | ABI3
         </Button>
       </CardActions>

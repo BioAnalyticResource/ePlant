@@ -160,7 +160,9 @@ export function ViewContainer<T, S, A>({
                   // @ts-ignore
                   <MenuItem
                     component={Link}
-                    to={`/${view.id}/${gene?.id ?? ''}` + window.location.search}
+                    to={
+                      `/${view.id}/${gene?.id ?? ''}` + window.location.search
+                    }
                     key={view.id}
                     value={view.id}
                     style={{

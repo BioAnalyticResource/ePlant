@@ -90,7 +90,9 @@ export function useViewData<T, S, A>(
   const key = getViewDataKey(view.id, gene)
   const id = view?.id ?? 'generic-view'
   const [viewData, setViewData] = useAtom(getViewAtom(key))
-  const [viewState, setViewState] = useAtom(getViewStateAtom(id, urlState ?? false))
+  const [viewState, setViewState] = useAtom(
+    getViewStateAtom(id, urlState ?? false)
+  )
   // console.log(viewData)
 
   // If there is no cached viewData then load it using the view's loader

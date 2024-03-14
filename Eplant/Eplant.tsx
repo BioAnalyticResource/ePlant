@@ -9,11 +9,7 @@ import { ViewContainer } from './UI/Layout/ViewContainer'
 import Sidebar, { sidebarWidth } from './UI/Sidebar'
 import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
-import {
-  useDarkMode,
-  useGeneticElements,
-  usePageLoad,
-} from './state'
+import { useDarkMode, useGeneticElements, usePageLoad } from './state'
 import { updateColors } from './updateColors'
 
 export const Eplant = () => {

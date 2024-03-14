@@ -2,10 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  useDarkMode,
-  useGeneticElements,
-} from '@eplant/state'
+import { useDarkMode, useGeneticElements } from '@eplant/state'
 import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Stack from '@mui/material/Stack'
 

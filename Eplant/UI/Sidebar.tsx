@@ -10,8 +10,8 @@ import ResponsiveDrawer from './ResponsiveDrawer'
 export const sidebarWidth = 300
 
 export default function Sidebar() {
-  const {viewId, geneId} = useParams()
-  const navigate = useNavigate();
+  const { viewId, geneId } = useParams()
+  const navigate = useNavigate()
 
   return (
     <ResponsiveDrawer
