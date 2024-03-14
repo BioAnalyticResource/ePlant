@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { SetStateAction, useEffect, useMemo } from 'react'
 import { atom, useAtom, WritableAtom } from 'jotai'
 
 import GeneticElement from '@eplant/GeneticElement'
@@ -40,13 +40,13 @@ export type UseViewDataType<T, S, A> = ViewDataType<T> & {
 const viewDataAtoms: {
   [key: string]: WritableAtom<
     ViewDataType<unknown>,
-    [React.SetStateAction<ViewDataType<unknown>>],
+    [SetStateAction<ViewDataType<unknown>>],
     void
   >
 } = {}
 
 const viewStateAtoms: {
-  [key: string]: WritableAtom<unknown, [React.SetStateAction<unknown>], void>
+  [key: string]: WritableAtom<unknown, [SetStateAction<unknown>], void>
 } = {}
 
 function getViewAtom(key: string) {
@@ -94,59 +94,62 @@ export function useViewData<T, S, A>(
   // console.log(viewData)
 
   // If there is no cached viewData then load it using the view's loader
-  React.useEffect(() => {
+  const loadData = async () => {
+    const loader =
+      (await gene?.species.api.loaders[view.id]) ?? view.getInitialData
+    // Guaranteed to work even though types are broken because if gene is null then view.getInitialData (which accepts null) is always used
+    try {
+      // If there already is data then don't load it again
+      if (viewData.activeData !== undefined) return
+      if (!loader) {
+        throw ViewDataError.UNSUPPORTED_GENE
+      }
+      setViewData({
+        ...defaultViewData,
+        loading: true,
+      })
+      const data = await loader(gene as GeneticElement, (amount) => {
+        setViewData((data) => {
+          return {
+            ...data,
+            loadingAmount: Math.max(amount, data.loadingAmount),
+          }
+        })
+      })
+      const newData = {
+        ...defaultViewData,
+        activeData: data ?? null,
+        loading: false,
+      }
+      setViewData(newData)
+      viewDataStorage.set(key, newData)
+    } catch (e) {
+      const errorData = {
+        ...defaultViewData,
+        error:
+          e instanceof Error
+            ? ViewDataError.FAILED_TO_LOAD
+            : (e as ViewDataError),
+        loading: false,
+      }
+      setViewData(errorData)
+    }
+  }
+
+  useEffect(() => {
     // Don't load data if the view data and they key aren't synced
     if (!viewData.loading && !viewData.error) {
-      const loader = gene?.species.api.loaders[view.id] ?? view.getInitialData
-      ;(async () => {
-        // Guaranteed to work even though types are broken because if gene is null then view.getInitialData (which accepts null) is always used
-        try {
-          // If there already is data then don't load it again
-          if (viewData.activeData !== undefined) return
-          if (!loader) {
-            throw ViewDataError.UNSUPPORTED_GENE
-          }
-          setViewData({
-            ...defaultViewData,
-            loading: true,
-          })
-          const data = await loader(gene as GeneticElement, (amount) => {
-            setViewData((data) => {
-              return {
-                ...data,
-                loadingAmount: Math.max(amount, data.loadingAmount),
-              }
-            })
-          })
-          const newData = {
-            ...defaultViewData,
-            activeData: data ?? null,
-            loading: false,
-          }
-          setViewData(newData)
-          viewDataStorage.set(key, newData)
-        } catch (e) {
-          const newData = {
-            ...defaultViewData,
-            error:
-              e instanceof Error
-                ? ViewDataError.FAILED_TO_LOAD
-                : (e as ViewDataError),
-            loading: false,
-          }
-          setViewData(newData)
-        }
-      })()
+      loadData()
     }
-  }, [viewData, id, gene?.id, view.id])
+  }, [viewData, loadData])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (viewState === undefined) {
       setViewState(view.getInitialState?.() ?? null)
     }
   }, [id])
 
-  const dispatch = React.useMemo(
+  const dispatch = useMemo(
     () => (action: A) => {
       setViewState((viewState: S) =>
         view.reducer && viewState !== undefined

@@ -1,5 +1,13 @@
 import React from 'react'
 
+import CellEFP from './views/CellEFP'
+import DebugView from './views/DebugView'
+import ExperimentEFP from './views/ExperimentEFP'
+import FallbackView from './views/FallbackView'
+import GeneInfoView from './views/GeneInfoView'
+import GetStartedView from './views/GetStartedView'
+import PlantEFP from './views/PlantEFP'
+import PublicationViewer from './views/PublicationViewer'
 import { type View } from './View'
 
 export type EplantConfig = {

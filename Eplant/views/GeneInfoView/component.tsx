@@ -267,7 +267,7 @@ export default function GeneInfoViewer({
               ></GeneSequence>
               <IconButton
                 onClick={() => copyToClipboard(activeData.geneSequence)}
-                color='primary'
+                color='secondary'
                 sx={{ ml: 1 }}
               >
                 <ContentCopyIcon />
@@ -304,7 +304,7 @@ export default function GeneInfoViewer({
                     copyToClipboard(activeData.proteinSequence)
                   }
                 }}
-                color='primary'
+                color='secondary'
                 sx={{ ml: 1 }}
               >
                 <ContentCopyIcon />
