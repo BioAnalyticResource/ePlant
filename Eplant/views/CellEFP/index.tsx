@@ -1,5 +1,3 @@
-import React from 'react'
-
 import Thumbnail from '../../../thumbnails/plant_efp.png'
 import EFP from '../eFP'
 import EFPViewer from '../eFP/Viewer'

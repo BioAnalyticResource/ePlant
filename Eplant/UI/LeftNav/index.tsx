@@ -6,10 +6,9 @@ import _ from 'lodash'
 import { changeCollapse, isCollapse as isCollapseState } from '@eplant/Eplant'
 import GeneticElement from '@eplant/GeneticElement'
 import {
-  useActiveId,
   useDarkMode,
   useGeneticElements,
-  usePanesDispatch,
+  useSetActiveGeneId,
 } from '@eplant/state'
 import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import ArrowRight from '@mui/icons-material/ArrowRight'
@@ -41,6 +40,7 @@ export function LeftNav(props: {
 }) {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
+
   const theme = useTheme()
 
   //Initializing settingCollapse function to the changeCollapse function
@@ -51,8 +51,7 @@ export function LeftNav(props: {
 
   const [tabWidth, setTabWidth] = useState('30px')
 
-  const panesDispatch = usePanesDispatch()
-  const activeID = useActiveId()[0]
+  const setActiveGeneId = useSetActiveGeneId()
 
   React.useEffect(() => {
     const uniq = _.uniqBy(geneticElements, (g) => g.id)
@@ -116,11 +115,7 @@ export function LeftNav(props: {
                 )
               )
               if (s.length > 0) {
-                panesDispatch({
-                  type: 'set-active-gene',
-                  id: activeID,
-                  activeGene: s[0].id,
-                })
+                setActiveGeneId(s[0].id)
               }
             }}
           />
@@ -141,17 +136,7 @@ export function LeftNav(props: {
         </>
       )}
       <Box flexGrow={1} />
-      {/* <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              onChange={(v) => setDarkMode(v.target.checked)}
-              checked={darkMode}
-            />
-          }
-          label='Dark mode'
-        />
-      </FormGroup> */}
+
       <div
         style={{ display: 'flex', justifyContent: 'center' }}
         onClick={() => setDarkMode(!darkMode)}
