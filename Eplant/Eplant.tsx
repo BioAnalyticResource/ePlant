@@ -1,15 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
-import { Route, Routes, useParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 
-import { Box, CircularProgress, CssBaseline, IconButton } from '@mui/material'
-import { ThemeProvider, useTheme } from '@mui/material/styles'
+import { Box, CircularProgress } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 
-import { dark, light } from './css/theme'
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import Sidebar, { sidebarWidth } from './UI/Sidebar'
 import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
-import { useDarkMode, useGeneticElements, usePageLoad } from './state'
+import { useGeneticElements, usePageLoad } from './state'
 import { updateColors } from './updateColors'
 
 export const Eplant = () => {
@@ -21,7 +20,6 @@ export const Eplant = () => {
   const [genes] = useGeneticElements()
 
   const config = useConfig()
-
   useEffect(() => {
     if (loaded) {
       updateColors(theme)
@@ -53,9 +51,7 @@ export const Eplant = () => {
             <ViewContainer
               gene={genes.find((gene) => gene.id === geneId) ?? null}
               view={
-                config.views.find(
-                  (view) => view.id === (viewId ?? config.defaultView)
-                ) ?? FallbackView
+                config.views.find((view) => view.id === viewId) ?? FallbackView
               }
               sx={{
                 width: '100%',
