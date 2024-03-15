@@ -131,7 +131,7 @@ export const CellEFPDataObject: ICellEFPDataObject = {
     const { svg } = view ?? {}
     const id =
       'svg-container-' +
-      this.id +
+      'Cell EFP' +
       '-' +
       (props.geneticElement?.id ?? 'no-gene') +
       '-' +

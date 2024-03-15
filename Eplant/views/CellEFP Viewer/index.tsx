@@ -35,13 +35,13 @@ import {
 } from '../eFP/Viewer/types'
 
 import CellEFP, { CellEFPDataObject } from './CellEFPDataObject'
-import Legend from './legend'
 import MaskModal from './MaskModal'
 import {
   CellEFPViewerAction,
   CellEFPViewerData,
   CellEFPViewerState,
 } from './types'
+import Legend from '../eFP/Viewer/legend'
 
 interface ICitationProps {
   activeData?: EFPViewerData
@@ -166,11 +166,7 @@ const CellEFPViewer: View<
                   data={{
                     ...activeData.viewData,
                   }}
-                  state={{
-                    colorMode: 'absolute',
-                    renderAsThumbnail: false,
-                    maskThreshold: state.maskThreshold,
-                  }}
+                  colorMode={'absolute'}
                 />
                 <PanZoom
                   sx={(theme) => ({
