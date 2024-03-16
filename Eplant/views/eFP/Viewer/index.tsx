@@ -415,11 +415,25 @@ export default class EFPViewer
           >
             {activeData.viewData[activeViewIndex].supported ? (
               <>
-                {activeData.views[activeViewIndex].name !== 'cellEFP' && (
-                  <GeneDistributionChart
-                    data={{ ...activeData.viewData[activeViewIndex] }}
-                  />
-                )}
+                <div>
+                  <Typography
+                    variant='h6'
+                    style={{ position: 'relative', top: '12px', left: '12px' }}
+                  >
+                    {
+                      activeData.views.find((v) => v.id === state.activeView)
+                        ?.name
+                    }
+                    {': '}
+                    {geneticElement?.id}
+                  </Typography>
+
+                  {activeData.views[activeViewIndex].name !== 'cellEFP' && (
+                    <GeneDistributionChart
+                      data={{ ...activeData.viewData[activeViewIndex] }}
+                    />
+                  )}
+                </div>
                 <MaskModal
                   state={state}
                   onClose={() => dispatch({ type: 'toggle-mask-modal' })}
@@ -500,6 +514,15 @@ export default class EFPViewer
       render: () => <>Mask data</>,
     },
   ]
+  header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
+    props
+  ) => (
+    <Typography variant='h6'>
+      {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}
+      {': '}
+      {props.geneticElement?.id}
+    </Typography>
+  )
 
   citation = ({ activeData, state, gene }: ICitationProps) => {
     const [xmlData, setXMLData] = useState<string[]>([])
