@@ -88,7 +88,8 @@ export function getColor(
   theme: Theme,
   colorMode: ColorMode,
   tissueStd?: number,
-  maskThreshold?: number
+  maskThreshold?: number,
+  maskingEnabled?: boolean
 ): string {
   const extremum = Math.max(
     Math.abs(Math.log2(group.min / control)),
@@ -96,7 +97,7 @@ export function getColor(
     1
   )
   const masked =
-    maskThreshold && tissueStd
+    maskingEnabled && maskThreshold !== undefined && tissueStd
       ? isNaN(group.std) || tissueStd >= value * (maskThreshold / 100)
       : false
   const norm = Math.log2(value / control) / extremum
@@ -118,7 +119,8 @@ export function useStyles(
   id: string,
   { groups, control }: EFPData,
   colorMode: ColorMode,
-  maskThreshold?: number
+  maskThreshold?: number,
+  maskingEnabled?: boolean
 ) {
   const theme = useTheme()
   const samples = groups
@@ -134,7 +136,8 @@ export function useStyles(
             theme,
             colorMode,
             tissue.std,
-            maskThreshold
+            maskThreshold,
+            maskingEnabled
           )} !important; }`
       )
     )
