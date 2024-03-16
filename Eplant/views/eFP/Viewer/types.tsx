@@ -2,7 +2,13 @@ import { Transform } from '@eplant/util/PanZoom'
 import { ColorMode, EFPData, EFPId } from '@eplant/views/eFP/types'
 
 export type EFPViewerData = {
-  viewData: EFPData
+  views: {
+    svgURL: string
+    xmlURL: string
+    id: EFPId
+    name: string
+  }[]
+  viewData: EFPData[]
 }
 
 export type EFPViewerSortTypes = 'expression-level' | 'name'

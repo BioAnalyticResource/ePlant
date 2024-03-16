@@ -9,24 +9,26 @@ import EFP, { getEFPSampleData } from '../../eFP'
 import { useEFPSVG, useStyles } from '../../eFP/svg'
 import CellSVGTooltip from '../../eFP/Tooltips/cellEFPTooltip'
 import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../../eFP/types'
-
 import { CellEFPViewerData, CellEFPViewerState } from '../types'
 
-interface ICellEFPDataObjectComponentProps {
+interface CellEFPDataObjectComponentProps {
   geneticElement: GeneticElement | null
   data: CellEFPViewerData
 }
-interface ICellEFPDataObject {
+interface CellEFPDataObject {
   svgURL: string
   xmlURL: string
   getInitialData: (
     gene: GeneticElement | null,
     loadEvent: (val: number) => void
   ) => Promise<EFPData>
-  component: (props: ICellEFPDataObjectComponentProps) => JSX.Element
+  component: ({
+    geneticElement,
+    data,
+  }: CellEFPDataObjectComponentProps) => JSX.Element
 }
 
-export const CellEFPDataObject: ICellEFPDataObject = {
+export const CellEFPDataObject: CellEFPDataObject = {
   svgURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.svg',
   xmlURL: 'https://bar.utoronto.ca/eplant/data/cell/Arabidopsis_thaliana.xml',
   async getInitialData(
@@ -117,7 +119,7 @@ export const CellEFPDataObject: ICellEFPDataObject = {
     }
     return out
   },
-  component(props: ICellEFPDataObjectComponentProps) {
+  component({ geneticElement, data }: CellEFPDataObjectComponentProps) {
     const { view } = useEFPSVG(
       {
         svgURL: this.svgURL,
@@ -133,10 +135,10 @@ export const CellEFPDataObject: ICellEFPDataObject = {
       'svg-container-' +
       'Cell EFP' +
       '-' +
-      (props.geneticElement?.id ?? 'no-gene') +
+      (geneticElement?.id ?? 'no-gene') +
       '-' +
       useMemo(() => Math.random().toString(16).slice(3), [])
-    const styles = useStyles(id, props.data.viewData, 'absolute')
+    const styles = useStyles(id, data.viewData, 'absolute')
     useEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
@@ -144,7 +146,7 @@ export const CellEFPDataObject: ICellEFPDataObject = {
       return () => {
         document.head.removeChild(el)
       }
-    }, [props.data, styles])
+    }, [data, styles])
 
     // Add tooltips to svg
     const [svgElements, setSvgElements] = useState<
@@ -174,7 +176,7 @@ export const CellEFPDataObject: ICellEFPDataObject = {
 
     useLayoutEffect(() => {
       const elements = Array.from(
-        props.data.viewData.groups.flatMap((group) =>
+        data.viewData.groups.flatMap((group) =>
           group.tissues.map((t) => ({
             el: document.querySelector(`#${id} .efp-group-${t.id}`),
             group,
@@ -183,7 +185,7 @@ export const CellEFPDataObject: ICellEFPDataObject = {
         )
       )
       setSvgElements(elements as any)
-    }, [props.data.viewData.groups, id, svgDiv])
+    }, [data.viewData.groups, id, svgDiv])
 
     if (!svg) {
       return (
@@ -200,7 +202,7 @@ export const CellEFPDataObject: ICellEFPDataObject = {
         </div>
       )
     }
-    if (!props.data.viewData.supported) {
+    if (!data.viewData.supported) {
       return (
         <div
           style={{
@@ -229,7 +231,7 @@ export const CellEFPDataObject: ICellEFPDataObject = {
         {svgDiv}
         {svgElements.map(({ el, group, tissue }) => (
           <CellSVGTooltip
-            data={props.data.viewData}
+            data={data.viewData}
             key={tissue.id}
             el={el}
             group={group}
