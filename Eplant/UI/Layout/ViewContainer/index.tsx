@@ -37,7 +37,7 @@ import ViewOptions from './ViewOptions'
  * @param props The remaining props are passed directly to the container
  * @returns
  */
-export function ViewContainer<T, S, A>({
+export function ViewContainer<T = any, S = any, A = any>({
   view,
   gene,
   ...props
