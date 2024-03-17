@@ -18,6 +18,8 @@ type ViewAction<State, Action> = {
 }
 
 export interface View<Data = any, State = any, Action = any> {
+  readonly name: string
+  readonly id: string
   /**
    * Get the initial state of this view.
    * When `getInitialState` is undefined the state defaults to `null`
@@ -34,6 +36,11 @@ export interface View<Data = any, State = any, Action = any> {
     loadEvent: (amount: number) => void
   ) => Promise<Data>
   /**
+   * The react component that renders this view
+   */
+  component: (props: ViewProps<Data, State, Action>) => JSX.Element | null
+  description?: string
+  /**
    * A reducer method that is used for the view actions menu,
    * and the `dispatch` in {@link ViewProps['dispatch']}
    */
@@ -42,19 +49,12 @@ export interface View<Data = any, State = any, Action = any> {
    * The list of actions shown in the view options menu
    */
   actions?: ViewAction<State, Action>[]
-  /**
-   * The react component that renders this view
-   */
-  component: (props: ViewProps<Data, State, Action>) => JSX.Element | null
+  thumbnail?: string
   /**
    * A react component returning icon that represents this view.
    * Used in the gene info viewer
    */
   icon?: () => JSX.Element
-  readonly name: string
-  readonly id: string
-  description?: string
-  thumbnail?: string
   /**
    * The react component that renders citations for a gene
    */

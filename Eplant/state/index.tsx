@@ -1,13 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import * as FlexLayout from 'flexlayout-react'
-import {
-  atom,
-  SetStateAction,
-  useAtom,
-  useAtomValue,
-  useSetAtom,
-  WritableAtom,
-} from 'jotai'
+import { atom, SetStateAction, useAtom, useSetAtom, WritableAtom } from 'jotai'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
@@ -30,11 +22,13 @@ export const pageLoad = (() => {
     start() {
       waiting++
       watchers.forEach((w) => w(finished / waiting))
-    },
-    done() {
-      finished++
-      // console.log(finished / waiting)
-      watchers.forEach((w) => w(finished / waiting))
+      let done = false
+      return () => {
+        if (done) return
+        done = true
+        finished++
+        watchers.forEach((w) => w(finished / waiting))
+      }
     },
     watch(cb: (progress: number) => void) {
       watchers.add(cb)
@@ -94,6 +88,44 @@ export function atomWithStorage<T>(
   return a
 }
 
+export function atomWithUrlStorage<T>(
+  key: string,
+  initialValue: T,
+  serialize: (value: T) => string = JSON.stringify,
+  deserialize: (value: string) => T = JSON.parse
+) {
+  const parse = () => {
+    const url = new URL(window.location.href)
+    const value = url.searchParams.get(key)
+    if (value === null) return initialValue
+    return deserialize(value)
+  }
+  const val = atom<T>(parse())
+  val.onMount = (setAtom) => {
+    const listener = () => {
+      setAtom(parse())
+    }
+    window.addEventListener('locationchange', listener)
+    return () => {
+      window.removeEventListener('locationchange', listener)
+    }
+  }
+  const a = atom(
+    (get) => {
+      return get(val)
+    },
+    (get, set, x: SetStateAction<T>) => {
+      const newValue =
+        typeof x == 'function' ? (x as (prev: T) => T)(get(val)) : x
+      const url = new URL(window.location.href)
+      url.searchParams.set(key, serialize(newValue))
+      window.history.pushState({}, '', url.toString())
+      set(val, newValue)
+    }
+  )
+  return a
+}
+
 // TODO: This should probably be removed
 // Atom with storage that doesn't persist when persistAtom is set to false
 function atomWithOptionalStorage<T>(
@@ -110,14 +142,14 @@ function atomWithOptionalStorage<T>(
       else setAtom(initialValue)
     }
     ;(async () => {
-      pageLoad.start()
+      const done = pageLoad.start()
       try {
         const val = await loadedValue
         if (val) {
           setAtom(deserialize(val))
         }
       } finally {
-        pageLoad.done()
+        done()
       }
     })()
     return storage.watch(key, listener)
@@ -146,12 +178,14 @@ function useAtomReducer<T, A>(
   return (action: A) => setValue((value) => reducer(value, action))
 }
 
-export const genesAtom = atomWithOptionalStorage<GeneticElement[]>(
+export const genesAtom = atom<GeneticElement[]>(
+  []
+) /*atomWithUrlStorage<GeneticElement[]>(
   'genes',
   [],
   (genes) => JSON.stringify(genes.map(GeneticElement.serialize)),
   (genes) => JSON.parse(genes).map(GeneticElement.deserialize)
-)
+)*/
 export const useGeneticElements = () => useAtom(genesAtom)
 export const useSetGeneticElements = () => useSetAtom(genesAtom)
 
@@ -185,68 +219,18 @@ export const collectionsAtom = atomWithOptionalStorage<
   (collections) => JSON.stringify(collections),
   (collections) => JSON.parse(collections)
 )
+
 export const useCollections = () => useAtom(collectionsAtom)
 export const useSetCollections = () => useSetAtom(collectionsAtom)
 
-export const speciesAtom = atom<Species[]>([arabidopsis])
+const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)
 export const useSetSpecies = () => useSetAtom(speciesAtom)
 
-const activeGeneIdAtom = atom<string>('')
-export const useActiveGeneId = () => useAtom(activeGeneIdAtom)
-export const useSetActiveGeneId = () => useSetAtom(activeGeneIdAtom)
-
-const activeViewIdAtom = atom<string>('gene-info')
-export const useActiveViewId = () => useAtom(activeViewIdAtom)
-export const useSetActiveViewId = () => useSetAtom(activeViewIdAtom)
-
-export const ViewIDContext = createContext<string>('')
-export const useViewID = () => useContext(ViewIDContext)
-
-export const printingAtom = atom<boolean>(false)
+const printingAtom = atom<boolean>(false)
 export const usePrinting = () => useAtom(printingAtom)
 export const useSetPrinting = () => useSetAtom(printingAtom)
 
-export const darkModeAtom = atomWithOptionalStorage<boolean>('dark-mode', true)
+const darkModeAtom = atomWithOptionalStorage<boolean>('dark-mode', true)
 export const useDarkMode = () => useAtom(darkModeAtom)
 export const useSetDarkMode = () => useSetAtom(darkModeAtom)
-
-export const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
-export const useActiveId = () => useAtom(activeIdAtom)
-
-// export function getPaneName(pane: Panes[string]) {
-//   return `${pane.activeGene ? pane.activeGene + ' - ' : ''}${pane.view}`
-// }
-
-// export const modelAtom = atomWithOptionalStorage<FlexLayout.Model>(
-//   'flexlayout-model',
-//   FlexLayout.Model.fromJson({
-//     global: {
-//       tabSetTabStripHeight: 48,
-//       tabEnableRename: false,
-//       tabEnableClose: false,
-//       tabSetEnableMaximize: false,
-//     },
-//     borders: [],
-//     layout: {
-//       type: 'row',
-//       weight: 100,
-//       children: [
-//         {
-//           type: 'tabset',
-//           active: true,
-//           children: [
-//             {
-//               type: 'tab',
-//               id: 'default',
-//             },
-//           ],
-//         },
-//       ],
-//     },
-//   }),
-//   (model) => JSON.stringify(model.toJson()),
-//   (model) => FlexLayout.Model.fromJson(JSON.parse(model))
-// )
-// export const useModel = () => useAtom(modelAtom)
-// export const useSetModel = () => useSetAtom(modelAtom)

@@ -1,11 +1,7 @@
-import React from 'react'
+import { Link, useParams } from 'react-router-dom'
 
 import arabidopsis from '@eplant/Species/arabidopsis'
-import {
-  useGeneticElements,
-  useSetActiveGeneId,
-  useSetActiveViewId,
-} from '@eplant/state'
+import { useGeneticElements } from '@eplant/state'
 import { View } from '@eplant/View'
 import {
   Button,
@@ -21,16 +17,9 @@ export type TileProps = {
 }
 
 export default function Tile({ view }: TileProps) {
-  const setActiveViewId = useSetActiveViewId()
-  const setActiveGeneId = useSetActiveGeneId()
+  const { geneId, viewId } = useParams()
   const [genes, setGenes] = useGeneticElements()
-  async function setView() {
-    const ABI3 = await arabidopsis.api.searchGene('AT3G24650')
-    if (ABI3) {
-      setActiveGeneId(ABI3.id)
-    }
-    setActiveViewId(view.id)
-  }
+
   return (
     <Card
       sx={(theme) => ({
@@ -78,9 +67,9 @@ export default function Tile({ view }: TileProps) {
         >
           Example{' '}
         </Typography>
-        <Button onClick={setView} size='small'>
-          AT3G24650 | ABI3
-        </Button>
+        <Link to={`/${view.id}/AT3G24650`}>
+          <Button size='small'>AT3G24650 | ABI3</Button>
+        </Link>
       </CardActions>
     </Card>
   )

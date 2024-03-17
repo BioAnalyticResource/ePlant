@@ -18,7 +18,6 @@ const GeneInfoView: View<GeneInfoViewData> = {
   //TODO: figure out how to make this a component lazy
   // component: React.lazy(() => import('./component')),
   component: component,
-  icon: () => <GeneInfoViewIcon />,
   getInitialState() {
     return null
   },
@@ -26,6 +25,7 @@ const GeneInfoView: View<GeneInfoViewData> = {
     // Loader override for the genes species must be undefined if getInitialData is being called
     throw ViewDataError.UNSUPPORTED_GENE
   },
+  icon: () => <GeneInfoViewIcon />,
   citation({ gene }) {
     return (
       <div>
