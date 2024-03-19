@@ -139,7 +139,6 @@ export const CellEFPDataObject: CellEFPDataObject = {
       '-' +
       useMemo(() => Math.random().toString(16).slice(3), [])
     const styles = useStyles(id, data.viewData, 'absolute')
-    console.log(styles)
     useEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
@@ -147,8 +146,7 @@ export const CellEFPDataObject: CellEFPDataObject = {
       return () => {
         document.head.removeChild(el)
       }
-    }, [data, styles])
-
+    }, [data.viewData.groups, styles])
     // Add tooltips to svg
     const [svgElements, setSvgElements] = useState<
       {
@@ -157,7 +155,6 @@ export const CellEFPDataObject: CellEFPDataObject = {
         tissue: EFPTissue
       }[]
     >([])
-
     const svgDiv = useMemo(() => {
       return (
         <div
@@ -187,7 +184,6 @@ export const CellEFPDataObject: CellEFPDataObject = {
       )
       setSvgElements(elements as any)
     }, [data.viewData.groups, id, svgDiv])
-
     if (!svg) {
       return (
         <div

@@ -52,7 +52,6 @@ const CellEFP: View<
         loadEvent(totalLoaded)
       }
     )
-
     return {
       activeView: CellEFP.id,
       transform: {

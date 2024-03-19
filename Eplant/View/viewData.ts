@@ -119,7 +119,6 @@ export function useViewData<T, S, A>(
         activeData: data ?? null,
         loading: false,
       }
-      console.log(newData)
 
       setViewData(newData)
       viewDataStorage.set(key, newData)
