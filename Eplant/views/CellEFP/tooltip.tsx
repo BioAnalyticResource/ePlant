@@ -11,16 +11,14 @@ import {
   useTheme,
 } from '@mui/material'
 
-import { EFPData, EFPGroup, EFPState, EFPTissue } from '../types'
+import { EFPData, EFPGroup, EFPTissue } from '../eFP/types'
+import { setStroke } from '../eFP/Viewer/EFPTooltip'
 
-import { setStroke } from './EFPTooltip'
-
-function CellSVGTooltip(props: {
+function CellEFPTooltip(props: {
   el: SVGElement | null
   group: EFPGroup
   tissue: EFPTissue
   data: EFPData
-  state: EFPState
 }) {
   const [open, setOpen] = React.useState(false)
   const theme = useTheme()
@@ -87,4 +85,4 @@ function CellSVGTooltip(props: {
   )
 }
 
-export default CellSVGTooltip
+export default CellEFPTooltip
