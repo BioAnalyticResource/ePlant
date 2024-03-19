@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { CellEFPViewerState } from '@eplant/views/CellEFP Viewer/types'
 import {
   Box,
   Grow,
@@ -12,11 +11,10 @@ import {
   useTheme,
 } from '@mui/material'
 
-import { EFPData, EFPGroup, EFPState, EFPTissue } from '../types'
+import { EFPData, EFPGroup, EFPTissue } from '../eFP/types'
+import { setStroke } from '../eFP/Viewer/EFPTooltip'
 
-import { setStroke } from './EFPTooltip'
-
-function CellSVGTooltip(props: {
+function CellEFPTooltip(props: {
   el: SVGElement | null
   group: EFPGroup
   tissue: EFPTissue
@@ -87,4 +85,4 @@ function CellSVGTooltip(props: {
   )
 }
 
-export default CellSVGTooltip
+export default CellEFPTooltip

@@ -235,6 +235,7 @@ export function ViewContainer<T, S, A>({
     ),
     [view.id, gene?.id, loading, activeData, state, dispatch]
   )
+
   return (
     <Box {...props} display='flex' flexDirection='column'>
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>

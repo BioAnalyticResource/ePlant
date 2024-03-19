@@ -1,55 +1,25 @@
-import {
-  memo,
-  startTransition,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import {
-  areEqual,
-  FixedSizeList as List,
-  ListChildComponentProps,
-} from 'react-window'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
-import Dropdown from '@eplant/UI/Dropdown'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import { getCitation } from '@eplant/util/citations'
 import PanZoom from '@eplant/util/PanZoom'
-import useDimensions from '@eplant/util/useDimensions'
 import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
-import { Box, MenuItem, Tooltip, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
-import EFP from '../eFP'
-import EFPPreview from '../eFP/EFPPreview'
-import { EFPData } from '../eFP/types'
-import { EFPListMemoized } from '../eFP/Viewer'
 import EFPViewerCitation from '../eFP/Viewer/EFPViewerCitation'
-import GeneDistributionChart from '../eFP/Viewer/GeneDistributionChart'
-import {
-  EFPViewerAction,
-  EFPViewerData,
-  EFPViewerState,
-} from '../eFP/Viewer/types'
+import Legend from '../eFP/Viewer/legend'
 
-import CellEFP, { CellEFPDataObject } from './CellEFPDataObject'
-import MaskModal from './MaskModal'
+import { CellEFPDataObject } from './CellEFPDataObject'
+import CellEFPIcon from './icon'
 import {
   CellEFPViewerAction,
   CellEFPViewerData,
   CellEFPViewerState,
 } from './types'
-import Legend from '../eFP/Viewer/legend'
 
-interface ICitationProps {
-  activeData?: EFPViewerData
-  state?: EFPViewerState
-  gene?: GeneticElement | null
-}
-
-const CellEFPViewer: View<
+const CellEFP: View<
   CellEFPViewerData,
   CellEFPViewerState,
   CellEFPViewerAction
@@ -73,19 +43,18 @@ const CellEFPViewer: View<
     loadEvent: (progress: number) => void
   ) {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
-    let loadingProgress = 0
+
     let totalLoaded = 0
     const viewData = await CellEFPDataObject.getInitialData(
       gene,
       (progress) => {
-        totalLoaded -= loadingProgress
-        loadingProgress = progress
-        totalLoaded += loadingProgress
+        totalLoaded += progress
         loadEvent(totalLoaded)
       }
     )
+
     return {
-      activeView: this.id,
+      activeView: CellEFP.id,
       transform: {
         offset: { x: 0, y: 0 },
         zoom: 1,
@@ -122,9 +91,6 @@ const CellEFPViewer: View<
       const Component = CellEFPDataObject.component
       return <Component data={activeData} geneticElement={geneticElement} />
     }, [geneticElement?.id])
-    const ref = useRef<HTMLDivElement>(null)
-    const dimensions = useDimensions(ref)
-
     if (!geneticElement) return <></>
     return (
       <Box
@@ -133,8 +99,12 @@ const CellEFPViewer: View<
           height: '100%',
           position: 'relative',
         }}
-        ref={ref}
       >
+        <Typography variant='h6'>
+          {CellEFP.name}
+          {': '}
+          {geneticElement?.id}
+        </Typography>
         <Box
           sx={{
             width: '100%',
@@ -198,7 +168,7 @@ const CellEFPViewer: View<
               >
                 <NotSupported
                   geneticElement={geneticElement}
-                  view={sortedEfps[activeViewIndex]}
+                  view={CellEFP}
                 ></NotSupported>
               </div>
             )}
@@ -217,23 +187,18 @@ const CellEFPViewer: View<
   header: (props) => {
     return (
       <Typography variant='h6'>
-        {
-          props.activeData.views.find((v) => v.id == props.state.activeView)
-            ?.name
-        }
+        cell efp
         {': '}
         {props.geneticElement?.id}
       </Typography>
     )
   },
 
-  citation = ({ activeData, state, gene }: ICitationProps) => {
+  citation() {
     const [xmlData, setXMLData] = useState<string[]>([])
 
-    const viewID = activeData?.views.find((v) => v.id == state?.activeView)
-      ?.name
-    const viewXML = activeData?.views.find((v) => v.id == state?.activeView)
-      ?.xmlURL
+    const viewID = CellEFP.name
+    const viewXML = CellEFPDataObject.xmlURL
     useEffect(() => {
       const xmlLoad = async () => {
         let xmlString = ''
@@ -247,7 +212,6 @@ const CellEFPViewer: View<
           }
         }
 
-        // Extract <li> tags
         if (xmlString !== '') {
           const parser = new DOMParser()
           const xmlDoc = parser.parseFromString(xmlString, 'text/xml')
@@ -261,19 +225,17 @@ const CellEFPViewer: View<
         }
       }
       xmlLoad()
-    }, [viewXML])
+    })
 
-    if (viewID) {
-      const citation = getCitation(viewID) as { [key: string]: string }
-      return (
-        <EFPViewerCitation
-          viewID={viewID}
-          citation={citation}
-          xmlData={xmlData}
-        ></EFPViewerCitation>
-      )
-    } else {
-      return <p>No Citation information provided.</p>
-    }
+    const citation = getCitation(viewID) as { [key: string]: string }
+    return (
+      <EFPViewerCitation
+        viewID={viewID}
+        citation={citation}
+        xmlData={xmlData}
+      ></EFPViewerCitation>
+    )
   },
 }
+
+export default CellEFP

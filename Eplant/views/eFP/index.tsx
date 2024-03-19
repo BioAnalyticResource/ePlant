@@ -6,7 +6,7 @@ import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
 import { CircularProgress, Typography } from '@mui/material'
 
-import SVGTooltip from './Tooltips/EFPTooltip'
+import SVGTooltip from './Viewer/EFPTooltip'
 import { useEFPSVG, useStyles } from './svg'
 import {
   EFPAction,

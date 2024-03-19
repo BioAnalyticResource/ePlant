@@ -1,15 +1,15 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewDataError } from '@eplant/View/viewData'
 import { CircularProgress, Typography } from '@mui/material'
 
-import EFP, { getEFPSampleData } from '../../eFP'
+import { getEFPSampleData } from '../../eFP'
 import { useEFPSVG, useStyles } from '../../eFP/svg'
-import CellSVGTooltip from '../../eFP/Tooltips/cellEFPTooltip'
-import { EFPData, EFPGroup, EFPId, EFPState, EFPTissue } from '../../eFP/types'
-import { CellEFPViewerData, CellEFPViewerState } from '../types'
+import { EFPData, EFPGroup, EFPTissue } from '../../eFP/types'
+import CellEFPTooltip from '../tooltip'
+import { CellEFPViewerData } from '../types'
 
 interface CellEFPDataObjectComponentProps {
   geneticElement: GeneticElement | null
@@ -37,7 +37,7 @@ export const CellEFPDataObject: CellEFPDataObject = {
   ): Promise<EFPData> {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
     const parser = new DOMParser()
-    const xml = await fetch(this.xmlURL).then(async (res) =>
+    const xml = await fetch(CellEFPDataObject.xmlURL).then(async (res) =>
       parser.parseFromString(await res.text(), 'text/xml')
     )
     const webservice = 'https://bar.utoronto.ca/eplant/cgi-bin/groupsuba4.php'
@@ -122,8 +122,8 @@ export const CellEFPDataObject: CellEFPDataObject = {
   component({ geneticElement, data }: CellEFPDataObjectComponentProps) {
     const { view } = useEFPSVG(
       {
-        svgURL: this.svgURL,
-        xmlURL: this.xmlURL,
+        svgURL: CellEFPDataObject.svgURL,
+        xmlURL: CellEFPDataObject.xmlURL,
         id: 'Cell EFP',
       },
       {
@@ -139,6 +139,7 @@ export const CellEFPDataObject: CellEFPDataObject = {
       '-' +
       useMemo(() => Math.random().toString(16).slice(3), [])
     const styles = useStyles(id, data.viewData, 'absolute')
+    console.log(styles)
     useEffect(() => {
       const el = document.createElement('style')
       el.innerHTML = styles
@@ -230,7 +231,7 @@ export const CellEFPDataObject: CellEFPDataObject = {
       >
         {svgDiv}
         {svgElements.map(({ el, group, tissue }) => (
-          <CellSVGTooltip
+          <CellEFPTooltip
             data={data.viewData}
             key={tissue.id}
             el={el}
