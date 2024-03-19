@@ -124,7 +124,7 @@ export const CellEFPDataObject: CellEFPDataObject = {
       {
         svgURL: CellEFPDataObject.svgURL,
         xmlURL: CellEFPDataObject.xmlURL,
-        id: 'Cell EFP',
+        id: 'Cell-EFP',
       },
       {
         showText: true,
@@ -133,7 +133,7 @@ export const CellEFPDataObject: CellEFPDataObject = {
     const { svg } = view ?? {}
     const id =
       'svg-container-' +
-      'Cell EFP' +
+      'Cell-EFP' +
       '-' +
       (geneticElement?.id ?? 'no-gene') +
       '-' +
