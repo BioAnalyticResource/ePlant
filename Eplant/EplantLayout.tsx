@@ -1,6 +1,17 @@
-import { useEffect } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
+import * as FlexLayout from 'flexlayout-react'
+import {
+  Actions,
+  BorderNode,
+  ITabSetRenderValues,
+  Layout,
+  TabSetNode,
+} from 'flexlayout-react'
+import { useAtom } from 'jotai'
 
-import { Box, CircularProgress } from '@mui/material'
+import { isCollapse as isCollapseState } from '@eplant/Eplant'
+import { Add, CallMade, Close } from '@mui/icons-material'
+import { Box, CircularProgress, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 import { ViewContainer } from './UI/Layout/ViewContainer'
@@ -29,15 +40,19 @@ const EplantLayout = () => {
     }
   }, [theme, loaded])
 
+  //Initializing isCollapse variable to isCollapse jotai atom state
+  const [isCollapse] = useAtom(isCollapseState)
+
   return (
     <Box
       sx={(theme) => ({
-        height: `100%`,
-        left: `${sidebarWidth}px`,
+        height: `calc(100% - ${theme.spacing(1)})`,
+        left: `${isCollapse ? 100 : sidebarWidth}px`,
         right: '0px',
         position: 'absolute',
-        margin: theme.spacing(0),
+        marginTop: '0.5rem',
         boxSizing: 'border-box',
+        transition: 'left 1s ease-out',
         backgroundColor: theme.palette.background.paper,
       })}
     >
@@ -50,6 +65,7 @@ const EplantLayout = () => {
           justifyContent: 'stretch',
         }}
       >
+        <div />
         {loaded ? (
           <ViewContainer
             gene={genes.find((gene) => gene.id === activeGeneId) ?? null}

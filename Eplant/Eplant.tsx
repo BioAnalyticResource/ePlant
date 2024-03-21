@@ -1,4 +1,6 @@
 // import useStateWithStorage from '@eplant/util/useStateWithStorage'
+import { createContext, useState } from 'react'
+import { atom, useAtom } from 'jotai'
 import { Route, Routes } from 'react-router-dom'
 
 import { CssBaseline, ThemeProvider } from '@mui/material'
@@ -28,6 +30,14 @@ export default function Eplant() {
  * The main Eplant component. This is the root of the application. It contains the left nav and the layout.
  * @returns {JSX.Element} The rendered Eplant component
  */
+
+// Setting the sidebar collapse state with jotai
+export const isCollapse = atom(false)
+export const changeCollapse = atom(null, (get, set) => {
+  set(isCollapse, !get(isCollapse))
+})
+
+// SideBar and EplantLayout children
 export function MainEplant() {
   return (
     <>

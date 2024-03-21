@@ -1,13 +1,26 @@
 import * as React from 'react'
+import { useContext, useState } from 'react'
+import { useAtom } from 'jotai'
 import _ from 'lodash'
 
+import { changeCollapse, isCollapse as isCollapseState } from '@eplant/Eplant'
 import GeneticElement from '@eplant/GeneticElement'
 import {
   useDarkMode,
   useGeneticElements,
   useSetActiveGeneId,
 } from '@eplant/state'
-import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material'
+import ArrowLeft from '@mui/icons-material/ArrowLeft'
+import ArrowRight from '@mui/icons-material/ArrowRight'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import SearchIcon from '@mui/icons-material/Search'
+import {
+  Box,
+  FormControlLabel,
+  FormGroup,
+  Switch,
+  useTheme,
+} from '@mui/material'
 import Stack from '@mui/material/Stack'
 
 import { LogoWithText } from '../Logo'
@@ -28,6 +41,16 @@ export function LeftNav(props: {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
 
+  const theme = useTheme()
+
+  //Initializing settingCollapse function to the changeCollapse function
+  const [, settingCollapse] = useAtom(changeCollapse)
+
+  //Initializing isCollapse variable to isCollapse jotai atom state
+  const [isCollapse] = useAtom(isCollapseState)
+
+  const [tabWidth, setTabWidth] = useState('30px')
+
   const setActiveGeneId = useSetActiveGeneId()
 
   React.useEffect(() => {
@@ -36,40 +59,109 @@ export function LeftNav(props: {
   }, [geneticElements])
   return (
     <Stack gap={2} direction='column' height={'100%'}>
-      <LogoWithText text='ePlant' />
-      <SearchGroup
-        addGeneticElements={(s) => {
-          setGeneticElements(
-            geneticElements.concat(
-              _.uniqBy(
-                s.filter(
-                  (g) => !geneticElements.find((gene) => g.id == gene.id)
-                ),
-                (a) => a.id
-              )
-            )
-          )
-          if (s.length > 0) {
-            setActiveGeneId(s[0].id)
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {isCollapse ? <LogoWithText text='' /> : <LogoWithText text='ePlant' />}
+        <div
+          style={
+            isCollapse
+              ? {
+                  cursor: 'pointer',
+                  height: '25px',
+                  width: `${tabWidth}`,
+                  marginRight: '-39px',
+                  backgroundColor: `${theme.palette.primary.main}`,
+                  borderRadius: '20px 0px 0px 20px',
+                  transform: 'translateX(-30%)',
+                  transition: 'all 0.5s ease-out',
+                }
+              : {
+                  cursor: 'pointer',
+                  height: '25px',
+                  width: `${tabWidth}`,
+                  marginRight: '-20px',
+                  backgroundColor: `${theme.palette.primary.main}`,
+                  borderRadius: '20px 0px 0px 20px',
+                  transform: 'translateX(20%)',
+                  transition: 'all 0.5s ease-out',
+                }
           }
-        }}
-      />
-      <Collections
-        onSelectGene={props.onSelectGene}
-        selectedGene={props.selectedGene}
-      />
-      <Box flexGrow={1} />
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              onChange={(v) => setDarkMode(v.target.checked)}
-              checked={darkMode}
+          onClick={settingCollapse}
+          onMouseEnter={() => setTabWidth('40px')}
+          onMouseLeave={() => setTabWidth('30px')}
+        >
+          {isCollapse ? (
+            <ArrowRight
+              sx={darkMode ? { color: '#181c18' } : { color: '#f0f7f0' }}
             />
+          ) : (
+            <ArrowLeft
+              sx={darkMode ? { color: '#181c18' } : { color: '#f0f7f0' }}
+            />
+          )}
+        </div>
+      </div>
+      {!isCollapse && (
+        <>
+          <SearchGroup
+            addGeneticElements={(s) => {
+              setGeneticElements(
+                geneticElements.concat(
+                  _.uniqBy(
+                    s.filter(
+                      (g) => !geneticElements.find((gene) => g.id == gene.id)
+                    ),
+                    (a) => a.id
+                  )
+                )
+              )
+              if (s.length > 0) {
+                setActiveGeneId(s[0].id)
+              }
+            }}
+          />
+          <Collections
+            onSelectGene={props.onSelectGene}
+            selectedGene={props.selectedGene}
+          />{' '}
+        </>
+      )}
+
+      {isCollapse && (
+        <>
+          <div onClick={settingCollapse} style={{ marginLeft: '10px' }}>
+            <SearchIcon
+              sx={{ '&:hover': { cursor: 'pointer', transform: 'scale(1.1)' } }}
+            />
+          </div>
+        </>
+      )}
+      <Box flexGrow={1} />
+
+      <div
+        style={{ display: 'flex', justifyContent: 'center' }}
+        onClick={() => setDarkMode(!darkMode)}
+      >
+        <DarkModeIcon
+          sx={
+            darkMode
+              ? {
+                  '&:hover': {
+                    cursor: 'pointer',
+                    color: 'white',
+                    transform: 'scale(1.1)',
+                  },
+                }
+              : {
+                  '&:hover': {
+                    cursor: 'pointer',
+                    color: 'black',
+                    transform: 'scale(1.1)',
+                  },
+                }
           }
-          label='Dark mode'
+          color={darkMode ? 'primary' : 'secondary'}
         />
-      </FormGroup>
+      </div>
     </Stack>
   )
 }
