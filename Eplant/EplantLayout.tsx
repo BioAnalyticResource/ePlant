@@ -51,7 +51,6 @@ const EplantLayout = () => {
         right: '0px',
         position: 'absolute',
         marginTop: '0.5rem',
-        // margin: theme.spacing(1),
         boxSizing: 'border-box',
         transition: 'left 1s ease-out',
         backgroundColor: theme.palette.background.paper,
@@ -66,7 +65,7 @@ const EplantLayout = () => {
           justifyContent: 'stretch',
         }}
       >
-        <div style={{ color: 'red' }} />
+        <div />
         {loaded ? (
           <ViewContainer
             gene={genes.find((gene) => gene.id === activeGeneId) ?? null}
