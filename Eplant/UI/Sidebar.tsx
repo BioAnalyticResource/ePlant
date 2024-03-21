@@ -41,6 +41,7 @@ export default function Sidebar() {
             width: `${isCollapse ? 100 : sidebarWidth}px`,
             boxSizing: 'border-box',
             transition: 'all 1s ease-out',
+            overflow: 'hidden'
           }}
         >
           <LeftNav
