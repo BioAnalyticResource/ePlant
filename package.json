@@ -26,6 +26,7 @@
     "@mui/lab": "^5.0.0-alpha.146",
     "@mui/material": "^5.14.11",
     "@mui/x-data-grid": "^6.15.0",
+    "@vis.gl/react-google-maps": "^0.8.0",
     "axios": "^1.5.1",
     "color2k": "^2.0.2",
     "dompurify": "^3.0.6",
