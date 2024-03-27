@@ -1,24 +1,28 @@
+import { useEffect } from 'react'
+
 import { View, ViewProps } from '@eplant/View'
-import {
-  APIProvider,
-  ControlPosition,
-  InfoWindow,
-  Map,
-  MapControl,
-} from '@vis.gl/react-google-maps'
+import { APIProvider, Map, useMap } from '@vis.gl/react-google-maps'
 const WorldEFP: View<any, any, any> = {
   name: 'World-EFP',
   id: 'World-EFP',
   component({ geneticElement, activeData }: ViewProps<any, any, any>) {
-    const position = { lat: 53.54, lng: 10 }
+    const mapTypeIds = ['roadmap', 'satellite', 'hybrid', 'terrain']
+    const position = { lat: 25, lng: 0 }
+    const map = useMap()
+
     return (
       <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}>
         <div style={{ height: '100vh' }}>
-          <Map zoom={9} center={position}>
-            <MapControl position={ControlPosition.BOTTOM_LEFT}>
-              <div>Hi</div>
-            </MapControl>
-          </Map>
+          <Map
+            mapTypeId={'roadmap'}
+            mapTypeControlOptions={{
+              mapTypeIds: [],
+            }}
+            zoom={2}
+            zoomControl={false}
+            center={position}
+            streetViewControl={false}
+          ></Map>
         </div>
       </APIProvider>
     )
