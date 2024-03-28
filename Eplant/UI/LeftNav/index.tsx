@@ -1,14 +1,13 @@
 import * as React from 'react'
-import { useContext, useState } from 'react'
-import { useAtom } from 'jotai'
+import { useState } from 'react'
 import _ from 'lodash'
 
-import { changeCollapse, isCollapse as isCollapseState } from '@eplant/Eplant'
 import GeneticElement from '@eplant/GeneticElement'
 import {
   useDarkMode,
   useGeneticElements,
   useSetActiveGeneId,
+  useSidebarState,
 } from '@eplant/state'
 import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import ArrowRight from '@mui/icons-material/ArrowRight'
@@ -40,14 +39,9 @@ export function LeftNav(props: {
 }) {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
+  const [isCollapse, setIsCollapse] = useSidebarState()
 
   const theme = useTheme()
-
-  //Initializing settingCollapse function to the changeCollapse function
-  const [, settingCollapse] = useAtom(changeCollapse)
-
-  //Initializing isCollapse variable to isCollapse jotai atom state
-  const [isCollapse] = useAtom(isCollapseState)
 
   const [tabWidth, setTabWidth] = useState('30px')
 
@@ -85,7 +79,7 @@ export function LeftNav(props: {
                   transition: 'all 0.5s ease-out',
                 }
           }
-          onClick={settingCollapse}
+          onClick={() => setIsCollapse(!isCollapse)}
           onMouseEnter={() => setTabWidth('40px')}
           onMouseLeave={() => setTabWidth('30px')}
         >
@@ -128,7 +122,10 @@ export function LeftNav(props: {
 
       {isCollapse && (
         <>
-          <div onClick={settingCollapse} style={{ marginLeft: '10px' }}>
+          <div
+            onClick={() => setIsCollapse(!isCollapse)}
+            style={{ marginLeft: '10px' }}
+          >
             <SearchIcon
               sx={{ '&:hover': { cursor: 'pointer', transform: 'scale(1.1)' } }}
             />

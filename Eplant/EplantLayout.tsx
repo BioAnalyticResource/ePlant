@@ -7,15 +7,13 @@ import {
   Layout,
   TabSetNode,
 } from 'flexlayout-react'
-import { useAtom } from 'jotai'
 
-import { isCollapse as isCollapseState } from '@eplant/Eplant'
 import { Add, CallMade, Close } from '@mui/icons-material'
 import { Box, CircularProgress, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 import { ViewContainer } from './UI/Layout/ViewContainer'
-import { sidebarWidth } from './UI/Sidebar'
+import { collapsedSidebarWidth, sidebarWidth } from './UI/Sidebar'
 import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
 import {
@@ -23,13 +21,14 @@ import {
   useActiveViewId,
   useGeneticElements,
   usePageLoad,
+  useSidebarState,
 } from './state'
 import { updateColors } from './updateColors'
 
 const EplantLayout = () => {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [activeViewId, setActiveViewId] = useActiveViewId()
-
+  const [isCollapse, setIsCollapse] = useSidebarState()
   const [genes] = useGeneticElements()
   const theme = useTheme()
   const [globalProgress, loaded] = usePageLoad()
@@ -40,14 +39,11 @@ const EplantLayout = () => {
     }
   }, [theme, loaded])
 
-  //Initializing isCollapse variable to isCollapse jotai atom state
-  const [isCollapse] = useAtom(isCollapseState)
-
   return (
     <Box
       sx={(theme) => ({
         height: `calc(100% - ${theme.spacing(1)})`,
-        left: `${isCollapse ? 100 : sidebarWidth}px`,
+        left: `${isCollapse ? collapsedSidebarWidth : sidebarWidth}px`,
         right: '0px',
         position: 'absolute',
         marginTop: '0.5rem',
