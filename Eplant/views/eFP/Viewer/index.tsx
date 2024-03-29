@@ -45,6 +45,7 @@ type EFPListProps = {
   height: number
   colorMode: 'absolute' | 'relative'
   maskThreshold: number
+  maskingEnabled: boolean
 }
 
 interface ICitationProps {
@@ -77,6 +78,7 @@ const EFPListItem = memo(
               })
             }}
             colorMode={data.colorMode}
+            maskingEnabled={data.maskingEnabled}
           />
         </div>
       </Tooltip>
@@ -88,7 +90,9 @@ const EFPListItem = memo(
       prev.data.colorMode === next.data.colorMode &&
       prev.data.geneticElement.id === next.data.geneticElement.id &&
       prev.data.activeView === next.data.activeView &&
-      prev.index == next.index
+      prev.index == next.index &&
+      prev.data.maskingEnabled == next.data.maskingEnabled &&
+      prev.data.maskThreshold == next.data.maskThreshold
     )
   }
 )
@@ -138,6 +142,7 @@ export default class EFPViewer
         zoom: 1,
       },
       sortBy: 'name',
+      maskingEnabled: false,
       maskThreshold: 100,
       maskModalVisible: false,
     }
@@ -216,6 +221,25 @@ export default class EFPViewer
               ? ('relative' as const)
               : ('absolute' as const),
         }
+      case 'toggle-mask-modal':
+        if (state.maskingEnabled) {
+          return {
+            ...state,
+            maskingEnabled: !state.maskingEnabled,
+          }
+        } else {
+          return {
+            ...state,
+            maskModalVisible: !state.maskModalVisible,
+          }
+        }
+      case 'set-mask-threshold':
+        return {
+          ...state,
+          maskThreshold: action.threshold,
+          maskingEnabled: !state.maskingEnabled,
+          maskModalVisible: !state.maskModalVisible,
+        }
       default:
         return state
     }
@@ -252,18 +276,21 @@ export default class EFPViewer
     const efp = useMemo(() => {
       const Component = sortedEfps[activeViewIndex].component
       return (
-        <Component
-          activeData={{
-            ...sortedViewData[activeViewIndex],
-          }}
-          state={{
-            colorMode: state.colorMode,
-            renderAsThumbnail: false,
-            maskThreshold: state.maskThreshold,
-          }}
-          geneticElement={geneticElement}
-          dispatch={() => {}}
-        />
+        <>
+          <Component
+            activeData={{
+              ...sortedViewData[activeViewIndex],
+            }}
+            state={{
+              colorMode: state.colorMode,
+              renderAsThumbnail: false,
+              maskThreshold: state.maskThreshold,
+              maskingEnabled: state.maskingEnabled,
+            }}
+            geneticElement={geneticElement}
+            dispatch={() => {}}
+          />
+        </>
       )
     }, [
       activeViewIndex,
@@ -272,6 +299,7 @@ export default class EFPViewer
       sortedViewData[activeViewIndex],
       state.colorMode,
       state.maskThreshold,
+      state.maskingEnabled,
     ])
     const ref = useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
@@ -366,6 +394,7 @@ export default class EFPViewer
               views={sortedEfps}
               colorMode={state.colorMode}
               maskThreshold={state.maskThreshold}
+              maskingEnabled={state.maskingEnabled}
             />
           </Box>
           {/* main canvas area */}
@@ -420,8 +449,9 @@ export default class EFPViewer
                   data={{
                     ...activeData.viewData[activeViewIndex],
                   }}
-                  colorMode={state.colorMode}
                   maskThreshold={state.maskThreshold}
+                  colorMode={state.colorMode}
+                  maskingEnabled={state.maskingEnabled}
                 />
                 <PanZoom
                   sx={(theme) => ({
@@ -476,15 +506,6 @@ export default class EFPViewer
       render: () => <>Mask data</>,
     },
   ]
-  header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
-    props
-  ) => (
-    <Typography variant='h6'>
-      {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}
-      {': '}
-      {props.geneticElement?.id}
-    </Typography>
-  )
 
   citation = ({ activeData, state, gene }: ICitationProps) => {
     const [xmlData, setXMLData] = useState<string[]>([])
