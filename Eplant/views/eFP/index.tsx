@@ -6,7 +6,7 @@ import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
 import { CircularProgress, Typography } from '@mui/material'
 
-import SVGTooltip from './Tooltips/EFPTooltip'
+import SVGTooltip from './Viewer/EFPTooltip'
 import { useEFPSVG, useStyles } from './svg'
 import {
   EFPAction,
@@ -240,7 +240,6 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       )
       setSvgElements(elements as any)
     }, [props.activeData.groups, id, svgDiv])
-
     if (!svg) {
       return (
         <div

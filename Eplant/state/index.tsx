@@ -33,7 +33,6 @@ export const pageLoad = (() => {
     },
     done() {
       finished++
-      // console.log(finished / waiting)
       watchers.forEach((w) => w(finished / waiting))
     },
     watch(cb: (progress: number) => void) {

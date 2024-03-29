@@ -275,9 +275,6 @@ export default class EFPViewer
     ])
     const ref = useRef<HTMLDivElement>(null)
     const dimensions = useDimensions(ref)
-    {
-      // console.log(props)
-    }
 
     if (!geneticElement) return <></>
     return (
@@ -423,11 +420,8 @@ export default class EFPViewer
                   data={{
                     ...activeData.viewData[activeViewIndex],
                   }}
-                  state={{
-                    colorMode: state.colorMode,
-                    renderAsThumbnail: false,
-                    maskThreshold: state.maskThreshold,
-                  }}
+                  colorMode={state.colorMode}
+                  maskThreshold={state.maskThreshold}
                 />
                 <PanZoom
                   sx={(theme) => ({
