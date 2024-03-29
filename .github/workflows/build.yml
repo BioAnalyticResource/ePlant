@@ -4,6 +4,10 @@ on:
     branches-ignore:
       - main
       - staging
+  pull_request:
+    branches-ignore:
+      - main
+      - staging
 jobs:
   build:
     runs-on: ubuntu-latest
