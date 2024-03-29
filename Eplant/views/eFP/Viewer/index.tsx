@@ -454,12 +454,9 @@ export default class EFPViewer
                   data={{
                     ...activeData.viewData[activeViewIndex],
                   }}
-                  state={{
-                    colorMode: state.colorMode,
-                    renderAsThumbnail: false,
-                    maskThreshold: state.maskThreshold,
-                    maskingEnabled: state.maskingEnabled,
-                  }}
+                  maskThreshold={state.maskThreshold}
+                  colorMode={state.colorMode}
+                  maskingEnabled={state.maskingEnabled}
                 />
                 <PanZoom
                   sx={(theme) => ({
@@ -514,15 +511,6 @@ export default class EFPViewer
       render: () => <>Mask data</>,
     },
   ]
-  header: View<EFPViewerData, EFPViewerState, EFPViewerAction>['header'] = (
-    props
-  ) => (
-    <Typography variant='h6'>
-      {props.activeData.views.find((v) => v.id == props.state.activeView)?.name}
-      {': '}
-      {props.geneticElement?.id}
-    </Typography>
-  )
 
   citation = ({ activeData, state, gene }: ICitationProps) => {
     const [xmlData, setXMLData] = useState<string[]>([])

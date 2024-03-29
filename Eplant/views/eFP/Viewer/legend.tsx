@@ -6,12 +6,14 @@ import { ColorMode, EFPData, EFPState } from '../types'
 interface ILegendProps {
   data: EFPData
   colorMode: ColorMode
+  maskingEnabled?: boolean
   maskThreshold?: number
 }
 const GRADIENT_STEPS = 11
 export default styled(function Legend({
   data,
   colorMode,
+  maskingEnabled,
   maskThreshold,
   ...rest
 }: ILegendProps) {
@@ -101,7 +103,7 @@ export default styled(function Legend({
             </Box>
           )
         })}
-        {maskThreshold ?? (
+        {(maskThreshold && maskingEnabled) ?? (
           <Box sx={{ fontSize: 10 }}>{`Masked (≥${maskThreshold}% RSE)`}</Box>
         )}
       </Box>

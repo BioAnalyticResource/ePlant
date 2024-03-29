@@ -309,17 +309,6 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       </div>
     )
   }
-  header: ({
-    geneticElement,
-  }: {
-    geneticElement: GeneticElement | null
-  }) => JSX.Element = ({ geneticElement }) => {
-    return (
-      <Typography variant='h6'>
-        {this.name} for {geneticElement?.id}
-      </Typography>
-    )
-  }
 }
 
 export function getEFPSampleData(samples: number[]): EFPSampleData {
