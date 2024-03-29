@@ -79,15 +79,19 @@ export default styled(function Legend({
         }}
       >
         {gradient}
-        <Box
-          sx={{
-            width: '15px',
-            height: '15px',
-            backgroundColor: 'gray',
-            display: 'inline-block',
-            fontSize: 10,
-          }}
-        ></Box>
+        {maskThreshold && maskingEnabled ? (
+          <Box
+            sx={{
+              width: '15px',
+              height: '15px',
+              backgroundColor: 'gray',
+              display: 'inline-block',
+              fontSize: 10,
+            }}
+          ></Box>
+        ) : (
+          <></>
+        )}
       </Box>
       <Box
         sx={{
@@ -103,8 +107,10 @@ export default styled(function Legend({
             </Box>
           )
         })}
-        {(maskThreshold && maskingEnabled) ?? (
+        {maskThreshold && maskingEnabled ? (
           <Box sx={{ fontSize: 10 }}>{`Masked (≥${maskThreshold}% RSE)`}</Box>
+        ) : (
+          <></>
         )}
       </Box>
     </Box>
