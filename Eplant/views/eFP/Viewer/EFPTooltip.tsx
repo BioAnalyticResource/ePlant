@@ -13,21 +13,17 @@ import {
 
 import { EFPData, EFPGroup, EFPState, EFPTissue } from '../types'
 
-export const setStroke = (
-  el: Element | null,
-  colour: string,
-  width: string
-) => {
+export const setStroke = (el: Element | null, color: string, width: string) => {
   // For multigroup SVGs, recursively sets stroke of all path elements
   if (el) {
     if (el.firstElementChild?.children.length === 0) {
       for (const child of el.children) {
         child.setAttribute('stroke-width', width)
-        child.setAttribute('stroke', colour)
+        child.setAttribute('stroke', color)
       }
     } else {
       for (const child of el.children) {
-        setStroke(child, colour, width)
+        setStroke(child, color, width)
       }
     }
   }

@@ -6,7 +6,6 @@ import { CssBaseline, ThemeProvider } from '@mui/material'
 import { dark, light } from './css/theme'
 import Sidebar from './UI/Sidebar'
 import { useConfig } from './config'
-import DirectPane from './DirectPane'
 import EplantLayout from './EplantLayout'
 import { useDarkMode } from './state'
 export type EplantProps = Record<string, never>
@@ -20,7 +19,6 @@ export default function Eplant() {
       <Routes>
         <Route path={rootPath}>
           <Route index element={<MainEplant />} />
-          <Route path='pane' element={<DirectPane />} />
         </Route>
       </Routes>
     </ThemeProvider>
