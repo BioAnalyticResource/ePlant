@@ -10,15 +10,11 @@ const InteractionsViewer: View = {
   component() {
     return <div>This is not implemented yet!</div>
   },
-  // TODO: Replace this with correct icon
-  icon: () => <PublicationViewerIcon />,
+  icon: () => <></>,
   description: 'Interactions Viewer.',
-  // TODO: Replace with correct thumbnail
-  thumbnail: ThumbnailLight,
   citation() {
     return <div></div>
   },
-  header: () => <div></div>,
   async getInitialData() {
     return
   },
