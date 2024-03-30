@@ -89,7 +89,6 @@ export function useViewData<T, S, A>(
   const id = view?.id ?? 'generic-view'
   const [viewData, setViewData] = useAtom(getViewAtom(key))
   const [viewState, setViewState] = useAtom(getViewStateAtom(id))
-  // console.log(viewData)
 
   // If there is no cached viewData then load it using the view's loader
   const loadData = async () => {
@@ -114,11 +113,13 @@ export function useViewData<T, S, A>(
           }
         })
       })
+
       const newData = {
         ...defaultViewData,
         activeData: data ?? null,
         loading: false,
       }
+
       setViewData(newData)
       viewDataStorage.set(key, newData)
     } catch (e) {
