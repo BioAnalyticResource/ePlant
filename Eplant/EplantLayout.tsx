@@ -1,10 +1,19 @@
-import { useEffect } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
+import * as FlexLayout from 'flexlayout-react'
+import {
+  Actions,
+  BorderNode,
+  ITabSetRenderValues,
+  Layout,
+  TabSetNode,
+} from 'flexlayout-react'
 
-import { Box, CircularProgress } from '@mui/material'
+import { Add, CallMade, Close } from '@mui/icons-material'
+import { Box, CircularProgress, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 import { ViewContainer } from './UI/Layout/ViewContainer'
-import { sidebarWidth } from './UI/Sidebar'
+import { collapsedSidebarWidth, sidebarWidth } from './UI/Sidebar'
 import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
 import {
@@ -12,13 +21,14 @@ import {
   useActiveViewId,
   useGeneticElements,
   usePageLoad,
+  useSidebarState,
 } from './state'
 import { updateColors } from './updateColors'
 
 const EplantLayout = () => {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [activeViewId, setActiveViewId] = useActiveViewId()
-
+  const [isCollapse, setIsCollapse] = useSidebarState()
   const [genes] = useGeneticElements()
   const theme = useTheme()
   const [globalProgress, loaded] = usePageLoad()
@@ -32,12 +42,13 @@ const EplantLayout = () => {
   return (
     <Box
       sx={(theme) => ({
-        height: `100%`,
-        left: `${sidebarWidth}px`,
+        height: `calc(100% - ${theme.spacing(1)})`,
+        left: `${isCollapse ? collapsedSidebarWidth : sidebarWidth}px`,
         right: '0px',
         position: 'absolute',
-        margin: theme.spacing(0),
+        marginTop: '0.5rem',
         boxSizing: 'border-box',
+        transition: 'left 1s ease-out',
         backgroundColor: theme.palette.background.paper,
       })}
     >
@@ -50,6 +61,7 @@ const EplantLayout = () => {
           justifyContent: 'stretch',
         }}
       >
+        <div />
         {loaded ? (
           <ViewContainer
             gene={genes.find((gene) => gene.id === activeGeneId) ?? null}
