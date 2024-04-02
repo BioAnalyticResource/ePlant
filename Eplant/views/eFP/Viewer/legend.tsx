@@ -1,24 +1,29 @@
 import { Box, styled, useTheme } from '@mui/material'
 
 import { getColor } from '../svg'
-import { EFPData, EFPState } from '../types'
+import { ColorMode, EFPData, EFPState } from '../types'
 
+interface ILegendProps {
+  data: EFPData
+  colorMode: ColorMode
+  maskingEnabled?: boolean
+  maskThreshold?: number
+}
 const GRADIENT_STEPS = 11
 export default styled(function Legend({
   data,
-  state,
+  colorMode,
+  maskingEnabled,
+  maskThreshold,
   ...rest
-}: {
-  data: EFPData
-  state: EFPState
-}) {
+}: ILegendProps) {
   const theme = useTheme()
   const control = data.control ?? 1
   const values = Array(GRADIENT_STEPS)
     .fill(0)
     .map((_, i) => {
       const ratio = i / (GRADIENT_STEPS - 1)
-      if (state.colorMode == 'relative') {
+      if (colorMode == 'relative') {
         const extremum = Math.max(
           Math.abs(Math.log2(data.min / control)),
           Math.log2(data.max / control),
@@ -37,11 +42,11 @@ export default styled(function Legend({
     .reverse()
     .map((g) =>
       getColor(
-        state.colorMode === 'absolute' ? g : 2 ** g * control,
+        colorMode === 'absolute' ? g : 2 ** g * control,
         data,
         data.control ?? 1,
         theme,
-        state.colorMode
+        colorMode
       )
     )
     .map((color, i) => (
@@ -74,15 +79,19 @@ export default styled(function Legend({
         }}
       >
         {gradient}
-        <Box
-          sx={{
-            width: '15px',
-            height: '15px',
-            backgroundColor: 'gray',
-            display: 'inline-block',
-            fontSize: 10,
-          }}
-        ></Box>
+        {maskThreshold && maskingEnabled ? (
+          <Box
+            sx={{
+              width: '15px',
+              height: '15px',
+              backgroundColor: 'gray',
+              display: 'inline-block',
+              fontSize: 10,
+            }}
+          ></Box>
+        ) : (
+          <></>
+        )}
       </Box>
       <Box
         sx={{
@@ -98,9 +107,11 @@ export default styled(function Legend({
             </Box>
           )
         })}
-        <Box
-          sx={{ fontSize: 10 }}
-        >{`Masked (≥${state.maskThreshold}% RSE)`}</Box>
+        {maskThreshold && maskingEnabled ? (
+          <Box sx={{ fontSize: 10 }}>{`Masked (≥${maskThreshold}% RSE)`}</Box>
+        ) : (
+          <></>
+        )}
       </Box>
     </Box>
   )
