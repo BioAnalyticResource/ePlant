@@ -39,7 +39,8 @@ export function SearchGroup({
   return (
     <Stack direction='column' spacing={2}>
       {/* Species selector */}
-      <TextField
+      {/* commenting out until multi species support*/}
+      {/* <TextField
         select
         size='small'
         value={species?.name ?? ''}
@@ -61,7 +62,7 @@ export function SearchGroup({
             {s.name}
           </MenuItem>
         ))}
-      </TextField>
+      </TextField> */}
 
       {/* Gene selector */}
       <SearchBar

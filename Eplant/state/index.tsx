@@ -234,3 +234,11 @@ export const useSetPrinting = () => useSetAtom(printingAtom)
 const darkModeAtom = atomWithOptionalStorage<boolean>('dark-mode', true)
 export const useDarkMode = () => useAtom(darkModeAtom)
 export const useSetDarkMode = () => useSetAtom(darkModeAtom)
+
+export const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
+export const useActiveId = () => useAtom(activeIdAtom)
+export const setActiveId = ()=> useSetAtom(activeIdAtom)
+
+export const sidebarAtom = atom<boolean>(false)
+export const useSidebarState = () => useAtom(sidebarAtom)
+export const useSetSidebarState = () => useSetAtom(sidebarAtom)

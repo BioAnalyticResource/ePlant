@@ -43,7 +43,7 @@ export function ViewContainer<T = any, S = any, A = any>({
   ...props
 }: {
   view: View<T, S, A>
-  setView: (view: View) => void
+  setView?: (view: View) => void
   gene: GeneticElement | null
 } & BoxProps) {
   const { activeData, error, loading, loadingAmount, dispatch, state } =

@@ -327,8 +327,8 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
           flexDirection: 'column',
           gap: 2,
           padding: 0,
-          position: 'relative',
-          top: -8,
+          position: 'sticky',
+          top: '8px',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
         }}

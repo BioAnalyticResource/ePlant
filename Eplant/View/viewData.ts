@@ -118,11 +118,13 @@ export function useViewData<T, S, A>(
           }
         })
       })
+
       const newData = {
         ...defaultViewData,
         activeData: data ?? null,
         loading: false,
       }
+
       setViewData(newData)
       viewDataStorage.set(key, newData)
     } catch (e) {

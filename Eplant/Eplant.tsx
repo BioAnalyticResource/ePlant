@@ -57,7 +57,6 @@ export const Eplant = () => {
                 width: '100%',
                 height: '100%',
               }}
-              setView={() => {}}
             />
           ) : (
             <div>
