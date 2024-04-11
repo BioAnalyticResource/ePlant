@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { debounce } from 'lodash'
 
+import AddIcon from '@mui/icons-material/Add'
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
 import { SxProps, Theme } from '@mui/material'
@@ -118,7 +119,7 @@ export default function SearchBar(props: {
                     setValue([])
                   }}
                 >
-                  <SearchIcon />
+                  {value.length > 0 ? <AddIcon /> : <SearchIcon />}
                 </IconButton>
               </InputAdornment>
             ),
