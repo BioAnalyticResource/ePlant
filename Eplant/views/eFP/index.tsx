@@ -6,7 +6,7 @@ import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
 import { CircularProgress, Typography } from '@mui/material'
 
-import SVGTooltip from './Tooltips/EFPTooltip'
+import SVGTooltip from './Viewer/EFPTooltip'
 import { useEFPSVG, useStyles } from './svg'
 import {
   EFPAction,
@@ -18,19 +18,27 @@ import {
   EFPTissue,
 } from './types'
 
+interface efpTooptipProps {
+  el: SVGElement | null
+  group: EFPGroup
+  tissue: EFPTissue
+  data: EFPData
+  state: EFPState
+}
 export default class EFP implements View<EFPData, EFPState, EFPAction> {
   getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
     maskThreshold: 100,
+    maskingEnabled: false,
   })
-  tooltipComponent: (props: {
-    el: SVGElement | null
-    group: EFPGroup
-    tissue: EFPTissue
-    data: EFPData
-    state: EFPState
-  }) => JSX.Element
+  tooltipComponent: ({
+    el,
+    group,
+    tissue,
+    data,
+    state,
+  }: efpTooptipProps) => JSX.Element
   constructor(
     public name: string,
     public id: EFPId,
@@ -168,7 +176,11 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     }
     return out
   }
-  component(props: ViewProps<EFPData, EFPState, EFPAction>): JSX.Element {
+  component({
+    state,
+    geneticElement,
+    activeData,
+  }: ViewProps<EFPData, EFPState, EFPAction>): JSX.Element {
     const { view } = useEFPSVG(
       {
         svgURL: this.svgURL,
@@ -176,7 +188,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         id: this.id,
       },
       {
-        showText: !props.state.renderAsThumbnail,
+        showText: !state.renderAsThumbnail,
       }
     )
     const { svg } = view ?? {}
@@ -184,14 +196,15 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       'svg-container-' +
       this.id +
       '-' +
-      (props.geneticElement?.id ?? 'no-gene') +
+      (geneticElement?.id ?? 'no-gene') +
       '-' +
       useMemo(() => Math.random().toString(16).slice(3), [])
     const styles = useStyles(
       id,
-      props.activeData,
-      props.state.colorMode,
-      props.state.maskThreshold
+      activeData,
+      state.colorMode,
+      state.maskThreshold,
+      state.maskingEnabled
     )
     useEffect(() => {
       const el = document.createElement('style')
@@ -200,7 +213,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       return () => {
         document.head.removeChild(el)
       }
-    }, [props.activeData.groups, styles])
+    }, [activeData.groups, styles])
 
     // Add tooltips to svg
     const [svgElements, setSvgElements] = useState<
@@ -230,7 +243,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
 
     useLayoutEffect(() => {
       const elements = Array.from(
-        props.activeData.groups.flatMap((group) =>
+        activeData.groups.flatMap((group) =>
           group.tissues.map((t) => ({
             el: document.querySelector(`#${id} .efp-group-${t.id}`),
             group,
@@ -239,8 +252,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         )
       )
       setSvgElements(elements as any)
-    }, [props.activeData.groups, id, svgDiv])
-
+    }, [activeData.groups, id, svgDiv])
     if (!svg) {
       return (
         <div
@@ -256,7 +268,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         </div>
       )
     }
-    if (!props.activeData.supported) {
+    if (!activeData.supported) {
       return (
         <div
           style={{
@@ -283,27 +295,18 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
         }}
       >
         {svgDiv}
-        {!props.state.renderAsThumbnail &&
+        {!state.renderAsThumbnail &&
           svgElements.map(({ el, group, tissue }) => (
             <this.tooltipComponent
-              data={props.activeData}
+              data={activeData}
               key={tissue.id}
               el={el}
               group={group}
               tissue={tissue}
-              state={props.state}
+              state={state}
             />
           ))}
       </div>
-    )
-  }
-  header: (props: { geneticElement: GeneticElement | null }) => JSX.Element = ({
-    geneticElement,
-  }) => {
-    return (
-      <Typography variant='h6'>
-        {this.name} for {geneticElement?.id}
-      </Typography>
     )
   }
 }

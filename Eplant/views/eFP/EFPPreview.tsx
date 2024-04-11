@@ -36,6 +36,7 @@ export type EFPPreviewProps = {
   colorMode: 'absolute' | 'relative'
   data: EFPData
   maskThreshold: number
+  maskingEnabled: boolean
 } & BoxProps
 
 export default function EFPPreview({
@@ -45,6 +46,7 @@ export default function EFPPreview({
   colorMode,
   data,
   maskThreshold,
+  maskingEnabled,
   ...boxProps
 }: EFPPreviewProps) {
   const colorModeDeferred = useDeferredValue(colorMode)
@@ -67,6 +69,7 @@ export default function EFPPreview({
             renderAsThumbnail: true,
             colorMode: colorModeDeferred,
             maskThreshold: maskThreshold,
+            maskingEnabled: maskingEnabled,
           }}
           geneticElement={gene}
           dispatch={() => {}}
@@ -88,7 +91,15 @@ export default function EFPPreview({
         </div>
       </EFPPreviewContainer>
     )
-  }, [gene, view.id, colorModeDeferred, dataDeferred, selected])
+  }, [
+    gene,
+    view.id,
+    colorModeDeferred,
+    dataDeferred,
+    selected,
+    maskThreshold,
+    maskingEnabled,
+  ])
   return draw ? (
     component
   ) : (
