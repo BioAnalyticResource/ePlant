@@ -33,7 +33,6 @@ export const pageLoad = (() => {
     },
     done() {
       finished++
-      // console.log(finished / waiting)
       watchers.forEach((w) => w(finished / waiting))
     },
     watch(cb: (progress: number) => void) {
@@ -213,6 +212,10 @@ export const useSetDarkMode = () => useSetAtom(darkModeAtom)
 
 export const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
 export const useActiveId = () => useAtom(activeIdAtom)
+
+export const sidebarAtom = atom<boolean>(false)
+export const useSidebarState = () => useAtom(sidebarAtom)
+export const useSetSidebarState = () => useSetAtom(sidebarAtom)
 
 // export function getPaneName(pane: Panes[string]) {
 //   return `${pane.activeGene ? pane.activeGene + ' - ' : ''}${pane.view}`

@@ -28,6 +28,8 @@ export default function Eplant() {
  * The main Eplant component. This is the root of the application. It contains the left nav and the layout.
  * @returns {JSX.Element} The rendered Eplant component
  */
+
+// SideBar and EplantLayout children
 export function MainEplant() {
   return (
     <>

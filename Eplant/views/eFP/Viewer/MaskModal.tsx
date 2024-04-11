@@ -33,7 +33,6 @@ const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
 
   const handleSubmit = () => {
     onSubmit(sliderValue)
-    onClose()
   }
   return (
     <Modal open={state.maskModalVisible} onClose={handleClose}>
@@ -64,7 +63,7 @@ const MaskModal = ({ state, onClose, onSubmit }: MaskModalProps) => {
           valueLabelDisplay='on'
           valueLabelFormat={(value) => `${value}%`}
           min={0}
-          max={100}
+          max={200}
           sx={{ width: 400 }}
         />
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
