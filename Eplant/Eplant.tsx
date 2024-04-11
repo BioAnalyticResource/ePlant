@@ -5,16 +5,16 @@ import { Box, CircularProgress } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 import { ViewContainer } from './UI/Layout/ViewContainer'
-import Sidebar, { sidebarWidth } from './UI/Sidebar'
+import Sidebar, { collapsedSidebarWidth, sidebarWidth } from './UI/Sidebar'
 import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
-import { useGeneticElements, usePageLoad } from './state'
+import { useGeneticElements, usePageLoad,   useSidebarState, } from './state'
 import { updateColors } from './updateColors'
 
 export const Eplant = () => {
   const { viewId, geneId } = useParams()
   const [globalProgress, loaded] = usePageLoad()
-
+  const [isCollapse, setIsCollapse] = useSidebarState()
   const theme = useTheme()
 
   const [genes] = useGeneticElements()
@@ -31,8 +31,9 @@ export const Eplant = () => {
       <Sidebar />
       <Box
         sx={(theme) => ({
+          transition: 'all 1s ease-out',
           height: `calc(100% - ${theme.spacing(1)})`,
-          left: `${sidebarWidth}px`,
+          left: `${isCollapse ? collapsedSidebarWidth : sidebarWidth}px`,
           right: '0px',
           position: 'absolute',
           boxSizing: 'border-box',

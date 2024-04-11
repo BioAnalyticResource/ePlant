@@ -33,6 +33,7 @@ export default function Sidebar() {
           },
         }}
       >
+
         <Container
           disableGutters
           sx={{
@@ -46,12 +47,12 @@ export default function Sidebar() {
         >
           <LeftNav
             onSelectGene={(gene: SerializedGeneticElement) =>
-              navigate(`/${viewId}/${gene.id}` + window.location.search)
-            }
+              navigate(`/${viewId}/${gene.id}` + window.location.search)            }
             selectedGene={geneId}
           />
         </Container>
       </ResponsiveDrawer>
     </div>
+
   )
 }
