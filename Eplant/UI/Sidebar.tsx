@@ -1,10 +1,6 @@
-import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import { Container } from '@mui/material'
-import { Box } from '@mui/material'
 
 import SerializedGeneticElement from '../GeneticElement'
 import { useSidebarState } from '../state'
@@ -12,6 +8,7 @@ import { useSidebarState } from '../state'
 import { LeftNav } from './LeftNav'
 import ResponsiveDrawer from './ResponsiveDrawer'
 
+// This sidebar width is hard coded --> not responsive to screen size
 // This sidebar width is hard coded --> not responsive to screen size
 export const sidebarWidth = 300
 export const collapsedSidebarWidth = 100

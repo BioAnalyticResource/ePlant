@@ -53,8 +53,9 @@ export function SearchGroup({
   return (
     <Stack direction='column' spacing={2}>
       {/* Species selector */}
-      {/* commenting out until multi species support*/}
-      {/* <TextField
+
+      {/* Commenting this out until we get multi-species support 
+      <TextField
         select
         size='small'
         value={species?.name ?? ''}
