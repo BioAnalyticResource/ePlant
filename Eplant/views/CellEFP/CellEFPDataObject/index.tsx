@@ -124,7 +124,7 @@ export const CellEFPDataObject: CellEFPDataObject = {
       {
         svgURL: CellEFPDataObject.svgURL,
         xmlURL: CellEFPDataObject.xmlURL,
-        id: 'Cell-EFP',
+        id: 'cell-efp',
       },
       {
         showText: true,

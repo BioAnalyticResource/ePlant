@@ -30,7 +30,7 @@ const views: EFPViewerData['views'] = [
 const efps: EFP[] = makeEfps(views)
 
 export default new EFPViewer(
-  'plant',
+  'plant-efp',
   'Plant eFP',
   views,
   efps,
