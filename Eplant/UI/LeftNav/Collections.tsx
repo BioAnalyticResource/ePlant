@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import {useParams} from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import {
   DndContext,
@@ -23,7 +23,11 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import GeneticElement from '@eplant/GeneticElement'
-import { useCollections, useGeneticElements, useSetCollections } from '@eplant/state'
+import {
+  useCollections,
+  useGeneticElements,
+  useSetCollections,
+} from '@eplant/state'
 import { Add, Check, ExpandMore } from '@mui/icons-material'
 import {
   Box,
@@ -352,7 +356,7 @@ export function Collections(props: {
 }) {
   const [genes, setGenes] = useGeneticElements()
   const [collections, setCollections] = useCollections()
-  const {viewId, geneId}= useParams();
+  const { viewId, geneId } = useParams()
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -366,7 +370,6 @@ export function Collections(props: {
 
   // If there are genes that aren't in a collection, put them in the first
   useEffect(() => {
-
     setCollections((collections) => {
       const unincluded = genes.map(
         (g) =>

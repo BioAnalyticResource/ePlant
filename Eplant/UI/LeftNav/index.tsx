@@ -1,20 +1,14 @@
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import _ from 'lodash'
-import {useParams} from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  useDarkMode,
-  useGeneticElements,
-  useSidebarState,
-} from '@eplant/state'
+import { useDarkMode, useGeneticElements, useSidebarState } from '@eplant/state'
 import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import SearchIcon from '@mui/icons-material/Search'
-import {
-  Box,
-} from '@mui/material'
+import { Box } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
 
@@ -36,7 +30,7 @@ export function LeftNav(props: {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
   const [isCollapse, setIsCollapse] = useSidebarState()
-  const {viewId, geneId}= useParams();
+  const { viewId, geneId } = useParams()
 
   const theme = useTheme()
 
@@ -74,7 +68,6 @@ export function LeftNav(props: {
                   transform: 'translateX(20%)',
                   transition: 'all 0.5s ease-out',
                 }
-
           }
           onClick={() => setIsCollapse(!isCollapse)}
           onMouseEnter={() => setTabWidth('40px')}

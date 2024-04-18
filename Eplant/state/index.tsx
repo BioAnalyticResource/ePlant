@@ -237,7 +237,7 @@ export const useSetDarkMode = () => useSetAtom(darkModeAtom)
 
 export const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
 export const useActiveId = () => useAtom(activeIdAtom)
-export const setActiveId = ()=> useSetAtom(activeIdAtom)
+export const setActiveId = () => useSetAtom(activeIdAtom)
 
 export const sidebarAtom = atom<boolean>(false)
 export const useSidebarState = () => useAtom(sidebarAtom)

@@ -1,4 +1,4 @@
-import{useCallback, useEffect,useState} from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import GeneticElement, { Species } from '@eplant/GeneticElement'
@@ -33,19 +33,19 @@ export function SearchGroup({
     useState<boolean>(false)
   const [searchingByPhenotype, setSearchingByPhenotype] =
     useState<boolean>(false)
-    const {viewId, geneId} = useParams()
-    const getGeneticElement = (terms: string[]) => {
-      if (!species) return
-      Promise.all(terms.map(species.api.searchGene)).then((a) =>
-        addGeneticElements(a.filter((x) => x != null) as GeneticElement[])
-      )
-    }
+  const { viewId, geneId } = useParams()
+  const getGeneticElement = (terms: string[]) => {
+    if (!species) return
+    Promise.all(terms.map(species.api.searchGene)).then((a) =>
+      addGeneticElements(a.filter((x) => x != null) as GeneticElement[])
+    )
+  }
   useEffect(() => {
     if (!species && speciesList.length) setSpecies(speciesList[0])
   }, [species])
 
-  useEffect(()=>{
-    if(geneId){
+  useEffect(() => {
+    if (geneId) {
       getGeneticElement([geneId])
     }
   }, [geneId, species])

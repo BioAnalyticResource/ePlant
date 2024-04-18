@@ -8,7 +8,7 @@ import { ViewContainer } from './UI/Layout/ViewContainer'
 import Sidebar, { collapsedSidebarWidth, sidebarWidth } from './UI/Sidebar'
 import GetStartedView from './views/GetStartedView'
 import { useConfig } from './config'
-import { useGeneticElements, usePageLoad,   useSidebarState, } from './state'
+import { useGeneticElements, usePageLoad, useSidebarState } from './state'
 import { updateColors } from './updateColors'
 
 export const Eplant = () => {
@@ -52,7 +52,8 @@ export const Eplant = () => {
             <ViewContainer
               gene={genes.find((gene) => gene.id === geneId) ?? null}
               view={
-                config.views.find((view) => view.id === viewId) ?? GetStartedView
+                config.views.find((view) => view.id === viewId) ??
+                GetStartedView
               }
               sx={{
                 width: '100%',
