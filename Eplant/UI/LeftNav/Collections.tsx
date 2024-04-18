@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import {
   DndContext,
@@ -357,6 +357,8 @@ export function Collections(props: {
   const [genes, setGenes] = useGeneticElements()
   const [collections, setCollections] = useCollections()
   const { viewId, geneId } = useParams()
+  const navigate = useNavigate()
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -595,6 +597,8 @@ export function Collections(props: {
       return cols
     })
     setGenes(genes.filter((g) => g != gene))
+    // you can't delete a gene without selecting it
+    navigate(`/${viewId}`)
   }
 
   function deleteCollection(index: number) {

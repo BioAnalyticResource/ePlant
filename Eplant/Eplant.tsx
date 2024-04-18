@@ -25,7 +25,6 @@ export const Eplant = () => {
       updateColors(theme)
     }
   }, [theme, loaded])
-
   return (
     <>
       <Sidebar />

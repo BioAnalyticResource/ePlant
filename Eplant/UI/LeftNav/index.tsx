@@ -8,7 +8,7 @@ import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import SearchIcon from '@mui/icons-material/Search'
-import { Box} from '@mui/material'
+import { Box } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
@@ -20,6 +20,12 @@ export default function Sidebar() {
   const { viewId, geneId } = useParams()
   const navigate = useNavigate()
 
+  const goToPage = (gene: SerializedGeneticElement) => {
+    if (gene.id !== geneId) {
+      console.log('go to page fired')
+      navigate(`/${viewId}/${gene.id}` + window.location.search)
+    }
+  }
   const [isCollapse, setIsCollapse] = useSidebarState()
   return (
     <div>
@@ -44,14 +50,10 @@ export default function Sidebar() {
             overflow: 'hidden',
           }}
         >
-          <LeftNav
-            onSelectGene={(gene: SerializedGeneticElement) =>
-              navigate(`/${viewId}/${gene.id}` + window.location.search)
-            }
-            selectedGene={geneId}
-          />
+          <LeftNav onSelectGene={goToPage} selectedGene={geneId} />
         </Container>
       </ResponsiveDrawer>
     </div>
   )
 }
+
