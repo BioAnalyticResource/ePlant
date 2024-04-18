@@ -55,6 +55,8 @@ export function SearchGroup({
       {/* Species selector */}
 
       {/* Commenting this out until we get multi-species support 
+
+      {/* Commenting this out until we get multi-species support 
       <TextField
         select
         size='small'

@@ -3,12 +3,21 @@ import _ from 'lodash'
 import { useParams } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { useDarkMode, useGeneticElements, useSidebarState } from '@eplant/state'
+import {
+  useDarkMode,
+  useGeneticElements,
+  useSidebarState,
+} from '@eplant/state'
 import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import SearchIcon from '@mui/icons-material/Search'
-import { Box } from '@mui/material'
+import {
+  Box,
+  FormControlLabel,
+  FormGroup,
+  Switch,
+} from '@mui/material'
 import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
 
@@ -29,10 +38,11 @@ export function LeftNav(props: {
 }) {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
-  const [isCollapse, setIsCollapse] = useSidebarState()
   const { viewId, geneId } = useParams()
 
   const theme = useTheme()
+  const [isCollapse, setIsCollapse] = useSidebarState()
+
 
   const [tabWidth, setTabWidth] = useState('30px')
 

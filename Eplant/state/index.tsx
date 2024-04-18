@@ -237,8 +237,44 @@ export const useSetDarkMode = () => useSetAtom(darkModeAtom)
 
 export const activeIdAtom = atomWithOptionalStorage<string>('active-id', '')
 export const useActiveId = () => useAtom(activeIdAtom)
-export const setActiveId = () => useSetAtom(activeIdAtom)
 
 export const sidebarAtom = atom<boolean>(false)
 export const useSidebarState = () => useAtom(sidebarAtom)
 export const useSetSidebarState = () => useSetAtom(sidebarAtom)
+
+// export function getPaneName(pane: Panes[string]) {
+//   return `${pane.activeGene ? pane.activeGene + ' - ' : ''}${pane.view}`
+// }
+
+// export const modelAtom = atomWithOptionalStorage<FlexLayout.Model>(
+//   'flexlayout-model',
+//   FlexLayout.Model.fromJson({
+//     global: {
+//       tabSetTabStripHeight: 48,
+//       tabEnableRename: false,
+//       tabEnableClose: false,
+//       tabSetEnableMaximize: false,
+//     },
+//     borders: [],
+//     layout: {
+//       type: 'row',
+//       weight: 100,
+//       children: [
+//         {
+//           type: 'tabset',
+//           active: true,
+//           children: [
+//             {
+//               type: 'tab',
+//               id: 'default',
+//             },
+//           ],
+//         },
+//       ],
+//     },
+//   }),
+//   (model) => JSON.stringify(model.toJson()),
+//   (model) => FlexLayout.Model.fromJson(JSON.parse(model))
+// )
+// export const useModel = () => useAtom(modelAtom)
+// export const useSetModel = () => useSetAtom(modelAtom)
