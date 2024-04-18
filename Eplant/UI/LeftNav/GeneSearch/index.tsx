@@ -1,4 +1,5 @@
-import * as React from 'react'
+import{useCallback, useEffect,useState} from 'react'
+import { useParams } from 'react-router-dom'
 
 import GeneticElement, { Species } from '@eplant/GeneticElement'
 import { useSpecies } from '@eplant/state'
@@ -26,16 +27,29 @@ export function SearchGroup({
 }: {
   addGeneticElements: (gene: GeneticElement[]) => void
 }) {
-  const [species, setSpecies] = React.useState<Species>()
+  const [species, setSpecies] = useState<Species>()
   const [speciesList, setSpeciesList] = useSpecies()
   const [searchingByExpression, setSearchingByExpression] =
-    React.useState<boolean>(false)
+    useState<boolean>(false)
   const [searchingByPhenotype, setSearchingByPhenotype] =
-    React.useState<boolean>(false)
-
-  React.useEffect(() => {
+    useState<boolean>(false)
+    const {viewId, geneId} = useParams()
+    const getGeneticElement = (terms: string[]) => {
+      if (!species) return
+      Promise.all(terms.map(species.api.searchGene)).then((a) =>
+        addGeneticElements(a.filter((x) => x != null) as GeneticElement[])
+      )
+    }
+  useEffect(() => {
     if (!species && speciesList.length) setSpecies(speciesList[0])
   }, [species])
+
+  useEffect(()=>{
+    if(geneId){
+      getGeneticElement([geneId])
+    }
+  }, [geneId, species])
+
   return (
     <Stack direction='column' spacing={2}>
       {/* Species selector */}

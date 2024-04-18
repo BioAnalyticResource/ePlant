@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { useState } from 'react'
+import { useEffect,useState } from 'react'
 import _ from 'lodash'
+import {useParams} from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
 import {
@@ -14,8 +14,6 @@ import DarkModeIcon from '@mui/icons-material/DarkMode'
 import SearchIcon from '@mui/icons-material/Search'
 import {
   Box,
-  FormControlLabel,
-  FormGroup,
 } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
@@ -38,15 +36,17 @@ export function LeftNav(props: {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
   const [isCollapse, setIsCollapse] = useSidebarState()
+  const {viewId, geneId}= useParams();
 
   const theme = useTheme()
 
   const [tabWidth, setTabWidth] = useState('30px')
 
-  React.useEffect(() => {
+  useEffect(() => {
     const uniq = _.uniqBy(geneticElements, (g) => g.id)
     if (uniq.length != geneticElements.length) setGeneticElements(uniq)
   }, [geneticElements])
+
   return (
     <Stack gap={2} direction='column' height={'100%'}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>

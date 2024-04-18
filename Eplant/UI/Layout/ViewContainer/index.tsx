@@ -99,7 +99,7 @@ export function ViewContainer<T = any, S = any, A = any>({
               <Select
                 value={view.id}
                 renderValue={() => {
-                  if (view.id == 'get-started') {
+                  if (view.id === 'get-started') {
                     return <span style={{ paddingLeft: 8 }}>View selector</span>
                   }
                   return (
