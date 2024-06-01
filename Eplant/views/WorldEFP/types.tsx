@@ -1,4 +1,4 @@
-import { ColorMode } from '../eFP/types'
+import { ColorMode, EFPData } from '../eFP/types'
 
 export type Coordinates = { lat: number; lng: number }
 type MapTypeId = 'roadmap' | 'satellite' | 'hybrid' | 'terrain'
@@ -14,5 +14,6 @@ export type WorldEFPState = {
 
 export type WorldEFPData = {
   positions: Coordinates[]
+  efpData: EFPData
   markerSVGString: string
 }

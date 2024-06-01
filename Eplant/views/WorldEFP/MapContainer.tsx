@@ -1,15 +1,8 @@
-import { min, random } from 'lodash'
+import { random } from 'lodash'
 
-import {
-  AdvancedMarker,
-  Map,
-  Marker,
-  Pin,
-  useMap,
-} from '@vis.gl/react-google-maps'
+import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps'
 
-import Icon from '../CellEFP/icon'
-
+import WorldEFPIcon from './icon'
 import { WorldEFPData, WorldEFPState } from './types'
 
 interface MapContainerProps {
@@ -17,35 +10,26 @@ interface MapContainerProps {
   state: WorldEFPState
 }
 const MapContainer = ({ activeData, state }: MapContainerProps) => {
-  const map = useMap()
-  //   const parser = new DOMParser()
-  //   const svg = parser.parseFromString(
-  //     activeData.markerSVGString,
-  //     'image/svg+xml'
-  //   ).documentElement
-  console.log(activeData.markerSVGString)
+  const position = { lat: 49, lng: 11 }
+
+  console.log(activeData)
   return (
-    <div style={{ height: '100vh' }}>
+    <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}>
       <Map
-        mapId={'2311f7af1b919095'}
-        mapTypeId={'roadmap'}
-        mapTypeControlOptions={{
-          mapTypeIds: [],
-        }}
-        defaultZoom={4}
-        defaultCenter={{ lat: 45, lng: 25 }}
-        streetViewControl={false}
+        defaultCenter={position}
+        defaultZoom={10}
+        mapId={import.meta.env.MAP_ID}
       >
-        {activeData.positions.map((position) => {
+        {activeData.positions.map((e, index) => {
+          const colour = index === 0 ? 'red' : 'yellow'
           return (
-            <AdvancedMarker
-              key={position.lat}
-              position={position}
-            ></AdvancedMarker>
+            <AdvancedMarker key={index} position={e}>
+              <WorldEFPIcon sx={{ fill: colour }}></WorldEFPIcon>
+            </AdvancedMarker>
           )
         })}
       </Map>
-    </div>
+    </APIProvider>
   )
 }
 
