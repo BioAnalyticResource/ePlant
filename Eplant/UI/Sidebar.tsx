@@ -22,8 +22,11 @@ export default function Sidebar() {
 
   const goToPage = (gene: SerializedGeneticElement) => {
     if (gene.id !== geneId) {
-      console.log('go to page fired')
-      navigate(`/${viewId}/${gene.id}` + window.location.search)
+      if(!viewId){
+        navigate(`/gene-info/${gene.id}`)
+      } else {
+        navigate(`/${viewId}/${gene.id}`)
+      }
     }
   }
   const [isCollapse, setIsCollapse] = useSidebarState()
@@ -50,7 +53,9 @@ export default function Sidebar() {
             overflow: 'hidden',
           }}
         >
-          <LeftNav onSelectGene={goToPage} selectedGene={geneId} />
+          <LeftNav 
+            onSelectGene={goToPage} 
+            selectedGene={geneId} />
         </Container>
       </ResponsiveDrawer>
     </div>

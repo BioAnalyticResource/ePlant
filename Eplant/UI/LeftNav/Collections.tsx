@@ -424,6 +424,7 @@ export function Collections(props: {
             name={p.name}
             open={p.open}
             onRemove={() => {
+              navigate('/')
               deleteCollection(i)
             }}
             onNameChange={(newName) => {

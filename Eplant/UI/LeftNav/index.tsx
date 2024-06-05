@@ -23,13 +23,12 @@ import { SearchGroup } from './GeneSearch'
  * @param props.selectedGene The currently selected gene
  * @returns
  */
-export function LeftNav(props: {
-  onSelectGene?: (gene: GeneticElement) => void
+export function LeftNav({onSelectGene, selectedGene}:{
+  onSelectGene: (gene: GeneticElement) => void
   selectedGene?: string
 }) {
   const [geneticElements, setGeneticElements] = useGeneticElements()
   const [darkMode, setDarkMode] = useDarkMode()
-  const { viewId, geneId } = useParams()
 
   const theme = useTheme()
   const [isCollapse, setIsCollapse] = useSidebarState()
@@ -99,13 +98,13 @@ export function LeftNav(props: {
                 )
               )
               if (s.length > 0) {
-                // setActiveGeneId(s[0].id)
+                onSelectGene(s[0])
               }
             }}
           />
           <Collections
-            onSelectGene={props.onSelectGene}
-            selectedGene={props.selectedGene}
+            onSelectGene={onSelectGene}
+            selectedGene={selectedGene}
           />{' '}
         </>
       )}
