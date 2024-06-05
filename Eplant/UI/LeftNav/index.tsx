@@ -23,7 +23,10 @@ import { SearchGroup } from './GeneSearch'
  * @param props.selectedGene The currently selected gene
  * @returns
  */
-export function LeftNav({onSelectGene, selectedGene}:{
+export function LeftNav({
+  onSelectGene,
+  selectedGene,
+}: {
   onSelectGene: (gene: GeneticElement) => void
   selectedGene?: string
 }) {

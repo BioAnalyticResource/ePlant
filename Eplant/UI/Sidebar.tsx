@@ -22,7 +22,7 @@ export default function Sidebar() {
 
   const goToPage = (gene: SerializedGeneticElement) => {
     if (gene.id !== geneId) {
-      if(!viewId){
+      if (!viewId) {
         navigate(`/gene-info/${gene.id}`)
       } else {
         navigate(`/${viewId}/${gene.id}`)
@@ -53,9 +53,7 @@ export default function Sidebar() {
             overflow: 'hidden',
           }}
         >
-          <LeftNav 
-            onSelectGene={goToPage} 
-            selectedGene={geneId} />
+          <LeftNav onSelectGene={goToPage} selectedGene={geneId} />
         </Container>
       </ResponsiveDrawer>
     </div>
