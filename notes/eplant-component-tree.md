@@ -1,5 +1,8 @@
+This is a little map of the current (June 5 2024) component tree.
+
 Indentation denotes nesting in the component tree.
-[] indicates functionality that is not its own component yet
+
+`[]` indicates functionality that is not its own component yet.
 
 
 Current layout:
