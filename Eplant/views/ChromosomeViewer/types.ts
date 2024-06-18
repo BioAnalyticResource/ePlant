@@ -14,8 +14,8 @@ export interface CentromereItem {
   }
   export interface ChromosomeList extends Array<ChromosomeItem> {}
   export interface ChromosomesResponseObj {
-	species: string;
-	chromosomes: ChromosomeList;
+	"species": string;
+	"chromosomes": ChromosomeList;
   }
 
   // Genes
@@ -29,3 +29,8 @@ export interface CentromereItem {
 	annotation: string;
   }
   export interface GeneList extends Array<GeneItem> {}
+
+  // Component Props
+  export type ChromosomeViewerData = ChromosomeList
+
+

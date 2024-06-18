@@ -10,7 +10,7 @@ import { MapInteractionCSS } from "react-map-interaction";
 import Typography from "@mui/material/Typography";
 
 import Chromosome from "./Chromosome";
-import { ChromosomeList, ChromosomesResponseObj } from "./types.js";
+import { ChromosomeList } from "./types.js";
 // TYPES
 interface ChromosomeViewProps {
   chromosomes: ChromosomeList
@@ -19,7 +19,6 @@ interface ChromosomeViewProps {
 // COMPONENT
 //----------
 const ChromosomeView: FC<ChromosomeViewProps> = ({ chromosomes }) => {
-
 
   return (
     <MapInteractionCSS
