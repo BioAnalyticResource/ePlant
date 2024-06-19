@@ -1,14 +1,8 @@
 import React, { useState } from 'react'
-import { Action } from 'flexlayout-react';
-
-import GeneticElement, { Species } from '@eplant/GeneticElement';
-import { useSpecies } from '@eplant/state'
-import { ViewDataError } from '@eplant/View/viewData';
-import { State } from '@popperjs/core';
 
 import { View } from '../../View'
 
-import ChromosomeView from './ChromosomeView';
+import ChromosomeView from './Viewer/ChromosomeView';
 import ChromosomeIcon from './icon';
 import { ChromosomeList, ChromosomesResponseObj, ChromosomeViewerData } from './types';
 

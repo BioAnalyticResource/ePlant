@@ -1,15 +1,17 @@
 // -------
 // IMPORTS
 // -------
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 //@ts-ignore
 import OutsideClickHandler from "react-outside-click-handler";
 
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
+import Typography from '@mui/material/Typography';
 
-import GeneticElementList from "./GeneticElementList";
-import { CentromereList, ChromosomeItem } from "./types";
+import { CentromereList, ChromosomeItem } from "../types";
+
+import GeneList from "./GeneList";
 //----------
 // TYPES
 //----------
@@ -24,8 +26,9 @@ interface Range {
 //----------
 const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 	// State
-	const [anchorOrigin, setAnchorOrigin] = React.useState<Array<number>>([]);
-	const [geneRange, setGeneRange] = React.useState<Range>({
+	const [isHovered, setIsHovered] = useState<boolean>(false);
+	const [anchorOrigin, setAnchorOrigin] = useState<Array<number>>([]);
+	const [geneRange, setGeneRange] = useState<Range>({
 		start: 0,
 		end: 0,
 	});
@@ -122,55 +125,79 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 	const handleClose = () => {
 		setAnchorOrigin([]);
 	};
+	// Handle mouse over
+	const handleMouseOver = () => {
+		setIsHovered(true)
+	}
+	// Handle mouse leave
+	const handleMouseLeave = () => {
+		setIsHovered(false)
+	}
 
 	// Popover prop variables
 	const open: boolean = anchorOrigin.length === 0 ? false : true;
-	const id = open ? "simple-popper" : undefined;
 
 	return (
 		<>
 			{/* GENETIC ELEMENT LIST POPUP */}
+
+
 			<Popover
 				disableScrollLock={true}
-				id={id}
 				open={open}
 				onClose={handleClose}
 				anchorReference="anchorPosition"
 				anchorPosition={{
-					left: anchorOrigin[0] + 10,
-					top: anchorOrigin[1],
+					left: anchorOrigin[0] + 20,
+					top: anchorOrigin[1] - 60,
 				}}
-				sx={{}}
+				sx={{
+					'& .MuiPopover-paper': {
+						background: "transparent"
+					}
+				}}
 			>
+
+
+				{/* <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" style={{overflow:"visible"}}>
+					<line x1={anchorOrigin[0] + 100} y1={anchorOrigin[1] - 100} x2={anchorOrigin[0]} y2="200" style={{ stroke: "red", strokeWidth: 2 }} />
+					<path stroke="red" d="M 150 300 L 200 250 L 200 350 Z"></path>
+				</svg> */}
+				<Typography variant="caption" sx={{ fontSize: 9 }}>
+					{geneRange.start.toLocaleString()}
+				</Typography>
+
 				<OutsideClickHandler
 					onOutsideClick={() => {
 						handleClose();
 					}}
 				>
-					{geneRange.start.toLocaleString()}
+
 					<Box
-						sx={{
+						sx={(theme) => ({
+							background: theme.palette.background.paper,
 							border: 1,
-							borderRadius: 1,
+							borderRadius: 0,
 							p: 1,
-							background: "transparent",
 							display: "flex",
 							flexDirection: "column",
 							maxHeight: "100px",
 							minHeight: "10vh",
 							overflowY: "scroll",
-						}}
+						})}
 					>
 						{open && (
-							<GeneticElementList
+							<GeneList
 								id={chromosome.id}
 								start={geneRange.start}
 								end={geneRange.end}
 							/>
 						)}
 					</Box>
-					{geneRange.end.toLocaleString()}
 				</OutsideClickHandler>
+				<Typography variant="caption" sx={{ fontSize: 9 }}>
+					{geneRange.end.toLocaleString()}
+				</Typography>
 			</Popover>
 			{/* CHROMOSOME SVG */}
 			<svg
@@ -234,6 +261,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 					)}
 					{/* Input Layer (transparent, must be drawn on top of other layers)*/}
 					<rect
+						id={chromosome.id + "_input"}
 						x={x - 2}
 						y={y}
 						width={width}
@@ -241,6 +269,10 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 						rx={width / 2}
 						ry={width / 2}
 						fill="transparent"
+						onMouseEnter={handleMouseOver}
+						onMouseLeave={handleMouseLeave}
+						cursor={isHovered ? "pointer" : "default"}
+
 						//@ts-ignore
 						onClick={handleClick}
 					/>
