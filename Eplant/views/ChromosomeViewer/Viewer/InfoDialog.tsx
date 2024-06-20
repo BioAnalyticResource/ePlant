@@ -1,8 +1,10 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 
+import { useSetActiveGeneId } from "@eplant/state";
 import CloseIcon from '@mui/icons-material/Close';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -20,64 +22,91 @@ interface InfoDialogProps {
 
 const InfoDialog: FC<InfoDialogProps> = ({ gene, dialogOpen }) => {
 	const [open, setOpen] = useState<boolean>(dialogOpen)
+	const setActiveGeneId = useSetActiveGeneId()
+
+
+	useEffect(() => {
+	}, [])
 	const loadGene = () => {
-		// load gene into the sidebar
+		console.log(gene.id)
+		// setActiveGeneId(gene.id)
 	}
 	const handleClose = () => {
 		setOpen(false);
 	};
 
 
+
 	return (
 		<Popover
+
 			disableScrollLock={true}
 			open={open}
+
 			onClose={handleClose}
 			sx={{
 				left: "50%",
 				top: "50%"
 			}}
 		>
-			<DialogTitle>
-				{gene.id}
-				<IconButton
-					aria-label="close"
-					onClick={handleClose}
+			{/* <Dialog
+			open={open}
+			onClose={handleClose}
+			sx={{
+				"& .MuiDialog-container": {
+					background: "transparent"
+				}
+			}}
+		> */}
+			<ClickAwayListener onClickAway={handleClose}>
+
+				<Box
 					sx={{
-						position: 'absolute',
-						right: 8,
-						top: 8,
-						color: (theme) => theme.palette.grey[500],
+						width: "500px",
+						padding: 2
 					}}
 				>
-					<CloseIcon />
-				</IconButton>
-			</DialogTitle>
-			<Box
-				sx={{
-					width: "500px",
-					padding: 2
-				}}
-			>
-				<Typography gutterBottom>
-					id: {gene.id}
-				</Typography>
-				<Typography>
-					start: {gene.start}
-				</Typography>
-				<Typography>
-					end: {gene.end}
+					<DialogTitle>
+						{gene.id}
+						<IconButton
+							aria-label="close"
+							onClick={handleClose}
+							sx={{
+								position: 'absolute',
+								right: 8,
+								top: 8,
+								color: (theme) => theme.palette.grey[500],
+							}}
+						>
+							<CloseIcon />
+						</IconButton>
+					</DialogTitle>
+					<Typography gutterBottom>
+						id: {gene.id}
+					</Typography>
+					<Typography>
+						start: {gene.start}
+					</Typography>
+					<Typography>
+						end: {gene.end}
 
-				</Typography>
-				<Typography>
-					strand: {gene.strand}
-				</Typography>
-				<Typography>
-					{/* aliases: {gene.aliases} */}
-				</Typography>
-			</Box>
+					</Typography>
+					<Typography>
+						strand: {gene.strand}
+					</Typography>
+					<Typography>
+						{/* aliases: {gene.aliases} */}
+					</Typography>
+					<Button autoFocus variant="contained" color="success" >
+						<div onClick={loadGene}>
+							Load Gene
+						</div>
+					</Button>
+				</Box>
+			</ClickAwayListener>
 
-		</Popover>
+
+		</Popover >
 	)
 }
 

@@ -13,6 +13,7 @@ import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import Storage from '@eplant/util/Storage'
+import { GeneItem } from '@eplant/views/ChromosomeViewer/types'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
@@ -63,17 +64,17 @@ export function atomWithStorage<T>(
       if (e) setAtom(e)
       else setAtom(initialValue)
     }
-    ;(async () => {
-      const finished = loading?.()
-      try {
-        const val = await loadedValue
-        if (val) {
-          setAtom(val)
+      ; (async () => {
+        const finished = loading?.()
+        try {
+          const val = await loadedValue
+          if (val) {
+            setAtom(val)
+          }
+        } finally {
+          if (finished) finished()
         }
-      } finally {
-        if (finished) finished()
-      }
-    })()
+      })()
     return storage.watch(key, listener)
   }
   const a = atom(
@@ -108,17 +109,17 @@ function atomWithOptionalStorage<T>(
       if (e) setAtom(deserialize(e))
       else setAtom(initialValue)
     }
-    ;(async () => {
-      pageLoad.start()
-      try {
-        const val = await loadedValue
-        if (val) {
-          setAtom(deserialize(val))
+      ; (async () => {
+        pageLoad.start()
+        try {
+          const val = await loadedValue
+          if (val) {
+            setAtom(deserialize(val))
+          }
+        } finally {
+          pageLoad.done()
         }
-      } finally {
-        pageLoad.done()
-      }
-    })()
+      })()
     return storage.watch(key, listener)
   }
   const a = atom(
@@ -186,6 +187,12 @@ export const collectionsAtom = atomWithOptionalStorage<
 )
 export const useCollections = () => useAtom(collectionsAtom)
 export const useSetCollections = () => useSetAtom(collectionsAtom)
+
+// export const geneInfoPopupAtom = atom<{
+//   gene: GeneItem | null; open: boolean
+// }>({ gene: null, open: false })
+// export const useGeneInfoPopup = () => useAtom(geneInfoPopupAtom)
+// export const useSetGeneInfoPopup = () => useSetAtom(geneInfoPopupAtom)
 
 export const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)

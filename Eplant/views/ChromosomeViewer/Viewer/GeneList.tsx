@@ -2,21 +2,29 @@
 // IMPORTS
 // -------
 import React, { FC, useState } from "react";
+import Draggable from "react-draggable";
 
+import { useSetActiveGeneId } from "@eplant/state";
+import CloseIcon from '@mui/icons-material/Close';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
 
-import { GeneArray } from "../types";
+import { GeneArray, GeneItem } from "../types";
 
-import InfoDialog from "./InfoDialog";
-import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
 // TYPES
 interface GeneListProps {
-	id: string;
-	start: number;
-	end: number;
+	id: string,
+	start: number,
+	end: number,
+	anchorOrigin: Array<number>
 }
 //----------
 // COMPONENT
@@ -25,6 +33,7 @@ const GeneList: FC<GeneListProps> = ({
 	id,
 	start,
 	end,
+	anchorOrigin
 }) => {
 	const [geneList, setGeneList] = useState<GeneArray>([{
 		id: "",
@@ -35,6 +44,11 @@ const GeneList: FC<GeneListProps> = ({
 		annotation: ""
 	}]);
 	const [open, setOpen] = React.useState(false);
+	const [activeGene, setActiveGene] = React.useState<GeneItem | null>(null)
+	// const setGeneInfoPopup = useSetGeneInfoPopup()
+	const setActiveGeneId = useSetActiveGeneId()
+
+
 	//------------------
 	// Helper Functions
 	//------------------
@@ -53,19 +67,99 @@ const GeneList: FC<GeneListProps> = ({
 		fetchGeneData();
 	}, []);
 	// EVENT HANDLERS
-	const handleClick = () => {
+	const handleGeneListClick = (gene: GeneItem) => (event: React.MouseEvent<HTMLElement>) => {
 		setOpen(true)
+		setActiveGene(gene)
 	}
+	const handleLoadGeneClick = (event: React.MouseEvent<HTMLElement>) => {
+		console.log(activeGene.id)
+		// setActiveGeneId(gene.id)
+	}
+	const handleClose = () => {
+		setOpen(false);
+	};
+
+
 	return (
 		<List>
 			{geneList.map((gene, i) => {
 				return (
 					<ListItem key={i} disablePadding>
-						<Button onClick={handleClick} sx={{ fontSize: "10px", paddingBlock: 0 }} >
+						{/* GENE LIST ITEM (rendered as  button) */}
+						<Button onClick={handleGeneListClick(gene)} sx={{ fontSize: "10px", borderRadius: 0, paddingBlock: 0 }} >
 							<Typography>{gene.id}</Typography>
 						</Button>
+						{/* GENE INFO POPUP */}
+
 						{open && (
-							<InfoDialog gene={gene} dialogOpen={open}></InfoDialog>
+							// <Draggable>
+							<Popover
+
+								disableScrollLock={true}
+								open={open}
+
+								onClose={handleClose}
+								sx={{
+
+									left: anchorOrigin[0],
+									top: anchorOrigin[1] - 100
+								}}
+							>
+
+								<ClickAwayListener onClickAway={handleClose}>
+
+									<Box
+										sx={{
+											minWidth: "300px",
+											maxWidth: "500px",
+											minHeight: "150px",
+											maxHeight: "400px",
+											padding: 2
+										}}
+									>
+										<DialogTitle>
+											{gene.id}
+											<IconButton
+												aria-label="close"
+												onClick={handleClose}
+												sx={{
+													position: 'absolute',
+													right: 8,
+													top: 8,
+													color: (theme) => theme.palette.grey[500],
+												}}
+											>
+												<CloseIcon />
+											</IconButton>
+										</DialogTitle>
+										<Typography gutterBottom>
+											id: {gene.id}
+										</Typography>
+										<Typography>
+											start: {gene.start}
+										</Typography>
+										<Typography>
+											end: {gene.end}
+
+										</Typography>
+										<Typography>
+											strand: {gene.strand}
+										</Typography>
+										<Typography>
+											{/* aliases: {gene.aliases} */}
+										</Typography>
+										<Button autoFocus variant="contained" color="success" >
+											<div onClick={handleLoadGeneClick}>
+												Load Gene
+											</div>
+										</Button>
+									</Box>
+								</ClickAwayListener>
+
+
+							</Popover >
+							// </Draggable>
+
 						)}
 
 					</ListItem>

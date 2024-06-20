@@ -22,13 +22,14 @@ const ChromosomeViewer: View<ChromosomeViewerData> = {
 		const url = `https://bar.utoronto.ca/eplant/cgi-bin/chromosomeinfo.cgi?species=${species}`
 		chromosomeViewData = await fetch(url).then(async (response) => {
 			console.log(response)
+			debugger
 			return response.json()
 		}).then((responseObj: ChromosomesResponseObj) => responseObj["chromosomes"])
 
 		return chromosomeViewData
 	},
 	component({ activeData }) {
-		console.log("test log  in chromosome view component",activeData)
+		console.log("test chromosome view component -> activeData prop", activeData)
 		const [chromosomes, setChromosomes] = useState<ChromosomeList>([
 			{
 				id: "Chr1",

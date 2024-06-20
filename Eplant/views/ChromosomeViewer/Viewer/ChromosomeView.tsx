@@ -2,7 +2,7 @@
 // IMPORTS
 // -------
 
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import { MapInteractionCSS } from "react-map-interaction";
@@ -20,7 +20,6 @@ interface ChromosomeViewProps {
 // COMPONENT
 //----------
 const ChromosomeView: FC<ChromosomeViewProps> = ({ chromosomes }) => {
-
   return (
     <MapInteractionCSS
       showControls

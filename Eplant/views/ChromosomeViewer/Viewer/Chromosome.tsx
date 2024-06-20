@@ -6,7 +6,9 @@ import React, { FC, useEffect, useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 
 import Box from "@mui/material/Box";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Popover from "@mui/material/Popover";
+import Popper from "@mui/material/Popper";
 import Typography from '@mui/material/Typography';
 
 import { CentromereList, ChromosomeItem } from "../types";
@@ -16,11 +18,11 @@ import GeneList from "./GeneList";
 // TYPES
 //----------
 interface ChromosomeProps {
-	chromosome: ChromosomeItem;
+	chromosome: ChromosomeItem
 }
 interface Range {
-	start: number;
-	end: number;
+	start: number,
+	end: number
 }
 // COMPONENT
 //----------
@@ -119,6 +121,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 	// Handle click on chromosome
 	const handleClick = (event: MouseEvent) => {
 		setAnchorOrigin([event.clientX, event.clientY]);
+		console.log(event.currentTarget)
 		setGeneRange(pixelToBp(event.clientY));
 	};
 	// Handle popup close
@@ -143,9 +146,9 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 
 
 			<Popover
-				disableScrollLock={true}
+
 				open={open}
-				onClose={handleClose}
+				// onClose={handleClose}
 				anchorReference="anchorPosition"
 				anchorPosition={{
 					left: anchorOrigin[0] + 20,
@@ -167,10 +170,8 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 					{geneRange.start.toLocaleString()}
 				</Typography>
 
-				<OutsideClickHandler
-					onOutsideClick={() => {
-						handleClose();
-					}}
+				<ClickAwayListener
+					onClickAway={handleClose}
 				>
 
 					<Box
@@ -191,22 +192,24 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 								id={chromosome.id}
 								start={geneRange.start}
 								end={geneRange.end}
+								anchorOrigin={anchorOrigin}
 							/>
 						)}
 					</Box>
-				</OutsideClickHandler>
+				</ClickAwayListener>
 				<Typography variant="caption" sx={{ fontSize: 9 }}>
 					{geneRange.end.toLocaleString()}
 				</Typography>
-			</Popover>
+			</Popover >
 			{/* CHROMOSOME SVG */}
-			<svg
+			< svg
 				id={chromosome.id + "_svg"}
 				width="0"
 				height="0"
 				viewBox="0 0 width height"
 				preserveAspectRatio="xMidYMid meet"
-				style={{ overflow: "visible", border: "0px blue solid" }}
+				style={{ overflow: "visible", border: "0px blue solid" }
+				}
 			>
 				<g>
 					{/*Centromeric Layer  */}
@@ -277,7 +280,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 						onClick={handleClick}
 					/>
 				</g>
-			</svg>
+			</svg >
 		</>
 	);
 };
