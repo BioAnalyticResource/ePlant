@@ -18,6 +18,7 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 
 import { GeneArray, GeneItem } from "../types";
+import axios from "axios";
 
 // TYPES
 interface GeneListProps {
@@ -81,92 +82,93 @@ const GeneList: FC<GeneListProps> = ({
 
 
 	return (
-		<List>
-			{geneList.map((gene, i) => {
-				return (
-					<ListItem key={i} disablePadding>
-						{/* GENE LIST ITEM (rendered as  button) */}
-						<Button onClick={handleGeneListClick(gene)} sx={{ fontSize: "10px", borderRadius: 0, paddingBlock: 0 }} >
-							<Typography>{gene.id}</Typography>
-						</Button>
-						{/* GENE INFO POPUP */}
-
-						{open && (
-							// <Draggable>
-							<Popover
-
-								disableScrollLock={true}
-								open={open}
-
-								onClose={handleClose}
-								sx={{
-
-									left: anchorOrigin[0],
-									top: anchorOrigin[1] - 100
-								}}
-							>
-
-								<ClickAwayListener onClickAway={handleClose}>
-
-									<Box
-										sx={{
-											minWidth: "300px",
-											maxWidth: "500px",
-											minHeight: "150px",
-											maxHeight: "400px",
-											padding: 2
-										}}
-									>
-										<DialogTitle>
-											{gene.id}
-											<IconButton
-												aria-label="close"
-												onClick={handleClose}
-												sx={{
-													position: 'absolute',
-													right: 8,
-													top: 8,
-													color: (theme) => theme.palette.grey[500],
-												}}
-											>
-												<CloseIcon />
-											</IconButton>
-										</DialogTitle>
-										<Typography gutterBottom>
-											id: {gene.id}
-										</Typography>
-										<Typography>
-											start: {gene.start}
-										</Typography>
-										<Typography>
-											end: {gene.end}
-
-										</Typography>
-										<Typography>
-											strand: {gene.strand}
-										</Typography>
-										<Typography>
-											{/* aliases: {gene.aliases} */}
-										</Typography>
-										<Button autoFocus variant="contained" color="success" >
-											<div onClick={handleLoadGeneClick}>
-												Load Gene
-											</div>
-										</Button>
-									</Box>
-								</ClickAwayListener>
+		<>
+			<List>
+				{geneList.map((gene, i) => {
+					return (
+						<ListItem key={i} disablePadding>
+							{/* GENE LIST ITEM (rendered as  button) */}
+							<Button onClick={handleGeneListClick(gene)} sx={{ fontSize: "10px", borderRadius: 0, paddingBlock: 0 }} >
+								<Typography>{gene.id}</Typography>
+							</Button>
+							{/* GENE INFO POPUP */}
 
 
-							</Popover >
-							// </Draggable>
+						</ListItem>
+					);
+				})
+				}
+			</List >
+			{open && (
+				<Draggable>
+					<Popover
 
-						)}
+						disableScrollLock={true}
+						open={open}
 
-					</ListItem>
-				);
-			})
+						onClose={handleClose}
+						sx={{
+
+							left: anchorOrigin[0],
+							top: anchorOrigin[1] - 100
+						}}
+					>
+
+						<Box
+							sx={{
+								minWidth: "300px",
+								maxWidth: "500px",
+								minHeight: "150px",
+								maxHeight: "400px",
+								padding: 2
+							}}
+						>
+							<DialogTitle>
+								{activeGene.id}
+								<IconButton
+									aria-label="close"
+									onClick={handleClose}
+									sx={{
+										position: 'absolute',
+										right: 8,
+										top: 8,
+										color: (theme) => theme.palette.grey[500],
+									}}
+								>
+									<CloseIcon />
+								</IconButton>
+							</DialogTitle>
+							<Typography gutterBottom>
+								id: {activeGene.id}
+							</Typography>
+							<Typography>
+								start: {activeGene.start}
+							</Typography>
+							<Typography>
+								end: {activeGene.end}
+
+							</Typography>
+							<Typography>
+								strand: {activeGene.strand}
+							</Typography>
+							<Typography>
+								{/* aliases: {gene.aliases} */}
+							</Typography>
+							<Button autoFocus variant="contained" color="success" >
+								<div onClick={handleLoadGeneClick}>
+									Load Gene
+								</div>
+							</Button>
+						</Box>
+
+
+					</Popover >
+				</Draggable>
+
+			)
 			}
-		</List >
+
+		</>
 
 	);
 };
