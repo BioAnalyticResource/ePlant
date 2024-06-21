@@ -2,13 +2,11 @@
 // IMPORTS
 // -------
 import React, { FC, useEffect, useState } from "react";
-//@ts-ignore
-import OutsideClickHandler from "react-outside-click-handler";
 
+import GeneticElement from "@eplant/GeneticElement";
 import Box from "@mui/material/Box";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Popover from "@mui/material/Popover";
-import Popper from "@mui/material/Popper";
 import Typography from '@mui/material/Typography';
 
 import { CentromereList, ChromosomeItem } from "../types";
@@ -18,7 +16,8 @@ import GeneList from "./GeneList";
 // TYPES
 //----------
 interface ChromosomeProps {
-	chromosome: ChromosomeItem
+	chromosome: ChromosomeItem,
+	geneticElement: GeneticElement
 }
 interface Range {
 	start: number,
@@ -26,14 +25,15 @@ interface Range {
 }
 // COMPONENT
 //----------
-const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
+const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 	// State
 	const [isHovered, setIsHovered] = useState<boolean>(false);
-	const [anchorOrigin, setAnchorOrigin] = useState<Array<number>>([]);
+	const [anchorOrigin, setAnchorOrigin] = useState<number[]>([]);
 	const [geneRange, setGeneRange] = useState<Range>({
 		start: 0,
 		end: 0,
 	});
+	const [geneticElementLocation, setGeneticElementLocation] = useState<number[]>([])
 	// SVG drawing
 	const centromeres: CentromereList = chromosome.centromeres;
 	const hasCentromeres: boolean = centromeres.length > 0;
@@ -56,6 +56,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 		svg.setAttribute("width", `${bbox.x + bbox.width + bbox.x}`);
 		svg.setAttribute("height", `${bbox.y + bbox.height + bbox.y}`);
 	}, []);
+
 
 	//------------------
 	// Helper Functions
@@ -87,6 +88,14 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 		return chromosome.size / (getChromosomeHeight() - 1);
 	};
 	/**
+	 * Gets the number of pixels per base-pair.
+	 *
+	 * @return {Number} Number of pixels per base-pair.
+	 */
+	const getPixelsPerBp = () => {
+		return 1 / getBpPerPixel();
+	};
+	/**
 	 * Converts a pixel value to the equivalent base-pair range.
 	 *
 	 * @param {Number} pixel A screen y-coordinate.
@@ -114,6 +123,30 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 			};
 		}
 	};
+	/**
+	 * Converts a base-pair value to the equivalent pixel value.
+	 *
+	 * @param {Number} bp A base-pair value.
+	 * @return {Number} Equivalent screen y-coordinate.
+	 */
+	const bpToPixel = (bp: number) => {
+		return getChromosomeYCoordinate() + (bp - 1) * getPixelsPerBp() + 1;
+	};
+	/**
+	 * returns gene location on the chromosome given a gene identifier.
+	 *
+	 * @return {Number[]} gene location.
+	 */
+	// const fetchGeneLocation = (id) => {
+	// 	const geneSummary = fetch(`https://bar.utoronto.ca/webservices/bar_araport/` +
+	// 		`gene_summary_by_locus.php?locus=${id}`
+	// 	).then((res) => {
+	// 		console.log(res.data.result[0])
+	// 	})
+	// 	// console.log(geneSummary)
+	// 	const geneLocation = [0, 0]
+	// 	return geneLocation
+	// }
 
 	//--------------
 	//Event Handling
@@ -121,7 +154,6 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 	// Handle click on chromosome
 	const handleClick = (event: MouseEvent) => {
 		setAnchorOrigin([event.clientX, event.clientY]);
-		console.log(event.currentTarget)
 		setGeneRange(pixelToBp(event.clientY));
 	};
 	// Handle popup close
@@ -161,11 +193,6 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 				}}
 			>
 
-
-				{/* <svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" style={{overflow:"visible"}}>
-					<line x1={anchorOrigin[0] + 100} y1={anchorOrigin[1] - 100} x2={anchorOrigin[0]} y2="200" style={{ stroke: "red", strokeWidth: 2 }} />
-					<path stroke="red" d="M 150 300 L 200 250 L 200 350 Z"></path>
-				</svg> */}
 				<Typography variant="caption" sx={{ fontSize: 9 }}>
 					{geneRange.start.toLocaleString()}
 				</Typography>
@@ -179,7 +206,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 							background: theme.palette.background.paper,
 							border: 1,
 							borderRadius: 0,
-							p: 1,
+							p: 0,
 							display: "flex",
 							flexDirection: "column",
 							maxHeight: "100px",
@@ -200,7 +227,16 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 				<Typography variant="caption" sx={{ fontSize: 9 }}>
 					{geneRange.end.toLocaleString()}
 				</Typography>
+
+
 			</Popover >
+			{/* arrow pointing to location on chromosome -- in development */}
+			{/* {open && (
+				<svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", overflow: "visible", left: anchorOrigin[0] - 450, top: anchorOrigin[1] - 350 }}>
+					<path stroke="red" d={`M 150 300 L 200 250 L 200 350 Z`}></path>
+				</svg >
+			)} */}
+			{/* =============== */}
 			{/* CHROMOSOME SVG */}
 			< svg
 				id={chromosome.id + "_svg"}
@@ -275,10 +311,11 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome }) => {
 						onMouseEnter={handleMouseOver}
 						onMouseLeave={handleMouseLeave}
 						cursor={isHovered ? "pointer" : "default"}
-
-						//@ts-ignore
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						//@ts-expect-error
 						onClick={handleClick}
 					/>
+
 				</g>
 			</svg >
 		</>

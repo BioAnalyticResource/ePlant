@@ -7,6 +7,7 @@ import React, { FC, useEffect } from "react";
 // @ts-expect-error
 import { MapInteractionCSS } from "react-map-interaction";
 
+import GeneticElement from "@eplant/GeneticElement.js";
 import Typography from "@mui/material/Typography";
 
 import { ChromosomeList } from "../types.js";
@@ -14,12 +15,13 @@ import { ChromosomeList } from "../types.js";
 import Chromosome from "./Chromosome";
 // TYPES
 interface ChromosomeViewProps {
-  chromosomes: ChromosomeList
+  chromosomes: ChromosomeList,
+  geneticElement: GeneticElement
 }
 //----------
 // COMPONENT
 //----------
-const ChromosomeView: FC<ChromosomeViewProps> = ({ chromosomes }) => {
+const ChromosomeView: FC<ChromosomeViewProps> = ({ chromosomes, geneticElement }) => {
   return (
     <MapInteractionCSS
       showControls
@@ -48,7 +50,7 @@ const ChromosomeView: FC<ChromosomeViewProps> = ({ chromosomes }) => {
           return (
             <div key={i}>
               <Typography noWrap>{chromosome.name}</Typography>
-              <Chromosome chromosome={chromosome} />
+              <Chromosome chromosome={chromosome}  />
               <Typography sx={{ fontSize: 8 }} noWrap>{(chromosome.size * 0.000001).toLocaleString()}Mb</Typography>
 
             </div>

@@ -1,23 +1,37 @@
 import React, { useState } from 'react'
 
-import { View } from '../../View'
+import GeneticElement from '@eplant/GeneticElement';
+import { useSpecies } from '@eplant/state';
+
+import { View, ViewProps } from '../../View'
 
 import ChromosomeView from './Viewer/ChromosomeView';
-import ChromosomeIcon from './icon';
-import { ChromosomeList, ChromosomesResponseObj, ChromosomeViewerData } from './types';
+import { ChromosomeIcon } from './icons';
+import {
+	ChromosomeList,
+	ChromosomesResponseObj,
+	ChromosomeViewerAction,
+	ChromosomeViewerData,
+	ChromosomeViewerState
+} from './types';
 
 
 const ChromosomeViewer: View<ChromosomeViewerData> = {
 
 	name: 'Chromosome Viewer',
 	id: 'chromosome-viewer',
-	async getInitialData() {
+	async getInitialData(
+		gene: GeneticElement | null,
+		loadEvent: (progress: number) => void
+
+	) {
 		let chromosomeViewData: ChromosomeList = [{
 			id: "Chr333",
 			name: "Chr",
 			size: 0,
 			centromeres: []
 		}];
+
 		const species = "Arabidopsis_thaliana"
 		const url = `https://bar.utoronto.ca/eplant/cgi-bin/chromosomeinfo.cgi?species=${species}`
 		chromosomeViewData = await fetch(url).then(async (response) => {
@@ -28,9 +42,15 @@ const ChromosomeViewer: View<ChromosomeViewerData> = {
 
 		return chromosomeViewData
 	},
-	component({ activeData }) {
-		console.log("test chromosome view component -> activeData prop", activeData)
-		return <ChromosomeView chromosomes={activeData}></ChromosomeView>
+	component({
+		activeData,
+		state,
+		dispatch,
+		geneticElement
+	}: ViewProps<ChromosomeViewerData, ChromosomeViewerState, ChromosomeViewerAction>) {
+
+		console.log("test chromosomeView component props ->", activeData, geneticElement)
+		return <ChromosomeView chromosomes={activeData} geneticElement={geneticElement}></ChromosomeView>
 	},
 	icon: () => <ChromosomeIcon />,
 	description: 'Chromosome Viewer.',

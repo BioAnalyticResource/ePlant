@@ -32,5 +32,7 @@ export interface GeneArray extends Array<GeneItem> { }
 
 // Component Props
 export type ChromosomeViewerData = ChromosomeList
+export type ChromosomeViewerState = undefined
+export type ChromosomeViewerAction = undefined
 
 
