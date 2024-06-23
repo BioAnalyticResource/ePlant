@@ -9,7 +9,7 @@ import { EFPData, EFPGroup, EFPTissue } from '../eFP/types'
 
 import MapContainer from './MapContainer'
 import { Coordinates, WorldEFPData, WorldEFPState } from './types'
-const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
+const WorldEFP: View<any, WorldEFPState, any> = {
   name: 'World-EFP',
   id: 'World-EFP',
   getInitialState() {
@@ -42,59 +42,63 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
         throw error
       })
 
-    const positions: Coordinates[] = []
-    const groupData: EFPGroup[] = []
-    markerData.foreach(
-      (group: {
-        id: string
-        source: string
-        position: { lat: string; lng: string }
-        samples: [string, number][]
-        ctrlSamples: [string, number][]
-      }) => {
-        const samples = group.samples.map((v) => v[1])
-        const ctrls = group.ctrlSamples.map((v) => v[1])
-        const sampleTissue = {
-          name: group.id,
-          id: group.id,
-          ...getEFPSampleData(samples),
-        } as EFPTissue
-        const tissueValue = sampleTissue.mean
-        const ctrlValue = _.mean(ctrls)
-        groupData.push({
-          name: group.id,
-          control: Number.isFinite(ctrlValue) ? ctrlValue : undefined,
-          tissues: [sampleTissue],
-          ...getEFPSampleData([tissueValue]),
-        })
+    const positions: Coordinates[] = markerData.map((e) => {
+      return {
+        lat: parseFloat(e.position.lat),
+        lng: parseFloat(e.position.lng),
       }
-    )
+    })
+    console.log(positions)
+    const groupData: EFPGroup[] = []
+    // markerData.foreach(
+    //   (group: {
+    //     id: string
+    //     source: string
+    //     position: { lat: string; lng: string }
+    //     samples: [string, number][]
+    //     ctrlSamples: [string, number][]
+    //   }) => {
+    //     const samples = group.samples.map((v) => v[1])
+    //     const ctrls = group.ctrlSamples.map((v) => v[1])
+    //     const sampleTissue = {
+    //       name: group.id,
+    //       id: group.id,
+    //       ...getEFPSampleData(samples),
+    //     } as EFPTissue
+    //     const tissueValue = sampleTissue.mean
+    //     const ctrlValue = _.mean(ctrls)
+    //     groupData.push({
+    //       name: group.id,
+    //       control: Number.isFinite(ctrlValue) ? ctrlValue : undefined,
+    //       tissues: [sampleTissue],
+    //       ...getEFPSampleData([tissueValue]),
+    //     })
+    //   }
+    // )
 
-    const efpData: EFPData = {
-      groups: groupData,
-      control: _.mean(
-        groupData
-          .map((g) => g.control)
-          .filter((g: unknown) => Number.isFinite(g))
-      ),
-      min: Math.min(...groupData.map((g: { min: any }) => g.min)),
-      max: Math.max(...groupData.map((g: { max: any }) => g.max)),
-      mean: _.mean(groupData.map((g: { mean: any }) => g.mean)),
-      std:
-        _.sum(
-          groupData.map(
-            (g: { std: number; samples: number }) => g.std ** 2 * g.samples
-          )
-        ) / _.sum(groupData.map((g: { samples: any }) => g.samples)),
-      samples: _.sum(groupData.map((g: { samples: any }) => g.samples)),
-      supported:
-        Number.isFinite(_.mean(groupData.map((g: { mean: any }) => g.mean))) &&
-        groupData.length > 0,
-    }
+    // const efpData: EFPData = {
+    //   groups: groupData,
+    //   control: _.mean(
+    //     groupData
+    //       .map((g) => g.control)
+    //       .filter((g: unknown) => Number.isFinite(g))
+    //   ),
+    //   min: Math.min(...groupData.map((g: { min: any }) => g.min)),
+    //   max: Math.max(...groupData.map((g: { max: any }) => g.max)),
+    //   mean: _.mean(groupData.map((g: { mean: any }) => g.mean)),
+    //   std:
+    //     _.sum(
+    //       groupData.map(
+    //         (g: { std: number; samples: number }) => g.std ** 2 * g.samples
+    //       )
+    //     ) / _.sum(groupData.map((g: { samples: any }) => g.samples)),
+    //   samples: _.sum(groupData.map((g: { samples: any }) => g.samples)),
+    //   supported:
+    //     Number.isFinite(_.mean(groupData.map((g: { mean: any }) => g.mean))) &&
+    //     groupData.length > 0,
+    // }
     return {
       positions: positions,
-      efpData: efpData,
-      markerSVGString: 'dummy_string',
     }
   },
   component({
@@ -103,8 +107,8 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
     state,
   }: ViewProps<WorldEFPData, WorldEFPState, any>) {
     if (!geneticElement) return <></>
-    else
-      return <MapContainer activeData={activeData} state={state}></MapContainer>
+    return <MapContainer activeData={activeData} state={state}></MapContainer>
+    // else return <div>hi</div>
   },
   icon: () => <div></div>,
   description: 'Find publications that mention your gene of interest.',

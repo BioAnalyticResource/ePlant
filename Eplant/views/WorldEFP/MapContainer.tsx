@@ -10,15 +10,13 @@ interface MapContainerProps {
   state: WorldEFPState
 }
 const MapContainer = ({ activeData, state }: MapContainerProps) => {
-  const position = { lat: 49, lng: 11 }
-
-  console.log(activeData)
+  const defaultCenter = { lat: 49, lng: 11 }
   return (
     <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}>
       <Map
-        defaultCenter={position}
+        defaultCenter={defaultCenter}
         defaultZoom={10}
-        mapId={import.meta.env.MAP_ID}
+        mapId={import.meta.env.VITE_MAP_ID}
       >
         {activeData.positions.map((e, index) => {
           const colour = index === 0 ? 'red' : 'yellow'
