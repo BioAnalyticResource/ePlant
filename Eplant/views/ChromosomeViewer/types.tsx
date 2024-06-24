@@ -1,3 +1,5 @@
+import { Transform } from "@eplant/util/PanZoom";
+
 // Centromere
 export interface CentromereItem {
 	id: string;
@@ -32,7 +34,12 @@ export interface GeneArray extends Array<GeneItem> { }
 
 // Component Props
 export type ChromosomeViewerData = ChromosomeList
-export type ChromosomeViewerState = undefined
-export type ChromosomeViewerAction = undefined
+export type ChromosomeViewerState = {
+	transform: Transform
+}
+export type ChromosomeViewerAction =
+	| { type: 'reset-transform' }
+	| { type: 'set-transform'; transform: Transform }
+
 
 

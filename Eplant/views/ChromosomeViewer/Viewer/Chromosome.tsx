@@ -209,6 +209,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 							p: 0,
 							display: "flex",
 							flexDirection: "column",
+							width: "200px",
 							maxHeight: "100px",
 							minHeight: "10vh",
 							overflowY: "scroll",

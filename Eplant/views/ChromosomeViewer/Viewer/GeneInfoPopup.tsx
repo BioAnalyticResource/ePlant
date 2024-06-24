@@ -46,7 +46,7 @@ const InfoDialog: FC<InfoDialogProps> = (props) => {
 				open={open}
 				anchorReference="anchorPosition"
 				anchorPosition={{
-					left: props.location[0],
+					left: props.location[0] + 220,
 					top: props.location[1] - 100
 
 				}}
