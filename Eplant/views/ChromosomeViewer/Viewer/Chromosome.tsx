@@ -4,9 +4,12 @@
 import React, { FC, useEffect, useState } from "react";
 
 import GeneticElement from "@eplant/GeneticElement";
+import { Unstable_Popup as Popup } from '@mui/base/Unstable_Popup';
+import ArrowLeft from "@mui/icons-material/ArrowLeft";
 import Box from "@mui/material/Box";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Popover from "@mui/material/Popover";
+import useTheme from "@mui/material/styles/useTheme";
 import Typography from '@mui/material/Typography';
 
 import { CentromereList, ChromosomeItem } from "../types";
@@ -29,11 +32,14 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 	// State
 	const [isHovered, setIsHovered] = useState<boolean>(false);
 	const [anchorOrigin, setAnchorOrigin] = useState<number[]>([]);
+	const [anchorEl, setAnchorEl] = React.useState<null | any>(null);
 	const [geneRange, setGeneRange] = useState<Range>({
 		start: 0,
 		end: 0,
 	});
-	const [geneticElementLocation, setGeneticElementLocation] = useState<number[]>([])
+	// const [activeGene, setActiveGene] = useState<GeneItem | null>(null)
+	// const [activeGeneLocation, setActiveGeneLocation] = useState<number | null>(null)
+	const theme = useTheme()
 	// SVG drawing
 	const centromeres: CentromereList = chromosome.centromeres;
 	const hasCentromeres: boolean = centromeres.length > 0;
@@ -56,8 +62,13 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 		svg.setAttribute("width", `${bbox.x + bbox.width + bbox.x}`);
 		svg.setAttribute("height", `${bbox.y + bbox.height + bbox.y}`);
 	}, []);
-
-
+	/* 	useEffect(() => {
+			if (chromosome.id === activeGene.chromosome) {
+				fetchActiveGene()
+			}
+			console.log(activeGeneLocation)
+		}, [geneticElement])
+	 */
 	//------------------
 	// Helper Functions
 	//------------------
@@ -74,6 +85,12 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 	 */
 	const getChromosomeYCoordinate = (): number => {
 		return getChromosomeSvg().getBoundingClientRect().top;
+	};
+	/**
+	* Gets the Chromosome right x-coordinate.
+	*/
+	const getChromosomeXCoordinate = (): number => {
+		return getChromosomeSvg().getBoundingClientRect().right;
 	};
 	/**
 	 * Gets the height of the Chromosome.
@@ -137,28 +154,43 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 	 *
 	 * @return {Number[]} gene location.
 	 */
-	// const fetchGeneLocation = (id) => {
-	// 	const geneSummary = fetch(`https://bar.utoronto.ca/webservices/bar_araport/` +
-	// 		`gene_summary_by_locus.php?locus=${id}`
-	// 	).then((res) => {
-	// 		console.log(res.data.result[0])
-	// 	})
-	// 	// console.log(geneSummary)
-	// 	const geneLocation = [0, 0]
-	// 	return geneLocation
-	// }
+	/* const fetchActiveGene = async () => {
+		const response: Response = await fetch(
+			`https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=${geneticElement.id}`
+		);
+		// await sleep(1000)
+		if (response.ok) {
+			const gene = await response.json();
+			setActiveGene(gene)
+		}
+	} */
 
 	//--------------
 	//Event Handling
 	//--------------
 	// Handle click on chromosome
-	const handleClick = (event: MouseEvent) => {
+	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+		const virtualEl = {
+			getBoundingClientRect() {
+				return {
+					left: getChromosomeXCoordinate() + 100,
+					top: event.clientY - 55,
+					width: 0,
+					height: 0
+				}
+			}
+		}
+
+		setAnchorEl(anchorEl ? null : virtualEl);
+
+
 		setAnchorOrigin([event.clientX, event.clientY]);
 		setGeneRange(pixelToBp(event.clientY));
 	};
 	// Handle popup close
 	const handleClose = () => {
 		setAnchorOrigin([]);
+		setAnchorEl(null);
 	};
 	// Handle mouse over
 	const handleMouseOver = () => {
@@ -171,66 +203,53 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 
 	// Popover prop variables
 	const open: boolean = anchorOrigin.length === 0 ? false : true;
+	const openPopup = Boolean(anchorEl);
 
 	return (
 		<>
 			{/* GENETIC ELEMENT LIST POPUP */}
+			<Popup open={openPopup} anchor={anchorEl} style={{
+				display: "flex",
+				flexDirection: "row",
+				alignItems: "center"
+			}}>
+				<ArrowLeft fontSize="medium" htmlColor={theme.palette.primary.main} />
+				<div>
+					<Typography variant="caption" sx={{ fontSize: 9 }}>
+						{geneRange.start.toLocaleString()}
+					</Typography>
 
 
-			<Popover
-
-				open={open}
-				// onClose={handleClose}
-				anchorReference="anchorPosition"
-				anchorPosition={{
-					left: anchorOrigin[0] + 20,
-					top: anchorOrigin[1] - 60,
-				}}
-				sx={{
-					'& .MuiPopover-paper': {
-						background: "transparent"
-					}
-				}}
-			>
-
-				<Typography variant="caption" sx={{ fontSize: 9 }}>
-					{geneRange.start.toLocaleString()}
-				</Typography>
-
-				<ClickAwayListener
-					onClickAway={handleClose}
-				>
-
-					<Box
-						sx={(theme) => ({
+					<ClickAwayListener
+						onClickAway={handleClose}
+					>
+						<Box sx={{
 							background: theme.palette.background.paper,
-							border: 1,
-							borderRadius: 0,
+							border: `1.5px solid ${theme.palette.primary.dark}`,
 							p: 0,
-							display: "flex",
-							flexDirection: "column",
-							width: "200px",
-							maxHeight: "100px",
+							width: "180px",
+							maxHeight: "15vh",
 							minHeight: "10vh",
 							overflowY: "scroll",
-						})}
-					>
-						{open && (
-							<GeneList
-								id={chromosome.id}
-								start={geneRange.start}
-								end={geneRange.end}
-								anchorOrigin={anchorOrigin}
-							/>
-						)}
-					</Box>
-				</ClickAwayListener>
-				<Typography variant="caption" sx={{ fontSize: 9 }}>
-					{geneRange.end.toLocaleString()}
-				</Typography>
+							overflowX: "clip"
+						}}>
+							{open && (
+								<GeneList
+									id={chromosome.id}
+									start={geneRange.start}
+									end={geneRange.end}
+									anchorOrigin={anchorOrigin}
+								/>
+							)}
+						</Box>
+					</ClickAwayListener>
+					<Typography variant="caption" sx={{ fontSize: 9 }}>
+						{geneRange.end.toLocaleString()}
+					</Typography>
+				</div>
 
+			</Popup>
 
-			</Popover >
 			{/* arrow pointing to location on chromosome -- in development */}
 			{/* {open && (
 				<svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", overflow: "visible", left: anchorOrigin[0] - 450, top: anchorOrigin[1] - 350 }}>

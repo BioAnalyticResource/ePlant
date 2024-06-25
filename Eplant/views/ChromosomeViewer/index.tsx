@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+//@ts-ignore
+import { MapInteractionCSS } from "react-map-interaction";
 
 import GeneticElement from '@eplant/GeneticElement';
 import { useSpecies } from '@eplant/state';
-import PanZoom from '@eplant/util/PanZoom';
+// import PanZoom from '@eplant/util/PanZoom';
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from '@mui/material/Typography';
 
@@ -15,7 +17,8 @@ import {
 	ChromosomesResponseObj,
 	ChromosomeViewerAction,
 	ChromosomeViewerData,
-	ChromosomeViewerState
+	ChromosomeViewerState,
+	Transform
 } from './types';
 
 
@@ -25,12 +28,12 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 	id: 'chromosome-viewer',
 	getInitialState(): ChromosomeViewerState {
 		return {
-			transform: {
-				offset: {
+			value: {
+				scale: 0.8,
+				translation: {
 					x: 0,
 					y: 0,
-				},
-				zoom: 0.4,
+				}
 			},
 		}
 	},
@@ -39,13 +42,19 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 		loadEvent: (progress: number) => void
 	) {
 		let chromosomeViewData: ChromosomeList = [{
-			id: "Chr333",
-			name: "Chr",
-			size: 0,
-			centromeres: []
+			id: "Chr1",
+			name: "Chr 1",
+			size: 30427671,
+			centromeres: [
+				{
+					id: "CEN1",
+					start: 15086046,
+					end: 15087045
+				}
+			]
 		}];
 
-		const species = "Populus_trichocarpa"
+		const species = "Arabidopsis_thaliana"
 		const url = `https://bar.utoronto.ca/eplant/cgi-bin/chromosomeinfo.cgi?species=${species}`
 		chromosomeViewData = await fetch(url).then(async (response) => {
 			console.log(response)
@@ -55,9 +64,9 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 
 		return {
 			viewData: chromosomeViewData,
-			transform: {
-				offset: { x: 0, y: 0 },
-				zoom: 1,
+			value: {
+				scale: 0.8,
+				translation: { x: 0, y: 0 }
 			},
 		}
 	},
@@ -68,13 +77,13 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 		geneticElement
 	}: ViewProps<ChromosomeViewerData, ChromosomeViewerState, ChromosomeViewerAction>) {
 		const theme = useTheme()
-
+		
 		console.log("test chromosomeView component props ->", activeData, geneticElement)
 		return (
 			<>
 				<Typography variant="h6" sx={{}}>Chromosome Viewer</Typography>
 
-				<PanZoom
+				{/* <PanZoom
 					sx={(theme) => ({
 						position: 'absolute',
 						top: theme.spacing(0),
@@ -90,9 +99,31 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 							transform,
 						})
 					}}
+				> */}
+				<MapInteractionCSS
+					showControls
+					defaultValue={{
+						scale: 0.8,
+						translation: { x: 100, y: 0 },
+					}}
+					value={state.value}
+					onChange={(value: Transform) => {
+						dispatch({
+							type: 'set-transform',
+							value,
+						})
+					}}
+					minScale={0.25}
+					maxScale={100}
+					translationBounds={{
+						xMax: 400,
+						yMax: 0,
+					}}
 				>
-					<ChromosomeView chromosomes={activeData} geneticElement={geneticElement}></ChromosomeView>
-				</PanZoom>
+
+					<ChromosomeView chromosomes={activeData} geneticElement={geneticElement} scale={state.value.scale}></ChromosomeView>
+				</MapInteractionCSS>
+				{/* </PanZoom> */}
 			</>
 		)
 	},
@@ -108,14 +139,14 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 			case 'set-transform':
 				return {
 					...state,
-					transform: action.transform,
+					value: action.value,
 				}
 			case 'reset-transform':
 				return {
 					...state,
-					transform: {
-						offset: { x: 0, y: 0 },
-						zoom: 1,
+					value: {
+						scale: 0.8,
+						translation: { x: 100, y: 0 },
 					},
 				}
 			default:

@@ -13,12 +13,13 @@ import Chromosome from "./Chromosome.js";
 // TYPES
 interface ChromosomeViewProps {
   chromosomes: ChromosomeList,
-  geneticElement: GeneticElement
+  geneticElement: GeneticElement,
+  scale: number
 }
 //----------
 // COMPONENT
 //----------
-const Viewer: FC<ChromosomeViewProps> = ({ chromosomes, geneticElement }) => {
+const Viewer: FC<ChromosomeViewProps> = ({ chromosomes, geneticElement, scale }) => {
   return (
 
     <div style={{
@@ -33,7 +34,7 @@ const Viewer: FC<ChromosomeViewProps> = ({ chromosomes, geneticElement }) => {
         return (
           <div key={i}>
             <Typography noWrap>{chromosome.name}</Typography>
-            <Chromosome chromosome={chromosome} geneticElement={undefined} />
+            <Chromosome chromosome={chromosome} geneticElement={geneticElement} />
             <Typography sx={{ fontSize: 8 }} noWrap>{(chromosome.size * 0.000001).toLocaleString()}Mb</Typography>
 
           </div>

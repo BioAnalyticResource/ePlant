@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Popover from "@mui/material/Popover";
+import useTheme from "@mui/material/styles/useTheme";
 import Typography from '@mui/material/Typography';
 
 import { GeneItem } from "../types";
@@ -21,6 +22,7 @@ interface InfoDialogProps {
 const InfoDialog: FC<InfoDialogProps> = (props) => {
 	const [gene, setGene] = useState<GeneItem>(props.gene)
 	const [open, setOpen] = useState<boolean>(props.open)
+	const theme = useTheme()
 	const setActiveGeneId = useSetActiveGeneId()
 
 
@@ -72,7 +74,7 @@ const InfoDialog: FC<InfoDialogProps> = (props) => {
 								position: 'absolute',
 								right: 8,
 								top: 8,
-								color: (theme) => theme.palette.grey[500],
+								color: theme.palette.grey[500],
 							}}
 						>
 							<CloseIcon />
