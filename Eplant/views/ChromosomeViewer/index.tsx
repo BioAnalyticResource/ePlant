@@ -77,7 +77,89 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 		geneticElement
 	}: ViewProps<ChromosomeViewerData, ChromosomeViewerState, ChromosomeViewerAction>) {
 		const theme = useTheme()
-		
+		const chromosomes = [{
+			id: "Chr1",
+			name: "Chr 1",
+			size: 30427671,
+			centromeres: [
+				{
+					id: "CEN1",
+					start: 15086046,
+					end: 15087045
+				}
+			]
+		},
+		{
+			id: "Chr2",
+			name: "Chr 2",
+			size: 19698289,
+			centromeres: [
+				{
+					id: "CEN2",
+					start: 3607930,
+					end: 3608929
+				}
+			]
+		},
+		{
+			id: "Chr3",
+			name: "Chr 3",
+			size: 23459830,
+			centromeres: [
+				{
+					id: "CEN3_1",
+					start: 13587787,
+					end: 13588786
+				},
+				{
+					id: "CEN3_2",
+					start: 13799418,
+					end: 13800417
+				},
+				{
+					id: "CEN3_3",
+					start: 14208953,
+					end: 14209952
+				}
+			]
+		},
+		{
+			id: "Chr4",
+			name: "Chr 4",
+			size: 18585056,
+			centromeres: [
+				{
+					id: "CEN4",
+					start: 3956022,
+					end: 3957021
+				}
+			]
+		},
+		{
+			id: "Chr5",
+			name: "Chr 5",
+			size: 26975502,
+			centromeres: [
+				{
+					id: "CEN5",
+					start: 11725025,
+					end: 11726024
+				}
+			]
+		},
+		{
+			id: "ChrC",
+			name: "Chr C",
+			size: 154478,
+			centromeres: []
+		},
+		{
+			id: "ChrM",
+			name: "Chr M",
+			size: 366924,
+			centromeres: []
+		}
+		];
 		console.log("test chromosomeView component props ->", activeData, geneticElement)
 		return (
 			<>
@@ -121,7 +203,7 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 					}}
 				>
 
-					<ChromosomeView chromosomes={activeData} geneticElement={geneticElement} scale={state.value.scale}></ChromosomeView>
+					<ChromosomeView chromosomes={chromosomes} geneticElement={geneticElement} scale={state.value.scale}></ChromosomeView>
 				</MapInteractionCSS>
 				{/* </PanZoom> */}
 			</>
