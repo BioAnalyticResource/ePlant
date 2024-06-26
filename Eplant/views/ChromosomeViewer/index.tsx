@@ -203,7 +203,7 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 					}}
 				>
 
-					<ChromosomeView chromosomes={chromosomes} geneticElement={geneticElement} scale={state.value.scale}></ChromosomeView>
+					<ChromosomeView chromosomes={activeData.viewData} geneticElement={geneticElement} scale={state.value.scale}></ChromosomeView>
 				</MapInteractionCSS>
 				{/* </PanZoom> */}
 			</>

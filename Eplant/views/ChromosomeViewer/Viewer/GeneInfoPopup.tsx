@@ -27,9 +27,11 @@ const InfoDialog: FC<InfoDialogProps> = (props) => {
 
 
 	useEffect(() => {
-		setOpen(props.open)
 		setGene(props.gene)
-	}, [props])
+	}, [props.gene])
+	useEffect(() => {
+		setOpen(props.open)
+	}, [props.open])
 	// EVENT HANDLERS
 	const handleLoadGeneClick = (event: React.MouseEvent<HTMLElement>) => {
 		console.log(gene.id)

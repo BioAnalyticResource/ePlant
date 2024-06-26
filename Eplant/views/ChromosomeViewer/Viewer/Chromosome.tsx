@@ -37,8 +37,8 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 		start: 0,
 		end: 0,
 	});
-	// const [activeGene, setActiveGene] = useState<GeneItem | null>(null)
-	// const [activeGeneLocation, setActiveGeneLocation] = useState<number | null>(null)
+	const [activeGene, setActiveGene] = useState<GeneItem | null>(null)
+	const [activeGeneLocation, setActiveGeneLocation] = useState<number | null>(null)
 	const theme = useTheme()
 	// SVG drawing
 	const centromeres: CentromereList = chromosome.centromeres;
@@ -62,13 +62,27 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 		svg.setAttribute("width", `${bbox.x + bbox.width + bbox.x}`);
 		svg.setAttribute("height", `${bbox.y + bbox.height + bbox.y}`);
 	}, []);
-	/* 	useEffect(() => {
-			if (chromosome.id === activeGene.chromosome) {
-				fetchActiveGene()
-			}
-			console.log(activeGeneLocation)
-		}, [geneticElement])
-	 */
+	useEffect(() => {
+		// setActiveGene(
+		// 	{
+		// 		"id": "AT1G01030",
+		// 		"chromosome": "Chr1",
+		// 		"start": 11649,
+		// 		"end": 13714,
+		// 		"strand": "-",
+		// 		"aliases": [
+		// 			"NGA3"
+		// 		],
+		// 		"annotation": "AP2/B3-like transcriptional factor family protein"
+		// 	}
+		// )
+		// if (chromosome.id === activeGene.chromosome) {
+		// 	const genePixelLoc: number = bpToPixel((activeGene.start + activeGene.end) / 2)
+		// 	setActiveGeneLocation(genePixelLoc)
+		// }
+		// console.log(activeGeneLocation)
+	}, [geneticElement])
+
 	//------------------
 	// Helper Functions
 	//------------------
@@ -170,16 +184,20 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 	//--------------
 	// Handle click on chromosome
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+		// define virtual element to attach geneList popup to
 		const virtualEl = {
 			getBoundingClientRect() {
 				return {
-					left: getChromosomeXCoordinate() + 100,
-					top: event.clientY - 55,
+					left: getChromosomeXCoordinate() + 100, // distanceX from the right of the chromosome (TODO: determine what side of the screen click is on and accordingly place popup on left or right of chromosome)
+					top: event.clientY - 60, // distanceY from click(has weird functionality- need to fix)
+
 					width: 0,
-					height: 0
+					height: 0,
+
 				}
 			}
 		}
+		console.log(virtualEl.getBoundingClientRect())
 
 		setAnchorEl(anchorEl ? null : virtualEl);
 
@@ -213,7 +231,9 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 				flexDirection: "row",
 				alignItems: "center"
 			}}>
-				<ArrowLeft fontSize="medium" htmlColor={theme.palette.primary.main} />
+				<ArrowLeft fontSize="medium" htmlColor={theme.palette.primary.main} sx={{
+					position: "relative"
+				}} />
 				<div>
 					<Typography variant="caption" sx={{ fontSize: 9 }}>
 						{geneRange.start.toLocaleString()}
@@ -228,8 +248,8 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 							border: `1.5px solid ${theme.palette.primary.dark}`,
 							p: 0,
 							width: "180px",
-							maxHeight: "15vh",
-							minHeight: "10vh",
+							maxHeight: "100px",
+							minHeight: 30,
 							overflowY: "scroll",
 							overflowX: "clip"
 						}}>
