@@ -14,9 +14,10 @@ import Typography from '@mui/material/Typography';
 import { GeneItem } from "../types";
 
 interface InfoDialogProps {
-	gene: GeneItem | null,
+	gene: GeneItem,
 	open: boolean,
-	location: number[]
+	location: number[],
+	onClose: () => void
 }
 
 const InfoDialog: FC<InfoDialogProps> = (props) => {
@@ -54,7 +55,10 @@ const InfoDialog: FC<InfoDialogProps> = (props) => {
 					top: props.location[1] - 100
 
 				}}
-				onClose={handleClose}
+				onClose={() => {
+					handleClose
+					props.onClose
+				}}
 
 			>
 

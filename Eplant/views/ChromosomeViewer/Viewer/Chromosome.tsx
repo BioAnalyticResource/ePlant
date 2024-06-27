@@ -12,7 +12,7 @@ import Popover from "@mui/material/Popover";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from '@mui/material/Typography';
 
-import { CentromereList, ChromosomeItem } from "../types";
+import { CentromereList, ChromosomeItem, GeneItem } from "../types";
 
 import GeneList from "./GeneList";
 //----------
@@ -20,7 +20,7 @@ import GeneList from "./GeneList";
 //----------
 interface ChromosomeProps {
 	chromosome: ChromosomeItem,
-	geneticElement: GeneticElement
+	activeGene: GeneItem | null
 }
 interface Range {
 	start: number,
@@ -28,7 +28,7 @@ interface Range {
 }
 // COMPONENT
 //----------
-const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
+const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 	// State
 	const [isHovered, setIsHovered] = useState<boolean>(false);
 	const [anchorOrigin, setAnchorOrigin] = useState<number[]>([]);
@@ -37,7 +37,6 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 		start: 0,
 		end: 0,
 	});
-	const [activeGene, setActiveGene] = useState<GeneItem | null>(null)
 	const [activeGeneLocation, setActiveGeneLocation] = useState<number | null>(null)
 	const theme = useTheme()
 	// SVG drawing
@@ -62,27 +61,15 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 		svg.setAttribute("width", `${bbox.x + bbox.width + bbox.x}`);
 		svg.setAttribute("height", `${bbox.y + bbox.height + bbox.y}`);
 	}, []);
-	useEffect(() => {
-		// setActiveGene(
-		// 	{
-		// 		"id": "AT1G01030",
-		// 		"chromosome": "Chr1",
-		// 		"start": 11649,
-		// 		"end": 13714,
-		// 		"strand": "-",
-		// 		"aliases": [
-		// 			"NGA3"
-		// 		],
-		// 		"annotation": "AP2/B3-like transcriptional factor family protein"
-		// 	}
-		// )
-		// if (chromosome.id === activeGene.chromosome) {
-		// 	const genePixelLoc: number = bpToPixel((activeGene.start + activeGene.end) / 2)
-		// 	setActiveGeneLocation(genePixelLoc)
-		// }
-		// console.log(activeGeneLocation)
-	}, [geneticElement])
 
+	useEffect(() => {
+
+		if (activeGene != null && chromosome.id === activeGene.chromosome) {
+			const genePixelLoc: number = bpToPixel((activeGene.start + activeGene.end) / 2)
+			setActiveGeneLocation(genePixelLoc)
+			console.log(activeGeneLocation)
+		}
+	}, [activeGene])
 	//------------------
 	// Helper Functions
 	//------------------
@@ -163,21 +150,6 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, geneticElement }) => {
 	const bpToPixel = (bp: number) => {
 		return getChromosomeYCoordinate() + (bp - 1) * getPixelsPerBp() + 1;
 	};
-	/**
-	 * returns gene location on the chromosome given a gene identifier.
-	 *
-	 * @return {Number[]} gene location.
-	 */
-	/* const fetchActiveGene = async () => {
-		const response: Response = await fetch(
-			`https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=${geneticElement.id}`
-		);
-		// await sleep(1000)
-		if (response.ok) {
-			const gene = await response.json();
-			setActiveGene(gene)
-		}
-	} */
 
 	//--------------
 	//Event Handling

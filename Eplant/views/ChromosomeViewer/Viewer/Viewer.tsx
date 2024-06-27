@@ -4,26 +4,25 @@
 
 import React, { FC, useEffect } from "react";
 
-import GeneticElement from "@eplant/GeneticElement.js";
 import Typography from "@mui/material/Typography";
 
-import { ChromosomeList } from "../types.js";
+import { ChromosomeList, GeneItem } from "../types.js";
 
 import Chromosome from "./Chromosome.js";
 // TYPES
 interface ChromosomeViewProps {
   chromosomes: ChromosomeList,
-  geneticElement: GeneticElement,
+  activeGene: GeneItem | null,
   scale: number
 }
 //----------
 // COMPONENT
 //----------
-const Viewer: FC<ChromosomeViewProps> = ({ chromosomes, geneticElement, scale }) => {
+const Viewer: FC<ChromosomeViewProps> = ({ chromosomes, activeGene, scale }) => {
   return (
 
     <div style={{
-      height: "100vh",
+      height: "0px",
       display: "flex",
       flexDirection: "row",
       gap: chromosomes.length * 10,
@@ -34,7 +33,7 @@ const Viewer: FC<ChromosomeViewProps> = ({ chromosomes, geneticElement, scale })
         return (
           <div key={i}>
             <Typography noWrap>{chromosome.name}</Typography>
-            <Chromosome chromosome={chromosome} geneticElement={geneticElement} />
+            <Chromosome chromosome={chromosome} activeGene={activeGene} />
             <Typography sx={{ fontSize: 8 }} noWrap>{(chromosome.size * 0.000001).toLocaleString()}Mb</Typography>
 
           </div>

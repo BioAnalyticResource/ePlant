@@ -13,7 +13,6 @@ import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import Storage from '@eplant/util/Storage'
-import { GeneItem } from '@eplant/views/ChromosomeViewer/types'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)

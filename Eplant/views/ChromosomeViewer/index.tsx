@@ -18,8 +18,10 @@ import {
 	ChromosomeViewerAction,
 	ChromosomeViewerData,
 	ChromosomeViewerState,
+	GeneItem,
 	Transform
 } from './types';
+import { fetchGeneItemFromGeneticElement } from './utilities';
 
 
 const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, ChromosomeViewerAction> = {
@@ -76,6 +78,7 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 		dispatch,
 		geneticElement
 	}: ViewProps<ChromosomeViewerData, ChromosomeViewerState, ChromosomeViewerAction>) {
+		const [activeGene, setActiveGene] = useState<GeneItem | null>(null)
 		const theme = useTheme()
 		const chromosomes = [{
 			id: "Chr1",
@@ -160,28 +163,23 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 			centromeres: []
 		}
 		];
-		console.log("test chromosomeView component props ->", activeData, geneticElement)
+		// console.log("test chromosomeView component props ->", activeData, geneticElement)
+
+		// React.useEffect(() => {
+		// 	if (geneticElement != null) {
+		// 		const geneItem = fetchGeneItemFromGeneticElement(geneticElement)
+		// 		console.log(geneItem, "geneitem")
+		// 		setActiveGene(geneItem)
+		// 	}
+
+		// }, [geneticElement])
+		console.log(activeGene)
+
 		return (
 			<>
 				<Typography variant="h6" sx={{}}>Chromosome Viewer</Typography>
 
-				{/* <PanZoom
-					sx={(theme) => ({
-						position: 'absolute',
-						top: theme.spacing(0),
-						left: theme.spacing(0),
-						width: '100%',
-						height: '100%',
-						zIndex: 0,
-					})}
-					transform={state.transform}
-					onTransformChange={(transform) => {
-						dispatch({
-							type: 'set-transform',
-							transform,
-						})
-					}}
-				> */}
+
 				<MapInteractionCSS
 					showControls
 					defaultValue={{
@@ -195,6 +193,7 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 							value,
 						})
 					}}
+
 					minScale={0.25}
 					maxScale={100}
 					translationBounds={{
@@ -203,9 +202,8 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 					}}
 				>
 
-					<ChromosomeView chromosomes={activeData.viewData} geneticElement={geneticElement} scale={state.value.scale}></ChromosomeView>
+					<ChromosomeView chromosomes={activeData.viewData} activeGene={activeGene} scale={state.value.scale}></ChromosomeView>
 				</MapInteractionCSS>
-				{/* </PanZoom> */}
 			</>
 		)
 	},

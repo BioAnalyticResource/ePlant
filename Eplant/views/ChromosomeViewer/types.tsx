@@ -20,7 +20,6 @@ export interface ChromosomesResponseObj {
 }
 
 // Genes
-
 export interface GeneItem {
 	id: string,
 	chromosome?: string,

@@ -2,26 +2,35 @@
 // IMPORTS
 // -------
 import React, { FC, useState } from "react";
+import Draggable from "react-draggable";
 
+import GeneticElement from "@eplant/GeneticElement";
+import arabidopsis from "@eplant/Species/arabidopsis";
+import {
+	useActiveGeneId,
+	useCollections,
+	useGeneticElements,
+	useSetActiveGeneId,
+	useSetCollections,
+	useSetGeneticElements
+} from "@eplant/state"
 import CloseIcon from '@mui/icons-material/Close';
 import LaunchIcon from '@mui/icons-material/Launch';
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from "@mui/material/ListItemText";
+import Popover from "@mui/material/Popover";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography";
 
 import { GeneIcon } from "../icons";
 import { GeneArray, GeneItem } from "../types";
-
-import GeneInfoPopup from "./GeneInfoPopup";
-import SnackbarContent from "@mui/material/SnackbarContent";
-import { Transition } from "react-transition-group";
-import Popper from "@mui/material/Popper";
 
 // TYPES
 interface GeneListProps {
@@ -49,6 +58,9 @@ const GeneList: FC<GeneListProps> = ({
 	anchorOrigin
 }) => {
 
+
+	const [loading, setLoading] = useState<boolean>(true);
+	// gene list
 	const [geneList, setGeneList] = useState<GeneArray>([{
 		id: "",
 		start: 0,
@@ -57,27 +69,17 @@ const GeneList: FC<GeneListProps> = ({
 		aliases: [],
 		annotation: ""
 	}]);
-	const [loading, setLoading] = useState<boolean>(true);
-	// gene list
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-	const [activeGene, setActiveGene] = useState<GeneItem | null>(null)
+	const [selectedGene, setSelectedGene] = useState<GeneItem | null>(null)
 	// gene info popup
 	const [open, setOpen] = useState(false);
-	// snackbar
-	const [snackbarOpen, setSnackbarOpen] = useState(false);
-	const [exited, setExited] = useState(true);
-	const nodeRef = React.useRef(null);
-	const snackbarVirtualEl = {
-		getBoundingClientRect: () => {
-			return {
-				bottom: 1,
-				right: 1,
-				width: 0,
-				height: 0,
 
-			}
-		}
-	}
+	// Other/Global State
+	const geneticElements = useGeneticElements()
+	const setGeneticElements = useSetGeneticElements()
+	const setActiveGeneId = useSetActiveGeneId()
+	const collections = useCollections()
+	const setCollections = useSetCollections()
 	const theme = useTheme()
 
 
@@ -98,83 +100,62 @@ const GeneList: FC<GeneListProps> = ({
 			}
 
 		};
-		console.log(loading)
 		fetchGeneData();
 		setLoading(false)
 	}, []);
 	// EVENT HANDLERS
-	const handleGeneListClick = (gene: GeneItem, index: number) => (event: React.MouseEvent<HTMLElement>) => {
-		if (index === selectedIndex) {
-			setOpen(true)
-			setSnackbarOpen(false)
-		} else {
-			setSnackbarOpen(true)
-			setOpen(false)
-		}
-		setActiveGene(gene)
+	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+		setOpen(true)
+	}
+	const handleGeneSelect = (gene: GeneItem, index: number) => (event: React.MouseEvent<HTMLElement>) => {
 		setSelectedIndex(index)
-		console.log("Clicked Gene: ", gene, open)
+		setSelectedGene(gene)
+		console.log("Clicked Gene: ", gene)
 	}
-	const handleSnackbarClick = () => {
-		setSnackbarOpen(true)
+	const handleClose = () => {
+		setOpen(false)
 	}
-	const handleSnackbarClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-		if (reason === 'clickaway') {
-			return;
+	const handleLoadGeneClick = (event: React.MouseEvent<HTMLElement>) => {
+		if (selectedGene != null) {
+			const gene = new GeneticElement(
+				selectedGene.id,
+				selectedGene.annotation,
+				arabidopsis,
+				selectedGene.aliases
+			)
+			geneticElements[0].push(gene)
+			setGeneticElements(geneticElements[0])
+			setActiveGeneId(gene.id)
+			console.log(collections[0])
+			console.log("new geneticelements list: ", geneticElements[0], "new gene: ", gene)
+
 		}
-
-		setSnackbarOpen(false);
-	};
-
-
-	const handleOnEnter = () => {
-		setExited(false);
-	};
-
-	const handleOnExited = () => {
-		setExited(true);
-	};
-
-
-	const snackbarAction = (
-		<React.Fragment>
-			<Button color="success" size="small" onClick={handleSnackbarClose}>
-				Load Gene
-			</Button>
-			<IconButton
-				size="small"
-				aria-label="close"
-				color="inherit"
-				onClick={handleSnackbarClose}
-			>
-				<CloseIcon fontSize="small" />
-			</IconButton>
-		</React.Fragment>
-	);
-
+		// setSelectedGeneId(gene.id)
+	}
 
 
 
 
 	return (
 		<>
+			{/* GENE LIST */}
 			{loading
 				&& <p>something is loading</p>
-				|| <List sx={{ padding: 0 }}>
+				|| <List sx={{ padding: 0 }} onClick={handleClick}>
 					{geneList.map((gene, i) => {
 						return (
 							<ListItem key={i} disablePadding sx={{
 								height: 23
 							}} secondaryAction={
-								<IconButton edge="end" aria-label="load-gene" title="Load Gene">
+								<IconButton edge="end" aria-label="load-gene" title="Load Gene" onClick={handleLoadGeneClick}>
 									<LaunchIcon sx={{ fontSize: 8 }} />
 								</IconButton>
 							}
 							>
 								{/* GENE LIST ITEM (rendered as  button) */}
 
-								<ListItemButton selected={selectedIndex === i}
-									onClick={handleGeneListClick(gene, i)}
+								<ListItemButton selected={i === selectedIndex}
+									onClick={handleGeneSelect(gene, i)}
 									// title={gene.aliases.length != 0 ? `Aliases: ${gene.aliases}` : gene.id}
 									sx={{ borderRadius: 0, padding: 0 }} >
 									<ListItemIcon sx={{
@@ -188,10 +169,11 @@ const GeneList: FC<GeneListProps> = ({
 											textOverflow: "ellipsis",
 											textWrap: "nowrap"
 										}
-									}}>{gene.id}<span style={{ color: theme.palette.secondary.main }}>{gene.aliases.length > 0 ? `/${gene.aliases[0]}` : ""}</span>
+									}}>
+										<span className="GeneID">{gene.id}</span>
+										<span style={{ color: theme.palette.secondary.main }}>{gene.aliases.length > 0 ? `/${gene.aliases[0]}` : ""}</span>
 									</ListItemText >
 								</ListItemButton>
-								{/* GENE INFO POPUP */}
 
 
 							</ListItem>
@@ -200,32 +182,75 @@ const GeneList: FC<GeneListProps> = ({
 					}
 				</List >
 			}
-			{open && (
-				<GeneInfoPopup gene={activeGene} open={open} location={anchorOrigin} />
+			{/* GENE INFO POPUP */}
+			{open && selectedGene != null && (
+				<Draggable>
+					<Popover
+
+						disableScrollLock={true}
+						open={open}
+						anchorReference="anchorPosition"
+						anchorPosition={{
+							left: anchorOrigin[0] + 220,
+							top: anchorOrigin[1] - 100
+
+						}}
+						onClose={handleClose}
+
+					>
+
+						<Box
+							sx={{
+								minWidth: "300px",
+								maxWidth: "500px",
+								minHeight: "150px",
+								maxHeight: "400px",
+								padding: 2
+							}}
+						>
+							<DialogTitle>
+								{selectedGene.id}
+								<IconButton
+									aria-label="close"
+									onClick={handleClose}
+									sx={{
+										position: 'absolute',
+										right: 8,
+										top: 8,
+										color: theme.palette.grey[500],
+									}}
+								>
+									<CloseIcon />
+								</IconButton>
+							</DialogTitle>
+							<Typography gutterBottom>
+								id: {selectedGene.id}
+							</Typography>
+							<Typography>
+								start: {selectedGene.start}
+							</Typography>
+							<Typography>
+								end: {selectedGene.end}
+
+							</Typography>
+							<Typography>
+								strand: {selectedGene.strand}
+							</Typography>
+							<Typography>
+								{/* aliases: {gene.aliases} */}
+							</Typography>
+							<Button autoFocus variant="contained" color="success" >
+								<div onClick={handleLoadGeneClick}>
+									Load Gene
+								</div>
+							</Button>
+						</Box>
+
+
+					</Popover >
+				</Draggable >
 			)
 			}
-			<Popper
-				open={snackbarOpen}
-				placement="bottom"
-				onClose={handleSnackbarClose}
-				message={`Gene selected. Click gene again to open gene info`}
-				sx={{
-					zIndex: 5500,
-					display: "flex",
-					height: "100px",
-					"& .MuiSnackbarContent-root": {
-						background: theme.palette.background.paperOverlay,
-						color: theme.palette.text.primary
-					}
-				}}
-			>
-
-				<SnackbarContent
-					message="Gene selected. Click gene again to view info."
-					action={snackbarAction}
-				/>
-
-			</Popper >
 
 		</>
 
