@@ -183,7 +183,7 @@ const GeneList: FC<GeneListProps> = ({
 				</List >
 			}
 			{/* GENE INFO POPUP */}
-			{open && selectedGene != null && (
+			{open && (
 				<Draggable>
 					<Popover
 
@@ -209,7 +209,7 @@ const GeneList: FC<GeneListProps> = ({
 							}}
 						>
 							<DialogTitle>
-								{selectedGene.id}
+								{selectedGene?.id}
 								<IconButton
 									aria-label="close"
 									onClick={handleClose}
@@ -224,17 +224,17 @@ const GeneList: FC<GeneListProps> = ({
 								</IconButton>
 							</DialogTitle>
 							<Typography gutterBottom>
-								id: {selectedGene.id}
+								id: {selectedGene?.id}
 							</Typography>
 							<Typography>
-								start: {selectedGene.start}
+								start: {selectedGene?.start}
 							</Typography>
 							<Typography>
-								end: {selectedGene.end}
+								end: {selectedGene?.end}
 
 							</Typography>
 							<Typography>
-								strand: {selectedGene.strand}
+								strand: {selectedGene?.strand}
 							</Typography>
 							<Typography>
 								{/* aliases: {gene.aliases} */}

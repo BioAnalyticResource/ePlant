@@ -2,19 +2,20 @@
 // IMPORTS
 // -------
 import React, { FC, useEffect, useState } from "react";
+import { createPortal } from 'react-dom';
 
-import GeneticElement from "@eplant/GeneticElement";
 import { Unstable_Popup as Popup } from '@mui/base/Unstable_Popup';
 import ArrowLeft from "@mui/icons-material/ArrowLeft";
 import Box from "@mui/material/Box";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
-import Popover from "@mui/material/Popover";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from '@mui/material/Typography';
+import { Instance } from '@popperjs/core';
 
 import { CentromereList, ChromosomeItem, GeneItem } from "../types";
 
 import GeneList from "./GeneList";
+import ActiveGeneArrow from "./ActiveGeneArrow";
 //----------
 // TYPES
 //----------
@@ -22,6 +23,7 @@ interface ChromosomeProps {
 	chromosome: ChromosomeItem,
 	activeGene: GeneItem | null
 }
+
 interface Range {
 	start: number,
 	end: number
@@ -29,6 +31,7 @@ interface Range {
 // COMPONENT
 //----------
 const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
+
 	// State
 	const [isHovered, setIsHovered] = useState<boolean>(false);
 	const [anchorOrigin, setAnchorOrigin] = useState<number[]>([]);
@@ -37,7 +40,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 		start: 0,
 		end: 0,
 	});
-	const [activeGeneLocation, setActiveGeneLocation] = useState<number | null>(null)
+	const [activeGeneYCoordinate, setActiveGeneYCoordinate] = useState<number | null>(null)
 	const theme = useTheme()
 	// SVG drawing
 	const centromeres: CentromereList = chromosome.centromeres;
@@ -51,6 +54,13 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 	const width: number = 10;
 	const perBpHeight: number = 0.000015;
 	let start: number = 0;
+	// Active Gene Arrow
+	const arrowPositionRef = React.useRef<{ x: number; y: number }>({
+		x: 0,
+		y: 0,
+	});
+	const popperRef = React.useRef<Instance>(null);
+	const areaRef = React.useRef<HTMLDivElement>(null);
 
 	// Execute on first render
 	useEffect(() => {
@@ -63,13 +73,18 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 	}, []);
 
 	useEffect(() => {
-
-		if (activeGene != null && chromosome.id === activeGene.chromosome) {
+		if ((activeGene != null) && (chromosome.id == activeGene.chromosome)) {
+			console.log("activeGene is on ", chromosome.id)
 			const genePixelLoc: number = bpToPixel((activeGene.start + activeGene.end) / 2)
-			setActiveGeneLocation(genePixelLoc)
-			console.log(activeGeneLocation)
+			setActiveGeneYCoordinate(genePixelLoc)
+			if (popperRef.current != null) {
+				popperRef.current.update();
+			}
+
+			console.log("genePixelLoc: ", activeGeneYCoordinate)
 		}
 	}, [activeGene])
+
 	//------------------
 	// Helper Functions
 	//------------------
@@ -197,6 +212,11 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 
 	return (
 		<>
+			{/* ACTIVE GENE ARROW */}
+			{activeGene != null && (
+				<ActiveGeneArrow title={activeGene?.id} x={getChromosomeSvg().getBoundingClientRect().right + 15} y={activeGeneYCoordinate} open={activeGeneYCoordinate != null} />
+			)}
+
 			{/* GENETIC ELEMENT LIST POPUP */}
 			<Popup open={openPopup} anchor={anchorEl} style={{
 				display: "flex",

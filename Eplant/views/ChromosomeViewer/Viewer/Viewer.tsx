@@ -33,7 +33,7 @@ const Viewer: FC<ChromosomeViewProps> = ({ chromosomes, activeGene, scale }) => 
         return (
           <div key={i}>
             <Typography noWrap>{chromosome.name}</Typography>
-            <Chromosome chromosome={chromosome} activeGene={activeGene} />
+            <Chromosome chromosome={chromosome} activeGene={activeGene?.chromosome == chromosome.id ? activeGene : null} />
             <Typography sx={{ fontSize: 8 }} noWrap>{(chromosome.size * 0.000001).toLocaleString()}Mb</Typography>
 
           </div>

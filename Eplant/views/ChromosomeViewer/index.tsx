@@ -9,7 +9,9 @@ import useTheme from "@mui/material/styles/useTheme";
 import Typography from '@mui/material/Typography';
 
 import { View, ViewProps } from '../../View'
-
+import IconButton from '@mui/material/IconButton';
+import Add from '@mui/icons-material/Add';
+import Remove from "@mui/icons-material/Remove"
 import ChromosomeView from './Viewer/Viewer';
 import { ChromosomeIcon } from './icons';
 import {
@@ -163,18 +165,46 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 			centromeres: []
 		}
 		];
-		// console.log("test chromosomeView component props ->", activeData, geneticElement)
 
-		// React.useEffect(() => {
-		// 	if (geneticElement != null) {
-		// 		const geneItem = fetchGeneItemFromGeneticElement(geneticElement)
-		// 		console.log(geneItem, "geneitem")
-		// 		setActiveGene(geneItem)
-		// 	}
+		// On render
+		React.useEffect(() => {
+			if (geneticElement != null) {
+				fetchGeneItem()
+				// const geneItem = fetchGeneItemFromGeneticElement(geneticElement)
+				// setActiveGene(geneItem)
+				console.log(activeGene, "from index.ts")
+			}
 
-		// }, [geneticElement])
-		console.log(activeGene)
+		}, [geneticElement])
+		//===============
+		//Helper Functions
+		//================
+		/**
+		 * takes object of type GeneticElement and converts it to type GeneItem. uses fetch api to get the GeneItem element from gene id
+		 *
+		 * @return {GeneItem} gene .
+		 */
+		const fetchGeneItem = async () => {
+			const response = await fetch(
+				`https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=${geneticElement.id}`
+			)
+			const gene = await response.json()
+			setActiveGene(gene)
+		}
+		// React Nodes
+		const controlButton = (variant: string) => {
+			return <React.Fragment>
+				<IconButton aria-label="fingerprint" color="secondary">
+					{variant === "+"
+						? <Add />
+						: variant === "-"
+							? <Remove />
+							: <></>
+					}
+				</IconButton>
 
+			</React.Fragment >
+		}
 		return (
 			<>
 				<Typography variant="h6" sx={{}}>Chromosome Viewer</Typography>
@@ -200,8 +230,12 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 						xMax: 400,
 						yMax: 0,
 					}}
+					btnClass={"ChromosomeZoomBtn"}
+					plusBtnContents={controlButton("+")}
+					minusBtnContents={controlButton("-")}
 				>
 
+					{/* <div id="activeGeneArrowWrapper"></div> */}
 					<ChromosomeView chromosomes={activeData.viewData} activeGene={activeGene} scale={state.value.scale}></ChromosomeView>
 				</MapInteractionCSS>
 			</>
