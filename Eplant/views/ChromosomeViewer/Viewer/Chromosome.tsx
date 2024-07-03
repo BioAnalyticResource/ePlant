@@ -2,7 +2,6 @@
 // IMPORTS
 // -------
 import React, { FC, useEffect, useState } from "react";
-import { createPortal } from 'react-dom';
 
 import { Unstable_Popup as Popup } from '@mui/base/Unstable_Popup';
 import ArrowLeft from "@mui/icons-material/ArrowLeft";
@@ -10,12 +9,10 @@ import Box from "@mui/material/Box";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from '@mui/material/Typography';
-import { Instance } from '@popperjs/core';
 
 import { CentromereList, ChromosomeItem, GeneItem } from "../types";
 
 import GeneList from "./GeneList";
-import ActiveGeneArrow from "./ActiveGeneArrow";
 //----------
 // TYPES
 //----------
@@ -54,13 +51,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 	const width: number = 10;
 	const perBpHeight: number = 0.000015;
 	let start: number = 0;
-	// Active Gene Arrow
-	const arrowPositionRef = React.useRef<{ x: number; y: number }>({
-		x: 0,
-		y: 0,
-	});
-	const popperRef = React.useRef<Instance>(null);
-	const areaRef = React.useRef<HTMLDivElement>(null);
+
 
 	// Execute on first render
 	useEffect(() => {
@@ -74,12 +65,9 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 
 	useEffect(() => {
 		if ((activeGene != null) && (chromosome.id == activeGene.chromosome)) {
-			console.log("activeGene is on ", chromosome.id)
 			const genePixelLoc: number = bpToPixel((activeGene.start + activeGene.end) / 2)
 			setActiveGeneYCoordinate(genePixelLoc)
-			if (popperRef.current != null) {
-				popperRef.current.update();
-			}
+
 
 			console.log("genePixelLoc: ", activeGeneYCoordinate)
 		}
@@ -163,7 +151,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 	 * @return {Number} Equivalent screen y-coordinate.
 	 */
 	const bpToPixel = (bp: number) => {
-		return getChromosomeYCoordinate() + (bp - 1) * getPixelsPerBp() + 1;
+		return bp * getPixelsPerBp() + 1;
 	};
 
 	//--------------
@@ -184,11 +172,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 				}
 			}
 		}
-		console.log(virtualEl.getBoundingClientRect())
-
 		setAnchorEl(anchorEl ? null : virtualEl);
-
-
 		setAnchorOrigin([event.clientX, event.clientY]);
 		setGeneRange(pixelToBp(event.clientY));
 	};
@@ -212,10 +196,7 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 
 	return (
 		<>
-			{/* ACTIVE GENE ARROW */}
-			{activeGene != null && (
-				<ActiveGeneArrow title={activeGene?.id} x={getChromosomeSvg().getBoundingClientRect().right + 15} y={activeGeneYCoordinate} open={activeGeneYCoordinate != null} />
-			)}
+
 
 			{/* GENETIC ELEMENT LIST POPUP */}
 			<Popup open={openPopup} anchor={anchorEl} style={{
@@ -262,12 +243,6 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 
 			</Popup>
 
-			{/* arrow pointing to location on chromosome -- in development */}
-			{/* {open && (
-				<svg height="100" width="100" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", overflow: "visible", left: anchorOrigin[0] - 450, top: anchorOrigin[1] - 350 }}>
-					<path stroke="red" d={`M 150 300 L 200 250 L 200 350 Z`}></path>
-				</svg >
-			)} */}
 			{/* =============== */}
 			{/* CHROMOSOME SVG */}
 			< svg
@@ -279,6 +254,16 @@ const Chromosome: FC<ChromosomeProps> = ({ chromosome, activeGene }) => {
 				style={{ overflow: "visible", border: "0px blue solid" }
 				}
 			>
+
+				{/* ACTIVE GENE ARROW */}
+				{activeGeneYCoordinate != null && activeGene != null && (
+					<g id="activeGeneText">
+						<polygon points={`22,${activeGeneYCoordinate - 3.5} 26,${activeGeneYCoordinate - 7} 26,${activeGeneYCoordinate}`} fill={theme.palette.grey[500]} />
+						<text fontSize="10" fill={theme.palette.grey[500]} x="30" y={`${activeGeneYCoordinate}`}>{activeGene?.id}</text>
+					</g>
+				)}
+
+
 				<g>
 					{/*Centromeric Layer  */}
 					{hasCentromeres ? (

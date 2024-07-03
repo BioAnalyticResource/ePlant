@@ -15,7 +15,6 @@ import {
 	useSetGeneticElements
 } from "@eplant/state"
 import CloseIcon from '@mui/icons-material/Close';
-import LaunchIcon from '@mui/icons-material/Launch';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -146,11 +145,7 @@ const GeneList: FC<GeneListProps> = ({
 						return (
 							<ListItem key={i} disablePadding sx={{
 								height: 23
-							}} secondaryAction={
-								<IconButton edge="end" aria-label="load-gene" title="Load Gene" onClick={handleLoadGeneClick}>
-									<LaunchIcon sx={{ fontSize: 8 }} />
-								</IconButton>
-							}
+							}}
 							>
 								{/* GENE LIST ITEM (rendered as  button) */}
 

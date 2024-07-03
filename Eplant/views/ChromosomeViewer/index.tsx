@@ -235,7 +235,6 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 					minusBtnContents={controlButton("-")}
 				>
 
-					{/* <div id="activeGeneArrowWrapper"></div> */}
 					<ChromosomeView chromosomes={activeData.viewData} activeGene={activeGene} scale={state.value.scale}></ChromosomeView>
 				</MapInteractionCSS>
 			</>
