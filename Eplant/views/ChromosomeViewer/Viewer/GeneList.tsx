@@ -12,7 +12,8 @@ import {
 	useGeneticElements,
 	useSetActiveGeneId,
 	useSetCollections,
-	useSetGeneticElements
+	useSetGeneticElements,
+	useSidebarState
 } from "@eplant/state"
 import CloseIcon from '@mui/icons-material/Close';
 import Box from "@mui/material/Box";
@@ -38,14 +39,7 @@ interface GeneListProps {
 	end: number,
 	anchorOrigin: Array<number>
 }
-// STYLES
-const positioningStyles = {
-	entering: 'translateX(0)',
-	entered: 'translateX(0)',
-	exiting: 'translateX(500px)',
-	exited: 'translateX(500px)',
-	unmounted: 'translateX(500px)',
-};
+
 
 //----------
 // COMPONENT
@@ -74,12 +68,13 @@ const GeneList: FC<GeneListProps> = ({
 	const [open, setOpen] = useState(false);
 
 	// Other/Global State
+	const [activeGeneId, setActiveGeneId] = useActiveGeneId()
 	const geneticElements = useGeneticElements()
 	const setGeneticElements = useSetGeneticElements()
-	const setActiveGeneId = useSetActiveGeneId()
 	const collections = useCollections()
 	const setCollections = useSetCollections()
 	const theme = useTheme()
+
 
 
 	//------------------
@@ -87,7 +82,6 @@ const GeneList: FC<GeneListProps> = ({
 	//------------------
 	React.useEffect(() => {
 		const fetchGeneData = async () => {
-			// Request return error, has something to do with CORS i think
 			const response: Response = await fetch(
 				`https://bar.utoronto.ca/eplant/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
 			);
@@ -125,7 +119,6 @@ const GeneList: FC<GeneListProps> = ({
 			geneticElements[0].push(gene)
 			setGeneticElements(geneticElements[0])
 			setActiveGeneId(gene.id)
-			console.log(collections[0])
 			console.log("new geneticelements list: ", geneticElements[0], "new gene: ", gene)
 
 		}
@@ -148,7 +141,6 @@ const GeneList: FC<GeneListProps> = ({
 							}}
 							>
 								{/* GENE LIST ITEM (rendered as  button) */}
-
 								<ListItemButton selected={i === selectedIndex}
 									onClick={handleGeneSelect(gene, i)}
 									// title={gene.aliases.length != 0 ? `Aliases: ${gene.aliases}` : gene.id}
