@@ -10,15 +10,12 @@ import {
 	useActiveGeneId,
 	useCollections,
 	useGeneticElements,
-	useSetActiveGeneId,
 	useSetCollections,
 	useSetGeneticElements,
-	useSidebarState
 } from "@eplant/state"
 import CloseIcon from '@mui/icons-material/Close';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -27,17 +24,22 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from "@mui/material/ListItemText";
 import Popover from "@mui/material/Popover";
 import useTheme from "@mui/material/styles/useTheme";
-import Typography from "@mui/material/Typography";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 import { GeneIcon } from "../icons";
 import { GeneArray, GeneItem } from "../types";
+import GeneInfoPopup from "./GeneInfoPopup";
 
 // TYPES
 interface GeneListProps {
 	id: string,
 	start: number,
 	end: number,
-	anchorOrigin: Array<number>
+	anchorOrigin: number[]
 }
 
 
@@ -50,9 +52,6 @@ const GeneList: FC<GeneListProps> = ({
 	end,
 	anchorOrigin
 }) => {
-
-
-	const [loading, setLoading] = useState<boolean>(true);
 	// gene list
 	const [geneList, setGeneList] = useState<GeneArray>([{
 		id: "",
@@ -94,7 +93,6 @@ const GeneList: FC<GeneListProps> = ({
 
 		};
 		fetchGeneData();
-		setLoading(false)
 	}, []);
 	// EVENT HANDLERS
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -103,7 +101,6 @@ const GeneList: FC<GeneListProps> = ({
 	const handleGeneSelect = (gene: GeneItem, index: number) => (event: React.MouseEvent<HTMLElement>) => {
 		setSelectedIndex(index)
 		setSelectedGene(gene)
-		console.log("Clicked Gene: ", gene)
 	}
 	const handleClose = () => {
 		setOpen(false)
@@ -119,10 +116,7 @@ const GeneList: FC<GeneListProps> = ({
 			geneticElements[0].push(gene)
 			setGeneticElements(geneticElements[0])
 			setActiveGeneId(gene.id)
-			console.log("new geneticelements list: ", geneticElements[0], "new gene: ", gene)
-
 		}
-		// setSelectedGeneId(gene.id)
 	}
 
 
@@ -131,114 +125,115 @@ const GeneList: FC<GeneListProps> = ({
 	return (
 		<>
 			{/* GENE LIST */}
-			{loading
-				&& <p>something is loading</p>
-				|| <List sx={{ padding: 0 }} onClick={handleClick}>
-					{geneList.map((gene, i) => {
-						return (
-							<ListItem key={i} disablePadding sx={{
-								height: 23
-							}}
-							>
-								{/* GENE LIST ITEM (rendered as  button) */}
-								<ListItemButton selected={i === selectedIndex}
-									onClick={handleGeneSelect(gene, i)}
-									// title={gene.aliases.length != 0 ? `Aliases: ${gene.aliases}` : gene.id}
-									sx={{ borderRadius: 0, padding: 0 }} >
-									<ListItemIcon sx={{
-										minWidth: 0
-									}}>
-										<GeneIcon height={15} stroke={theme.palette.primary.main} />
-									</ListItemIcon>
-									<ListItemText sx={{
-										'& .MuiListItemText-primary': {
-											fontSize: "10px",
-											textOverflow: "ellipsis",
-											textWrap: "nowrap"
-										}
-									}}>
-										<span className="GeneID">{gene.id}</span>
-										<span style={{ color: theme.palette.secondary.main }}>{gene.aliases.length > 0 ? `/${gene.aliases[0]}` : ""}</span>
-									</ListItemText >
-								</ListItemButton>
+			<List sx={{ padding: 0 }} onClick={handleClick}>
+				{geneList.map((gene, i) => {
+					return (
+						<ListItem key={i} disablePadding sx={{
+							height: 23
+						}}
+						>
+							{/* GENE LIST ITEM (rendered as  button) */}
+							<ListItemButton selected={i === selectedIndex}
+								onClick={handleGeneSelect(gene, i)}
+								// title={gene.aliases.length != 0 ? `Aliases: ${gene.aliases}` : gene.id}
+								sx={{ borderRadius: 0, padding: 0 }} >
+								<ListItemIcon sx={{
+									minWidth: 0
+								}}>
+									<GeneIcon height={15} stroke={theme.palette.primary.main} />
+								</ListItemIcon>
+								<ListItemText sx={{
+									'& .MuiListItemText-primary': {
+										fontSize: "10px",
+										textOverflow: "ellipsis",
+										textWrap: "nowrap"
+									}
+								}}>
+									<span className="GeneID">{gene.id}</span>
+									<span style={{ color: theme.palette.secondary.main }}>{gene.aliases.length > 0 ? `/${gene.aliases[0]}` : ""}</span>
+								</ListItemText >
+							</ListItemButton>
+						</ListItem>
+					);
+				})
+				}
+			</List >
 
-
-							</ListItem>
-						);
-					})
-					}
-				</List >
-			}
 			{/* GENE INFO POPUP */}
-			{open && (
-				<Draggable>
+			{selectedGene != null && (
+				<GeneInfoPopup gene={selectedGene} open={open} anchorOrigin={anchorOrigin} ></GeneInfoPopup>
+			)}
+			{/* 			<Draggable>
 					<Popover
-
 						disableScrollLock={true}
 						open={open}
 						anchorReference="anchorPosition"
 						anchorPosition={{
-							left: anchorOrigin[0] + 220,
+							left: anchorOrigin[0] + 100,
 							top: anchorOrigin[1] - 100
 
 						}}
 						onClose={handleClose}
 
 					>
-
 						<Box
 							sx={{
 								minWidth: "300px",
-								maxWidth: "500px",
+								maxWidth: "400px",
 								minHeight: "150px",
 								maxHeight: "400px",
-								padding: 2
+								padding: 2,
+								background: "red"
 							}}
 						>
-							<DialogTitle>
-								{selectedGene?.id}
-								<IconButton
-									aria-label="close"
-									onClick={handleClose}
-									sx={{
-										position: 'absolute',
-										right: 8,
-										top: 8,
-										color: theme.palette.grey[500],
-									}}
+							<Table size="small">
+								<TableHead>
+									{selectedGene?.id}
+									<IconButton
+										title="Close Popup"
+										aria-label="close"
+										color="error"
+										onClick={handleClose}
+										sx={{
+											position: 'absolute',
+											right: 8,
+											top: 8,
+										}}
+									>
+										<CloseIcon />
+									</IconButton>
+								</TableHead>
+								<TableBody sx={{
+									'tr': { maxHeight: "20px" },
+									'.label': { color: theme.palette.secondary.main }
+								}}
 								>
-									<CloseIcon />
-								</IconButton>
-							</DialogTitle>
-							<Typography gutterBottom>
-								id: {selectedGene?.id}
-							</Typography>
-							<Typography>
-								start: {selectedGene?.start}
-							</Typography>
-							<Typography>
-								end: {selectedGene?.end}
-
-							</Typography>
-							<Typography>
-								strand: {selectedGene?.strand}
-							</Typography>
-							<Typography>
-								{/* aliases: {gene.aliases} */}
-							</Typography>
-							<Button autoFocus variant="contained" color="success" >
-								<div onClick={handleLoadGeneClick}>
+									<TableRow>
+										<TableCell className="label">Identifier</TableCell>
+										<TableCell>{selectedGene?.id}</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell className="label">Aliases</TableCell>
+										<TableCell>{selectedGene?.aliases.length > 0 ? selectedGene?.aliases : "N/A"}</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell className="label">Strand</TableCell>
+										<TableCell>{selectedGene?.strand}</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell className="label">Annotation</TableCell>
+										<TableCell>{selectedGene?.annotation != null ? selectedGene?.annotation : "N/A"}</TableCell>
+									</TableRow>
+								</TableBody>
+								<Button autoFocus title="Load gene into collection" variant="contained" size="small" color="success"
+									onClick={handleLoadGeneClick} sx={{ marginTop: "10px" }}>
 									Load Gene
-								</div>
-							</Button>
+								</Button>
+							</Table>
 						</Box>
-
-
 					</Popover >
 				</Draggable >
-			)
-			}
-
+ */}
 		</>
 
 	);

@@ -3,15 +3,14 @@ import React, { useState } from 'react'
 import { MapInteractionCSS } from "react-map-interaction";
 
 import GeneticElement from '@eplant/GeneticElement';
-import { useSpecies } from '@eplant/state';
-// import PanZoom from '@eplant/util/PanZoom';
+import Add from '@mui/icons-material/Add';
+import Remove from "@mui/icons-material/Remove"
+import IconButton from '@mui/material/IconButton';
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from '@mui/material/Typography';
 
 import { View, ViewProps } from '../../View'
-import IconButton from '@mui/material/IconButton';
-import Add from '@mui/icons-material/Add';
-import Remove from "@mui/icons-material/Remove"
+
 import ChromosomeView from './Viewer/Viewer';
 import { ChromosomeIcon } from './icons';
 import {
@@ -205,6 +204,7 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 
 			</React.Fragment >
 		}
+		console.log(state.value.scale)
 		return (
 			<>
 				<Typography variant="h6" sx={{}}>Chromosome Viewer</Typography>
