@@ -1,8 +1,8 @@
-import {useEffect,useState} from 'react'
+import { useEffect, useState } from 'react'
 
 import GeneticElement, { Species } from '@eplant/GeneticElement'
 import { useSpecies } from '@eplant/state'
-import { Button, styled  } from '@mui/material'
+import { Button, styled } from '@mui/material'
 import Stack from '@mui/material/Stack'
 
 import SearchBar from './SearchBar'
@@ -27,7 +27,7 @@ export function SearchGroup({
   addGeneticElements: (gene: GeneticElement[]) => void
 }) {
   const [species, setSpecies] = useState<Species>()
-  
+
   // Commedned out until we get multi-species support
   // const [searchingByExpression, setSearchingByExpression] = useState<boolean>(false)
   // const [searchingByPhenotype, setSearchingByPhenotype] = useState<boolean>(false)

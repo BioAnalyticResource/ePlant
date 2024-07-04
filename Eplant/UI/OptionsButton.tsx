@@ -1,4 +1,4 @@
-import {MouseEvent} from 'react'
+import { MouseEvent } from 'react'
 
 import { MoreVert } from '@mui/icons-material'
 import { IconButton, IconButtonProps } from '@mui/material'

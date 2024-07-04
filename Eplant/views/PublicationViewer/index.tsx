@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useState } from 'react'
 
 import { ViewDataError } from '@eplant/View/viewData'
 import { Link, Tab, Tabs, Typography, useTheme } from '@mui/material'

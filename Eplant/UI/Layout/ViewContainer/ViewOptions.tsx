@@ -1,4 +1,4 @@
-import {useTransition} from 'react'
+import { useTransition } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
 import Dropdown from '@eplant/UI/Dropdown'

@@ -1,4 +1,4 @@
-import {CSSProperties, useState} from 'react'
+import { CSSProperties, useState } from 'react'
 import _ from 'lodash'
 
 import { useConfig } from '@eplant/config'

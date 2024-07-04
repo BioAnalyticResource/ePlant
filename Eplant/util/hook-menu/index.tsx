@@ -1,4 +1,13 @@
-import {Context, createContext, Dispatch, PropsWithChildren, useContext, useEffect,useId, useReducer } from 'react'
+import {
+  Context,
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useId,
+  useReducer,
+} from 'react'
 
 type Entries<Entry> = {
   idOrdering: string[]
@@ -33,13 +42,10 @@ export default class HookMenu<EntryType> {
    * @returns
    */
   Root(props: PropsWithChildren) {
-    const [value, dispatch] = useReducer<typeof this.reducer>(
-      this.reducer,
-      {
-        idOrdering: [],
-        entries: {},
-      }
-    )
+    const [value, dispatch] = useReducer<typeof this.reducer>(this.reducer, {
+      idOrdering: [],
+      entries: {},
+    })
     return (
       <this.context.Provider value={[value, dispatch]}>
         {props.children}

@@ -1,4 +1,4 @@
-import{useEffect, useId,useMemo, useState} from 'react'
+import { useEffect, useId, useMemo, useState } from 'react'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
@@ -56,7 +56,7 @@ export function ViewContainer<T, S, A>({
 
   const { userViews, views, genericViews } = useConfig()
 
-useEffect(() => {
+  useEffect(() => {
     if (printing) {
       setTimeout(() => {
         window.print()

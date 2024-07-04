@@ -1,4 +1,4 @@
-import { Component,ErrorInfo, PropsWithChildren } from 'react'
+import { Component, ErrorInfo, PropsWithChildren } from 'react'
 export default class ErrorBoundary extends Component<
   PropsWithChildren,
   { hasError: boolean }

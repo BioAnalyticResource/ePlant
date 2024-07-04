@@ -1,11 +1,11 @@
-import { MutableRefObject,useEffect, useState } from 'react'
+import { MutableRefObject, useEffect, useState } from 'react'
 
 /**
  * A hook that returns the dimensions of a DOM node.
  * @param ref The ref of the DOM node.
  */
 export default function useDimensions(
-  ref:MutableRefObject<HTMLElement | null>
+  ref: MutableRefObject<HTMLElement | null>
 ) {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   useEffect(() => {
