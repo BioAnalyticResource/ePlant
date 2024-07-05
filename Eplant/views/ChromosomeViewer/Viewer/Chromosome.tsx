@@ -3,6 +3,7 @@
 // -------
 import React, { FC, useEffect, useState } from "react";
 
+import { useCollections } from "@eplant/state";
 import { Unstable_Popup as Popup } from '@mui/base/Unstable_Popup';
 import ArrowLeft from "@mui/icons-material/ArrowLeft";
 import Box from "@mui/material/Box";
@@ -12,8 +13,8 @@ import Typography from '@mui/material/Typography';
 
 import { CentromereList, ChromosomeItem, GeneItem } from "../types";
 
-import GeneList from "./GeneList";
 import GeneInfoPopup from "./GeneInfoPopup";
+import GeneList from "./GeneList";
 //----------
 // TYPES
 //----------
@@ -27,6 +28,11 @@ interface Range {
 	start: number,
 	end: number
 }
+interface SimplifiedGeneItem {
+	id: string,
+	location: number,
+	strand: string
+}
 // COMPONENT
 //----------
 const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome, activeGene }) => {
@@ -39,8 +45,13 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome, activeGene }) => {
 		start: 0,
 		end: 0,
 	});
+	const [simplifiedCollection, setSimplifiedCollection] = useState<SimplifiedGeneItem[]>([])
 	const [activeGeneYCoordinate, setActiveGeneYCoordinate] = useState<number | null>(null)
+	const [collections, setCollections] = useCollections()
+	const [tempGene, setTempGene] = useState<GeneItem | null>(null)
+
 	const theme = useTheme()
+
 	// SVG drawing
 	const centromeres: CentromereList = chromosome.centromeres;
 	const hasCentromeres: boolean = centromeres.length > 0;
@@ -54,7 +65,6 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome, activeGene }) => {
 	const perBpHeight: number = 0.000015;
 	let start: number = 0;
 
-
 	// Execute on first render
 	useEffect(() => {
 		const svg: HTMLElement & SVGSVGElement = getChromosomeSvg();
@@ -64,14 +74,39 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome, activeGene }) => {
 		svg.setAttribute("width", `${bbox.x + bbox.width + bbox.x}`);
 		svg.setAttribute("height", `${bbox.y + bbox.height + bbox.y}`);
 	}, []);
-
 	useEffect(() => {
+		const allGenesInCollections: string[] = [];
+		if (collections.length != 0) {
+			(collections.map((collection) => {
+				if (collection.genes.length != 0) {
+					allGenesInCollections.push(...collection.genes)
+				}
+			}));
+			(allGenesInCollections.map((geneId) => {
+				const fetchGene = async () => {
+					const json: GeneItem = await fetch(
+						`https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=${geneId}`
+					).then((response) => response.json())
+					setTempGene(json)
+				}
+				fetchGene()
+				if (tempGene != null) {
+					if (tempGene.chromosome == chromosome.id) {
+						const genePixelLoc: number = (tempGene.start + tempGene.end) / 2 * perBpHeight
+						const strand = tempGene.strand
+						const simplifiedGene: SimplifiedGeneItem = { id: tempGene.id, location: genePixelLoc, strand: tempGene.strand }
+						const newSimplifiedCollection = [...simplifiedCollection, simplifiedGene]
+						setSimplifiedCollection(newSimplifiedCollection)
+					}
+				}
+			}))
+		}
+
 		if ((activeGene != null) && (chromosome.id == activeGene.chromosome)) {
 			let genePixelLoc: number = (activeGene.start + activeGene.end) / 2 * perBpHeight
-			console.log("genePixelLoc:(before) ", activeGeneYCoordinate)
 
-			if (genePixelLoc < 5) {
-				genePixelLoc = 5
+			if (genePixelLoc < 4) {
+				genePixelLoc = 4
 			}
 			// else if (genePixelLoc > parseFloat(getChromosomeSvg().getAttribute("height")) - 2) {
 			// 	genePixelLoc = getChromosomeSvg().getAttribute("height") - 2
@@ -79,7 +114,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome, activeGene }) => {
 
 			setActiveGeneYCoordinate(genePixelLoc)
 
-			console.log("genePixelLoc: ", activeGeneYCoordinate)
+			// console.log("genePixelLoc: ", activeGeneYCoordinate)
 		}
 	}, [activeGene])
 
@@ -302,7 +337,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome, activeGene }) => {
 									y={y + start * perBpHeight}
 									width={width}
 									height={(end - start) * perBpHeight}
-									ry={width / 2}
+									ry={(end - start) * perBpHeight < 4 ? 2 : (end - start) * perBpHeight < 10 ? 3 : width / 2}
 									fill="gray"
 									key={index}
 								/>
@@ -339,9 +374,31 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome, activeGene }) => {
 					/>
 
 				</g>
+				{/* GENES IN COLLECTION INDICATORS */}
+				{/* <g id={`${chromosome.id}_genesInCollection`}>
+					{simplifiedCollection.map((gene, i) => {
+						return (
+							<g key={i} id={`${gene.id}_indicator`} cursor="pointer">
+								<line
+									x1={gene.strand == "+" ? 18 : 8}
+									y1={scale >= 2 ? gene.location - 3 : gene.location - 5}
+									x2={gene.strand == "+" ? 2 : 24}
+									y2={scale >= 2 ? gene.location - 3 : gene.location - 5}
+									strokeWidth={scale >= 2 ? 0.5 : scale <= 0.6 ? 3 : 2 / scale}
+									stroke={theme.palette.secondary.contrastText} />
+								<text fontSize={scale >= 2 ? 8 : 15}
+									fill={theme.palette.secondary.contrastText}
+									x={`${gene.strand == "+" && scale >= 2 ? -40 : gene.strand == "+" ? -78 : 25}`}
+									y={`${gene.location}`}
+								>
+									{gene.id}
+								</text>
+							</g>)
+					})}
+				</g> */}
 
-				{/* ACTIVE GENE ARROW */}
-				{activeGeneYCoordinate != null && activeGene != null && (
+				{/* ACTIVE GENE INDICATOR */}
+		{activeGeneYCoordinate != null && activeGene != null && (
 					<g id="activeGeneText" cursor="pointer">
 						<line
 							x1={activeGene.strand == "+" ? 18 : 8}
@@ -352,51 +409,16 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome, activeGene }) => {
 							stroke={theme.palette.secondary.contrastText} />
 						<a onClick={handleActiveGeneClick}>
 							<text fontSize={scale >= 2 ? 8 : 15}
-								fill={theme.palette.secondary.contrastText}
+								fill={theme.palette.primary.main}
 								x={`${activeGene.strand == "+" && scale >= 2 ? -40 : activeGene.strand == "+" ? -78 : 25}`}
 								y={`${activeGeneYCoordinate}`}
 							>
 								{activeGene?.id}
 							</text>
 						</a>
-{/* 						{geneInfoOpen && (
-							<g fontSize={scale >= 2 ? 6 : 8}>
-								<text
-									fill={theme.palette.grey[700]}
-									x={`${activeGene.strand == "+" && scale >= 2 ? -40 : activeGene.strand == "+" ? -78 : 25}`}
-									y={`${activeGeneYCoordinate + 15}`}>
-									aliases: <tspan fill={theme.palette.grey[400]}
-									>{activeGene.aliases.length > 0 ? activeGene.aliases : "N/A"}</tspan>
-								</text>
-								<text
-									fill={theme.palette.grey[700]}
-									x={`${activeGene.strand == "+" && scale >= 2 ? -40 : activeGene.strand == "+" ? -78 : 25}`}
-									y={`${activeGeneYCoordinate + 25}`}>
-									strand: <tspan fill={theme.palette.grey[400]}
-									>{activeGene.strand}</tspan>
-								</text>
-								<text
-									fill={theme.palette.grey[700]}
-									x={`${activeGene.strand == "+" && scale >= 2 ? -40 : activeGene.strand == "+" ? -78 : 25}`}
-									y={`${activeGeneYCoordinate + 35}`}>
-									start: <tspan fill={theme.palette.grey[400]}
-									>{activeGene.start}</tspan>
-								</text>
-								<text
-									fill={theme.palette.grey[700]}
-									x={`${activeGene.strand == "+" && scale >= 2 ? -40 : activeGene.strand == "+" ? -78 : 25}`}
-									y={`${activeGeneYCoordinate + 45}`}>
-									end: <tspan fill={theme.palette.grey[400]}
-									>{activeGene.end}</tspan>
-								</text>
-							</g>
-						)} */}
 					</g>
 				)}
 			</svg>
-			{/* {activeGene != null && geneInfoPopupOpen &&(
-				<GeneInfoPopup gene={activeGene} open={geneInfoPopupOpen} anchorOrigin={anchorOrigin}></GeneInfoPopup>
-			)} */}
 		</>
 	);
 };

@@ -32,6 +32,7 @@ import TableRow from "@mui/material/TableRow";
 
 import { GeneIcon } from "../icons";
 import { GeneArray, GeneItem } from "../types";
+
 import GeneInfoPopup from "./GeneInfoPopup";
 
 // TYPES

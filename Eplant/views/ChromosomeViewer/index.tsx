@@ -22,7 +22,6 @@ import {
 	GeneItem,
 	Transform
 } from './types';
-import { fetchGeneItemFromGeneticElement } from './utilities';
 
 
 const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, ChromosomeViewerAction> = {
@@ -171,7 +170,7 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 				fetchGeneItem()
 				// const geneItem = fetchGeneItemFromGeneticElement(geneticElement)
 				// setActiveGene(geneItem)
-				console.log(activeGene, "from index.ts")
+				// console.log(activeGene, "from index.ts")
 			}
 
 		}, [geneticElement])
@@ -204,7 +203,6 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 
 			</React.Fragment >
 		}
-		console.log(state.value.scale)
 		return (
 			<>
 				<Typography variant="h6" sx={{}}>Chromosome Viewer</Typography>

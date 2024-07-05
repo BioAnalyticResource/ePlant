@@ -26,12 +26,12 @@ const genericViews = [GetStartedView, FallbackView]
 // List of views that a user can select from
 // Can contain views from the genericViews list too
 const userViews = [
-  // GeneInfoView,
-  // PublicationViewer,
-  // DebugView,
-  // PlantEFP,
-  // CellEFP,
-  // ExperimentEFP,
+  GeneInfoView,
+  PublicationViewer,
+  DebugView,
+  PlantEFP,
+  CellEFP,
+  ExperimentEFP,
   ChromosomeViewer
 ]
 
