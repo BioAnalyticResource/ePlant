@@ -42,7 +42,10 @@ const Viewer: FC<ChromosomeViewProps> = ({
         height: '0px',
         display: 'flex',
         flexDirection: 'row',
-        gap: chromosomes.length * 10,
+        gap:
+          chromosomes.length > 10
+            ? chromosomes.length
+            : chromosomes.length * 10,
       }}
     >
       {chromosomes.map((chromosome, i) => {

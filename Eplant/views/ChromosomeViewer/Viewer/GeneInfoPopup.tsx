@@ -130,7 +130,7 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
                   <TableRow>
                     <TableCell className='label'>Annotation</TableCell>
                     <TableCell>
-                      {gene.annotation != '' ? gene.annotation : 'N/A'}
+                      {gene.annotation != null ? gene.annotation : 'N/A'}
                     </TableCell>
                   </TableRow>
                 </TableBody>

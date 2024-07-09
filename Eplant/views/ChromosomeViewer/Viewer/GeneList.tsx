@@ -64,10 +64,14 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
   //------------------
   useEffect(() => {
     fetch(
+      // Arabidopsis_thaliana
       `https://bar.utoronto.ca/eplant/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
+      //   Populus_trichocarpa
+      //   `https://bar.utoronto.ca/eplant_poplar/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
     )
       .then((response) => response.json())
       .then((json) => {
+        console.log(json)
         setGeneList(json)
       })
   }, [])

@@ -281,7 +281,7 @@ const Chromosome: FC<ChromosomeProps> = ({
               y={y}
               width={width}
               height={chromosome.size * perBpHeight}
-              ry={'50%'}
+              ry={chromosome.size * perBpHeight > 10 ? width/2 : '50%'}
               fill='grey'
             />
           )}

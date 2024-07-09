@@ -64,6 +64,9 @@ const ChromosomeViewer: View<
 
     const species = 'Arabidopsis_thaliana'
     const url = `https://bar.utoronto.ca/eplant/cgi-bin/chromosomeinfo.cgi?species=${species}`
+
+    // const species = 'Populus_trichocarpa'
+    // const url = `https://bar.utoronto.ca/eplant_poplar/cgi-bin/chromosomeinfo.cgi?species=${species}`
     chromosomeViewData = await fetch(url)
       .then(async (response) => {
         return response.json()
@@ -184,7 +187,10 @@ const ChromosomeViewer: View<
     React.useEffect(() => {
       if (geneticElement != null) {
         fetch(
+          // Arabidopsis_thaliana
           `https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=${geneticElement.id}`
+          // Populus_trichocarpa
+          // `https://bar.utoronto.ca/eplant_poplar/cgi-bin/querygene.cgi?species=Populus_trichocarpa&term=${geneticElement.id}`
         )
           .then((response) => response.json())
           .then((geneItem) => {
@@ -198,7 +204,10 @@ const ChromosomeViewer: View<
       setGeneAnnotationArray([])
       geneticElements.map((gene) => {
         fetch(
+          // Arabidopsis_thaliana
           `https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=${gene.id}`
+          // Populus_trichocarpa
+          // `https://bar.utoronto.ca/eplant_poplar/cgi-bin/querygene.cgi?species=Populus_trichocarpa&term=${gene.id}`
         )
           .then((response) => response.json())
           .then((geneItem) => {
