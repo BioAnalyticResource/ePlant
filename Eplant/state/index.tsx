@@ -13,6 +13,7 @@ import GeneticElement from '@eplant/GeneticElement'
 import { Species } from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import Storage from '@eplant/util/Storage'
+import { GeneArray } from '@eplant/views/ChromosomeViewer/types'
 
 const persistAtom = atom<boolean>(true)
 export const useSetPersist = () => useSetAtom(persistAtom)
@@ -187,6 +188,9 @@ export const collectionsAtom = atomWithOptionalStorage<
 export const useCollections = () => useAtom(collectionsAtom)
 export const useSetCollections = () => useSetAtom(collectionsAtom)
 
+export const selectedGeneHistoryAtom = atom<GeneArray | []>([])
+export const useSelectedGeneHistory = () => useAtom(selectedGeneHistoryAtom)
+export const useSetSelectedGeneHistory = () => useSetAtom(selectedGeneHistoryAtom)
 // export const geneInfoPopupAtom = atom<{
 //   gene: GeneItem | null; open: boolean
 // }>({ gene: null, open: false })

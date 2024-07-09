@@ -2,58 +2,72 @@
 // IMPORTS
 // -------
 
-import React, { FC, useEffect, useLayoutEffect, useState } from "react";
+import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
 
-import { useGeneticElements } from "@eplant/state";
-import Typography from "@mui/material/Typography";
+import { useGeneticElements } from '@eplant/state'
+import Typography from '@mui/material/Typography'
 
-import { ChromosomeList, GeneItem, SimplifiedGeneItem } from "../types";
+import { ChromosomeList, GeneAnnotationItem, GeneItem } from '../types'
 
-import Chromosome from "./Chromosome";
+import Chromosome from './Chromosome'
 // TYPES
 interface ChromosomeViewProps {
-  chromosomes: ChromosomeList,
-  activeGene: GeneItem | null,
-  simplifiedGenes: SimplifiedGeneItem[] | [],
+  chromosomes: ChromosomeList
+  activeGeneAnnotation: GeneAnnotationItem | null
+  geneAnnotationArray: GeneAnnotationItem[] | []
   scale: number
 }
 //----------
 // COMPONENT
 //----------
-const Viewer: FC<ChromosomeViewProps> = ({ chromosomes, activeGene, simplifiedGenes, scale }) => {
-  const filterSimplifiedGenes = (chromosomeId: string) => {
-    // filter the simplified genes by chromosome
-    const filteredGenes: SimplifiedGeneItem[] = [];
-    (simplifiedGenes.map((simplifiedGene) => {
-      if (chromosomeId == simplifiedGene.chromosome) {
-        filteredGenes.push(simplifiedGene)
+const Viewer: FC<ChromosomeViewProps> = ({
+  chromosomes,
+  activeGeneAnnotation,
+  geneAnnotationArray,
+  scale,
+}) => {
+  const filterGeneAnnotationArray = (chromosomeId: string) => {
+    // filter the annotation genes by chromosome
+    const filteredGenes: GeneAnnotationItem[] = []
+    geneAnnotationArray.map((geneAnnotation) => {
+      if (chromosomeId == geneAnnotation.chromosome) {
+        filteredGenes.push(geneAnnotation)
       }
-    }))
+    })
     return filteredGenes
   }
   return (
-
-    <div style={{
-      height: "0px",
-      display: "flex",
-      flexDirection: "row",
-      gap: chromosomes.length * 10,
-    }}
+    <div
+      style={{
+        height: '0px',
+        display: 'flex',
+        flexDirection: 'row',
+        gap: chromosomes.length * 10,
+      }}
     >
       {chromosomes.map((chromosome, i) => {
         // Render a Chromosome component for each chromosome
         return (
           <div key={i}>
             <Typography noWrap>{chromosome.name}</Typography>
-            <Chromosome scale={scale} chromosome={chromosome} activeGene={activeGene?.chromosome == chromosome.id ? activeGene : null} simplifiedGenes={filterSimplifiedGenes(chromosome.id)} />
-            <Typography sx={{ fontSize: 8 }} noWrap>{(chromosome.size * 0.000001).toLocaleString()}Mb</Typography>
-
+            <Chromosome
+              scale={scale}
+              chromosome={chromosome}
+              activeGeneAnnotation={
+                activeGeneAnnotation?.chromosome == chromosome.id
+                  ? activeGeneAnnotation
+                  : null
+              }
+              geneAnnotationArray={filterGeneAnnotationArray(chromosome.id)}
+            />
+            <Typography sx={{ fontSize: 8 }} noWrap>
+              {(chromosome.size * 0.000001).toLocaleString()}Mb
+            </Typography>
           </div>
-        );
-      })
-      }
+        )
+      })}
     </div>
-  );
-};
+  )
+}
 
-export default Viewer;
+export default Viewer
