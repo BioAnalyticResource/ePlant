@@ -386,7 +386,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome, activeGene, simpli
 						<a onClick={handleActiveGeneClick}>
 							<text fontSize={scale <= 1.5 ? 15 : 20 / scale}
 								fill={theme.palette.primary.main}
-								x={`${activeGene.strand == "+" && scale >= 2 ? -40 : activeGene.strand == "+" ? -78 : 25}`}
+								x={`${activeGene.strand == "+" && scale <= 1.5 ? -75 : activeGene.strand == "+" ? -100 / scale : 25}`}
 								y={`${activeGeneYCoordinate}`}
 							>
 								{activeGene?.id}
