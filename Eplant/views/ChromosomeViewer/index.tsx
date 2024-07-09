@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { MapInteractionCSS } from "react-map-interaction";
 
 import GeneticElement from '@eplant/GeneticElement';
+import { useGeneticElements } from '@eplant/state';
 import Add from '@mui/icons-material/Add';
 import Remove from "@mui/icons-material/Remove"
 import IconButton from '@mui/material/IconButton';
@@ -20,6 +21,7 @@ import {
 	ChromosomeViewerData,
 	ChromosomeViewerState,
 	GeneItem,
+	SimplifiedGeneItem,
 	Transform
 } from './types';
 
@@ -59,8 +61,6 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 		const species = "Arabidopsis_thaliana"
 		const url = `https://bar.utoronto.ca/eplant/cgi-bin/chromosomeinfo.cgi?species=${species}`
 		chromosomeViewData = await fetch(url).then(async (response) => {
-			console.log(response)
-
 			return response.json()
 		}).then((responseObj: ChromosomesResponseObj) => responseObj["chromosomes"])
 
@@ -78,7 +78,10 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 		dispatch,
 		geneticElement
 	}: ViewProps<ChromosomeViewerData, ChromosomeViewerState, ChromosomeViewerAction>) {
-		const [activeGene, setActiveGene] = useState<GeneItem | null>(null)
+		const [activeGene, setActiveGene] = useState<GeneItem | null>(null);
+		const [simplifiedGeneItems, setSimplifiedGeneItems] = useState<SimplifiedGeneItem[] | []>([])
+		const [geneticElements] = useGeneticElements()
+
 		const theme = useTheme()
 		const chromosomes = [{
 			id: "Chr1",
@@ -164,7 +167,7 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 		}
 		];
 
-		// On render
+		// On active geneticElement update
 		React.useEffect(() => {
 			if (geneticElement != null) {
 				fetchGeneItem()
@@ -174,6 +177,27 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 			}
 
 		}, [geneticElement])
+		//on geneticElements update
+		React.useEffect(() => {
+			setSimplifiedGeneItems([])
+			geneticElements.map((gene) => {
+				fetch(
+					`https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=${gene.id}`
+				).then((response) => response.json())
+					.then((geneItem) => {
+						const genePixelLoc: number = (geneItem?.start + geneItem.end) / 2 * 0.000015
+						const simplifiedGene: SimplifiedGeneItem = {
+							id: geneItem.id, chromosome: geneItem.chromosome, location: genePixelLoc, strand: geneItem.strand
+						} // simplifiedGene is an object that holds only the neccessary information to draw the gene indicators
+						const tempGenes: SimplifiedGeneItem[] = simplifiedGeneItems
+						tempGenes.push(simplifiedGene)
+						setSimplifiedGeneItems(tempGenes)
+					}).catch((err) => {
+						console.log(err);
+					});
+			})
+			// console.log(simplifiedGeneItems, simplifiedGeneItems.length);
+		}, [geneticElements])
 		//===============
 		//Helper Functions
 		//================
@@ -233,7 +257,7 @@ const ChromosomeViewer: View<ChromosomeViewerData, ChromosomeViewerState, Chromo
 					minusBtnContents={controlButton("-")}
 				>
 
-					<ChromosomeView chromosomes={activeData.viewData} activeGene={activeGene} scale={state.value.scale}></ChromosomeView>
+					<ChromosomeView chromosomes={activeData.viewData} activeGene={activeGene} simplifiedGenes={simplifiedGeneItems} scale={state.value.scale}></ChromosomeView>
 				</MapInteractionCSS>
 			</>
 		)

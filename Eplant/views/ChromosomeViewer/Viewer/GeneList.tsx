@@ -162,79 +162,12 @@ const GeneList: FC<GeneListProps> = ({
 
 			{/* GENE INFO POPUP */}
 			{selectedGene != null && (
-				<GeneInfoPopup gene={selectedGene} open={open} anchorOrigin={anchorOrigin} ></GeneInfoPopup>
+				<>
+					<GeneInfoPopup gene={selectedGene} open={open} anchorOrigin={anchorOrigin} ></GeneInfoPopup>
+					<GeneInfoPopup gene={selectedGene} open={open} anchorOrigin={anchorOrigin} ></GeneInfoPopup>
+				</>
 			)}
-			{/* 			<Draggable>
-					<Popover
-						disableScrollLock={true}
-						open={open}
-						anchorReference="anchorPosition"
-						anchorPosition={{
-							left: anchorOrigin[0] + 100,
-							top: anchorOrigin[1] - 100
 
-						}}
-						onClose={handleClose}
-
-					>
-						<Box
-							sx={{
-								minWidth: "300px",
-								maxWidth: "400px",
-								minHeight: "150px",
-								maxHeight: "400px",
-								padding: 2,
-								background: "red"
-							}}
-						>
-							<Table size="small">
-								<TableHead>
-									{selectedGene?.id}
-									<IconButton
-										title="Close Popup"
-										aria-label="close"
-										color="error"
-										onClick={handleClose}
-										sx={{
-											position: 'absolute',
-											right: 8,
-											top: 8,
-										}}
-									>
-										<CloseIcon />
-									</IconButton>
-								</TableHead>
-								<TableBody sx={{
-									'tr': { maxHeight: "20px" },
-									'.label': { color: theme.palette.secondary.main }
-								}}
-								>
-									<TableRow>
-										<TableCell className="label">Identifier</TableCell>
-										<TableCell>{selectedGene?.id}</TableCell>
-									</TableRow>
-									<TableRow>
-										<TableCell className="label">Aliases</TableCell>
-										<TableCell>{selectedGene?.aliases.length > 0 ? selectedGene?.aliases : "N/A"}</TableCell>
-									</TableRow>
-									<TableRow>
-										<TableCell className="label">Strand</TableCell>
-										<TableCell>{selectedGene?.strand}</TableCell>
-									</TableRow>
-									<TableRow>
-										<TableCell className="label">Annotation</TableCell>
-										<TableCell>{selectedGene?.annotation != null ? selectedGene?.annotation : "N/A"}</TableCell>
-									</TableRow>
-								</TableBody>
-								<Button autoFocus title="Load gene into collection" variant="contained" size="small" color="success"
-									onClick={handleLoadGeneClick} sx={{ marginTop: "10px" }}>
-									Load Gene
-								</Button>
-							</Table>
-						</Box>
-					</Popover >
-				</Draggable >
- */}
 		</>
 
 	);

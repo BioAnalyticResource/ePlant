@@ -21,6 +21,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
 import { GeneItem } from "../types";
+import { TableFooter } from "@mui/material";
 
 
 // TYPES
@@ -46,6 +47,7 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
 
 	useEffect(() => {
 		setOpen(props.open)
+		setGene(props.gene)
 	}, [props])
 	// EVENT HANDLERS
 	const handleClose = () => {
@@ -84,8 +86,8 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
 					>
 						<Box
 							sx={{
-								minWidth: "300px",
-								maxWidth: "400px",
+								minWidth: "350px",
+								maxWidth: "350px",
 								minHeight: "150px",
 								maxHeight: "400px",
 								padding: 2
@@ -130,11 +132,12 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
 										<TableCell>{gene.annotation != "" ? gene.annotation : "N/A"}</TableCell>
 									</TableRow>
 								</TableBody>
-								<Button autoFocus title="Load gene into collection" variant="contained" size="small" color="success"
-									onClick={handleLoadGeneClick} sx={{ marginTop: "10px" }}>
-									Load Gene
-								</Button>
+
 							</Table>
+							<Button autoFocus title="Load gene into collection" variant="contained" size="small" color="success"
+								onClick={handleLoadGeneClick} sx={{ marginTop: "10px" }}>
+								Load Gene
+							</Button>
 						</Box>
 					</Popover >
 				</Draggable >

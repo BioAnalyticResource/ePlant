@@ -18,6 +18,13 @@ export interface ChromosomesResponseObj {
 	"species": string,
 	"chromosomes": ChromosomeList
 }
+// Simplified Gene Item contains only neccary information for drawing the gene indicator
+export interface SimplifiedGeneItem {
+	id: string,
+	chromosome: string,
+	location: number, // y coordinate of gene
+	strand: string // influences if gene is left or right of chromosome
+}
 
 // Genes
 export interface GeneItem {
