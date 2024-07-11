@@ -1,4 +1,4 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Box,
@@ -20,10 +20,10 @@ function CellEFPTooltip(props: {
   tissue: EFPTissue
   data: EFPData
 }) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const theme = useTheme()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const enterListener = () => {
       setOpen(true)
       setStroke(props.el, '#000000', '3')

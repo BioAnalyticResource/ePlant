@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import { ViewDataError } from '@eplant/View/viewData'
 import { Link, Typography } from '@mui/material'
 

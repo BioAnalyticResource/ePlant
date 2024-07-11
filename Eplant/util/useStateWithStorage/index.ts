@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 
 import { storage, usePersist } from '@eplant/state'
 
@@ -21,7 +21,7 @@ export default function useStateWithStorage<T>(
 
   const [loaded, setLoaded] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     storage.get(key).then((x) => {
       setLoaded(true)
       if (x) setVal(deserialize(x))
