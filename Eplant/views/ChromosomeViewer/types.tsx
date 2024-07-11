@@ -49,5 +49,4 @@ export type ChromosomeViewerState = {
   transform: Transform
 }
 export type ChromosomeViewerAction =
-  | { type: 'toggle-heatmap' }
   | { type: 'set-transform'; transform: Transform }

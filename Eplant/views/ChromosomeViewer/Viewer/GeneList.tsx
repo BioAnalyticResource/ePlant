@@ -3,14 +3,6 @@
 // -------
 import React, { FC, useEffect, useState } from 'react'
 
-import GeneticElement from '@eplant/GeneticElement'
-import arabidopsis from '@eplant/Species/arabidopsis'
-import {
-  useActiveGeneId,
-  useGeneticElements,
-  useSelectedGeneHistory,
-  useSetGeneticElements,
-} from '@eplant/state'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -49,14 +41,11 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
   ])
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [selectedGene, setSelectedGene] = useState<GeneItem | null>(null)
-  const [selectedGeneHistory, setSelectedGeneHistory] = useSelectedGeneHistory()
+
   // gene info popup
   const [open, setOpen] = useState(false)
 
   // Other/Global State
-  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
-  const geneticElements = useGeneticElements()
-  const setGeneticElements = useSetGeneticElements()
   const theme = useTheme()
 
   //------------------
@@ -67,11 +56,10 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
       // Arabidopsis_thaliana
       `https://bar.utoronto.ca/eplant/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
       //   Populus_trichocarpa
-      //   `https://bar.utoronto.ca/eplant_poplar/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
+      // `https://bar.utoronto.ca/eplant_poplar/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log(json)
         setGeneList(json)
       })
   }, [])
@@ -84,26 +72,7 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
     (event: React.MouseEvent<HTMLElement>) => {
       setSelectedIndex(index)
       setSelectedGene(gene)
-      const tempHistory = [...selectedGeneHistory]
-      tempHistory.push(gene)
-      setSelectedGeneHistory(tempHistory)
     }
-  const handleClose = () => {
-    setOpen(false)
-  }
-  const handleLoadGeneClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (selectedGene != null) {
-      const gene = new GeneticElement(
-        selectedGene.id,
-        selectedGene.annotation,
-        arabidopsis,
-        selectedGene.aliases
-      )
-      geneticElements[0].push(gene)
-      setGeneticElements(geneticElements[0])
-      setActiveGeneId(gene.id)
-    }
-  }
 
   return (
     <>
@@ -151,17 +120,7 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
           )
         })}
       </List>
-
       {/* GENE INFO POPUP */}
-      {/* {selectedGeneHistory.map((gene, i) => {
-        return (
-          <GeneInfoPopup
-            key={i}
-            gene={gene}
-            anchorOrigin={anchorOrigin}
-          />
-        )
-      })} */}
       {selectedGene != null && (
         <>
           <GeneInfoPopup

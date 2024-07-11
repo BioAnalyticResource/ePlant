@@ -64,17 +64,17 @@ export function atomWithStorage<T>(
       if (e) setAtom(e)
       else setAtom(initialValue)
     }
-      ; (async () => {
-        const finished = loading?.()
-        try {
-          const val = await loadedValue
-          if (val) {
-            setAtom(val)
-          }
-        } finally {
-          if (finished) finished()
+    ;(async () => {
+      const finished = loading?.()
+      try {
+        const val = await loadedValue
+        if (val) {
+          setAtom(val)
         }
-      })()
+      } finally {
+        if (finished) finished()
+      }
+    })()
     return storage.watch(key, listener)
   }
   const a = atom(
@@ -109,17 +109,17 @@ function atomWithOptionalStorage<T>(
       if (e) setAtom(deserialize(e))
       else setAtom(initialValue)
     }
-      ; (async () => {
-        pageLoad.start()
-        try {
-          const val = await loadedValue
-          if (val) {
-            setAtom(deserialize(val))
-          }
-        } finally {
-          pageLoad.done()
+    ;(async () => {
+      pageLoad.start()
+      try {
+        const val = await loadedValue
+        if (val) {
+          setAtom(deserialize(val))
         }
-      })()
+      } finally {
+        pageLoad.done()
+      }
+    })()
     return storage.watch(key, listener)
   }
   const a = atom(
@@ -187,10 +187,6 @@ export const collectionsAtom = atomWithOptionalStorage<
 )
 export const useCollections = () => useAtom(collectionsAtom)
 export const useSetCollections = () => useSetAtom(collectionsAtom)
-
-export const selectedGeneHistoryAtom = atom<GeneArray | []>([])
-export const useSelectedGeneHistory = () => useAtom(selectedGeneHistoryAtom)
-export const useSetSelectedGeneHistory = () => useSetAtom(selectedGeneHistoryAtom)
 
 export const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)

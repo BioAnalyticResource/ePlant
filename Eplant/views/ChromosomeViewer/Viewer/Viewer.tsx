@@ -11,7 +11,7 @@ import { ChromosomeList, GeneAnnotationItem, GeneItem } from '../types'
 
 import Chromosome from './Chromosome'
 // TYPES
-interface ChromosomeViewProps {
+interface ViewerProps {
   chromosomes: ChromosomeList
   activeGeneAnnotation: GeneAnnotationItem | null
   geneAnnotationArray: GeneAnnotationItem[] | []
@@ -20,7 +20,7 @@ interface ChromosomeViewProps {
 //----------
 // COMPONENT
 //----------
-const Viewer: FC<ChromosomeViewProps> = ({
+const Viewer: FC<ViewerProps> = ({
   chromosomes,
   activeGeneAnnotation,
   geneAnnotationArray,

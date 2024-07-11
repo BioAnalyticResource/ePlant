@@ -1,16 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { useGeneticElements } from '@eplant/state'
-import Add from '@mui/icons-material/Add'
-import Remove from '@mui/icons-material/Remove'
-import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import ButtonGroup from '@mui/material/ButtonGroup'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 
 import { View, ViewProps } from '../../View'
 
@@ -26,6 +19,7 @@ import {
   GeneItem,
   Transform,
 } from './types'
+import ZoomControls from './ZoomControls'
 
 const ChromosomeViewer: View<
   ChromosomeViewerData,
@@ -102,7 +96,7 @@ const ChromosomeViewer: View<
     const [geneticElements] = useGeneticElements()
 
     // On active geneticElement update
-    React.useEffect(() => {
+    useEffect(() => {
       if (geneticElement != null) {
         fetch(
           // Arabidopsis_thaliana
@@ -118,7 +112,7 @@ const ChromosomeViewer: View<
     }, [geneticElement])
 
     //on geneticElements in sidebar update
-    React.useEffect(() => {
+    useLayoutEffect(() => {
       setGeneAnnotationArray([])
       geneticElements.map((gene) => {
         fetch(
@@ -155,68 +149,8 @@ const ChromosomeViewer: View<
 
     return (
       <Box sx={{ flexGrow: 1 }}>
-        {/* VIEW TOOLBAR */}
-        <AppBar position='sticky' color='default' sx={{ overflow: 'overlay' }}>
-          <Toolbar variant='dense'>
-            {/* VIEW TITLE */}
-            <Typography variant='h6' sx={{ flexGrow: 1 }}>
-              Chromosome Viewer
-            </Typography>
-            {/* ZOOM CONTROLS */}
-            <Typography
-              variant='caption'
-              sx={{
-                color:
-                  state.transform.dZoom == 1000
-                    ? 'red'
-                    : state.transform.dZoom < 0.46
-                      ? 'red'
-                      : 'white',
-              }}
-            >
-              {(state.transform.dZoom * 100).toFixed(0)}%
-            </Typography>
-            <ButtonGroup variant='outlined' sx={{ marginLeft: '5px' }}>
-              <Button
-                size='medium'
-                color='secondary'
-                title='Zoom in'
-                sx={{
-                  minWidth: '25px',
-                  padding: '2px',
-                }}
-                onClick={() =>
-                  spaceRef.current?.viewPort?.camera.moveBy(0, 0, 0.1)
-                }
-              >
-                <Add />
-              </Button>
-              <Button
-                size='medium'
-                color='secondary'
-                title='Zoom out'
-                sx={{
-                  minWidth: '25px',
-                  padding: '2px',
-                }}
-                onClick={() =>
-                  spaceRef.current?.viewPort?.camera.moveBy(0, 0, -0.1)
-                }
-              >
-                <Remove />
-              </Button>
-            </ButtonGroup>
-            <Button
-              color='secondary'
-              title='Reset zoom'
-              onClick={() =>
-                spaceRef.current?.viewPort?.camera.recenter(300, 150, 0.7)
-              }
-            >
-              Reset
-            </Button>
-          </Toolbar>
-        </AppBar>
+        {/* ZOOM CONTROLS */}
+        <ZoomControls spaceRef={spaceRef} scale={state.transform.dZoom} />
         {/* CHROMOSOME VIEWER */}
         <Space
           ref={spaceRef}
@@ -229,7 +163,7 @@ const ChromosomeViewer: View<
             vp.setBounds({
               x: [-650, 1300],
               y: [-450, 815],
-              zoom: [0.05, 1000],
+              zoom: [0.05, 1000-0.3],
             })
           }}
           onUpdated={(vp) => {
@@ -254,22 +188,13 @@ const ChromosomeViewer: View<
       </Box>
     )
   },
-  actions: [
-    {
-      action: { type: 'toggle-heatmap' },
-      render: () => <>Toggle heatmap</>,
-    },
-  ],
+  actions: [],
   reducer: (state, action) => {
     switch (action.type) {
       case 'set-transform':
         return {
           ...state,
           transform: action.transform,
-        }
-      case 'toggle-heatmap':
-        return {
-          ...state,
         }
       default:
         return state

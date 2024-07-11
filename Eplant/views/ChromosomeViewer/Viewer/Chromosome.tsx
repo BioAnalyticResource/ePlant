@@ -43,7 +43,6 @@ const Chromosome: FC<ChromosomeProps> = ({
   geneAnnotationArray,
 }) => {
   // State
-  const [geneInfoOpen, setGeneInfoOpen] = useState(false)
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [anchorOrigin, setAnchorOrigin] = useState<number[]>([])
   const [anchorEl, setAnchorEl] = useState<null | any>(null)
@@ -76,7 +75,8 @@ const Chromosome: FC<ChromosomeProps> = ({
     svg.setAttribute('width', `${bbox.x + bbox.width + bbox.x}`)
     svg.setAttribute('height', `${bbox.y + bbox.height + bbox.y}`)
   }, [])
-
+  // on geneAnnotationArray update
+  useEffect(() => {}, [geneAnnotationArray])
   //------------------
   // Helper Functions
   //------------------
@@ -192,13 +192,8 @@ const Chromosome: FC<ChromosomeProps> = ({
   const handleMouseLeave = () => {
     setIsHovered(false)
   }
-  // Handle active gene click
-  const handleActiveGeneClick = () => {
-    setGeneInfoOpen(!geneInfoOpen)
-  }
 
   // Popover prop variables
-  const open: boolean = anchorOrigin.length === 0 ? false : true
   const openPopup = Boolean(anchorEl)
 
   return (
@@ -238,14 +233,12 @@ const Chromosome: FC<ChromosomeProps> = ({
                 overflowX: 'clip',
               }}
             >
-              {open && (
-                <GeneList
-                  id={chromosome.id}
-                  start={geneRange.start}
-                  end={geneRange.end}
-                  anchorOrigin={anchorOrigin}
-                />
-              )}
+              <GeneList
+                id={chromosome.id}
+                start={geneRange.start}
+                end={geneRange.end}
+                anchorOrigin={anchorOrigin}
+              />
             </Box>
           </ClickAwayListener>
           <Typography variant='caption' sx={{ fontSize: 9 }}>
@@ -281,7 +274,7 @@ const Chromosome: FC<ChromosomeProps> = ({
               y={y}
               width={width}
               height={chromosome.size * perBpHeight}
-              ry={chromosome.size * perBpHeight > 10 ? width/2 : '50%'}
+              ry={chromosome.size * perBpHeight > 10 ? width / 2 : '50%'}
               fill='grey'
             />
           )}
@@ -342,19 +335,28 @@ const Chromosome: FC<ChromosomeProps> = ({
         {/* GENES ANNOTATION TAGS */}
         <g id={`${chromosome.id}_geneAnnotationTags`}>
           {geneAnnotationArray.map((gene, i) => {
-            if (activeGeneAnnotation?.id != gene.id) {
-              return <GeneAnnotation key={i} gene={gene} scale={scale} />
+            let active = false
+            if (activeGeneAnnotation?.id == gene.id) {
+              active = true
             }
+            return (
+              <GeneAnnotation
+                key={i}
+                gene={gene}
+                scale={scale}
+                active={active}
+              />
+            )
           })}
 
           {/* ACTIVE GENE ANNOTATION */}
-          {activeGeneAnnotation != null && (
+          {/* {activeGeneAnnotation != null && (
             <GeneAnnotation
               gene={activeGeneAnnotation}
               scale={scale}
               active={true}
             />
-          )}
+          )} */}
         </g>
       </svg>
     </>
