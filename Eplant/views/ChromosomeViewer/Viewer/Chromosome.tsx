@@ -10,15 +10,11 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 import useTheme from '@mui/material/styles/useTheme'
 import Typography from '@mui/material/Typography'
 
-import {
-  CentromereList,
-  ChromosomeItem,
-  GeneAnnotationItem,
-  GeneItem,
-} from '../types'
+import { CentromereList, ChromosomeItem, GeneAnnotationItem } from '../types'
 
 import GeneAnnotation from './GeneAnnotation'
 import GeneList from './GeneList'
+import { useCollections } from '@eplant/state'
 //----------
 // TYPES
 //----------
@@ -50,7 +46,9 @@ const Chromosome: FC<ChromosomeProps> = ({
     start: 0,
     end: 0,
   })
+
   // Global State
+  const [collections] = useCollections()
   const theme = useTheme()
 
   // SVG drawing
@@ -76,7 +74,13 @@ const Chromosome: FC<ChromosomeProps> = ({
     svg.setAttribute('height', `${bbox.y + bbox.height + bbox.y}`)
   }, [])
   // on geneAnnotationArray update
-  useEffect(() => {}, [geneAnnotationArray])
+  useEffect(() => {
+    // const uniq = geneAnnotationArray.reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[])
+    // if (uniq.length > 0 ) {
+    //   console.log(uniq)
+    // }
+    /* try to remove duplicates from geneAnnotationArray!!!!! */
+  }, [geneAnnotationArray])
   //------------------
   // Helper Functions
   //------------------
@@ -335,18 +339,30 @@ const Chromosome: FC<ChromosomeProps> = ({
         {/* GENES ANNOTATION TAGS */}
         <g id={`${chromosome.id}_geneAnnotationTags`}>
           {geneAnnotationArray.map((gene, i) => {
+            const allGenesInCollections: string[] = []
             let active = false
             if (activeGeneAnnotation?.id == gene.id) {
               active = true
             }
-            return (
-              <GeneAnnotation
-                key={i}
-                gene={gene}
-                scale={scale}
-                active={active}
-              />
-            )
+
+            // get all genes in collections, to check that the geneAnnotation
+              // actually corrosponds to a gene in a collection
+            collections.map((collection) => {
+              collection.genes.map((cGeneId) => {
+                allGenesInCollections.push(cGeneId)
+              })
+            })
+
+            if (allGenesInCollections.includes(gene.id)) {
+              return (
+                <GeneAnnotation
+                  key={i}
+                  gene={gene}
+                  scale={scale}
+                  active={active}
+                />
+              )
+            }
           })}
 
           {/* ACTIVE GENE ANNOTATION */}

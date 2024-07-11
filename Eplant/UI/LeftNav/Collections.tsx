@@ -22,7 +22,11 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import GeneticElement from '@eplant/GeneticElement'
-import { useCollections, useGeneticElements } from '@eplant/state'
+import {
+  useActiveGeneId,
+  useCollections,
+  useGeneticElements,
+} from '@eplant/state'
 import { Add, Check, ExpandMore } from '@mui/icons-material'
 import {
   Box,
@@ -349,6 +353,7 @@ export function Collections(props: {
   onSelectGene?: (gene: GeneticElement) => void
   selectedGene?: string
 }) {
+  const [activeGeneId] = useActiveGeneId() // new
   const [genes, setGenes] = useGeneticElements()
   const [collections, setCollections] = useCollections()
 
@@ -388,7 +393,11 @@ export function Collections(props: {
         return cols
       } else return collections
     })
-  }, [genes, collections])
+  }, [
+    genes,
+    collections,
+    activeGeneId, // new
+  ])
 
   return (
     <DndContext

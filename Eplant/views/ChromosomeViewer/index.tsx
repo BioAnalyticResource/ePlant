@@ -163,7 +163,7 @@ const ChromosomeViewer: View<
             vp.setBounds({
               x: [-650, 1300],
               y: [-450, 815],
-              zoom: [0.05, 1000-0.3],
+              zoom: [0.05, 1000 - 0.3],
             })
           }}
           onUpdated={(vp) => {

@@ -38,7 +38,6 @@ const ZoomControls: FC<ZoomControlsProps> = ({ spaceRef, scale }) => {
       <Tooltip title={resetZoomMessage} arrow>
         <Button
           color='secondary'
-          title='Reset zoom'
           onClick={() => {
             spaceRef.current?.viewPort?.camera.recenter(300, 150, 0.7)
             setResetZoomMessage('Zoom reset!')
@@ -47,17 +46,19 @@ const ZoomControls: FC<ZoomControlsProps> = ({ spaceRef, scale }) => {
             }, 2000)
           }}
           sx={{
-            color: scale == 1000 ? 'red' : scale < 0.46 ? 'red' : 'white',
+            color: scale == 1000 - 0.3 ? 'red' : scale < 0.46 ? 'red' : 'white',
           }}
         >
           {(scale * 100 + 30).toFixed(0)}%
         </Button>
       </Tooltip>
-      <Tooltip title='Zoom in' arrow>
+      <Tooltip
+        title={scale >= 1000 - 0.3 ? 'Maximum zoom reached!' : 'Zoom in'}
+        arrow
+      >
         <Button
           size='medium'
           color='secondary'
-          title='Zoom in'
           sx={{
             minWidth: '25px',
             padding: '2px',
@@ -67,11 +68,13 @@ const ZoomControls: FC<ZoomControlsProps> = ({ spaceRef, scale }) => {
           <Add />
         </Button>
       </Tooltip>
-      <Tooltip title='Zoom out' arrow>
+      <Tooltip
+        title={scale + 30 < 76 ? 'Minimum zoom reached!' : 'Zoom out'}
+        arrow
+      >
         <Button
           size='medium'
           color='secondary'
-          title='Zoom out'
           sx={{
             minWidth: '25px',
             padding: '2px',
