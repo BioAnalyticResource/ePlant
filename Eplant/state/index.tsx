@@ -191,11 +191,6 @@ export const useSetCollections = () => useSetAtom(collectionsAtom)
 export const selectedGeneHistoryAtom = atom<GeneArray | []>([])
 export const useSelectedGeneHistory = () => useAtom(selectedGeneHistoryAtom)
 export const useSetSelectedGeneHistory = () => useSetAtom(selectedGeneHistoryAtom)
-// export const geneInfoPopupAtom = atom<{
-//   gene: GeneItem | null; open: boolean
-// }>({ gene: null, open: false })
-// export const useGeneInfoPopup = () => useAtom(geneInfoPopupAtom)
-// export const useSetGeneInfoPopup = () => useSetAtom(geneInfoPopupAtom)
 
 export const speciesAtom = atom<Species[]>([arabidopsis])
 export const useSpecies = () => useAtom(speciesAtom)

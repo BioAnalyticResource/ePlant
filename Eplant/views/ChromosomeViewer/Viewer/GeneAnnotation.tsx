@@ -50,6 +50,7 @@ const GeneAnnotation: FC<GeneAnnotationProps> = ({
       />
       <text
         fontSize={scale <= 1.5 ? 15 : 20 / scale}
+        letterSpacing='initial'
         fill={
           active
             ? theme.palette.primary.main
@@ -57,10 +58,16 @@ const GeneAnnotation: FC<GeneAnnotationProps> = ({
         }
         x={`${
           gene.strand == '+' && scale <= 1.5
-            ? -78
-            : gene.strand == '+'
-              ? -103/ scale
-              : 25
+            ? -76
+            : gene.strand == '+' && scale >= 100
+              ? -100 / scale + 1.99
+              : gene.strand == '+' && scale >= 10
+                ? -100 / scale + 1.91
+                : gene.strand == '+' && scale >= 4
+                  ? -100 / scale + 1.4
+                  : gene.strand == '+'
+                    ? -99 / scale
+                    : 25
         }`}
         y={`${gene.location}`}
       >

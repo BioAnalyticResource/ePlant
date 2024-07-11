@@ -52,7 +52,9 @@ const Viewer: FC<ChromosomeViewProps> = ({
         // Render a Chromosome component for each chromosome
         return (
           <div key={i}>
-            <Typography noWrap>{chromosome.name}</Typography>
+            <Typography fontSize='30px' noWrap sx={{ marginLeft: '-20px' }}>
+              {chromosome.name}
+            </Typography>
             <Chromosome
               scale={scale}
               chromosome={chromosome}

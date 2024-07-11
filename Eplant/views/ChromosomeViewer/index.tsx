@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import { transform } from 'lodash'
-//@ts-ignore
-import { MapInteractionCSS } from 'react-map-interaction'
+import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { useGeneticElements } from '@eplant/state'
 import Add from '@mui/icons-material/Add'
 import Remove from '@mui/icons-material/Remove'
-import IconButton from '@mui/material/IconButton'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import ButtonGroup from '@mui/material/ButtonGroup'
+import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 
 import { View, ViewProps } from '../../View'
@@ -34,15 +36,14 @@ const ChromosomeViewer: View<
   id: 'chromosome-viewer',
   getInitialState(): ChromosomeViewerState {
     return {
-      value: {
-        scale: 0.8,
-        translation: {
-          x: 0,
-          y: 0,
-        },
+      transform: {
+        dx: 300,
+        dy: 150,
+        dZoom: 0.7,
       },
     }
   },
+
   async getInitialData(
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void
@@ -75,9 +76,10 @@ const ChromosomeViewer: View<
 
     return {
       viewData: chromosomeViewData,
-      value: {
-        scale: 0.8,
-        translation: { x: 0, y: 0 },
+      transform: {
+        dx: 0,
+        dy: 0,
+        dZoom: 1,
       },
     }
   },
@@ -96,92 +98,8 @@ const ChromosomeViewer: View<
     const [geneAnnotationArray, setGeneAnnotationArray] = useState<
       GeneAnnotationItem[] | []
     >([])
+    const spaceRef = React.useRef<Space | null>(null)
     const [geneticElements] = useGeneticElements()
-
-    const chromosomes = [
-      {
-        id: 'Chr1',
-        name: 'Chr 1',
-        size: 30427671,
-        centromeres: [
-          {
-            id: 'CEN1',
-            start: 15086046,
-            end: 15087045,
-          },
-        ],
-      },
-      {
-        id: 'Chr2',
-        name: 'Chr 2',
-        size: 19698289,
-        centromeres: [
-          {
-            id: 'CEN2',
-            start: 3607930,
-            end: 3608929,
-          },
-        ],
-      },
-      {
-        id: 'Chr3',
-        name: 'Chr 3',
-        size: 23459830,
-        centromeres: [
-          {
-            id: 'CEN3_1',
-            start: 13587787,
-            end: 13588786,
-          },
-          {
-            id: 'CEN3_2',
-            start: 13799418,
-            end: 13800417,
-          },
-          {
-            id: 'CEN3_3',
-            start: 14208953,
-            end: 14209952,
-          },
-        ],
-      },
-      {
-        id: 'Chr4',
-        name: 'Chr 4',
-        size: 18585056,
-        centromeres: [
-          {
-            id: 'CEN4',
-            start: 3956022,
-            end: 3957021,
-          },
-        ],
-      },
-      {
-        id: 'Chr5',
-        name: 'Chr 5',
-        size: 26975502,
-        centromeres: [
-          {
-            id: 'CEN5',
-            start: 11725025,
-            end: 11726024,
-          },
-        ],
-      },
-      {
-        id: 'ChrC',
-        name: 'Chr C',
-        size: 154478,
-        centromeres: [],
-      },
-      {
-        id: 'ChrM',
-        name: 'Chr M',
-        size: 366924,
-        centromeres: [],
-      },
-    ]
 
     // On active geneticElement update
     React.useEffect(() => {
@@ -211,14 +129,8 @@ const ChromosomeViewer: View<
         )
           .then((response) => response.json())
           .then((geneItem) => {
-            const genePixelLoc: number =
-              ((geneItem?.start + geneItem.end) / 2) * 0.000015
-            const geneAnnotation: GeneAnnotationItem = {
-              id: geneItem.id,
-              chromosome: geneItem.chromosome,
-              location: genePixelLoc,
-              strand: geneItem.strand,
-            } // geneAnnotation is an object that holds only the neccessary information to draw the gene indicators
+            const geneAnnotation: GeneAnnotationItem =
+              getGeneAnnotation(geneItem)
             const tempGenes: GeneAnnotationItem[] = geneAnnotationArray
             tempGenes.push(geneAnnotation)
             setGeneAnnotationArray(tempGenes)
@@ -228,6 +140,7 @@ const ChromosomeViewer: View<
           })
       })
     }, [geneticElements])
+
     // Utility Functions
     const getGeneAnnotation = (gene: GeneItem): GeneAnnotationItem => {
       const genePixelLoc: number = ((gene.start + gene.end) / 2) * 0.000015
@@ -240,58 +153,111 @@ const ChromosomeViewer: View<
       return geneAnnotation
     }
 
-    // React Nodes
-    const controlButton = (variant: string) => {
-      return (
-        <React.Fragment>
-          <IconButton aria-label='fingerprint' color='secondary'>
-            {variant === '+' ? <Add /> : variant === '-' ? <Remove /> : <></>}
-          </IconButton>
-        </React.Fragment>
-      )
-    }
     return (
-      <>
-        <Typography variant='h6' sx={{}}>
-          Chromosome Viewer
-        </Typography>
-        <MapInteractionCSS
-          showControls
-          defaultValue={{
-            scale: 0.8,
-            translation: { x: 100, y: 0 },
-          }}
-          value={state.value}
-          onChange={(value: Transform) => {
-            dispatch({
-              type: 'set-transform',
-              value,
+      <Box sx={{ flexGrow: 1 }}>
+        {/* VIEW TOOLBAR */}
+        <AppBar position='sticky' color='default' sx={{ overflow: 'overlay' }}>
+          <Toolbar variant='dense'>
+            {/* VIEW TITLE */}
+            <Typography variant='h6' sx={{ flexGrow: 1 }}>
+              Chromosome Viewer
+            </Typography>
+            {/* ZOOM CONTROLS */}
+            <Typography
+              variant='caption'
+              sx={{
+                color:
+                  state.transform.dZoom == 1000
+                    ? 'red'
+                    : state.transform.dZoom < 0.46
+                      ? 'red'
+                      : 'white',
+              }}
+            >
+              {(state.transform.dZoom * 100).toFixed(0)}%
+            </Typography>
+            <ButtonGroup variant='outlined' sx={{ marginLeft: '5px' }}>
+              <Button
+                size='medium'
+                color='secondary'
+                title='Zoom in'
+                sx={{
+                  minWidth: '25px',
+                  padding: '2px',
+                }}
+                onClick={() =>
+                  spaceRef.current?.viewPort?.camera.moveBy(0, 0, 0.1)
+                }
+              >
+                <Add />
+              </Button>
+              <Button
+                size='medium'
+                color='secondary'
+                title='Zoom out'
+                sx={{
+                  minWidth: '25px',
+                  padding: '2px',
+                }}
+                onClick={() =>
+                  spaceRef.current?.viewPort?.camera.moveBy(0, 0, -0.1)
+                }
+              >
+                <Remove />
+              </Button>
+            </ButtonGroup>
+            <Button
+              color='secondary'
+              title='Reset zoom'
+              onClick={() =>
+                spaceRef.current?.viewPort?.camera.recenter(300, 150, 0.7)
+              }
+            >
+              Reset
+            </Button>
+          </Toolbar>
+        </AppBar>
+        {/* CHROMOSOME VIEWER */}
+        <Space
+          ref={spaceRef}
+          onCreate={(vp) => {
+            vp.camera.recenter(
+              state.transform.dx,
+              state.transform.dy,
+              state.transform.dZoom
+            )
+            vp.setBounds({
+              x: [-650, 1300],
+              y: [-450, 815],
+              zoom: [0.05, 1000],
             })
           }}
-          minScale={0.25}
-          maxScale={100}
-          translationBounds={{
-            xMax: 400,
-            yMax: 0,
+          onUpdated={(vp) => {
+            const transform: Transform = {
+              dx: vp.centerX,
+              dy: vp.centerY,
+              dZoom: vp.zoomFactor,
+            }
+            dispatch({
+              type: 'set-transform',
+              transform,
+            })
           }}
-          btnClass={'ChromosomeZoomBtn'}
-          plusBtnContents={controlButton('+')}
-          minusBtnContents={controlButton('-')}
         >
           <ChromosomeView
             chromosomes={activeData.viewData}
             activeGeneAnnotation={activeGeneAnnotation}
             geneAnnotationArray={geneAnnotationArray}
-            scale={state.value.scale}
+            scale={state.transform.dZoom}
           ></ChromosomeView>
-        </MapInteractionCSS>
-      </>
+        </Space>
+      </Box>
     )
   },
   actions: [
     {
-      action: { type: 'reset-transform' },
-      render: () => <>Reset pan/zoom</>,
+      action: { type: 'toggle-heatmap' },
+      render: () => <>Toggle heatmap</>,
     },
   ],
   reducer: (state, action) => {
@@ -299,15 +265,11 @@ const ChromosomeViewer: View<
       case 'set-transform':
         return {
           ...state,
-          value: action.value,
+          transform: action.transform,
         }
-      case 'reset-transform':
+      case 'toggle-heatmap':
         return {
           ...state,
-          value: {
-            scale: 0.8,
-            translation: { x: 100, y: 0 },
-          },
         }
       default:
         return state
@@ -316,7 +278,12 @@ const ChromosomeViewer: View<
   icon: () => <ChromosomeIcon />,
   description: 'Chromosome Viewer.',
   citation() {
-    return <div></div>
+    return (
+      <div>
+        This image was generated with the Chromosome viewer of ePlant v3 using
+        the BAR api
+      </div>
+    )
   },
 }
 export default ChromosomeViewer

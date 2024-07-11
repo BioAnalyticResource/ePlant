@@ -40,16 +40,14 @@ export interface GeneArray extends Array<GeneItem> {}
 
 // Component Props
 export type Transform = {
-  scale: number
-  translation: {
-    x: number
-    y: number
-  }
+  dx: number
+  dy: number
+  dZoom: number
 }
 export type ChromosomeViewerData = ChromosomeList
 export type ChromosomeViewerState = {
-  value: Transform
+  transform: Transform
 }
 export type ChromosomeViewerAction =
-  | { type: 'reset-transform' }
-  | { type: 'set-transform'; value: Transform }
+  | { type: 'toggle-heatmap' }
+  | { type: 'set-transform'; transform: Transform }
