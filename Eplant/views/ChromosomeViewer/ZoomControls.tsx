@@ -69,7 +69,7 @@ const ZoomControls: FC<ZoomControlsProps> = ({ spaceRef, scale }) => {
         </Button>
       </Tooltip>
       <Tooltip
-        title={scale + 30 < 76 ? 'Minimum zoom reached!' : 'Zoom out'}
+        title={scale * 100 + 30 < 76 ? 'Minimum zoom reached!' : 'Zoom out'}
         arrow
       >
         <Button

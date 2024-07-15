@@ -2,8 +2,10 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { useGeneticElements } from '@eplant/state'
+import { useActiveGeneId, useGeneticElements } from '@eplant/state'
+import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
+import Snackbar from '@mui/material/Snackbar'
 
 import { View, ViewProps } from '../../View'
 
@@ -15,11 +17,11 @@ import {
   ChromosomeViewerAction,
   ChromosomeViewerData,
   ChromosomeViewerState,
-  GeneAnnotationItem,
-  GeneItem,
   Transform,
 } from './types'
 import ZoomControls from './ZoomControls'
+import SnackbarContent from '@mui/material/SnackbarContent'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const ChromosomeViewer: View<
   ChromosomeViewerData,
@@ -35,6 +37,7 @@ const ChromosomeViewer: View<
         dy: 150,
         dZoom: 0.7,
       },
+      species: 'Arabidopsis_thaliana',
     }
   },
 
@@ -57,8 +60,11 @@ const ChromosomeViewer: View<
       },
     ]
 
-    const species = 'Arabidopsis_thaliana'
-    const url = `https://bar.utoronto.ca/eplant/cgi-bin/chromosomeinfo.cgi?species=${species}`
+    const poplar = false
+    const species = poplar ? 'Populus_trichocarpa' : 'Arabidopsis_thaliana'
+    const url = `https://bar.utoronto.ca/eplant${
+      poplar ? '_poplar' : ''
+    }/cgi-bin/chromosomeinfo.cgi?species=${species}`
 
     // const species = 'Populus_trichocarpa'
     // const url = `https://bar.utoronto.ca/eplant_poplar/cgi-bin/chromosomeinfo.cgi?species=${species}`
@@ -69,12 +75,14 @@ const ChromosomeViewer: View<
       .then((responseObj: ChromosomesResponseObj) => responseObj['chromosomes'])
 
     return {
+      activeView: ChromosomeViewer.id,
       viewData: chromosomeViewData,
       transform: {
         dx: 0,
         dy: 0,
         dZoom: 1,
       },
+      species: species,
     }
   },
   component({
@@ -87,64 +95,18 @@ const ChromosomeViewer: View<
     ChromosomeViewerState,
     ChromosomeViewerAction
   >) {
-    const [activeGeneAnnotation, setActiveGeneAnnotation] =
-      useState<GeneAnnotationItem | null>(null)
-    const [geneAnnotationArray, setGeneAnnotationArray] = useState<
-      GeneAnnotationItem[] | []
-    >([])
     const spaceRef = React.useRef<Space | null>(null)
-    const [geneticElements] = useGeneticElements()
-
-    // On active geneticElement update
+    const [messageOpen, setMessageOpen] = useState(true)
     useEffect(() => {
-      if (geneticElement != null) {
-        fetch(
-          // Arabidopsis_thaliana
-          `https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=${geneticElement.id}`
-          // Populus_trichocarpa
-          // `https://bar.utoronto.ca/eplant_poplar/cgi-bin/querygene.cgi?species=Populus_trichocarpa&term=${geneticElement.id}`
-        )
-          .then((response) => response.json())
-          .then((geneItem) => {
-            setActiveGeneAnnotation(getGeneAnnotation(geneItem))
-          })
-      }
-    }, [geneticElement])
+      spaceRef.current?.viewPort?.camera.moveBy(0, 0, 0.1)
 
-    //on geneticElements in sidebar update
-    useLayoutEffect(() => {
-      setGeneAnnotationArray([])
-      geneticElements.map((gene) => {
-        fetch(
-          // Arabidopsis_thaliana
-          `https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=${gene.id}`
-          // Populus_trichocarpa
-          // `https://bar.utoronto.ca/eplant_poplar/cgi-bin/querygene.cgi?species=Populus_trichocarpa&term=${gene.id}`
-        )
-          .then((response) => response.json())
-          .then((geneItem) => {
-            const geneAnnotation: GeneAnnotationItem =
-              getGeneAnnotation(geneItem)
-            const tempGenes: GeneAnnotationItem[] = geneAnnotationArray
-            tempGenes.push(geneAnnotation)
-            setGeneAnnotationArray(tempGenes)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      })
-    }, [geneticElements])
-
-    // Utility Functions
-    const getGeneAnnotation = (gene: GeneItem): GeneAnnotationItem => {
-      const genePixelLoc: number = ((gene.start + gene.end) / 2) * 0.000015
-      const geneAnnotation: GeneAnnotationItem = {
-        id: gene.id,
-        chromosome: gene.chromosome,
-        location: genePixelLoc,
-        strand: gene.strand,
-      }
-      return geneAnnotation
+      setTimeout(() => {
+        // refresh the ui to render gene annotations automatically
+        spaceRef.current?.viewPort?.camera.moveBy(0, 0, -0.1)
+      }, 1000)
+    }, [])
+    const handleClose = () => {
+      setMessageOpen(false)
     }
 
     return (
@@ -180,11 +142,29 @@ const ChromosomeViewer: View<
         >
           <ChromosomeView
             chromosomes={activeData.viewData}
-            activeGeneAnnotation={activeGeneAnnotation}
-            geneAnnotationArray={geneAnnotationArray}
             scale={state.transform.dZoom}
+            species={state.species}
           ></ChromosomeView>
         </Space>
+        <Snackbar
+          open={messageOpen}
+          autoHideDuration={2500}
+          onClose={handleClose}
+        >
+          <SnackbarContent
+            sx={(theme) => ({
+              backgroundColor: theme.palette.background.transparentOverlay,
+              color: theme.palette.secondary.contrastText,
+            })}
+            message={
+              <span id='client-snackbar'>
+                Please allow a brief moment for gene annotations to be processed
+                &nbsp;
+                <CircularProgress size={12} />
+              </span>
+            }
+          />
+        </Snackbar>
       </Box>
     )
   },

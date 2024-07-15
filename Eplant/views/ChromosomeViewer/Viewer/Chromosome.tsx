@@ -3,6 +3,7 @@
 // -------
 import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
 
+import { useCollections, useGeneticElements } from '@eplant/state'
 import { Unstable_Popup as Popup } from '@mui/base/Unstable_Popup'
 import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import Box from '@mui/material/Box'
@@ -10,19 +11,23 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 import useTheme from '@mui/material/styles/useTheme'
 import Typography from '@mui/material/Typography'
 
-import { CentromereList, ChromosomeItem, GeneAnnotationItem } from '../types'
+import {
+  CentromereList,
+  ChromosomeItem,
+  GeneAnnotationItem,
+  GeneItem,
+} from '../types'
 
 import GeneAnnotation from './GeneAnnotation'
 import GeneList from './GeneList'
-import { useCollections } from '@eplant/state'
+import Snackbar from '@mui/material/Snackbar'
+
 //----------
 // TYPES
 //----------
 interface ChromosomeProps {
   scale: number
   chromosome: ChromosomeItem
-  activeGeneAnnotation: GeneAnnotationItem | null
-  geneAnnotationArray: GeneAnnotationItem[] | []
 }
 
 interface Range {
@@ -30,14 +35,10 @@ interface Range {
   end: number
 }
 
+//----------
 // COMPONENT
 //----------
-const Chromosome: FC<ChromosomeProps> = ({
-  scale,
-  chromosome,
-  activeGeneAnnotation,
-  geneAnnotationArray,
-}) => {
+const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
   // State
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [anchorOrigin, setAnchorOrigin] = useState<number[]>([])
@@ -46,8 +47,12 @@ const Chromosome: FC<ChromosomeProps> = ({
     start: 0,
     end: 0,
   })
+  const [geneAnnotationsArray, setGeneAnnotationsArray] = useState<
+    GeneAnnotationItem[]
+  >([])
 
   // Global State
+  const [geneticElements] = useGeneticElements()
   const [collections] = useCollections()
   const theme = useTheme()
 
@@ -74,13 +79,51 @@ const Chromosome: FC<ChromosomeProps> = ({
     svg.setAttribute('height', `${bbox.y + bbox.height + bbox.y}`)
   }, [])
   // on geneAnnotationArray update
-  useEffect(() => {
-    // const uniq = geneAnnotationArray.reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[])
-    // if (uniq.length > 0 ) {
-    //   console.log(uniq)
-    // }
+  useLayoutEffect(() => {
+    const species = 'Arabidopsis_thaliana'
+    let newGeneAnnotationArray: GeneAnnotationItem[] = []
+    geneticElements.map((gene) => {
+      fetch(
+        `https://bar.utoronto.ca/eplant${
+          species == 'Populus_trichocarpa' ? '_poplar' : ''
+        }/cgi-bin/querygene.cgi?species=${species}&term=${gene.id}`
+      )
+        .then((response) => response.json())
+        .then((geneItem) => {
+          if (geneItem.chromosome === chromosome.id) {
+            newGeneAnnotationArray = geneAnnotationsArray
+            const geneAnnotation: GeneAnnotationItem =
+              getGeneAnnotation(geneItem)
+
+            const isDuplicate = newGeneAnnotationArray.some((gene) => {
+              if (gene.id === geneAnnotation.id) {
+                return true
+              }
+              return false
+            })
+            if (!isDuplicate) {
+              newGeneAnnotationArray.push(geneAnnotation)
+              setGeneAnnotationsArray(newGeneAnnotationArray)
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    })
     /* try to remove duplicates from geneAnnotationArray!!!!! */
-  }, [geneAnnotationArray])
+  }, [])
+
+  const getGeneAnnotation = (gene: GeneItem): GeneAnnotationItem => {
+    const genePixelLoc: number = ((gene.start + gene.end) / 2) * 0.000015
+    const geneAnnotation: GeneAnnotationItem = {
+      id: gene.id,
+      chromosome: gene.chromosome,
+      location: genePixelLoc,
+      strand: gene.strand,
+    }
+    return geneAnnotation
+  }
   //------------------
   // Helper Functions
   //------------------
@@ -152,18 +195,9 @@ const Chromosome: FC<ChromosomeProps> = ({
       }
     }
   }
-  /**
-   * Converts a base-pair value to the equivalent pixel value.
-   *
-   * @param {Number} bp A base-pair value.
-   * @return {Number} Equivalent screen y-coordinate.
-   */
-  const bpToPixel = (bp: number) => {
-    return (bp - 1) * getPixelsPerBp() + 1
-  }
 
   //--------------
-  //Event Handling
+  // Event Handling
   //--------------
   // Handle click on chromosome
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -173,7 +207,6 @@ const Chromosome: FC<ChromosomeProps> = ({
         return {
           left: getChromosomeXCoordinate() + 100, // distanceX from the right of the chromosome (TODO: determine what side of the screen click is on and accordingly place popup on left or right of chromosome)
           top: event.clientY - 60, // distanceY from click(has weird functionality- need to fix)
-
           width: 0,
           height: 0,
         }
@@ -188,18 +221,15 @@ const Chromosome: FC<ChromosomeProps> = ({
     setAnchorOrigin([])
     setAnchorEl(null)
   }
-  // Handle mouse over
-  const handleMouseOver = () => {
+  const handleMouseOverChromosome = () => {
     setIsHovered(true)
   }
-  // Handle mouse leave
-  const handleMouseLeave = () => {
+  const handleMouseLeaveChromosome = () => {
     setIsHovered(false)
   }
 
   // Popover prop variables
   const openPopup = Boolean(anchorEl)
-
   return (
     <>
       {/* GENETIC ELEMENT LIST POPUP */}
@@ -250,7 +280,6 @@ const Chromosome: FC<ChromosomeProps> = ({
           </Typography>
         </div>
       </Popup>
-
       {/* =============== */}
       {/* CHROMOSOME SVG */}
       <svg
@@ -328,8 +357,8 @@ const Chromosome: FC<ChromosomeProps> = ({
             rx={width / 2}
             ry={width / 2}
             fill='transparent'
-            onMouseEnter={handleMouseOver}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={handleMouseOverChromosome}
+            onMouseLeave={handleMouseLeaveChromosome}
             cursor={isHovered ? 'pointer' : 'default'}
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-expect-error
@@ -338,41 +367,17 @@ const Chromosome: FC<ChromosomeProps> = ({
         </g>
         {/* GENES ANNOTATION TAGS */}
         <g id={`${chromosome.id}_geneAnnotationTags`}>
-          {geneAnnotationArray.map((gene, i) => {
-            const allGenesInCollections: string[] = []
-            let active = false
-            if (activeGeneAnnotation?.id == gene.id) {
-              active = true
-            }
+          {geneAnnotationsArray.map((gene, i) => {
+            const flatGeneCollection = collections.flatMap(
+              (collection) => collection.genes
+            ) // Flatten collections into array of gene IDs
 
-            // get all genes in collections, to check that the geneAnnotation
-              // actually corrosponds to a gene in a collection
-            collections.map((collection) => {
-              collection.genes.map((cGeneId) => {
-                allGenesInCollections.push(cGeneId)
-              })
-            })
-
-            if (allGenesInCollections.includes(gene.id)) {
-              return (
-                <GeneAnnotation
-                  key={i}
-                  gene={gene}
-                  scale={scale}
-                  active={active}
-                />
-              )
+            // Make sure that the gene has not been removed already
+            // fixes bug where the gene annotations for removed genes dont disappear
+            if (flatGeneCollection.includes(gene.id)) {
+              return <GeneAnnotation key={i} gene={gene} scale={scale} />
             }
           })}
-
-          {/* ACTIVE GENE ANNOTATION */}
-          {/* {activeGeneAnnotation != null && (
-            <GeneAnnotation
-              gene={activeGeneAnnotation}
-              scale={scale}
-              active={true}
-            />
-          )} */}
         </g>
       </svg>
     </>

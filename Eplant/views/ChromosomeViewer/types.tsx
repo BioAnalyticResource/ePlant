@@ -47,6 +47,7 @@ export type Transform = {
 export type ChromosomeViewerData = ChromosomeList
 export type ChromosomeViewerState = {
   transform: Transform
+  species: string
 }
 export type ChromosomeViewerAction =
   | { type: 'set-transform'; transform: Transform }

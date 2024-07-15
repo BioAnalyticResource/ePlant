@@ -65,8 +65,9 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
         arabidopsis,
         gene.aliases
       )
-      geneticElements[0].push(geneticElement)
-      setGeneticElements(geneticElements[0])
+      const newGeneticElements = geneticElements[0]
+      newGeneticElements.push(geneticElement)
+      setGeneticElements(newGeneticElements)
       setActiveGeneId(geneticElement.id)
     }
   }
@@ -84,6 +85,19 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
           }}
           onClose={handleClose}
         >
+          <IconButton
+            title='Close Popup'
+            aria-label='close'
+            color='secondary'
+            onClick={handleClose}
+            sx={{
+              position: 'relative',
+              left: 0,
+              top: 0,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
           <Box
             sx={{
               minWidth: '350px',
@@ -94,22 +108,6 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
             }}
           >
             <Table size='small'>
-              <TableHead>
-                {gene.id}
-                <IconButton
-                  title='Close Popup'
-                  aria-label='close'
-                  color='secondary'
-                  onClick={handleClose}
-                  sx={{
-                    position: 'absolute',
-                    right: 8,
-                    top: 8,
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </TableHead>
               <TableBody
                 sx={{
                   tr: { maxHeight: '20px' },

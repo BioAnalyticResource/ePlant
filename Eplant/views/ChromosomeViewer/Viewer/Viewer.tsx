@@ -4,38 +4,56 @@
 
 import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
 
-import { useGeneticElements } from '@eplant/state'
+import { useActiveGeneId, useGeneticElements } from '@eplant/state'
 import Typography from '@mui/material/Typography'
 
 import { ChromosomeList, GeneAnnotationItem, GeneItem } from '../types'
 
 import Chromosome from './Chromosome'
+
 // TYPES
 interface ViewerProps {
   chromosomes: ChromosomeList
-  activeGeneAnnotation: GeneAnnotationItem | null
-  geneAnnotationArray: GeneAnnotationItem[] | []
   scale: number
+  species: string
 }
 //----------
 // COMPONENT
 //----------
-const Viewer: FC<ViewerProps> = ({
-  chromosomes,
-  activeGeneAnnotation,
-  geneAnnotationArray,
-  scale,
-}) => {
-  const filterGeneAnnotationArray = (chromosomeId: string) => {
-    // filter the annotation genes by chromosome
-    const filteredGenes: GeneAnnotationItem[] = []
-    geneAnnotationArray.map((geneAnnotation) => {
-      if (chromosomeId == geneAnnotation.chromosome) {
-        filteredGenes.push(geneAnnotation)
-      }
-    })
-    return filteredGenes
-  }
+const Viewer: FC<ViewerProps> = ({ chromosomes, scale, species }) => {
+  // useEffect(() => {
+  // let newGeneAnnotationArray: GeneAnnotationItem[] = []
+  // geneticElements.map((gene) => {
+  //   fetch(
+  //     `https://bar.utoronto.ca/eplant${
+  //       species == 'Populus_trichocarpa' ? '_poplar' : ''
+  //     }/cgi-bin/querygene.cgi?species=${species}&term=${gene.id}`
+  //   )
+  //     .then((response) => response.json())
+  //     .then((geneItem) => {
+  //       newGeneAnnotationArray = geneAnnotations
+  //       const geneAnnotation: GeneAnnotationItem = getGeneAnnotation(geneItem)
+
+  //       const isDuplicate = newGeneAnnotationArray.some((gene) => {
+  //         if (gene.id === geneAnnotation.id) {
+  //           return true
+  //         }
+  //         return false
+  //       })
+  //       if (!isDuplicate) {
+  //         newGeneAnnotationArray.push(geneAnnotation)
+  //         setGeneAnnotations(newGeneAnnotationArray)
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // })
+  // console.log(geneAnnotations, geneticElements)
+  // }, [])
+
+  // Utility Functions
+
   return (
     <div
       style={{
@@ -58,12 +76,7 @@ const Viewer: FC<ViewerProps> = ({
             <Chromosome
               scale={scale}
               chromosome={chromosome}
-              activeGeneAnnotation={
-                activeGeneAnnotation?.chromosome == chromosome.id
-                  ? activeGeneAnnotation
-                  : null
-              }
-              geneAnnotationArray={filterGeneAnnotationArray(chromosome.id)}
+              // geneAnnotationArray={filterGeneAnnotationArray(chromosome.id)}
             />
             <Typography sx={{ fontSize: 8 }} noWrap>
               {(chromosome.size * 0.000001).toLocaleString()}Mb

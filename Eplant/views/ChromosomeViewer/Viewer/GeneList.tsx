@@ -52,17 +52,19 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
   // Helper Functions
   //------------------
   useEffect(() => {
+    const poplar = false // switch to true for poplar species to work
+
     fetch(
-      // Arabidopsis_thaliana
-      `https://bar.utoronto.ca/eplant/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
-      //   Populus_trichocarpa
-      // `https://bar.utoronto.ca/eplant_poplar/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
+      `https://bar.utoronto.ca/eplant${
+        poplar ? '_poplar' : ''
+      }/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
     )
       .then((response) => response.json())
       .then((json) => {
         setGeneList(json)
       })
   }, [])
+  // --------------
   // EVENT HANDLERS
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setOpen(true)

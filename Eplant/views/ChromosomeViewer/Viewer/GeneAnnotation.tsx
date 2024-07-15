@@ -14,7 +14,6 @@ import { GeneAnnotationItem } from '../types'
 interface GeneAnnotationProps {
   gene: GeneAnnotationItem
   scale: number
-  active?: boolean
 }
 //----------
 // COMPONENT
@@ -22,7 +21,6 @@ interface GeneAnnotationProps {
 const GeneAnnotation: FC<GeneAnnotationProps> = ({
   gene,
   scale,
-  active = false,
 }) => {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const theme = useTheme()
@@ -52,7 +50,7 @@ const GeneAnnotation: FC<GeneAnnotationProps> = ({
         fontSize={scale <= 1.5 ? 15 : 20 / scale}
         letterSpacing='initial'
         fill={
-          active
+          gene.id == activeGeneId
             ? theme.palette.primary.main
             : theme.palette.secondary.contrastText
         }
