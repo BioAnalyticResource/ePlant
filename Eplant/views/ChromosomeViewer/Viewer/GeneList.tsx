@@ -11,7 +11,7 @@ import ListItemText from '@mui/material/ListItemText'
 import useTheme from '@mui/material/styles/useTheme'
 
 import { GeneIcon } from '../icons'
-import { GeneArray, GeneItem } from '../types'
+import { GeneItem } from '../types'
 
 import GeneInfoPopup from './GeneInfoPopup'
 
@@ -28,7 +28,7 @@ interface GeneListProps {
 //----------
 const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
   // gene list
-  const [geneList, setGeneList] = useState<GeneArray>([
+  const [geneList, setGeneList] = useState<GeneItem[]>([
     {
       id: '',
       chromosome: '',
@@ -48,9 +48,6 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
   // Other/Global State
   const theme = useTheme()
 
-  //------------------
-  // Helper Functions
-  //------------------
   useEffect(() => {
     const poplar = false // switch to true for poplar species to work
 
@@ -66,15 +63,14 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
   }, [])
   // --------------
   // EVENT HANDLERS
+  // --------------
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setOpen(true)
   }
-  const handleGeneSelect =
-    (gene: GeneItem, index: number) =>
-    (event: React.MouseEvent<HTMLElement>) => {
-      setSelectedIndex(index)
-      setSelectedGene(gene)
-    }
+  const handleGeneSelect = (gene: GeneItem, index: number) => () => {
+    setSelectedIndex(index)
+    setSelectedGene(gene)
+  }
 
   return (
     <>
@@ -124,13 +120,11 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
       </List>
       {/* GENE INFO POPUP */}
       {selectedGene != null && (
-        <>
-          <GeneInfoPopup
-            gene={selectedGene}
-            open={open}
-            anchorOrigin={anchorOrigin}
-          ></GeneInfoPopup>
-        </>
+        <GeneInfoPopup
+          gene={selectedGene}
+          open={open}
+          anchorOrigin={anchorOrigin}
+        ></GeneInfoPopup>
       )}
     </>
   )

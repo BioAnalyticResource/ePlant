@@ -15,45 +15,11 @@ import Chromosome from './Chromosome'
 interface ViewerProps {
   chromosomes: ChromosomeList
   scale: number
-  species: string
 }
 //----------
 // COMPONENT
 //----------
-const Viewer: FC<ViewerProps> = ({ chromosomes, scale, species }) => {
-  // useEffect(() => {
-  // let newGeneAnnotationArray: GeneAnnotationItem[] = []
-  // geneticElements.map((gene) => {
-  //   fetch(
-  //     `https://bar.utoronto.ca/eplant${
-  //       species == 'Populus_trichocarpa' ? '_poplar' : ''
-  //     }/cgi-bin/querygene.cgi?species=${species}&term=${gene.id}`
-  //   )
-  //     .then((response) => response.json())
-  //     .then((geneItem) => {
-  //       newGeneAnnotationArray = geneAnnotations
-  //       const geneAnnotation: GeneAnnotationItem = getGeneAnnotation(geneItem)
-
-  //       const isDuplicate = newGeneAnnotationArray.some((gene) => {
-  //         if (gene.id === geneAnnotation.id) {
-  //           return true
-  //         }
-  //         return false
-  //       })
-  //       if (!isDuplicate) {
-  //         newGeneAnnotationArray.push(geneAnnotation)
-  //         setGeneAnnotations(newGeneAnnotationArray)
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // })
-  // console.log(geneAnnotations, geneticElements)
-  // }, [])
-
-  // Utility Functions
-
+const Viewer: FC<ViewerProps> = ({ chromosomes, scale }) => {
   return (
     <div
       style={{
@@ -76,7 +42,6 @@ const Viewer: FC<ViewerProps> = ({ chromosomes, scale, species }) => {
             <Chromosome
               scale={scale}
               chromosome={chromosome}
-              // geneAnnotationArray={filterGeneAnnotationArray(chromosome.id)}
             />
             <Typography sx={{ fontSize: 8 }} noWrap>
               {(chromosome.size * 0.000001).toLocaleString()}Mb

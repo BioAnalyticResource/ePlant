@@ -20,7 +20,6 @@ import {
 
 import GeneAnnotation from './GeneAnnotation'
 import GeneList from './GeneList'
-import Snackbar from '@mui/material/Snackbar'
 
 //----------
 // TYPES
@@ -47,7 +46,8 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
     start: 0,
     end: 0,
   })
-  const [geneAnnotationsArray, setGeneAnnotationsArray] = useState<
+  // Gene Annotation drawing
+  const [geneAnnotationArray, setGeneAnnotationArray] = useState<
     GeneAnnotationItem[]
   >([])
 
@@ -69,32 +69,29 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
   const perBpHeight: number = 0.000015
   let start: number = 0
 
-  // Execute on first render
-  useEffect(() => {
-    const svg: HTMLElement & SVGSVGElement = getChromosomeSvg()
-    // Get the bounds of the SVG content
-    const bbox: SVGRect = svg.getBBox()
-    // Update the width and height using the size of the contents
-    svg.setAttribute('width', `${bbox.x + bbox.width + bbox.x}`)
-    svg.setAttribute('height', `${bbox.y + bbox.height + bbox.y}`)
-  }, [])
-  // on geneAnnotationArray update
+  // Gene List popover variables
+  const openPopup = Boolean(anchorEl)
+
+  // Fire before paint, converts geneticElements into geneAnnotationArray
   useLayoutEffect(() => {
-    const species = 'Arabidopsis_thaliana'
+    const poplar = false
+    const species = poplar ? 'Populus_trichocarpa' : 'Arabidopsis_thaliana'
     let newGeneAnnotationArray: GeneAnnotationItem[] = []
     geneticElements.map((gene) => {
+      // for each item in geneticElements, fetch it's gene information to add to it's geneAnnotation
       fetch(
         `https://bar.utoronto.ca/eplant${
-          species == 'Populus_trichocarpa' ? '_poplar' : ''
+          poplar ? '_poplar' : ''
         }/cgi-bin/querygene.cgi?species=${species}&term=${gene.id}`
       )
         .then((response) => response.json())
         .then((geneItem) => {
           if (geneItem.chromosome === chromosome.id) {
-            newGeneAnnotationArray = geneAnnotationsArray
+            newGeneAnnotationArray = geneAnnotationArray
             const geneAnnotation: GeneAnnotationItem =
               getGeneAnnotation(geneItem)
 
+            // Make sure new geneAnnotation is not already in geneAnnotationArray
             const isDuplicate = newGeneAnnotationArray.some((gene) => {
               if (gene.id === geneAnnotation.id) {
                 return true
@@ -103,7 +100,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
             })
             if (!isDuplicate) {
               newGeneAnnotationArray.push(geneAnnotation)
-              setGeneAnnotationsArray(newGeneAnnotationArray)
+              setGeneAnnotationArray(newGeneAnnotationArray)
             }
           }
         })
@@ -111,9 +108,24 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
           console.log(err)
         })
     })
-    /* try to remove duplicates from geneAnnotationArray!!!!! */
   }, [])
 
+  // Execute on first render, after paint
+  useEffect(() => {
+    const svg: HTMLElement & SVGSVGElement = getChromosomeSvg()
+    // Get the bounds of the SVG content
+    const bbox: SVGRect = svg.getBBox()
+    // Update the width and height using the size of the contents
+    svg.setAttribute('width', `${bbox.x + bbox.width + bbox.x}`)
+    svg.setAttribute('height', `${bbox.y + bbox.height + bbox.y}`)
+  }, [])
+
+  //------------------
+  // Helper Functions
+  //------------------
+  /**
+   * formats a GeneItem into GeneAnnotationItem
+   */
   const getGeneAnnotation = (gene: GeneItem): GeneAnnotationItem => {
     const genePixelLoc: number = ((gene.start + gene.end) / 2) * 0.000015
     const geneAnnotation: GeneAnnotationItem = {
@@ -124,9 +136,6 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
     }
     return geneAnnotation
   }
-  //------------------
-  // Helper Functions
-  //------------------
   /**
    * Gets the Chromosome svg element.
    */
@@ -200,7 +209,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
   // Event Handling
   //--------------
   // Handle click on chromosome
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: React.MouseEvent<SVGRectElement>) => {
     // define virtual element to attach geneList popup to
     const virtualEl = {
       getBoundingClientRect() {
@@ -228,11 +237,9 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
     setIsHovered(false)
   }
 
-  // Popover prop variables
-  const openPopup = Boolean(anchorEl)
   return (
     <>
-      {/* GENETIC ELEMENT LIST POPUP */}
+      {/* GENE LIST POPUP */}
       <Popup
         open={openPopup}
         anchor={anchorEl}
@@ -288,7 +295,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
         height={chromosome.size * perBpHeight}
         viewBox='0 0 width height'
         preserveAspectRatio='xMidYMid meet'
-        style={{ overflow: 'visible', border: '0px blue solid' }}
+        overflow='visible'
       >
         <g>
           {/*Centromeric Layer  */}
@@ -299,7 +306,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
               width={width * 0.6}
               height={chromosome.size * perBpHeight}
               ry={width / 2}
-              fill='grey'
+              fill='gray'
             />
           ) : (
             <rect
@@ -308,7 +315,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
               width={width}
               height={chromosome.size * perBpHeight}
               ry={chromosome.size * perBpHeight > 10 ? width / 2 : '50%'}
-              fill='grey'
+              fill='gray'
             />
           )}
           {/* Non-Centromeric Layers */}
@@ -360,19 +367,17 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
             onMouseEnter={handleMouseOverChromosome}
             onMouseLeave={handleMouseLeaveChromosome}
             cursor={isHovered ? 'pointer' : 'default'}
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-expect-error
             onClick={handleClick}
           />
         </g>
         {/* GENES ANNOTATION TAGS */}
         <g id={`${chromosome.id}_geneAnnotationTags`}>
-          {geneAnnotationsArray.map((gene, i) => {
+          {geneAnnotationArray.map((gene, i) => {
+            // Flatten collections into array of gene IDs - important for not drawing removed gene annotations
             const flatGeneCollection = collections.flatMap(
               (collection) => collection.genes
-            ) // Flatten collections into array of gene IDs
-
-            // Make sure that the gene has not been removed already
+            )
+            // Make sure that the gene actually is in a collection
             // fixes bug where the gene annotations for removed genes dont disappear
             if (flatGeneCollection.includes(gene.id)) {
               return <GeneAnnotation key={i} gene={gene} scale={scale} />

@@ -13,6 +13,7 @@ import {
   useSetGeneticElements,
 } from '@eplant/state'
 import CloseIcon from '@mui/icons-material/Close'
+import { Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
@@ -21,7 +22,6 @@ import useTheme from '@mui/material/styles/useTheme'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
-import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 
 import { GeneItem } from '../types'
@@ -85,28 +85,34 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
           }}
           onClose={handleClose}
         >
-          <IconButton
-            title='Close Popup'
-            aria-label='close'
-            color='secondary'
-            onClick={handleClose}
-            sx={{
-              position: 'relative',
-              left: 0,
-              top: 0,
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
           <Box
             sx={{
               minWidth: '350px',
               maxWidth: '350px',
               minHeight: '150px',
               maxHeight: '400px',
-              padding: 2,
+              paddingInline: 2,
+              paddingBlockStart: 1,
+              paddingBlockEnd: 2,
             }}
           >
+            {/* POPUP TITLE BAR */}
+            <div style={{ display: 'flex' }}>
+              <IconButton
+                title='Close Popup'
+                aria-label='close'
+                size='small'
+                color='secondary'
+                onClick={handleClose}
+                sx={{
+                  marginRight: 1
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography variant='h6'>Gene Info</Typography>
+            </div>
+            {/* GENE INFO TABLE */}
             <Table size='small'>
               <TableBody
                 sx={{
@@ -136,6 +142,7 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
                 </TableRow>
               </TableBody>
             </Table>
+            {/* LOAD GENE BUTTON */}
             <Button
               autoFocus
               title='Load gene into collection'

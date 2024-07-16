@@ -82,7 +82,6 @@ const ChromosomeViewer: View<
         dy: 0,
         dZoom: 1,
       },
-      species: species,
     }
   },
   component({
@@ -97,7 +96,7 @@ const ChromosomeViewer: View<
   >) {
     const spaceRef = React.useRef<Space | null>(null)
     const [messageOpen, setMessageOpen] = useState(true)
-    useEffect(() => {
+    useLayoutEffect(() => {
       spaceRef.current?.viewPort?.camera.moveBy(0, 0, 0.1)
 
       setTimeout(() => {
@@ -143,13 +142,13 @@ const ChromosomeViewer: View<
           <ChromosomeView
             chromosomes={activeData.viewData}
             scale={state.transform.dZoom}
-            species={state.species}
           ></ChromosomeView>
         </Space>
         <Snackbar
           open={messageOpen}
           autoHideDuration={2500}
           onClose={handleClose}
+          sx={{ position: 'absolute'}}
         >
           <SnackbarContent
             sx={(theme) => ({

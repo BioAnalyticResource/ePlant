@@ -23,7 +23,6 @@ export interface GeneAnnotationItem {
   chromosome: string
   location: number // y coordinate of gene
   strand: string // influences if gene is left or right of chromosome
-  active?: boolean
 }
 
 // Genes
@@ -47,7 +46,6 @@ export type Transform = {
 export type ChromosomeViewerData = ChromosomeList
 export type ChromosomeViewerState = {
   transform: Transform
-  species: string
 }
 export type ChromosomeViewerAction =
   | { type: 'set-transform'; transform: Transform }
