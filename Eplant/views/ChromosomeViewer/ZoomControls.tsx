@@ -35,7 +35,7 @@ const ZoomControls: FC<ZoomControlsProps> = ({ spaceRef, scale }) => {
         background: theme.palette.background.paper,
       }}
     >
-     {/* RESET BUTTON */}
+      {/* RESET BUTTON */}
       <Tooltip title={resetZoomMessage} arrow>
         <Button
           color='secondary'

@@ -1,7 +1,7 @@
 // -------
 // IMPORTS
 // -------
-import React, { FC } from 'react'
+import { FC } from 'react'
 
 import { useActiveGeneId } from '@eplant/state'
 import useTheme from '@mui/material/styles/useTheme'
@@ -21,7 +21,7 @@ interface GeneAnnotationProps {
 const GeneAnnotation: FC<GeneAnnotationProps> = ({ gene, scale }) => {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const theme = useTheme()
-  // Handlers
+
   const onClick = () => {
     setActiveGeneId(gene.id)
   }

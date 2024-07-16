@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
@@ -57,8 +57,6 @@ const ChromosomeViewer: View<
       poplar ? '_poplar' : ''
     }/cgi-bin/chromosomeinfo.cgi?species=${species}`
 
-    // const species = 'Populus_trichocarpa'
-    // const url = `https://bar.utoronto.ca/eplant_poplar/cgi-bin/chromosomeinfo.cgi?species=${species}`
     chromosomeViewData = await fetch(url)
       .then(async (response) => {
         return response.json()
@@ -133,7 +131,7 @@ const ChromosomeViewer: View<
           <ChromosomeView
             chromosomes={activeData.viewData}
             scale={state.transform.dZoom}
-          ></ChromosomeView>
+          />
         </Space>
         <Snackbar
           id='chromosomeViewer_geneAnnotationMessage'

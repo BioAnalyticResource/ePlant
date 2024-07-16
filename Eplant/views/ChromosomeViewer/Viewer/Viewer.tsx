@@ -38,10 +38,7 @@ const Viewer: FC<ViewerProps> = ({ chromosomes, scale }) => {
             <Typography fontSize='30px' noWrap sx={{ marginLeft: '-20px' }}>
               {chromosome.name}
             </Typography>
-            <Chromosome
-              scale={scale}
-              chromosome={chromosome}
-            />
+            <Chromosome scale={scale} chromosome={chromosome} />
             <Typography sx={{ fontSize: 8 }} noWrap>
               {(chromosome.size * 0.000001).toLocaleString()}Mb
             </Typography>

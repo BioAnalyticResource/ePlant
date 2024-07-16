@@ -60,6 +60,9 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
       .then((json) => {
         setGeneList(json)
       })
+      .catch((err) => {
+        console.log(err)
+      })
   }, [])
   // --------------
   // EVENT HANDLERS
@@ -109,9 +112,12 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
                 >
                   <span className='geneId'>{gene.id}</span>
                   {gene.aliases.length != 0 && (
-                  <span className='geneAliases' style={{ color: theme.palette.secondary.main }}>
-                    {`/${gene.aliases[0]}`}
-                  </span>
+                    <span
+                      className='geneAliases'
+                      style={{ color: theme.palette.secondary.main }}
+                    >
+                      {`/${gene.aliases[0]}`}
+                    </span>
                   )}
                 </ListItemText>
               </ListItemButton>

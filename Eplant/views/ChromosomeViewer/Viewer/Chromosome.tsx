@@ -169,18 +169,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
     return chromosome.size / (getChromosomeHeight() - 1)
   }
   /**
-   * Gets the number of pixels per base-pair.
-   *
-   * @return {Number} Number of pixels per base-pair.
-   */
-  const getPixelsPerBp = () => {
-    return 1 / getBpPerPixel()
-  }
-  /**
    * Converts a pixel value to the equivalent base-pair range.
-   *
-   * @param {Number} pixel A screen y-coordinate.
-   * @return {Number} Equivalent base-pair range.
    */
   const pixelToBp = (pixel: number): Range => {
     if (
@@ -225,18 +214,17 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
     setAnchorOrigin([event.clientX, event.clientY])
     setGeneRange(pixelToBp(event.clientY))
   }
-  // Handle popup close
-  const handleClose = () => {
-    setAnchorOrigin([])
-    setAnchorEl(null)
-  }
   const handleMouseOverChromosome = () => {
     setIsHovered(true)
   }
   const handleMouseLeaveChromosome = () => {
     setIsHovered(false)
   }
-
+  // Handle popup close
+  const handleClose = () => {
+    setAnchorOrigin([])
+    setAnchorEl(null)
+  }
   return (
     <>
       {/* GENE LIST POPUP */}
@@ -298,7 +286,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
         overflow='visible'
       >
         <g>
-          {/*Centromeric Layer  */}
+          {/* CENTROMERIC LAYER */}
           {hasCentromeres ? (
             <rect
               x={x}
@@ -318,7 +306,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
               fill='gray'
             />
           )}
-          {/* Non-Centromeric Layers */}
+          {/* NON-CENTROMERIC LAYERS */}
           {/* note: all except last can be drawn in a loop */}
           {hasCentromeres &&
             centromeres.map((centromere, index) => {
@@ -342,7 +330,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
                 />
               )
             })}
-          {/* Last Non-Centromeric Layer must be drawn seperately*/}
+          {/* LAST NON-CENTROMERIC LAYER > must be drawn seperately */}
           {hasCentromeres && (
             <rect
               x={x - 2}
@@ -354,7 +342,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
               fill='gray'
             />
           )}
-          {/* Input Layer (transparent, must be drawn on top of other layers)*/}
+          {/* INPUT LAYER (transparent, must be drawn on top of other layers) */}
           <rect
             id={chromosome.id + '_input'}
             x={x - 2}
