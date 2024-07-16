@@ -1,18 +1,18 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, {useLayoutEffect, useState } from 'react'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { useActiveGeneId, useGeneticElements } from '@eplant/state'
-import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 import Snackbar from '@mui/material/Snackbar'
+import SnackbarContent from '@mui/material/SnackbarContent'
 
 import { View, ViewProps } from '../../View'
 
 import ChromosomeView from './Viewer/Viewer'
 import { ChromosomeIcon } from './icons'
 import {
-  ChromosomeList,
+  ChromosomeItem,
   ChromosomesResponseObj,
   ChromosomeViewerAction,
   ChromosomeViewerData,
@@ -20,8 +20,6 @@ import {
   Transform,
 } from './types'
 import ZoomControls from './ZoomControls'
-import SnackbarContent from '@mui/material/SnackbarContent'
-import CircularProgress from '@mui/material/CircularProgress'
 
 const ChromosomeViewer: View<
   ChromosomeViewerData,
@@ -37,7 +35,6 @@ const ChromosomeViewer: View<
         dy: 150,
         dZoom: 0.7,
       },
-      species: 'Arabidopsis_thaliana',
     }
   },
 
@@ -45,18 +42,12 @@ const ChromosomeViewer: View<
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void
   ) {
-    let chromosomeViewData: ChromosomeList = [
+    let chromosomeViewData: ChromosomeItem[] = [
       {
         id: 'Chr1',
         name: 'Chr 1',
         size: 30427671,
-        centromeres: [
-          {
-            id: 'CEN1',
-            start: 15086046,
-            end: 15087045,
-          },
-        ],
+        centromeres: [],
       },
     ]
 
@@ -109,7 +100,7 @@ const ChromosomeViewer: View<
     }
 
     return (
-      <Box sx={{ flexGrow: 1 }}>
+      <Box>
         {/* ZOOM CONTROLS */}
         <ZoomControls spaceRef={spaceRef} scale={state.transform.dZoom} />
         {/* CHROMOSOME VIEWER */}
@@ -145,10 +136,11 @@ const ChromosomeViewer: View<
           ></ChromosomeView>
         </Space>
         <Snackbar
+          id='chromosomeViewer_geneAnnotationMessage'
           open={messageOpen}
           autoHideDuration={2500}
           onClose={handleClose}
-          sx={{ position: 'absolute'}}
+          sx={{ position: 'absolute' }}
         >
           <SnackbarContent
             sx={(theme) => ({
@@ -156,7 +148,7 @@ const ChromosomeViewer: View<
               color: theme.palette.secondary.contrastText,
             })}
             message={
-              <span id='client-snackbar'>
+              <span>
                 Please allow a brief moment for gene annotations to be processed
                 &nbsp;
                 <CircularProgress size={12} />
@@ -167,7 +159,6 @@ const ChromosomeViewer: View<
       </Box>
     )
   },
-  actions: [],
   reducer: (state, action) => {
     switch (action.type) {
       case 'set-transform':

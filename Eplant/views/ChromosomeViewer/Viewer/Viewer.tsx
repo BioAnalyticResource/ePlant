@@ -2,18 +2,17 @@
 // IMPORTS
 // -------
 
-import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
+import { FC } from 'react'
 
-import { useActiveGeneId, useGeneticElements } from '@eplant/state'
 import Typography from '@mui/material/Typography'
 
-import { ChromosomeList, GeneAnnotationItem, GeneItem } from '../types'
+import { ChromosomeItem } from '../types'
 
 import Chromosome from './Chromosome'
 
 // TYPES
 interface ViewerProps {
-  chromosomes: ChromosomeList
+  chromosomes: ChromosomeItem[]
   scale: number
 }
 //----------

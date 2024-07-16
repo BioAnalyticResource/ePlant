@@ -1,7 +1,7 @@
 // -------
 // IMPORTS
 // -------
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { Space } from 'react-zoomable-ui/dist/Space'
 
 import Add from '@mui/icons-material/Add'
@@ -36,7 +36,7 @@ const ZoomControls: FC<ZoomControlsProps> = ({ spaceRef, scale }) => {
       }}
     >
      {/* RESET BUTTON */}
-      <Tooltip title={`${scale.toFixed(2)} > ${resetZoomMessage}`} arrow>
+      <Tooltip title={resetZoomMessage} arrow>
         <Button
           color='secondary'
           onClick={() => {

@@ -89,7 +89,6 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
               <ListItemButton
                 selected={i === selectedIndex}
                 onClick={handleGeneSelect(gene, i)}
-                // title={gene.aliases.length != 0 ? `Aliases: ${gene.aliases}` : gene.id}
                 sx={{ borderRadius: 0, padding: 0 }}
               >
                 <ListItemIcon
@@ -108,10 +107,12 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
                     },
                   }}
                 >
-                  <span className='GeneID'>{gene.id}</span>
-                  <span style={{ color: theme.palette.secondary.main }}>
-                    {gene.aliases.length > 0 ? `/${gene.aliases[0]}` : ''}
+                  <span className='geneId'>{gene.id}</span>
+                  {gene.aliases.length != 0 && (
+                  <span className='geneAliases' style={{ color: theme.palette.secondary.main }}>
+                    {`/${gene.aliases[0]}`}
                   </span>
+                  )}
                 </ListItemText>
               </ListItemButton>
             </ListItem>

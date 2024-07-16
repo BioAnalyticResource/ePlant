@@ -12,7 +12,7 @@ import useTheme from '@mui/material/styles/useTheme'
 import Typography from '@mui/material/Typography'
 
 import {
-  CentromereList,
+  CentromereItem,
   ChromosomeItem,
   GeneAnnotationItem,
   GeneItem,
@@ -57,7 +57,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
   const theme = useTheme()
 
   // SVG drawing
-  const centromeres: CentromereList = chromosome.centromeres
+  const centromeres: CentromereItem[] = chromosome.centromeres
   const hasCentromeres: boolean = centromeres.length > 0
   const lastCentromereEnd: number = hasCentromeres
     ? centromeres[centromeres.length - 1].end

@@ -4,25 +4,16 @@ export interface CentromereItem {
   start: number
   end: number
 }
-export interface CentromereList extends Array<CentromereItem> {}
 // Chromosome
 export interface ChromosomeItem {
   id: string
   name: string
   size: number
-  centromeres: CentromereList | []
+  centromeres: CentromereItem[] | []
 }
-export interface ChromosomeList extends Array<ChromosomeItem> {}
 export interface ChromosomesResponseObj {
   species: string
-  chromosomes: ChromosomeList
-}
-// Annotation Gene Item contains only neccary information for drawing the gene annotation
-export interface GeneAnnotationItem {
-  id: string
-  chromosome: string
-  location: number // y coordinate of gene
-  strand: string // influences if gene is left or right of chromosome
+  chromosomes: ChromosomeItem[]
 }
 
 // Genes
@@ -35,7 +26,12 @@ export interface GeneItem {
   aliases: []
   annotation: string
 }
-export interface GeneArray extends Array<GeneItem> {}
+export interface GeneAnnotationItem {
+  id: string
+  chromosome: string
+  location: number // y coordinate of gene
+  strand: string // influences if gene is left or right of chromosome
+}
 
 // Component Props
 export type Transform = {
@@ -43,9 +39,13 @@ export type Transform = {
   dy: number
   dZoom: number
 }
-export type ChromosomeViewerData = ChromosomeList
+export type ChromosomeViewerData = {
+  viewData: ChromosomeItem[]
+}
 export type ChromosomeViewerState = {
   transform: Transform
 }
-export type ChromosomeViewerAction =
-  | { type: 'set-transform'; transform: Transform }
+export type ChromosomeViewerAction = {
+  type: 'set-transform'
+  transform: Transform
+}

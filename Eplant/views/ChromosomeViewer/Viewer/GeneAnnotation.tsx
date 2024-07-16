@@ -75,31 +75,6 @@ const GeneAnnotation: FC<GeneAnnotationProps> = ({ gene, scale }) => {
       >
         <a onClick={onClick}>{gene.id}</a>
       </text>
-      {/* GENE ID INDICATOR WHEN VERY ZOOMED IN */}
-      {scale >= 75 && (
-        <>
-          <text
-            letterSpacing='initial'
-            x={12.5}
-            y={gene.location - 3 / scale}
-            fill={theme.palette.background.transparentOverlay}
-            fontSize={15 / scale}
-            stroke={theme.palette.background.transparentOverlay}
-            strokeWidth={5 / scale}
-          >
-            ŒIIIIIIIIIIIIIID
-          </text>
-          <text
-            letterSpacing='initial'
-            x={12.5}
-            y={gene.location - 3 / scale}
-            fill={theme.palette.secondary.contrastText}
-            fontSize={15 / scale}
-          >
-            {gene.id}
-          </text>
-        </>
-      )}
     </g>
   )
 }
