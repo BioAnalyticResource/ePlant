@@ -85,14 +85,6 @@ const ChromosomeViewer: View<
   >) {
     const spaceRef = React.useRef<Space | null>(null)
     const [messageOpen, setMessageOpen] = useState(true)
-    useLayoutEffect(() => {
-      spaceRef.current?.viewPort?.camera.moveBy(0, 0, 0.1)
-
-      setTimeout(() => {
-        // refresh the ui to render gene annotations automatically
-        spaceRef.current?.viewPort?.camera.moveBy(0, 0, -0.1)
-      }, 1000)
-    }, [])
     const handleClose = () => {
       setMessageOpen(false)
     }
@@ -136,7 +128,7 @@ const ChromosomeViewer: View<
         <Snackbar
           id='chromosomeViewer_geneAnnotationMessage'
           open={messageOpen}
-          autoHideDuration={2500}
+          autoHideDuration={1000}
           onClose={handleClose}
           sx={{ position: 'absolute' }}
         >
