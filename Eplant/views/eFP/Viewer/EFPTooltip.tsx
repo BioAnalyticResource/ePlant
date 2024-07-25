@@ -1,4 +1,4 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Box,
@@ -65,9 +65,9 @@ function SVGTooltip(props: {
   data: EFPData
   state: EFPState
 }) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const theme = useTheme()
-  React.useEffect(() => {
+  useEffect(() => {
     const enterListener = () => {
       setOpen(true)
       setStroke(props.el, theme.palette.secondary.contrastText, '1.5')

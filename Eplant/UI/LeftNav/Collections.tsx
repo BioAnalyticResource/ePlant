@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { MouseEvent, useEffect, useId, useRef, useState } from 'react'
 
 import {
   DndContext,
@@ -321,7 +321,7 @@ export function Collection({
     </Stack>
   )
 
-  function openMenu(e: React.MouseEvent<HTMLElement>) {
+  function openMenu(e: MouseEvent<HTMLElement>) {
     setMenuEl(e.currentTarget)
     setMenuOpen(true)
   }

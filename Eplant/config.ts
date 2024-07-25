@@ -1,4 +1,4 @@
-import React from 'react'
+import { createContext, useContext } from 'react'
 
 import CellEFP from './views/CellEFP'
 import ChromosomeViewer from './views/ChromosomeViewer'
@@ -47,6 +47,6 @@ export const defaultConfig = {
   defaultSpecies: '',
 }
 
-export const Config = React.createContext<EplantConfig>(defaultConfig)
+export const Config = createContext<EplantConfig>(defaultConfig)
 
-export const useConfig = () => React.useContext(Config)
+export const useConfig = () => useContext(Config)

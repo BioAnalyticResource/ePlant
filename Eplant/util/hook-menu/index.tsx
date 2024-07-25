@@ -1,4 +1,13 @@
-import React from 'react'
+import {
+  Context,
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useId,
+  useReducer,
+} from 'react'
 
 type Entries<Entry> = {
   idOrdering: string[]
@@ -12,7 +21,7 @@ type HookMenuAction<Entry> =
 
 type HookMenuContextValue<Entry> = [
   Entries<Entry>,
-  React.Dispatch<HookMenuAction<Entry>>,
+  Dispatch<HookMenuAction<Entry>>,
 ]
 /**
  * Generates a list of entries by calling a hook in order.
@@ -20,9 +29,9 @@ type HookMenuContextValue<Entry> = [
  * while allowing the user to put callbacks in the view's render method.
  */
 export default class HookMenu<EntryType> {
-  private context: React.Context<HookMenuContextValue<EntryType>>
+  private context: Context<HookMenuContextValue<EntryType>>
   constructor() {
-    this.context = React.createContext<HookMenuContextValue<EntryType>>([
+    this.context = createContext<HookMenuContextValue<EntryType>>([
       { idOrdering: [], entries: {} },
       (a) => a,
     ])
@@ -32,14 +41,11 @@ export default class HookMenu<EntryType> {
    * @param props - Props containing the children of this hook menu
    * @returns
    */
-  Root(props: React.PropsWithChildren) {
-    const [value, dispatch] = React.useReducer<typeof this.reducer>(
-      this.reducer,
-      {
-        idOrdering: [],
-        entries: {},
-      }
-    )
+  Root(props: PropsWithChildren) {
+    const [value, dispatch] = useReducer<typeof this.reducer>(this.reducer, {
+      idOrdering: [],
+      entries: {},
+    })
     return (
       <this.context.Provider value={[value, dispatch]}>
         {props.children}
@@ -51,7 +57,7 @@ export default class HookMenu<EntryType> {
    * @returns The entries in the HookMenu
    */
   useEntries() {
-    const val = React.useContext(this.context)[0]
+    const val = useContext(this.context)[0]
     return val.idOrdering
       .map((id) => val.entries[id])
       .filter((x) => x) as EntryType[]
@@ -61,9 +67,9 @@ export default class HookMenu<EntryType> {
    * @param entry - The entry to add to the HookMenu
    */
   useEntry(entry: EntryType) {
-    const [, dispatch] = React.useContext(this.context)
-    const id = React.useId()
-    React.useEffect(() => {
+    const [, dispatch] = useContext(this.context)
+    const id = useId()
+    useEffect(() => {
       dispatch({ type: 'add', entry, id })
       return () => dispatch({ type: 'remove', id })
     }, [entry, id])

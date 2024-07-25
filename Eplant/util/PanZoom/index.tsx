@@ -1,4 +1,4 @@
-import React from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Box, BoxProps } from '@mui/material'
 
@@ -17,15 +17,15 @@ export default function PanZoom({
   transform: Transform
   onTransformChange: (transform: Transform) => void
 }) {
-  const [dragStart, setDragStart] = React.useState<{
+  const [dragStart, setDragStart] = useState<{
     click: Point
     offset: Point
   } | null>(null)
 
   const { offset, zoom } = transform
-  const containerRef = React.useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const listener = (e: WheelEvent) => {
       e.stopPropagation()
       e.preventDefault()

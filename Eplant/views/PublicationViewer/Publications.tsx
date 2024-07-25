@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 import { Box, Button } from '@mui/material'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
@@ -80,8 +80,8 @@ export const Publications = ({
 }: {
   publications: PublicationData[]
 }) => {
-  const [rows, setRows] = React.useState(toRows(publications))
-  React.useEffect(() => {
+  const [rows, setRows] = useState(toRows(publications))
+  useEffect(() => {
     setRows(toRows(publications))
   }, [publications])
 
