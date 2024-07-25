@@ -28,17 +28,7 @@ interface GeneListProps {
 //----------
 const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
   // gene list
-  const [geneList, setGeneList] = useState<GeneItem[]>([
-    {
-      id: '',
-      chromosome: '',
-      start: 0,
-      end: 0,
-      strand: '',
-      aliases: [],
-      annotation: '',
-    },
-  ])
+  const [geneList, setGeneList] = useState<GeneItem[]>([])
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [selectedGene, setSelectedGene] = useState<GeneItem | null>(null)
 
