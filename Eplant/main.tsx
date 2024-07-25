@@ -10,7 +10,7 @@ import './css/index.css'
 
 function RootApp() {
   return (
-    // <React.StrictMode>
+    <React.StrictMode>
       <Provider>
         <BrowserRouter>
           <Config.Provider value={defaultConfig}>
@@ -18,7 +18,7 @@ function RootApp() {
           </Config.Provider>
         </BrowserRouter>
       </Provider>
-    // </React.StrictMode>
+    </React.StrictMode>
   )
 }
 
