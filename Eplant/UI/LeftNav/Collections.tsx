@@ -353,7 +353,6 @@ export function Collections(props: {
   onSelectGene?: (gene: GeneticElement) => void
   selectedGene?: string
 }) {
-  const [activeGeneId] = useActiveGeneId() // new
   const [genes, setGenes] = useGeneticElements()
   const [collections, setCollections] = useCollections()
 
@@ -396,7 +395,6 @@ export function Collections(props: {
   }, [
     genes,
     collections,
-    activeGeneId, // new
   ])
 
   return (

@@ -65,9 +65,7 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
         arabidopsis,
         gene.aliases
       )
-      const newGeneticElements = geneticElements[0]
-      newGeneticElements.push(geneticElement)
-      setGeneticElements(newGeneticElements)
+      setGeneticElements([...geneticElements[0], geneticElement])
       setActiveGeneId(geneticElement.id)
     }
   }
