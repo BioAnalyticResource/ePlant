@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Stack, Tooltip, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
@@ -10,14 +10,14 @@ type GeneModelProps = {
   margin: number
 }
 export const GeneModel = ({ feature, margin }: GeneModelProps) => {
-  const ref = React.useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const theme = useTheme()
-  const [{ width, height }, setDimensions] = React.useState({
+  const [{ width, height }, setDimensions] = useState({
     width: 0,
     height: 0,
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     const updateDimensions = () => {
       if (ref.current) {
         setDimensions({

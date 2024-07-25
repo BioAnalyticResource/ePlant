@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 import { Box, Button } from '@mui/material'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
@@ -50,8 +50,8 @@ const toRows = (geneRIFs: GeneRIFsData[]) => {
 }
 
 export const GeneRIFs = ({ geneRIFs }: { geneRIFs: GeneRIFsData[] }) => {
-  const [rows, setRows] = React.useState(toRows(geneRIFs))
-  React.useEffect(() => {
+  const [rows, setRows] = useState(toRows(geneRIFs))
+  useEffect(() => {
     setRows(toRows(geneRIFs))
   }, [geneRIFs])
   return (

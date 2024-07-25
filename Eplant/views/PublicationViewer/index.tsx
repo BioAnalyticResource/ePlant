@@ -1,7 +1,7 @@
-import * as React from 'react'
+import { useState } from 'react'
 
 import { ViewDataError } from '@eplant/View/viewData'
-import { Link, Tab, Tabs, Theme, Typography, useTheme } from '@mui/material'
+import { Link, Tab, Tabs, Typography, useTheme } from '@mui/material'
 
 import ThumbnailDark from '../../../thumbnails/publication-viewer.png'
 import ThumbnailLight from '../../../thumbnails/publication-viewer-light.png'
@@ -19,7 +19,7 @@ const PublicationViewer: View<PublicationViewerData> = {
     geneticElement,
     activeData,
   }: ViewProps<PublicationViewerData, null, null>) {
-    const [tab, setTab] = React.useState<TabValues>('publications')
+    const [tab, setTab] = useState<TabValues>('publications')
     const theme = useTheme()
     return (
       <div>

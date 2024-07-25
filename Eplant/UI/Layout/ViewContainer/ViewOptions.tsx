@@ -1,4 +1,4 @@
-import React from 'react'
+import { useTransition } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
 import Dropdown from '@eplant/UI/Dropdown'
@@ -18,7 +18,7 @@ export default function ViewOptions<T, S, A>({
   state?: S
   dispatch: ViewDispatch<A>
 }) {
-  const [transitioning, startTransition] = React.useTransition()
+  const [transitioning, startTransition] = useTransition()
   if (!view.actions) return <></>
   return (
     <>
