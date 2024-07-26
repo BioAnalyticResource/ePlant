@@ -26,16 +26,18 @@ export function SearchGroup({
 }: {
   addGeneticElements: (gene: GeneticElement[]) => void
 }) {
+  const [speciesList, setSpeciesList] = useSpecies()
   const [species, setSpecies] = useState<Species>()
 
-  // Commedned out until we get multi-species support
-  // const [searchingByExpression, setSearchingByExpression] = useState<boolean>(false)
-  // const [searchingByPhenotype, setSearchingByPhenotype] = useState<boolean>(false)
-  // const [speciesList, setSpeciesList] = useSpecies()
+  // TODO: Uncomment out once multi-species support is added
+  // const [searchingByExpression, setSearchingByExpression] =
+  //   useState<boolean>(false)
+  // const [searchingByPhenotype, setSearchingByPhenotype] =
+  //   useState<boolean>(false)
 
-  // useEffect(() => {
-  //   if (!species && speciesList.length) setSpecies(speciesList[0])
-  // }, [species])
+  useEffect(() => {
+    if (!species && speciesList.length) setSpecies(speciesList[0])
+  }, [species])
 
   return (
     <Stack direction='column' spacing={2}>
