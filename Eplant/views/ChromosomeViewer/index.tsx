@@ -42,22 +42,13 @@ const ChromosomeViewer: View<
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void
   ) {
-    let chromosomeViewData: ChromosomeItem[] = [
-      {
-        id: 'Chr1',
-        name: 'Chr 1',
-        size: 30427671,
-        centromeres: [],
-      },
-    ]
-
     const poplar = false
     const species = poplar ? 'Populus_trichocarpa' : 'Arabidopsis_thaliana'
     const url = `https://bar.utoronto.ca/eplant${
       poplar ? '_poplar' : ''
     }/cgi-bin/chromosomeinfo.cgi?species=${species}`
 
-    chromosomeViewData = await fetch(url)
+    const chromosomeViewData: ChromosomeItem[] = await fetch(url)
       .then(async (response) => {
         return response.json()
       })
