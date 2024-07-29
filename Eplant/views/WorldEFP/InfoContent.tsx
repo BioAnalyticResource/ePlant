@@ -1,0 +1,47 @@
+import { styled } from '@mui/material'
+
+interface InfoContentProps {
+  id: string
+  mean: number
+  std: number
+  sample_size: number
+  pos: { x: number; y: number }
+}
+
+const InfoContent = ({ id, mean, std, sample_size, pos }: InfoContentProps) => {
+  return (
+    <StyledInfoContent x={pos.x} y={pos.y}>
+      <p>
+        <strong>{id}</strong>
+      </p>
+      <p>Mean: {mean}</p>
+      <p>Standard error: {std}</p>
+      <p>Sample size: {sample_size}</p>
+    </StyledInfoContent>
+  )
+}
+
+const StyledInfoContent = styled('div')<{ x: number; y: number }>(
+  ({ theme, x, y }) => ({
+    position: 'absolute',
+    top: y,
+    left: x,
+    border: '1px solid #ccc',
+    backgroundColor: theme.palette.background.active,
+    padding: '10px',
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: '200px',
+    width: '200px',
+    '& p': {
+      margin: '5px 0',
+    },
+    '& strong': {
+      display: 'block',
+      marginBottom: '10px',
+    },
+  })
+)
+
+export default InfoContent

@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _, { max, mean } from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { View, ViewProps } from '@eplant/View'
@@ -8,8 +8,14 @@ import { getEFPSampleData } from '../eFP'
 import { EFPData, EFPGroup, EFPTissue } from '../eFP/types'
 
 import MapContainer from './MapContainer'
-import { Coordinates, WorldEFPData, WorldEFPState } from './types'
-const WorldEFP: View<any, WorldEFPState, any> = {
+import {
+  Coordinates,
+  WorldEFPData,
+  WorldEFPGroupData,
+  WorldEFPMicroArrayResponse,
+  WorldEFPState,
+} from './types'
+const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
   name: 'World-EFP',
   id: 'World-EFP',
   getInitialState() {
@@ -28,9 +34,11 @@ const WorldEFP: View<any, WorldEFPState, any> = {
     loadEvent: (progress: number) => void
   ) {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
-    const markersURL =
-      'https://private-1e099f-eplant3.apiary-mock.com/microarray_gene_expression/world_efp/At1g01010'
-    const markerData = await fetch(markersURL)
+    const microArrayDataURL =
+      'https://bar.utoronto.ca/api_dev/microarray_gene_expression/world_efp/arabidopsis/At1g01010'
+    const microArrayData: WorldEFPMicroArrayResponse = await fetch(
+      microArrayDataURL
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
@@ -42,63 +50,34 @@ const WorldEFP: View<any, WorldEFPState, any> = {
         throw error
       })
 
-    const positions: Coordinates[] = markerData.map((e) => {
-      return {
-        lat: parseFloat(e.position.lat),
-        lng: parseFloat(e.position.lng),
-      }
-    })
-    console.log(positions)
-    const groupData: EFPGroup[] = []
-    // markerData.foreach(
-    //   (group: {
-    //     id: string
-    //     source: string
-    //     position: { lat: string; lng: string }
-    //     samples: [string, number][]
-    //     ctrlSamples: [string, number][]
-    //   }) => {
-    //     const samples = group.samples.map((v) => v[1])
-    //     const ctrls = group.ctrlSamples.map((v) => v[1])
-    //     const sampleTissue = {
-    //       name: group.id,
-    //       id: group.id,
-    //       ...getEFPSampleData(samples),
-    //     } as EFPTissue
-    //     const tissueValue = sampleTissue.mean
-    //     const ctrlValue = _.mean(ctrls)
-    //     groupData.push({
-    //       name: group.id,
-    //       control: Number.isFinite(ctrlValue) ? ctrlValue : undefined,
-    //       tissues: [sampleTissue],
-    //       ...getEFPSampleData([tissueValue]),
-    //     })
-    //   }
-    // )
+    const positions: Coordinates[] = []
+    const groupData: WorldEFPGroupData[] = []
 
-    // const efpData: EFPData = {
-    //   groups: groupData,
-    //   control: _.mean(
-    //     groupData
-    //       .map((g) => g.control)
-    //       .filter((g: unknown) => Number.isFinite(g))
-    //   ),
-    //   min: Math.min(...groupData.map((g: { min: any }) => g.min)),
-    //   max: Math.max(...groupData.map((g: { max: any }) => g.max)),
-    //   mean: _.mean(groupData.map((g: { mean: any }) => g.mean)),
-    //   std:
-    //     _.sum(
-    //       groupData.map(
-    //         (g: { std: number; samples: number }) => g.std ** 2 * g.samples
-    //       )
-    //     ) / _.sum(groupData.map((g: { samples: any }) => g.samples)),
-    //   samples: _.sum(groupData.map((g: { samples: any }) => g.samples)),
-    //   supported:
-    //     Number.isFinite(_.mean(groupData.map((g: { mean: any }) => g.mean))) &&
-    //     groupData.length > 0,
-    // }
+    Object.entries(microArrayData.data).forEach(([key, marker]) => {
+      // Coordinates
+      positions.push({
+        lat: parseFloat(marker.position.lat),
+        lng: parseFloat(marker.position.lng),
+      })
+
+      // Sample data
+      const efpGroupData = {
+        name: marker.id,
+        id: key,
+        mean: mean(Object.values(marker.values)),
+      }
+
+      groupData.push(efpGroupData)
+    })
+
+    const groupMax = groupData.reduce((extremum, group) => {
+      return group.mean > extremum ? group.mean : extremum
+    }, -Infinity)
+
     return {
       positions: positions,
+      efpData: groupData,
+      efpMax: groupMax,
     }
   },
   component({
@@ -108,7 +87,6 @@ const WorldEFP: View<any, WorldEFPState, any> = {
   }: ViewProps<WorldEFPData, WorldEFPState, any>) {
     if (!geneticElement) return <></>
     return <MapContainer activeData={activeData} state={state}></MapContainer>
-    // else return <div>hi</div>
   },
   icon: () => <div></div>,
   description: 'Find publications that mention your gene of interest.',
