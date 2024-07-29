@@ -1,7 +1,6 @@
 // -------
 // IMPORTS
 // -------
-
 import React, { FC, useEffect, useState } from 'react'
 import Draggable from 'react-draggable'
 
