@@ -26,6 +26,7 @@ export function SearchGroup({
 }: {
   addGeneticElements: (gene: GeneticElement[]) => void
 }) {
+  const [speciesList, setSpeciesList] = useSpecies()
   const [species, setSpecies] = useState<Species>()
 
   // Commedned out until we get multi-species support
@@ -33,15 +34,15 @@ export function SearchGroup({
   // const [searchingByPhenotype, setSearchingByPhenotype] = useState<boolean>(false)
   // const [speciesList, setSpeciesList] = useSpecies()
 
-  // useEffect(() => {
-  //   if (!species && speciesList.length) setSpecies(speciesList[0])
-  // }, [species])
+  useEffect(() => {
+    if (!species && speciesList.length) setSpecies(speciesList[0])
+  }, [species])
 
   return (
     <Stack direction='column' spacing={2}>
       {/* Species selector */}
 
-      {/* Commenting this out until we get multi-species support 
+      {/* Commenting this out until we get multi-species support
       <TextField
         select
         size='small'
@@ -81,7 +82,7 @@ export function SearchGroup({
           )
         }}
       ></SearchBar>
-      {/* TODO: Implement alternate search options 
+      {/* TODO: Implement alternate search options
       <MenuButton disabled variant="contained">
         Search by expression
       </MenuButton>

@@ -19,6 +19,9 @@ interface GeneAnnotationProps {
 // COMPONENT
 //----------
 const GeneAnnotation: FC<GeneAnnotationProps> = ({ gene, scale }) => {
+  if (gene.id == 'AT1G01010') {
+    console.log(gene.location)
+  }
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const theme = useTheme()
 
@@ -30,11 +33,7 @@ const GeneAnnotation: FC<GeneAnnotationProps> = ({ gene, scale }) => {
       {/* GENE ID INDICATOR LINE */}
       <line
         x1={gene.strand == '+' ? 18 : 8}
-        y1={
-          scale >= 1.5
-            ? gene.location + 1.5 / scale - 10 / scale
-            : gene.location - 6
-        }
+        y1={gene.location}
         x2={
           gene.strand == '+' && scale <= 2
             ? 0
@@ -44,11 +43,7 @@ const GeneAnnotation: FC<GeneAnnotationProps> = ({ gene, scale }) => {
                 ? 8 - 20 / scale
                 : 18 + 20 / scale
         }
-        y2={
-          scale >= 1.5
-            ? gene.location + 1.5 / scale - 10 / scale
-            : gene.location - 6
-        }
+        y2={gene.location}
         strokeWidth={scale <= 1 ? 1.5 : 1 / scale}
         stroke={theme.palette.secondary.contrastText}
       />
@@ -71,7 +66,7 @@ const GeneAnnotation: FC<GeneAnnotationProps> = ({ gene, scale }) => {
                 ? 8 - 20 / scale
                 : 18 + 20 / scale
         }
-        y={gene.location}
+        y={gene.location + 7 / scale}
       >
         <a onClick={onClick}>{gene.id}</a>
       </text>
