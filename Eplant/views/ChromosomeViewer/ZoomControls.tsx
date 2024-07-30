@@ -36,7 +36,7 @@ const ZoomControls: FC<ZoomControlsProps> = ({ spaceRef, scale }) => {
       }}
     >
       {/* RESET BUTTON */}
-      <Tooltip title={`${scale.toFixed(2)}-${resetZoomMessage}`} arrow>
+      <Tooltip title={resetZoomMessage} arrow>
         <Button
           color='secondary'
           onClick={() => {

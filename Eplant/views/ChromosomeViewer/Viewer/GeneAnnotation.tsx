@@ -19,9 +19,6 @@ interface GeneAnnotationProps {
 // COMPONENT
 //----------
 const GeneAnnotation: FC<GeneAnnotationProps> = ({ gene, scale }) => {
-  if (gene.id == 'AT1G01010') {
-    console.log(gene.location)
-  }
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const theme = useTheme()
 
