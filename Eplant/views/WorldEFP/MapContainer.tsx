@@ -1,18 +1,13 @@
 import { MouseEvent, useState } from 'react'
-import { random } from 'lodash'
 
+import { useSidebarState } from '@eplant/state'
+import { sidebarWidth } from '@eplant/UI/Sidebar'
 import { useTheme } from '@mui/material'
-import {
-  AdvancedMarker,
-  APIProvider,
-  InfoWindow,
-  Map,
-  useAdvancedMarkerRef,
-} from '@vis.gl/react-google-maps'
+import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps'
 
 import WorldEFPIcon from './icon'
 import InfoContent from './InfoContent'
-import { Coordinates, WorldEFPData, WorldEFPState } from './types'
+import { WorldEFPData, WorldEFPState } from './types'
 import { getWorldEFPColour } from './utils'
 
 interface MapContainerProps {
@@ -24,14 +19,18 @@ const MapContainer = ({ activeData, state }: MapContainerProps) => {
   const theme = useTheme()
   const [infoWindowShown, setInfoWindowShown] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [hoveredMarkerId, setHoveredMarkerId] = useState<string>('')
+  const [isCollapse] = useSidebarState()
 
-  const handleMouseOver = (event: MouseEvent<HTMLDivElement>) => {
-    console.log('yo')
+  const handleMouseOver = (event: MouseEvent<HTMLDivElement>, id: string) => {
     setInfoWindowShown(true)
+    const mouseX = isCollapse ? event.clientX : event.clientX - sidebarWidth
+    const mouseY = event.clientY
     setMousePosition({
-      x: event.clientX,
-      y: event.clientY,
+      x: mouseX,
+      y: mouseY,
     })
+    setHoveredMarkerId(id)
   }
 
   const handleMouseOut = (event: MouseEvent<HTMLDivElement>) => {
@@ -40,6 +39,7 @@ const MapContainer = ({ activeData, state }: MapContainerProps) => {
       x: 0,
       y: 0,
     })
+    setHoveredMarkerId('')
   }
   return (
     <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY} version='beta'>
@@ -54,28 +54,30 @@ const MapContainer = ({ activeData, state }: MapContainerProps) => {
             activeData.efpData[index].mean,
             activeData.efpMax
           )
+          const markerId = activeData.efpData[index].id
+
           return (
             <>
               <AdvancedMarker key={index} position={pos}>
                 <div
-                  onMouseOver={handleMouseOver}
+                  onMouseOver={(event) => handleMouseOver(event, markerId)}
                   onMouseLeave={handleMouseOut}
                   style={{
                     width: 24,
                     height: 24,
                     position: 'absolute',
-                    opacity: 1,
+                    opacity: 0,
                     backgroundColor: 'white',
                   }}
                 ></div>
                 <WorldEFPIcon sx={{ fill: colour }}></WorldEFPIcon>
               </AdvancedMarker>
-              {infoWindowShown && (
+              {infoWindowShown && markerId === hoveredMarkerId && (
                 <InfoContent
-                  id={'asd'}
-                  mean={12}
-                  std={12}
-                  sample_size={12}
+                  id={activeData.efpData[index].name}
+                  mean={activeData.efpData[index].mean}
+                  std={activeData.efpData[index].std}
+                  sampleSize={activeData.efpData[index].sampleSize}
                   pos={mousePosition}
                 ></InfoContent>
               )}

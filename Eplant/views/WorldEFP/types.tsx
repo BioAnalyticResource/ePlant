@@ -40,4 +40,6 @@ export interface WorldEFPGroupData {
   name: string
   id: string
   mean: number
+  std: number
+  sampleSize: number
 }

@@ -1,4 +1,4 @@
-import _, { max, mean } from 'lodash'
+import _, { max, mean, sampleSize } from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { View, ViewProps } from '@eplant/View'
@@ -59,12 +59,17 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
         lat: parseFloat(marker.position.lat),
         lng: parseFloat(marker.position.lng),
       })
-
+      const samples = Object.values(marker.values)
+      const sampleMean = mean(samples)
       // Sample data
       const efpGroupData = {
         name: marker.id,
         id: key,
-        mean: mean(Object.values(marker.values)),
+        mean: sampleMean,
+        std: Math.sqrt(
+          _.sumBy(samples, (v) => Math.pow(v - sampleMean, 2)) / samples.length
+        ),
+        sampleSize: samples.length,
       }
 
       groupData.push(efpGroupData)
