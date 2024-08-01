@@ -162,8 +162,8 @@ const ChromosomeViewer: View<
   citation() {
     return (
       <div>
-        The Chromosome viewer of ePlant v3 is generated with SVGs using
-        the BAR API
+        The Chromosome viewer of ePlant v3 is generated with SVGs using the BAR
+        API
       </div>
     )
   },
