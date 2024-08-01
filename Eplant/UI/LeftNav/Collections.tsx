@@ -392,10 +392,7 @@ export function Collections(props: {
         return cols
       } else return collections
     })
-  }, [
-    genes,
-    collections,
-  ])
+  }, [genes, collections])
 
   return (
     <DndContext

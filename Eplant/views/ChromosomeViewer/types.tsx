@@ -33,6 +33,10 @@ export interface GeneAnnotationItem {
   strand: string // influences if gene is left or right of chromosome
 }
 
+export interface GeneRange {
+  start: number
+  end: number
+}
 // Component Props
 export type Transform = {
   dx: number

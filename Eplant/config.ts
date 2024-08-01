@@ -32,7 +32,7 @@ const userViews = [
   PlantEFP,
   CellEFP,
   ExperimentEFP,
-  ChromosomeViewer
+  ChromosomeViewer,
 ]
 
 // List of views that are used to lookup a view by id

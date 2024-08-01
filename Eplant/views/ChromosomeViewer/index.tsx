@@ -49,9 +49,7 @@ const ChromosomeViewer: View<
     }/cgi-bin/chromosomeinfo.cgi?species=${species}`
 
     const chromosomeViewData: ChromosomeItem[] = await fetch(url)
-      .then(async (response) => {
-        return response.json()
-      })
+      .then((response) => response.json())
       .then((responseObj: ChromosomesResponseObj) => responseObj['chromosomes'])
 
     return {

@@ -15,11 +15,17 @@ import {
   CentromereItem,
   ChromosomeItem,
   GeneAnnotationItem,
-  GeneItem,
+  GeneRange,
 } from '../types'
 
 import GeneAnnotation from './GeneAnnotation'
 import GeneList from './GeneList'
+import {
+  getChromosomeSvg,
+  getChromosomeXCoordinate,
+  getGeneAnnotation,
+  pixelToBp,
+} from './utilities'
 
 //----------
 // TYPES
@@ -27,11 +33,6 @@ import GeneList from './GeneList'
 interface ChromosomeProps {
   scale: number
   chromosome: ChromosomeItem
-}
-
-interface Range {
-  start: number
-  end: number
 }
 
 //----------
@@ -42,7 +43,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [anchorOrigin, setAnchorOrigin] = useState<number[]>([])
   const [anchorEl, setAnchorEl] = useState<null | any>(null)
-  const [geneRange, setGeneRange] = useState<Range>({
+  const [geneRange, setGeneRange] = useState<GeneRange>({
     start: 0,
     end: 0,
   })
@@ -74,6 +75,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
 
   // Fire before paint, converts geneticElements into geneAnnotationArray
   useLayoutEffect(() => {
+    // TODO: move this to top level to prevent uneccessary api calls
     const poplar = false
     const species = poplar ? 'Populus_trichocarpa' : 'Arabidopsis_thaliana'
     let newGeneAnnotationArray: GeneAnnotationItem[] = []
@@ -112,87 +114,13 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
 
   // Execute on first render, after paint
   useEffect(() => {
-    const svg: HTMLElement & SVGSVGElement = getChromosomeSvg()
+    const svg: HTMLElement & SVGSVGElement = getChromosomeSvg(chromosome.id)
     // Get the bounds of the SVG content
     const bbox: SVGRect = svg.getBBox()
     // Update the width and height using the size of the contents
     svg.setAttribute('width', `${bbox.x + bbox.width + bbox.x}`)
     svg.setAttribute('height', `${bbox.y + bbox.height + bbox.y}`)
   }, [])
-
-  //------------------
-  // Helper Functions
-  //------------------
-  /**
-   * formats a GeneItem into GeneAnnotationItem
-   */
-  const getGeneAnnotation = (gene: GeneItem): GeneAnnotationItem => {
-    const genePixelLoc: number = ((gene.start + gene.end) / 2) * 0.000015
-    const geneAnnotation: GeneAnnotationItem = {
-      id: gene.id,
-      chromosome: gene.chromosome,
-      location: genePixelLoc,
-      strand: gene.strand,
-    }
-    return geneAnnotation
-  }
-  /**
-   * Gets the Chromosome svg element.
-   */
-  const getChromosomeSvg = (): HTMLElement & SVGSVGElement => {
-    const svg = document.getElementById(chromosome.id + '_svg') as HTMLElement &
-      SVGSVGElement
-    return svg
-  }
-  /**
-   * Gets the Chromosome top y-coordinate.
-   */
-  const getChromosomeYCoordinate = (): number => {
-    return getChromosomeSvg().getBoundingClientRect().top
-  }
-  /**
-   * Gets the Chromosome right x-coordinate.
-   */
-  const getChromosomeXCoordinate = (): number => {
-    return getChromosomeSvg().getBoundingClientRect().right
-  }
-  /**
-   * Gets the height of the Chromosome.
-   */
-  const getChromosomeHeight = (): number => {
-    return getChromosomeSvg().getBoundingClientRect().height
-  }
-  /**
-   * Gets the number of base-pairs per pixel.
-   */
-  const getBpPerPixel = (): number => {
-    return chromosome.size / (getChromosomeHeight() - 1)
-  }
-  /**
-   * Converts a pixel value to the equivalent base-pair range.
-   */
-  const pixelToBp = (pixel: number): Range => {
-    if (
-      pixel > getChromosomeYCoordinate() &&
-      pixel < getChromosomeYCoordinate() + getChromosomeHeight()
-    ) {
-      const range = {
-        start: Math.floor(
-          (pixel - 1 - getChromosomeYCoordinate()) * getBpPerPixel() + 1
-        ),
-        end: Math.floor((pixel - getChromosomeYCoordinate()) * getBpPerPixel()),
-      }
-      if (range.end > chromosome.size) {
-        range.end = chromosome.size
-      }
-      return range
-    } else {
-      return {
-        start: 0,
-        end: 0,
-      }
-    }
-  }
 
   //--------------
   // Event Handling
@@ -203,7 +131,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
     const virtualEl = {
       getBoundingClientRect() {
         return {
-          left: getChromosomeXCoordinate() + 100, // distanceX from the right of the chromosome (TODO: determine what side of the screen click is on and accordingly place popup on left or right of chromosome)
+          left: getChromosomeXCoordinate(chromosome.id) + 100, // distanceX from the right of the chromosome (TODO: determine what side of the screen click is on and accordingly place popup on left or right of chromosome)
           top: event.clientY - 60, // distanceY from click(has weird functionality- need to fix)
           width: 0,
           height: 0,
@@ -212,7 +140,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
     }
     setAnchorEl(anchorEl ? null : virtualEl)
     setAnchorOrigin([event.clientX, event.clientY])
-    setGeneRange(pixelToBp(event.clientY))
+    setGeneRange(pixelToBp(geneRange, chromosome, event.clientY))
   }
   const handleMouseOverChromosome = () => {
     setIsHovered(true)
