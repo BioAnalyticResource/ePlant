@@ -1,4 +1,12 @@
-import React, { useLayoutEffect, useState } from 'react'
+/**
+ * ---------------------
+ * view: ChromosomeViewer
+ * author: Yonah Aviv
+ * modified: 08/01/2024
+ * --------------------
+ *  */
+
+import React, { useState } from 'react'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
@@ -154,8 +162,8 @@ const ChromosomeViewer: View<
   citation() {
     return (
       <div>
-        This image was generated with the Chromosome viewer of ePlant v3 using
-        the BAR api
+        The Chromosome viewer of ePlant v3 is generated with SVGs using
+        the BAR API
       </div>
     )
   },
