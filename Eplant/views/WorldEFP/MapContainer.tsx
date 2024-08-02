@@ -22,18 +22,20 @@ const MapContainer = ({ activeData, state }: MapContainerProps) => {
   const [hoveredMarkerId, setHoveredMarkerId] = useState<string>('')
   const [isCollapse] = useSidebarState()
 
-  const handleMouseOver = (event: MouseEvent<HTMLDivElement>, id: string) => {
-    setInfoWindowShown(true)
-    const mouseX = isCollapse ? event.clientX : event.clientX - sidebarWidth
-    const mouseY = event.clientY
-    setMousePosition({
-      x: mouseX,
-      y: mouseY,
-    })
-    setHoveredMarkerId(id)
+  const handleMouseEnter = (event: MouseEvent<HTMLDivElement>, id: string) => {
+    if (!infoWindowShown) {
+      setInfoWindowShown(true)
+      const mouseX = isCollapse ? event.clientX : event.clientX - sidebarWidth
+      const mouseY = event.clientY
+      setMousePosition({
+        x: mouseX,
+        y: mouseY,
+      })
+      setHoveredMarkerId(id)
+    }
   }
 
-  const handleMouseOut = (event: MouseEvent<HTMLDivElement>) => {
+  const handleMouseLeave = (event: MouseEvent<HTMLDivElement>) => {
     setInfoWindowShown(false)
     setMousePosition({
       x: 0,
@@ -60,17 +62,18 @@ const MapContainer = ({ activeData, state }: MapContainerProps) => {
             <>
               <AdvancedMarker key={index} position={pos}>
                 <div
-                  onMouseOver={(event) => handleMouseOver(event, markerId)}
-                  onMouseLeave={handleMouseOut}
+                  onMouseOver={(event) => handleMouseEnter(event, markerId)}
+                  onMouseLeave={handleMouseLeave}
                   style={{
                     width: 24,
                     height: 24,
                     position: 'absolute',
-                    opacity: 0,
-                    backgroundColor: 'white',
+                    opacity: 1,
+                    backgroundColor: 'rgba(52, 52, 52, 0)',
                   }}
-                ></div>
-                <WorldEFPIcon sx={{ fill: colour }}></WorldEFPIcon>
+                >
+                  <WorldEFPIcon sx={{ fill: colour }}></WorldEFPIcon>
+                </div>
               </AdvancedMarker>
               {infoWindowShown && markerId === hoveredMarkerId && (
                 <InfoContent
