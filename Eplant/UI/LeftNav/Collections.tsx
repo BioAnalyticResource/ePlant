@@ -22,7 +22,11 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import GeneticElement from '@eplant/GeneticElement'
-import { useCollections, useGeneticElements } from '@eplant/state'
+import {
+  useActiveGeneId,
+  useCollections,
+  useGeneticElements,
+} from '@eplant/state'
 import { Add, Check, ExpandMore } from '@mui/icons-material'
 import {
   Box,
