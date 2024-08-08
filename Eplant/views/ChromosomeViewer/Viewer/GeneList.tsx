@@ -75,22 +75,20 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
               key={i}
               disablePadding
               sx={{
-                height: 23,
+                height: 18,
               }}
             >
               {/* GENE LIST ITEM (rendered as  button) */}
               <ListItemButton
                 selected={i === selectedIndex}
                 onClick={handleGeneSelect(gene, i)}
-                sx={{ borderRadius: 0, padding: 0 }}
+                sx={{
+                  height: 18,
+                  borderRadius: 0,
+                  padding: 0,
+                  paddingInline: '2px',
+                }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                  }}
-                >
-                  <GeneIcon height={15} stroke={theme.palette.primary.main} />
-                </ListItemIcon>
                 <ListItemText
                   sx={{
                     '& .MuiListItemText-primary': {
