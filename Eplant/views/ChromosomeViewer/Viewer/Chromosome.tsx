@@ -183,7 +183,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
                 background: theme.palette.background.paper,
                 border: `1.5px solid ${theme.palette.primary.dark}`,
                 p: 0,
-                width: '180px',
+                width: '120px',
                 maxHeight: '100px',
                 minHeight: 30,
                 overflowY: 'scroll',
