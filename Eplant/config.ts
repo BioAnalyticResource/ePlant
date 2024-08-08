@@ -7,6 +7,7 @@ import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
 import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
+import InteractionsViewer from './views/InteractionsViewer'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
 import { type View } from './View'
@@ -33,6 +34,7 @@ const userViews = [
   CellEFP,
   ExperimentEFP,
   ChromosomeViewer,
+  InteractionsViewer
 ]
 
 // List of views that are used to lookup a view by id

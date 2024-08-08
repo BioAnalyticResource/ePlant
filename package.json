@@ -28,9 +28,14 @@
     "@mui/x-data-grid": "^6.15.0",
     "@mui/x-tree-view": "^7.5.1",
     "@popperjs/core": "^2.11.8",
+    "@types/cytoscape": "^3.21.5",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.5.1",
     "color2k": "^2.0.2",
+    "cytoscape": "^3.30.1",
+    "cytoscape-automove": "^1.10.3",
+    "cytoscape-cose-bilkent": "^4.1.0",
+    "cytoscape-popper": "^4.0.0",
     "dompurify": "^3.0.6",
     "flexlayout-react": "^0.7.11",
     "idb": "^7.1.1",
@@ -39,7 +44,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
-    "react-window": "^1.8.9"
+    "react-window": "^1.8.9",
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.3.0",
