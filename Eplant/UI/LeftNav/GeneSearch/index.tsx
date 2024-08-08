@@ -43,7 +43,7 @@ export function SearchGroup({
     <Stack direction='column' spacing={2}>
       {/* Species selector */}
 
-      {/* Commenting this out until we get multi-species support 
+      {/* Commenting this out until we get multi-species support
       <TextField
         select
         size='small'
@@ -83,7 +83,7 @@ export function SearchGroup({
           )
         }}
       ></SearchBar>
-      {/* TODO: Implement alternate search options 
+      {/* TODO: Implement alternate search options
       <MenuButton disabled variant="contained">
         Search by expression
       </MenuButton>
