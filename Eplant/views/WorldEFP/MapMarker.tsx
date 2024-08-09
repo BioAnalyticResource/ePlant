@@ -40,7 +40,7 @@ const MapMarker = ({ data, color, position }: MapMarkerProps) => {
 
   useEffect(() => {
     if (marker) {
-      marker.addListener('gmp-click', () => {})
+      marker.addListener('gmp-click', () => {}) // Need this to have mouseover logic work for some reason
       marker.content?.addEventListener('mouseover', handleMouseOver)
       marker.content?.addEventListener('mouseout', handleMouseOut)
 
