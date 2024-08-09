@@ -14,8 +14,8 @@ const InfoContent = ({ id, mean, std, sampleSize, pos }: InfoContentProps) => {
       <p>
         <strong>{id}</strong>
       </p>
-      <p>Mean: {mean}</p>
-      <p>Standard error: {std}</p>
+      <p>Mean: {mean.toFixed(2)}</p>
+      <p>Standard error: {std.toFixed(2)}</p>
       <p>Sample size: {sampleSize}</p>
     </StyledInfoContent>
   )

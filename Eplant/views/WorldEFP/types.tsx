@@ -16,8 +16,7 @@ export type WorldEFPState = {
 
 export type WorldEFPData = {
   positions: Coordinates[]
-  efpData: WorldEFPGroupData[]
-  efpMax: number
+  efpData: EFPData
 }
 
 export interface WorldEFPMicroArrayResponse {
@@ -34,12 +33,4 @@ export interface WorldEFPMicroArrayData {
   probeset: string
   values: { [key: string]: number }
   code: string
-}
-
-export interface WorldEFPGroupData {
-  name: string
-  id: string
-  mean: number
-  std: number
-  sampleSize: number
 }

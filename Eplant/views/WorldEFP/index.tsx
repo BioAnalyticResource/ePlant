@@ -1,17 +1,14 @@
-import _, { max, mean, sampleSize } from 'lodash'
-
 import GeneticElement from '@eplant/GeneticElement'
 import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
 
-import { getEFPSampleData } from '../eFP'
-import { EFPData, EFPGroup, EFPTissue } from '../eFP/types'
+import { EFPData, EFPGroup } from '../eFP/types'
 
+import WorldEFPIcon from './icon'
 import MapContainer from './MapContainer'
 import {
   Coordinates,
   WorldEFPData,
-  WorldEFPGroupData,
   WorldEFPMicroArrayResponse,
   WorldEFPState,
 } from './types'
@@ -34,8 +31,7 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
     loadEvent: (progress: number) => void
   ) {
     if (!gene) throw ViewDataError.UNSUPPORTED_GENE
-    const microArrayDataURL =
-      'https://bar.utoronto.ca/api_dev/microarray_gene_expression/world_efp/arabidopsis/At1g01010'
+    const microArrayDataURL = `https://bar.utoronto.ca/api_dev/microarray_gene_expression/world_efp/arabidopsis/${gene.id}`
     const microArrayData: WorldEFPMicroArrayResponse = await fetch(
       microArrayDataURL
     )
@@ -51,8 +47,7 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
       })
 
     const positions: Coordinates[] = []
-    const groupData: WorldEFPGroupData[] = []
-
+    const groupData: EFPGroup[] = []
     Object.entries(microArrayData.data).forEach(([key, marker]) => {
       // Coordinates
       positions.push({
@@ -60,29 +55,45 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
         lng: parseFloat(marker.position.lng),
       })
       const samples = Object.values(marker.values)
-      const sampleMean = mean(samples)
       // Sample data
+      const mean =
+        samples.reduce((sum, value) => sum + value, 0) / samples.length
       const efpGroupData = {
         name: marker.id,
-        id: key,
-        mean: sampleMean,
+        tissues: [],
+        mean: mean,
+        min: Math.min(...samples),
+        max: Math.max(...samples),
         std: Math.sqrt(
-          _.sumBy(samples, (v) => Math.pow(v - sampleMean, 2)) / samples.length
+          samples.reduce((sum, value) => Math.pow(value - mean, 2)) /
+            (samples.length - 1)
         ),
-        sampleSize: samples.length,
+        samples: samples.length,
       }
 
       groupData.push(efpGroupData)
     })
 
-    const groupMax = groupData.reduce((extremum, group) => {
-      return group.mean > extremum ? group.mean : extremum
-    }, -Infinity)
+    const totalSamples = groupData.reduce(
+      (sum, group) => sum + group.samples,
+      0
+    )
+    const totalMean =
+      groupData.reduce((sum, group) => sum + group.mean * group.samples, 0) /
+      totalSamples
+
+    const efpData = {
+      groups: groupData,
+      mean: totalMean,
+      min: Math.min(...groupData.map((group) => group.min)),
+      max: Math.max(...groupData.map((group) => group.max)),
+      std: 0, // This isn't needed, just set to 0 for convenience
+      samples: totalSamples,
+    } as EFPData
 
     return {
       positions: positions,
-      efpData: groupData,
-      efpMax: groupMax,
+      efpData: efpData,
     }
   },
   component({
@@ -93,8 +104,8 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
     if (!geneticElement) return <></>
     return <MapContainer activeData={activeData} state={state}></MapContainer>
   },
-  icon: () => <div></div>,
-  description: 'Find publications that mention your gene of interest.',
+  icon: () => <WorldEFPIcon></WorldEFPIcon>,
+  description: '',
   // TODO: If dark theme is active, use ThumbnailDark
   citation({ gene }) {
     return <div></div>

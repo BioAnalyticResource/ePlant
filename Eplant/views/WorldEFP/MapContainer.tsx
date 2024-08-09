@@ -5,10 +5,13 @@ import { sidebarWidth } from '@eplant/UI/Sidebar'
 import { useTheme } from '@mui/material'
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps'
 
+import { getColor } from '../eFP/svg'
+import GeneDistributionChart from '../eFP/Viewer/GeneDistributionChart'
+import Legend from '../eFP/Viewer/legend'
+
 import WorldEFPIcon from './icon'
 import InfoContent from './InfoContent'
 import { WorldEFPData, WorldEFPState } from './types'
-import { getWorldEFPColour } from './utils'
 
 interface MapContainerProps {
   activeData: WorldEFPData
@@ -43,6 +46,7 @@ const MapContainer = ({ activeData, state }: MapContainerProps) => {
     })
     setHoveredMarkerId('')
   }
+  console.log(activeData)
   return (
     <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY} version='beta'>
       <Map
@@ -51,42 +55,55 @@ const MapContainer = ({ activeData, state }: MapContainerProps) => {
         mapId={import.meta.env.VITE_MAP_ID}
       >
         {activeData.positions.map((pos, index) => {
-          const colour = getWorldEFPColour(
+          const colour = getColor(
+            activeData.efpData.groups[index].mean,
+            activeData.efpData.groups[index],
+            1,
             theme,
-            activeData.efpData[index].mean,
-            activeData.efpMax
+            'absolute'
           )
-          const markerId = activeData.efpData[index].id
+          const markerId = activeData.efpData.groups[index].name
 
           return (
             <>
-              <AdvancedMarker key={index} position={pos}>
-                <div
-                  onMouseOver={(event) => handleMouseEnter(event, markerId)}
-                  onMouseLeave={handleMouseLeave}
-                  style={{
-                    width: 24,
-                    height: 24,
-                    position: 'absolute',
-                    opacity: 1,
-                    backgroundColor: 'rgba(52, 52, 52, 0)',
-                  }}
-                >
+              <div
+                onMouseOver={(event) => handleMouseEnter(event, markerId)}
+                onMouseLeave={handleMouseLeave}
+                style={{
+                  width: 30,
+                  height: 30,
+                  position: 'absolute',
+                  opacity: 1,
+                  backgroundColor: 'rgba(52, 52, 52, 0)',
+                }}
+              >
+                <AdvancedMarker key={index} position={pos}>
                   <WorldEFPIcon sx={{ fill: colour }}></WorldEFPIcon>
-                </div>
-              </AdvancedMarker>
+                </AdvancedMarker>
+              </div>
               {infoWindowShown && markerId === hoveredMarkerId && (
                 <InfoContent
-                  id={activeData.efpData[index].name}
-                  mean={activeData.efpData[index].mean}
-                  std={activeData.efpData[index].std}
-                  sampleSize={activeData.efpData[index].sampleSize}
+                  id={activeData.efpData.groups[index].name}
+                  mean={activeData.efpData.groups[index].mean}
+                  std={activeData.efpData.groups[index].std}
+                  sampleSize={activeData.efpData.groups[index].samples}
                   pos={mousePosition}
                 ></InfoContent>
               )}
             </>
           )
         })}
+        <Legend
+          sx={(theme) => ({
+            position: 'absolute',
+            left: theme.spacing(2),
+            bottom: theme.spacing(4),
+            zIndex: 10,
+          })}
+          colorMode={'absolute'}
+          data={activeData.efpData}
+        ></Legend>
+        <GeneDistributionChart data={activeData.efpData} />
       </Map>
     </APIProvider>
   )
