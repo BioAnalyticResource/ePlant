@@ -45,8 +45,8 @@ const MapMarker = ({ data, color, position }: MapMarkerProps) => {
       marker.content?.addEventListener('mouseout', handleMouseOut)
 
       return () => {
-        marker.removeEventListener('mouseover', handleMouseOver)
-        marker.removeEventListener('mouseout', handleMouseOut)
+        marker.content?.removeEventListener('mouseover', handleMouseOver)
+        marker.content?.removeEventListener('mouseout', handleMouseOut)
       }
     }
   }, [data])

@@ -16,14 +16,14 @@ interface MapContainerProps {
   state: WorldEFPState
 }
 const MapContainer = ({ activeData, state }: MapContainerProps) => {
-  const defaultCenter = { lat: 49, lng: 11 }
+  const defaultCenter = { lat: 0, lng: 0 }
   const theme = useTheme()
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY} version='beta'>
       <Map
         defaultCenter={defaultCenter}
-        defaultZoom={10}
+        defaultZoom={2}
         mapId={import.meta.env.VITE_MAP_ID}
         streetViewControl={false}
         mapTypeId={'roadmap'}
