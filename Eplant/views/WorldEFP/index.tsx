@@ -3,11 +3,13 @@ import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
 
 import { EFPData, EFPGroup } from '../eFP/types'
+import MaskModal from '../eFP/Viewer/MaskModal'
 
 import WorldEFPIcon from './icon'
 import MapContainer from './MapContainer'
 import {
   Coordinates,
+  WorldEFPAction,
   WorldEFPData,
   WorldEFPMicroArrayResponse,
   WorldEFPState,
@@ -21,8 +23,8 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
       zoom: 2,
       mapTypeId: 'roadmap',
       maskingEnabled: false,
-      maskModalVisibile: false,
-      maskingThreshold: 100,
+      maskModalVisible: false,
+      maskThreshold: 100,
       colorMode: 'absolute',
     }
   },
@@ -98,11 +100,27 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
   },
   component({
     geneticElement,
+    dispatch,
     activeData,
     state,
-  }: ViewProps<WorldEFPData, WorldEFPState, any>) {
+  }: ViewProps<WorldEFPData, WorldEFPState, WorldEFPAction>) {
     if (!geneticElement) return <></>
-    return <MapContainer activeData={activeData} state={state}></MapContainer>
+    return (
+      <>
+        <MapContainer activeData={activeData} state={state}></MapContainer>
+        <MaskModal
+          maskModalVisible={state.maskModalVisible}
+          maskThreshold={state.maskThreshold}
+          onClose={() => dispatch({ type: 'toggle-mask-modal' })}
+          onSubmit={(threshold) =>
+            dispatch({
+              type: 'set-mask-threshold',
+              threshold: threshold,
+            })
+          }
+        />
+      </>
+    )
   },
   icon: () => <WorldEFPIcon></WorldEFPIcon>,
   description: '',
@@ -110,5 +128,52 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
   citation({ gene }) {
     return <div></div>
   },
+  reducer: (state: WorldEFPState, action: WorldEFPAction) => {
+    switch (action.type) {
+      case 'toggle-color-mode':
+        return {
+          ...state,
+          colorMode:
+            state.colorMode == 'absolute'
+              ? ('relative' as const)
+              : ('absolute' as const),
+        }
+      case 'toggle-mask-modal':
+        if (state.maskingEnabled) {
+          return {
+            ...state,
+            maskingEnabled: !state.maskingEnabled,
+          }
+        } else {
+          return {
+            ...state,
+            maskModalVisible: !state.maskModalVisible,
+          }
+        }
+      case 'set-mask-threshold':
+        return {
+          ...state,
+          maskThreshold: action.threshold,
+          maskingEnabled: !state.maskingEnabled,
+          maskModalVisible: !state.maskModalVisible,
+        }
+      default:
+        return state
+    }
+  },
+  actions: [
+    {
+      action: { type: 'reset-transform' },
+      render: () => <>Reset pan/zoom</>,
+    },
+    {
+      action: { type: 'toggle-color-mode' },
+      render: (props) => <>Toggle data mode: {props.state.colorMode}</>,
+    },
+    {
+      action: { type: 'toggle-mask-modal' },
+      render: () => <>Mask data</>,
+    },
+  ],
 }
 export default WorldEFP

@@ -46,7 +46,6 @@ const MapContainer = ({ activeData, state }: MapContainerProps) => {
     })
     setHoveredMarkerId('')
   }
-  console.log(activeData)
   return (
     <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY} version='beta'>
       <Map
@@ -60,7 +59,10 @@ const MapContainer = ({ activeData, state }: MapContainerProps) => {
             activeData.efpData.groups[index],
             1,
             theme,
-            'absolute'
+            state.colorMode,
+            activeData.efpData.groups[index].std,
+            state.maskThreshold,
+            state.maskingEnabled
           )
           const markerId = activeData.efpData.groups[index].name
 

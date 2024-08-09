@@ -8,9 +8,9 @@ export type WorldEFPState = {
   position: Coordinates
   zoom: number
   mapTypeId: MapTypeId
-  maskModalVisibile: boolean
+  maskModalVisible: boolean
   maskingEnabled: boolean
-  maskingThreshold: number
+  maskThreshold: number
   colorMode: ColorMode
 }
 
@@ -34,3 +34,8 @@ export interface WorldEFPMicroArrayData {
   values: { [key: string]: number }
   code: string
 }
+export type WorldEFPAction =
+  | { type: 'toggle-color-mode' }
+  | { type: 'toggle-masking' }
+  | { type: 'toggle-mask-modal' }
+  | { type: 'set-mask-threshold'; threshold: number }
