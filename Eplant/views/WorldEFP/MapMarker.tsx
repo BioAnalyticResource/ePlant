@@ -81,7 +81,9 @@ const MapMarker = ({ data, color, position }: MapMarkerProps) => {
         onClose={() => {
           setShowModal(false)
         }}
-      ></Modal>
+      >
+        
+      </Modal>
     </>
   )
 }

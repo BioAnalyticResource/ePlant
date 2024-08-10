@@ -1,6 +1,7 @@
 import GeneticElement from '@eplant/GeneticElement'
 import { View, ViewProps } from '@eplant/View'
 import { ViewDataError } from '@eplant/View/viewData'
+import { APIProvider } from '@vis.gl/react-google-maps'
 
 import { EFPData, EFPGroup } from '../eFP/types'
 import MaskModal from '../eFP/Viewer/MaskModal'
@@ -107,7 +108,13 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
     if (!geneticElement) return <></>
     return (
       <>
-        <MapContainer activeData={activeData} state={state}></MapContainer>
+        <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY} version='beta'>
+          <MapContainer
+            activeData={activeData}
+            state={state}
+            dispatch={dispatch}
+          ></MapContainer>
+        </APIProvider>
         <MaskModal
           maskModalVisible={state.maskModalVisible}
           maskThreshold={state.maskThreshold}
@@ -156,6 +163,16 @@ const WorldEFP: View<WorldEFPData, WorldEFPState, any> = {
           maskThreshold: action.threshold,
           maskingEnabled: !state.maskingEnabled,
           maskModalVisible: !state.maskModalVisible,
+        }
+      case 'set-map-position':
+        return {
+          ...state,
+          position: action.position,
+        }
+      case 'set-map-zoom':
+        return {
+          ...state,
+          zoom: action.zoom,
         }
       default:
         return state
