@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef, useState } from 'react'
+import { MouseEvent, useEffect, useId, useRef, useState } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { DragIndicator } from '@mui/icons-material'
@@ -265,7 +265,7 @@ export default function GeneticElementComponent({
     </Paper>
   )
 
-  function openMenu(e: React.MouseEvent<HTMLElement>) {
+  function openMenu(e: MouseEvent<HTMLElement>) {
     setMenuEl(e.currentTarget)
     setMenuOpen(true)
   }

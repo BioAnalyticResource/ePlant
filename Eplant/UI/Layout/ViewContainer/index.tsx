@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useId, useMemo, useState } from 'react'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
@@ -48,15 +48,15 @@ export function ViewContainer<T, S, A>({
 } & BoxProps) {
   const { activeData, error, loading, loadingAmount, dispatch, state } =
     useViewData(view, gene)
-  const idLabel = React.useId()
-  const selectId = React.useId()
+  const idLabel = useId()
+  const selectId = useId()
   const [printing, setPrinting] = usePrinting()
 
-  const [viewingCitations, setViewingCitations] = React.useState(false)
+  const [viewingCitations, setViewingCitations] = useState(false)
 
   const { userViews, views, genericViews } = useConfig()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (printing) {
       setTimeout(() => {
         window.print()
@@ -65,7 +65,7 @@ export function ViewContainer<T, S, A>({
     }
   }, [printing])
 
-  const topBar = React.useMemo(
+  const topBar = useMemo(
     () => (
       <AppBar
         variant='elevation'

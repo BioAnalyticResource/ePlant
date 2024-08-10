@@ -24,8 +24,8 @@ const CellEFP: View<
   CellEFPViewerState,
   CellEFPViewerAction
 > = {
-  id: 'Cell EFP',
-  name: 'Cell EFP',
+  id: 'Cell eFP',
+  name: 'Cell eFP',
   icon: () => <CellEFPIcon />,
   getInitialState() {
     return {

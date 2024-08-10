@@ -1,9 +1,4 @@
-import { useState } from 'react'
-
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import { Container } from '@mui/material'
-import { Box } from '@mui/material'
 
 import SerializedGeneticElement from '../GeneticElement'
 import { useSidebarState } from '../state'
@@ -18,7 +13,7 @@ export const collapsedSidebarWidth = 100
 
 export default function Sidebar() {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
-  const [isCollapse, setIsCollapse] = useSidebarState()
+  const [isCollapse] = useSidebarState()
   return (
     <div>
       <ResponsiveDrawer

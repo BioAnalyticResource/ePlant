@@ -1,4 +1,4 @@
-import React from 'react'
+import { CSSProperties, useState } from 'react'
 import _ from 'lodash'
 
 import { useConfig } from '@eplant/config'
@@ -57,7 +57,7 @@ const GeneSequence = ({
     i++
   ) {
     let char = (activeData.geneSequence[i] as string).toUpperCase()
-    let currentStyle: React.CSSProperties = {}
+    let currentStyle: CSSProperties = {}
 
     // Add regions around the three prime utr and five prime utr
     const features: {
@@ -194,7 +194,7 @@ export default function GeneInfoViewer({
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
 
-  const [snackBarOpen, setSnackBarOpen] = React.useState(false)
+  const [snackBarOpen, setSnackBarOpen] = useState(false)
   const copyToClipboard = (text: string) => {
     setSnackBarOpen(true)
     navigator.clipboard.writeText(text)
@@ -328,8 +328,8 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
           flexDirection: 'column',
           gap: 2,
           padding: 0,
-          position: 'relative',
-          top: -8,
+          position: 'sticky',
+          top: '8px',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
         }}

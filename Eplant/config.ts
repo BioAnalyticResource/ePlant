@@ -1,6 +1,7 @@
-import React from 'react'
+import { createContext, useContext } from 'react'
 
 import CellEFP from './views/CellEFP'
+import ChromosomeViewer from './views/ChromosomeViewer'
 import DebugView from './views/DebugView'
 import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
@@ -33,6 +34,7 @@ const userViews = [
   CellEFP,
   ExperimentEFP,
   WorldEFP,
+  ChromosomeViewer,
 ]
 
 // List of views that are used to lookup a view by id
@@ -47,6 +49,6 @@ export const defaultConfig = {
   defaultSpecies: '',
 }
 
-export const Config = React.createContext<EplantConfig>(defaultConfig)
+export const Config = createContext<EplantConfig>(defaultConfig)
 
-export const useConfig = () => React.useContext(Config)
+export const useConfig = () => useContext(Config)

@@ -1,4 +1,4 @@
-import React from 'react'
+import { MouseEvent, ReactNode, useId, useState } from 'react'
 
 import { KeyboardArrowDown } from '@mui/icons-material'
 import {
@@ -54,17 +54,17 @@ const StyledMenu = styled((props: MenuProps) => (
 export default function Dropdown({
   options,
   ...buttonProps
-}: { options: React.ReactNode[] } & ButtonProps) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+}: { options: ReactNode[] } & ButtonProps) {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
     setAnchorEl(null)
   }
-  const buttonId = React.useId()
-  const menuId = React.useId()
+  const buttonId = useId()
+  const menuId = useId()
 
   return (
     <div>

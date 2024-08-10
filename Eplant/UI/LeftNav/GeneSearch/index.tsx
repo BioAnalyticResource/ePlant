@@ -1,8 +1,8 @@
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 import GeneticElement, { Species } from '@eplant/GeneticElement'
 import { useSpecies } from '@eplant/state'
-import { Button, MenuItem, styled, TextField } from '@mui/material'
+import { Button, styled } from '@mui/material'
 import Stack from '@mui/material/Stack'
 
 import SearchBar from './SearchBar'
@@ -26,19 +26,23 @@ export function SearchGroup({
 }: {
   addGeneticElements: (gene: GeneticElement[]) => void
 }) {
-  const [species, setSpecies] = React.useState<Species>()
   const [speciesList, setSpeciesList] = useSpecies()
-  const [searchingByExpression, setSearchingByExpression] =
-    React.useState<boolean>(false)
-  const [searchingByPhenotype, setSearchingByPhenotype] =
-    React.useState<boolean>(false)
+  const [species, setSpecies] = useState<Species>()
 
-  React.useEffect(() => {
+  // Commedned out until we get multi-species support
+  // const [searchingByExpression, setSearchingByExpression] = useState<boolean>(false)
+  // const [searchingByPhenotype, setSearchingByPhenotype] = useState<boolean>(false)
+  // const [speciesList, setSpeciesList] = useSpecies()
+
+  useEffect(() => {
     if (!species && speciesList.length) setSpecies(speciesList[0])
   }, [species])
+
   return (
     <Stack direction='column' spacing={2}>
       {/* Species selector */}
+
+      {/* Commenting this out until we get multi-species support
       <TextField
         select
         size='small'
@@ -62,7 +66,7 @@ export function SearchGroup({
           </MenuItem>
         ))}
       </TextField>
-
+      */}
       {/* Gene selector */}
       <SearchBar
         label='Search for genes'
@@ -78,7 +82,7 @@ export function SearchGroup({
           )
         }}
       ></SearchBar>
-      {/* TODO: Implement alternate search options 
+      {/* TODO: Implement alternate search options
       <MenuButton disabled variant="contained">
         Search by expression
       </MenuButton>
