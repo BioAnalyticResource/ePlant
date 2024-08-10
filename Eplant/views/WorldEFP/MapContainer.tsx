@@ -44,7 +44,6 @@ const MapContainer = ({ activeData, state, dispatch }: MapContainerProps) => {
     })
   }
 
-  console.log(state)
   return (
     <Map
       defaultCenter={state.position}
