@@ -1,6 +1,10 @@
 # Contributing to ePlant
 
-First off, thank you for considering contributing to ePlant! [VL to add blub on this project. Some metrics would be nice too]
+First off, thank you for considering contributing to ePlant! By submitting your work, you
+agree that it can be shared under the terms of our license.
+
+### Code of Conduct
+Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms.
 
 ## How to Contribute
 
@@ -66,6 +70,15 @@ We welcome feature requests! To suggest a new feature, please open an issue on G
    ```
 6. **Submit a pull request**: Choose your fork as the head repository and https://github.com/BioAnalyticResource/ePlant/ as the base repository.
 
+#### PR templates
+
+Please include in the PR:
+
+- **Issue**: The issue(s) related to the work done.
+- **Previous behaviour**: A description of the behaviour was changed.
+- **Updated behaviour**: How the new changes affect the expected behaviour.
+- **Notes (Optional)**: Additional notes.
+
 ### Code Style
 This is an abridged version of the [Google style guide](https://google.github.io/styleguide/tsguide.html) and [MS Typescript Coding guidelines](https://github.com/microsoft/TypeScript/wiki/Coding-guidelines), plus some tweaks to make it our own.
 
@@ -73,15 +86,11 @@ Use Prettier and ESLint for code formatting. You may want to install the plugin 
 
 All the new code must be written in typescript and all the types should be clearly defined in the project.
 
-
 ### Documentation
 If your change affects any part of the documentation, please update the `README.md` accordingly.
 
 ### Testing
 Make sure to run all tests before submitting your changes. If you add new functionality, please include tests for it.
-
-### Code of Conduct
-Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms.
 
 ### Getting Help
 If you need help, feel free to ask questions by opening an issue. We appreciate your contributions!
