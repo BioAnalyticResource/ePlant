@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { MouseEvent, useEffect, useId, useRef, useState } from 'react'
 
 import {
   DndContext,
@@ -22,7 +22,11 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import GeneticElement from '@eplant/GeneticElement'
-import { useCollections, useGeneticElements } from '@eplant/state'
+import {
+  useActiveGeneId,
+  useCollections,
+  useGeneticElements,
+} from '@eplant/state'
 import { Add, Check, ExpandMore } from '@mui/icons-material'
 import {
   Box,
@@ -317,7 +321,7 @@ export function Collection({
     </Stack>
   )
 
-  function openMenu(e: React.MouseEvent<HTMLElement>) {
+  function openMenu(e: MouseEvent<HTMLElement>) {
     setMenuEl(e.currentTarget)
     setMenuOpen(true)
   }

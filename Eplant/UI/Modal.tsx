@@ -1,19 +1,19 @@
-import React from 'react'
+import { forwardRef, PropsWithChildren, ReactElement, Ref } from 'react'
 
 import { Dialog, Slide } from '@mui/material'
 import { TransitionProps } from '@mui/material/transitions'
 
-const Transition = React.forwardRef(function Transition(
+const Transition = forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement<any, any>
+    children: ReactElement<any, any>
   },
-  ref: React.Ref<unknown>
+  ref: Ref<unknown>
 ) {
   return <Slide direction='up' ref={ref} {...props} />
 })
 
 export default function Modal(
-  props: React.PropsWithChildren<{
+  props: PropsWithChildren<{
     open: boolean
     onClose: () => void
   }>

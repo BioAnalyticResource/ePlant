@@ -1,5 +1,4 @@
-import * as React from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
@@ -13,13 +12,7 @@ import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import ArrowRight from '@mui/icons-material/ArrowRight'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import SearchIcon from '@mui/icons-material/Search'
-import {
-  Box,
-  FormControlLabel,
-  FormGroup,
-  Switch,
-  useTheme,
-} from '@mui/material'
+import { Box, useTheme } from '@mui/material'
 import Stack from '@mui/material/Stack'
 
 import { LogoWithText } from '../Logo'
@@ -47,7 +40,7 @@ export function LeftNav(props: {
 
   const setActiveGeneId = useSetActiveGeneId()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const uniq = _.uniqBy(geneticElements, (g) => g.id)
     if (uniq.length != geneticElements.length) setGeneticElements(uniq)
   }, [geneticElements])
