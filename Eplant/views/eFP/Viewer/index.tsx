@@ -184,7 +184,6 @@ export default class EFPViewer
         zoom: 1,
       },
       viewData: viewData,
-      efps: this.efps,
       colorMode: 'absolute' as const,
     }
   }
