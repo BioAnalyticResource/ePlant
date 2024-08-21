@@ -11,7 +11,7 @@ import { LoadFlags } from '../types'
 let cy: Core;
 let loadFlags: LoadFlags;
 
-const setLayout = (cytoscape, flags: LoadFlags) => {
+const setLayout = (cytoscape: Core, flags: LoadFlags) => {
 	cy = cytoscape
 	loadFlags = flags
 	if (!loadFlags.empty && cy != null) {
@@ -38,7 +38,7 @@ const setLayout = (cytoscape, flags: LoadFlags) => {
 		},
 		when: 'matching'
 	})
-	cy.minZoom(0.5)
+	cy.minZoom(0.2)
 	cy.fit()
 }
 export default setLayout

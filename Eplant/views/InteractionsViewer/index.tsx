@@ -1,9 +1,13 @@
-import React, { useEffect, useRef } from 'react'
-import cytoscape, { Core } from 'cytoscape'
+import React, { useEffect, useRef, useState } from 'react'
+import cytoscape, {
+  Core,
+  ElementDefinition,
+  ElementsDefinition,
+} from 'cytoscape'
 import automove from 'cytoscape-automove'
 import coseBilkent from 'cytoscape-cose-bilkent'
 import popper from 'cytoscape-popper'
-import tippy from 'tippy.js'
+import tippy, { Instance as TippyInstance, Props as TProps } from 'tippy.js'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewDataError } from '@eplant/View/viewData'
@@ -12,7 +16,8 @@ import { View, ViewProps } from '../../View'
 
 import { addEdgeListener, addNodeListener } from './scripts/eventHandlers'
 import setLayout from './scripts/layout'
-import loadViewData from './scripts/loadInteractions'
+import loadInteractions from './scripts/loadInteractions'
+import loadSublocalizations from './scripts/loadSublocalizations'
 import { InteractionsIcon } from './icon'
 // import GeneDialog from './GeneDialog'
 import {
@@ -22,12 +27,20 @@ import {
   InteractionsViewState,
   ViewData,
 } from './types'
+import Topbar from './Topbar'
+
+/*--------------------
+CYTOSCAPE PLUGIN SETUP
+---------------------- */
+declare module 'cytoscape-popper' {
+  interface PopperOptions extends Partial<TProps> {}
+  interface PopperInstance extends TippyInstance {}
+}
 
 function tippyFactory(ref: { getBoundingClientRect: any }, content: any) {
   // Since tippy constructor requires DOM element/elements, create a placeholder
   const dummyDomEle = document.createElement('div')
-
-  const tip = tippy(dummyDomEle, {
+  const config: Partial<TProps> = {
     getReferenceClientRect: ref.getBoundingClientRect,
     trigger: 'manual', // mandatory
     // dom element inside the tippy:
@@ -41,13 +54,15 @@ function tippyFactory(ref: { getBoundingClientRect: any }, content: any) {
     // if interactive:
     interactive: true,
     appendTo: document.body, // or append dummyDomEle to document.body
-  })
+  }
+  const tip = tippy(dummyDomEle, config)
   return tip
 }
 
 cytoscape.use(popper(tippyFactory))
 cytoscape.use(automove)
 cytoscape.use(coseBilkent)
+/* -------------------------------- */
 
 const InteractionsViewer: View = {
   name: 'Interactions Viewer',
@@ -62,6 +77,7 @@ const InteractionsViewer: View = {
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void
   ) {
+    console.log('eeee')
     let data: ViewData
     if (gene) {
       const query = gene.id.toUpperCase()
@@ -76,11 +92,17 @@ const InteractionsViewer: View = {
       const interactions = await fetch(url)
         .then((response) => response.json())
         .then((json) => json[query])
-        .then((interactions: []) => {
+        .then((interactions: [] | undefined) => {
+          console.log(interactions)
+          if (interactions === undefined) {
+            recursive = 'false'
+            return []
+          }
           recursive = interactions[interactions.length - 1]
           return interactions.slice(0, interactions.length - 1)
         })
-      data = loadViewData(gene, interactions, recursive)
+      data = loadInteractions(gene, interactions, recursive)
+      data.nodes = loadSublocalizations(data.nodes)
       loadEvent(100)
     } else {
       throw ViewDataError.UNSUPPORTED_GENE
@@ -100,10 +122,11 @@ const InteractionsViewer: View = {
     InteractionsViewState,
     InteractionsViewAction
   >) {
+    // const [cy, setCy] = useState<Core>(cytoscape())
     const cyRef = useRef(null)
     console.log(activeData)
     const viewData = activeData.viewData
-    const interactions = [...viewData.nodes, ...viewData.edges]
+    const elements: any = [...viewData.nodes, ...viewData.edges]
     const styles: any = [
       {
         selector: 'node',
@@ -282,10 +305,11 @@ const InteractionsViewer: View = {
 
     useEffect(() => {
       const cy: Core = cytoscape({
-        container: document.getElementById('cy'), // container to render in
-        elements: interactions,
-        style: styles,
-      })
+          container: document.getElementById('cy'), // container to render in
+          elements: elements,
+          style: styles,
+        })
+
       setLayout(cy, viewData.loadFlags)
       // Listen for mouseover events on nodes
       addNodeListener(cy)
@@ -295,6 +319,7 @@ const InteractionsViewer: View = {
 
     return (
       <div style={{ background: 'white' }}>
+        <Topbar></Topbar>
         <div
           ref={cyRef}
           id='cy'

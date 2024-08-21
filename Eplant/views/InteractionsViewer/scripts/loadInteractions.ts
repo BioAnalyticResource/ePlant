@@ -1,9 +1,11 @@
 /** @format */
+
 import GeneticElement, { Species } from '@eplant/GeneticElement'
 
 import { Edge, Interaction, LoadFlags, NodeItem } from '../types'
 
 import loadSublocalizations from './loadSublocalizations'
+
 let query = ''
 let geneticElement: GeneticElement;
 let loadFlags: LoadFlags = {
@@ -23,8 +25,6 @@ const loadViewData = (gene: GeneticElement, data: Interaction[], recursive: stri
 	geneticElement = gene
 	getLoadFlags(data, recursive)
 	loadInteractions(data)
-	nodes = loadSublocalizations(nodes)
-
 	return {
 		nodes: nodes,
 		edges: edges,
@@ -733,7 +733,7 @@ const checkRecursive = (data: string | any[], recursive: string) => {
  */
 const checkEmpty = (data: Interaction[]) => {
 	// check for undefined
-	if (typeof data == 'undefined') {
+	if (data.length === 0) {
 		return true
 	}
 	return data.length < 2
