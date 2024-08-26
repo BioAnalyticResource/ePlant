@@ -19,6 +19,7 @@ import setLayout from './scripts/layout'
 import loadInteractions from './scripts/loadInteractions'
 import loadSublocalizations from './scripts/loadSublocalizations'
 import { InteractionsIcon } from './icon'
+import Topbar from './Topbar'
 // import GeneDialog from './GeneDialog'
 import {
   Interaction,
@@ -27,7 +28,6 @@ import {
   InteractionsViewState,
   ViewData,
 } from './types'
-import Topbar from './Topbar'
 
 /*--------------------
 CYTOSCAPE PLUGIN SETUP
@@ -124,6 +124,8 @@ const InteractionsViewer: View = {
   >) {
     // const [cy, setCy] = useState<Core>(cytoscape())
     const cyRef = useRef(null)
+    let cy: Core
+    const geneId = geneticElement?.id
     console.log(activeData)
     const viewData = activeData.viewData
     const elements: any = [...viewData.nodes, ...viewData.edges]
@@ -305,10 +307,10 @@ const InteractionsViewer: View = {
 
     useEffect(() => {
       const cy: Core = cytoscape({
-          container: document.getElementById('cy'), // container to render in
-          elements: elements,
-          style: styles,
-        })
+        container: document.getElementById('cy'), // container to render in
+        elements: elements,
+        style: styles,
+      })
 
       setLayout(cy, viewData.loadFlags)
       // Listen for mouseover events on nodes
@@ -319,7 +321,7 @@ const InteractionsViewer: View = {
 
     return (
       <div style={{ background: 'white' }}>
-        <Topbar></Topbar>
+        <Topbar gene={geneId === undefined ? '' : geneId}></Topbar>
         <div
           ref={cyRef}
           id='cy'

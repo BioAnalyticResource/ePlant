@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from 'react'
-import { Core } from 'cytoscape'
+import { FC } from 'react'
 
 import Add from '@mui/icons-material/Add'
 import Remove from '@mui/icons-material/Remove'
@@ -9,15 +8,17 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 
-const Topbar = () => {
-
-  const zoomValue = 1000.0
+interface TopbarProps {
+  gene: string
+}
+const Topbar: FC<TopbarProps> = ({ gene }) => {
+  const zoomValue = 1000
   return (
     <AppBar position='sticky' color='default' sx={{ overflow: 'overlay' }}>
       <Toolbar variant='dense'>
         {/* VIEW TITLE */}
         <Typography variant='h6' sx={{ flexGrow: 1 }}>
-          Interactions Viewer
+          Interactions Viewer: {gene}
         </Typography>
         {/* ZOOM CONTROLS */}
         <Typography
@@ -38,10 +39,7 @@ const Topbar = () => {
               minWidth: '25px',
               padding: '2px',
             }}
-            onClick={
-              () => {}
-              // zoom in
-            }
+            onClick={() => {}}
           >
             <Add />
           </Button>
