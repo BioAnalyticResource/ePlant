@@ -7,19 +7,20 @@ import { FC } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 
-import { ChromosomeItem } from '../types'
+import { ChromosomeItem, GeneAnnotationItem } from '../types'
 
 import Chromosome from './Chromosome'
 
 // TYPES
 interface ViewerProps {
   chromosomes: ChromosomeItem[]
+  annotations: GeneAnnotationItem[]
   scale: number
 }
 //----------
 // COMPONENT
 //----------
-const Viewer: FC<ViewerProps> = ({ chromosomes, scale }) => {
+const Viewer: FC<ViewerProps> = ({ chromosomes, annotations, scale }) => {
   return (
     <div
       style={{
@@ -33,13 +34,23 @@ const Viewer: FC<ViewerProps> = ({ chromosomes, scale }) => {
       }}
     >
       {chromosomes.map((chromosome, i) => {
+        const chromosomeAnnotations: GeneAnnotationItem[] = []
+        annotations.map((gene, j) => {
+          if (gene.chromosome === chromosome.id) {
+            chromosomeAnnotations.push(gene)
+          }
+        })
         // Render a Chromosome component for each chromosome
         return (
           <Box key={i}>
             <Typography fontSize='30px' noWrap sx={{ marginLeft: '-20px' }}>
               {chromosome.name}
             </Typography>
-            <Chromosome scale={scale} chromosome={chromosome} />
+            <Chromosome
+              chromosome={chromosome}
+              annotations={chromosomeAnnotations}
+              scale={scale}
+            />
             <Typography sx={{ fontSize: 8 }} noWrap>
               {(chromosome.size * 0.000001).toLocaleString()}Mb
             </Typography>

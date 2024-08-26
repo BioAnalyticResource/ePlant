@@ -6,10 +6,11 @@
  * --------------------
  *  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
+import { useGeneticElements } from '@eplant/state'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Snackbar from '@mui/material/Snackbar'
@@ -25,8 +26,10 @@ import {
   ChromosomeViewerAction,
   ChromosomeViewerData,
   ChromosomeViewerState,
+  GeneAnnotationItem,
   Transform,
 } from './types'
+import { getGeneAnnotation } from './utilities'
 import ZoomControls from './ZoomControls'
 
 const ChromosomeViewer: View<
@@ -52,11 +55,14 @@ const ChromosomeViewer: View<
   ) {
     const poplar = false
     const species = poplar ? 'Populus_trichocarpa' : 'Arabidopsis_thaliana'
-    const url = `https://bar.utoronto.ca/eplant${
+    const urlPrefix = `https://bar.utoronto.ca/eplant${
       poplar ? '_poplar' : ''
-    }/cgi-bin/chromosomeinfo.cgi?species=${species}`
+    }/cgi-bin`
+    const chromosomeUrl = `/chromosomeinfo.cgi?species=${species}`
 
-    const chromosomeViewData: ChromosomeItem[] = await fetch(url)
+    const chromosomeViewData: ChromosomeItem[] = await fetch(
+      urlPrefix + chromosomeUrl
+    )
       .then((response) => response.json())
       .then((responseObj: ChromosomesResponseObj) => responseObj['chromosomes'])
 
@@ -82,6 +88,45 @@ const ChromosomeViewer: View<
   >) {
     const spaceRef = React.useRef<Space | null>(null)
     const [messageOpen, setMessageOpen] = useState(true)
+    const [annotationArray, setAnnotationArray] = useState<
+      GeneAnnotationItem[]
+    >([])
+
+    // Global State
+    const [geneticElements] = useGeneticElements()
+
+    //converts geneticElements into array of gene annotations
+    useEffect(() => {
+      const poplar = false
+      const species = poplar ? 'Populus_trichocarpa' : 'Arabidopsis_thaliana'
+      let newAnnotationArray: GeneAnnotationItem[] = []
+      geneticElements.map((gene) => {
+        // for each item in geneticElements, fetch it's gene information to add to it's geneAnnotation
+        fetch(
+          `https://bar.utoronto.ca/eplant${
+            poplar ? '_poplar' : ''
+          }/cgi-bin/querygene.cgi?species=${species}&term=${gene.id}`
+        )
+          .then((response) => response.json())
+          .then((geneItem) => {
+            newAnnotationArray = annotationArray
+            const geneAnnotation: GeneAnnotationItem =
+              getGeneAnnotation(geneItem)
+
+            // Make sure new geneAnnotation is not already in geneAnnotationArray
+            if (
+              !newAnnotationArray.some((gene) => gene.id === geneAnnotation.id)
+            ) {
+              newAnnotationArray.push(geneAnnotation)
+              setAnnotationArray(newAnnotationArray)
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      })
+    }, [geneticElements])
+
     const handleClose = () => {
       setMessageOpen(false)
     }
@@ -102,7 +147,7 @@ const ChromosomeViewer: View<
             vp.setBounds({
               x: [-650, 1300],
               y: [-450, 815],
-              zoom: [0.05, 1000 - 0.3],
+              zoom: [0.02, 1000 - 0.3],
             })
           }}
           onUpdated={(vp) => {
@@ -119,6 +164,7 @@ const ChromosomeViewer: View<
         >
           <ChromosomeView
             chromosomes={activeData.viewData}
+            annotations={annotationArray}
             scale={state.transform.dZoom}
           />
         </Space>
