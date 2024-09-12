@@ -7,7 +7,7 @@ import {
   GeneAnnotationItem,
   GeneItem,
   GeneRange,
-} from '../types'
+} from './types'
 
 /**
  * formats a GeneItem into GeneAnnotationItem

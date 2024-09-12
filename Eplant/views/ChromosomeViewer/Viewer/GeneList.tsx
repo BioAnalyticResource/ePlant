@@ -6,11 +6,9 @@ import React, { FC, useEffect, useState } from 'react'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import useTheme from '@mui/material/styles/useTheme'
 
-import { GeneIcon } from '../icons'
 import { GeneItem } from '../types'
 
 import GeneInfoPopup from './GeneInfoPopup'
@@ -47,12 +45,8 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
       }/cgi-bin/querygenesbyposition.cgi?chromosome=${id}&start=${start}&end=${end}`
     )
       .then((response) => response.json())
-      .then((json) => {
-        setGeneList(json)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      .then((json) => setGeneList(json))
+      .catch((err) => console.log(err))
   }, [])
   // --------------
   // EVENT HANDLERS
@@ -104,7 +98,7 @@ const GeneList: FC<GeneListProps> = ({ id, start, end, anchorOrigin }) => {
                       className='geneAliases'
                       style={{ color: theme.palette.secondary.main }}
                     >
-                      {`/${gene.aliases[0]}`}
+                      {`/${gene?.aliases[0]}`}
                     </span>
                   )}
                 </ListItemText>
