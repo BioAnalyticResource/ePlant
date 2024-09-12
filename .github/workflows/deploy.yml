@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - staging
-      
+
 permissions:
   contents: read
   pages: write
@@ -27,7 +27,9 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          BASE_URL: "/ePlant"
+          BASE_URL: '/ePlant'
+          VITE_MAPS_API_KEY: ${{ secrets.VITE_MAPS_API_KEY }}
+          VITE_MAPS_API_KEY: ${{ secrets.VITE_MAPS_ID }}
       - run: mv dist _site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
