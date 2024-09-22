@@ -17,6 +17,7 @@ import { ListItemText, ListSubheader, Switch } from '@mui/material'
 interface TopbarProps {
   gene: string
 }
+
 const Topbar: FC<TopbarProps> = ({ gene }) => {
   const [showLegend, setShowLegend] = useState<boolean>(false)
   const legendRef = useRef(null)
@@ -68,7 +69,7 @@ const Topbar: FC<TopbarProps> = ({ gene }) => {
         </ButtonGroup>
       </Toolbar>
       <Popup open={showLegend} anchor={legendRef.current}>
-        <Box>
+        <Box sx={{zIndex: 120}}>
           <img src='thumbnails/legendAIV.png' width={200}></img>
         </Box>
       </Popup>

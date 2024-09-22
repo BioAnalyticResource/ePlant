@@ -43,7 +43,6 @@ const GeneInfoPopup: FC<GeneInfoPopupProps> = (props) => {
   const geneticElements = useGeneticElements()
   const setGeneticElements = useSetGeneticElements()
   const theme = useTheme()
-
   useEffect(() => {
     if (props.gene != gene) {
       setOpen(props.open)

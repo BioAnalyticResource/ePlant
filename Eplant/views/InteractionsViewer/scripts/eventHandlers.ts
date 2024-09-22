@@ -1,5 +1,14 @@
 import { Core } from 'cytoscape'
 import { PopperInstance } from 'cytoscape-popper'
+
+// import GeneticElement from '@eplant/GeneticElement'
+// import arabidopsis from '@eplant/Species/arabidopsis'
+// import { useActiveGeneId, useGeneticElements, useSetActiveGeneId, useSetGeneticElements } from '@eplant/state'
+// import { GeneItem } from '@eplant/views/ChromosomeViewer/types'
+
+// Global
+
+
 // --------------
 // Event Listeners
 // --------------
@@ -31,6 +40,89 @@ export const addEdgeListener = (cy: Core) => {
 // --------------
 // Event Handlers
 // --------------
+// Handle load gene button click
+// Tried to set jotai geneticElements atom from outside react component --> I beleieve it is impossible due to the limits of jotai copabilities
+/* class LoadGene {
+    geneticElements = useGeneticElements()
+    setGeneticElements = useSetGeneticElements()
+    activeGeneId = useActiveGeneId()
+    setActiveGeneId = useSetActiveGeneId()
+
+    public handleLoadGeneClick = (gene: GeneticElement) => {
+        if (gene != null) {
+            const geneticElement = new GeneticElement(
+                gene.id,
+                gene.annotation,
+                arabidopsis,
+                gene.aliases
+            )
+            this.setGeneticElements([...this.geneticElements[0], geneticElement])
+            this.setActiveGeneId(geneticElement.id)
+        }
+    }
+} */
+
+
+// Handle regular node hover
+const nodeMouseOverHandler = (cy: Core, event) => {
+    const node = event.target
+    const id = node._private.data.content
+    fetch(
+        'https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=' +
+        id
+    )
+        .then((response) => response.json())
+        .then((gene) => {
+            const tip: PopperInstance = node.popper({
+                content: () => {
+                    const content = document.createElement('div')
+
+                    content.innerHTML = `<style>
+                                            .tooltip {
+                                            padding: 8px;
+                                            background: white;
+                                            minHeight: 100px;
+                                            maxHeight: 200px
+                                            width: 200px;
+                                            font-size: 10px;
+                                            color: black;
+                                            border: 1px solid black;
+                                            }
+                                            label {
+                                            color: grey;
+                                            }
+                                        </style>
+                                        <div class="tooltip">
+                                            <table>
+                                                <tr>
+                                                    <td><label>Identifier: </label></td>
+                                                    <td>${gene.id}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label>Aliases: </label></td>
+                                                    <td>
+                                                        ${gene.aliases.length > 0 ? gene.aliases.slice(0, 3) : 'N/A'}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label>Annotation: </label></td>
+                                                    <td>
+                                                        ${gene.annotation != '' ? gene.annotation : 'N/A'}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><button title='Load gene into collection'>Load Gene</button>
+                                                </tr>
+                                            </table>
+                                        </div>`
+                    return content
+                },
+            })
+
+            tip.show()
+            destroyTip(cy, tip)
+        })
+}
 // Handle edge hover
 const edgeMouseOverHandler = (cy: Core, event) => {
     const edge = event.target
@@ -118,63 +210,8 @@ const chrNodeMouseOverHandler = (cy: Core, event) => {
 }
 
 
-// Handle regular node hover
-const nodeMouseOverHandler = (cy: Core, event) => {
-    const node = event.target
-    const id = node._private.data.content
-    fetch(
-        'https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=' +
-        id
-    )
-        .then((response) => response.json())
-        .then((gene) => {
-            const tip: PopperInstance = node.popper({
-                content: () => {
-                    const content = document.createElement('div')
 
-                    content.innerHTML = `<style>
-                                            .tooltip {
-                                            padding: 8px;
-                                            background: white;
-                                            minHeight: 100px;
-                                            maxHeight: 200px
-                                            width: 200px;
-                                            font-size: 10px;
-                                            color: black;
-                                            border: 1px solid black;
-                                            }
-                                            label {
-                                            color: grey;
-                                            }
-                                        </style>
-                                        <div class="tooltip">
-                                            <table>
-                                                <tr>
-                                                    <td><label>Identifier: </label></td>
-                                                    <td>${gene.id}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label>Aliases: </label></td>
-                                                    <td>
-                                                        ${gene.aliases.length > 0 ? gene.aliases.slice(0, 3) : 'N/A'}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label>Annotation: </label></td>
-                                                    <td>
-                                                        ${gene.annotation != '' ? gene.annotation : 'N/A'}
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>`
-                    return content
-                },
-            })
 
-            tip.show()
-            destroyTip(cy, tip)
-        })
-}
 const destroyTip = (cy: Core, tip: PopperInstance) => {
     // add handler to node for mouse leave
     cy.on('mouseout', 'node', (event) => {
@@ -189,7 +226,9 @@ const destroyTip = (cy: Core, tip: PopperInstance) => {
     })
 }
 
+// --------
 // Helpers
+// --------
 const generateLinks = (reference: string): string[] => {
     const AL1_HYPERLINK = 'http://interactome.dfci.harvard.edu/A_thaliana/'
 
