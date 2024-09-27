@@ -9,6 +9,7 @@ import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
+import WorldEFP from './views/WorldEFP'
 import { type View } from './View'
 
 export type EplantConfig = {
@@ -32,6 +33,7 @@ const userViews = [
   PlantEFP,
   CellEFP,
   ExperimentEFP,
+  WorldEFP,
   ChromosomeViewer,
 ]
 
