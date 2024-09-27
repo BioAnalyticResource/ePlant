@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Modal from '@eplant/UI/Modal'
-import { useTheme } from '@mui/material'
+import { Theme, useTheme } from '@mui/material'
 import {
   AdvancedMarker,
   InfoWindow,
@@ -12,19 +12,20 @@ import { EFPGroup } from '../eFP/types'
 
 import WorldEFPIcon from './icon'
 import InfoContent from './InfoContent'
+import { ModalContent } from './ModalContent'
 import { Coordinates } from './types'
 
 interface MapMarkerProps {
+  theme: Theme
   color: string
   position: Coordinates
   data: EFPGroup
 }
 
-const MapMarker = ({ data, color, position }: MapMarkerProps) => {
+const MapMarker = ({ theme, data, color, position }: MapMarkerProps) => {
   const [showPopup, setShowPopup] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [markerRef, marker] = useAdvancedMarkerRef()
-  const theme = useTheme()
   const handleMouseOver = () => {
     setShowPopup(true)
   }
@@ -49,7 +50,7 @@ const MapMarker = ({ data, color, position }: MapMarkerProps) => {
         marker.content?.removeEventListener('mouseout', handleMouseOut)
       }
     }
-  }, [data])
+  }, [data, marker])
 
   return (
     <>
@@ -81,7 +82,15 @@ const MapMarker = ({ data, color, position }: MapMarkerProps) => {
         onClose={() => {
           setShowModal(false)
         }}
-      ></Modal>
+      >
+        <ModalContent
+          theme={theme}
+          id={data.name}
+          mean={data.mean}
+          std={data.std}
+          sampleSize={data.samples}
+        ></ModalContent>
+      </Modal>
     </>
   )
 }

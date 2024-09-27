@@ -69,6 +69,7 @@ const MapContainer = ({ activeData, state, dispatch }: MapContainerProps) => {
         )
         return (
           <MapMarker
+            theme={theme}
             key={index}
             color={color}
             data={activeData.efpData.groups[index]}

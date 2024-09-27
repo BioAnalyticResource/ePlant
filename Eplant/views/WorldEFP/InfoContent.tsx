@@ -1,4 +1,4 @@
-import { styled } from '@mui/material'
+import { styled, Theme } from '@mui/material'
 
 interface InfoContentProps {
   id: string
@@ -20,12 +20,12 @@ const InfoContent = ({ id, mean, std, sampleSize }: InfoContentProps) => {
   )
 }
 
-const StyledInfoContent = styled('div')(({ theme }) => ({
-  backgroundColor: 'white',
+const StyledInfoContent = styled('div')(() => ({
   wordWrap: 'break-word',
   maxWidth: '300px',
   '& p': {
     margin: '5px 0',
+    color: 'black',
   },
   '& strong': {
     display: 'block',
