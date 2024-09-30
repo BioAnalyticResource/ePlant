@@ -1,5 +1,7 @@
 import { Core } from 'cytoscape'
 
+
+
 /*
 * Applies filter to get edges matching selector
 * @param {HTMLElement} checkbox The related checkbox element
@@ -7,7 +9,7 @@ import { Core } from 'cytoscape'
 * @param {String} selector The selector by which to filter edges
 * @return {boolean} The state of the related checkbox element
 */
-export const applyFilter = (cy: Core, selector) => {
+export const applyFilter = (cy: Core, selector: string) => {
     const edges = cy.edges(selector);
     edges.hide();
 }
