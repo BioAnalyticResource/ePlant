@@ -24,7 +24,7 @@ const CellEFP: View<
   CellEFPViewerState,
   CellEFPViewerAction
 > = {
-  id: 'Cell eFP',
+  id: 'cell-efp',
   name: 'Cell eFP',
   icon: () => <CellEFPIcon />,
   getInitialState() {
@@ -167,7 +167,7 @@ const CellEFP: View<
               >
                 <NotSupported
                   geneticElement={geneticElement}
-                  view={CellEFP}
+                  viewName={CellEFP.name}
                 ></NotSupported>
               </div>
             )}

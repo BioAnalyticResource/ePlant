@@ -104,6 +104,7 @@ export const CellEFPDataObject: CellEFPDataObject = {
       })
       .filter((g) => Number.isFinite(g.mean))
 
+    loadEvent(100)
     const out: EFPData = {
       groups: groupData,
       min: Math.min(...groupData.map((g) => g.min)),

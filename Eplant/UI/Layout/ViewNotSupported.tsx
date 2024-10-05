@@ -28,7 +28,7 @@ const Illustration = ({
  */
 export default function NotSupported(props: {
   geneticElement: GeneticElement | null
-  view: View
+  viewName: string
 }) {
   const theme = useTheme()
   return (
@@ -45,7 +45,7 @@ export default function NotSupported(props: {
 
       <Typography variant='h6'>
         {props.geneticElement
-          ? `Cannot view ${props.view.name.toLowerCase()} for ${
+          ? `Cannot view ${props.viewName.toLowerCase()} for ${
               props.geneticElement.id
             }`
           : `There is no gene selected`}
@@ -58,7 +58,7 @@ export default function NotSupported(props: {
       >
         {props.geneticElement
           ? 'No data is available for this gene.'
-          : `The ${props.view.name.toLowerCase()} requires a selected gene.`}
+          : `The ${props.viewName.toLowerCase()} requires a selected gene.`}
       </Typography>
     </Stack>
   )

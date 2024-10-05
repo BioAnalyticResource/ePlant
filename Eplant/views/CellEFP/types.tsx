@@ -14,3 +14,9 @@ export type CellEFPViewerState = {
 export type CellEFPViewerAction =
   | { type: 'reset-transform' }
   | { type: 'set-transform'; transform: Transform }
+
+export type CellEFPSearchParams = {
+  x: string
+  y: string
+  zoom: string
+}

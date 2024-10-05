@@ -482,7 +482,7 @@ export default class EFPViewer
               >
                 <NotSupported
                   geneticElement={geneticElement}
-                  view={sortedEfps[activeViewIndex]}
+                  viewName={sortedEfps[activeViewIndex].name}
                 ></NotSupported>
               </div>
             )}

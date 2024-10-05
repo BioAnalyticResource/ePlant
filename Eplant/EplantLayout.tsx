@@ -1,14 +1,5 @@
-import { useContext, useEffect, useRef, useState } from 'react'
-import * as FlexLayout from 'flexlayout-react'
-import {
-  Actions,
-  BorderNode,
-  ITabSetRenderValues,
-  Layout,
-  TabSetNode,
-} from 'flexlayout-react'
+import { useEffect } from 'react'
 
-import { Add, CallMade, Close } from '@mui/icons-material'
 import { Box, CircularProgress, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
@@ -71,7 +62,7 @@ const EplantLayout = () => {
               ) ?? FallbackView
             }
             setView={(view) => {
-              setActiveViewId(view.id)
+              setActiveViewId(view)
             }}
             sx={{
               width: '100%',

@@ -38,8 +38,11 @@ export default function Sidebar() {
           }}
         >
           <LeftNav
-            onSelectGene={(gene: SerializedGeneticElement) =>
+            onSelectGene={(gene: SerializedGeneticElement) => {
+              
               setActiveGeneId(gene.id)
+
+            }
             }
             selectedGene={activeGeneId}
           />

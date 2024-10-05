@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useState } from 'react'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
@@ -26,6 +27,7 @@ import Box, { BoxProps } from '@mui/material/Box'
 import { View } from '../../../View'
 
 import LoadingPage from './LoadingPage'
+import { ViewContext } from './types'
 import ViewOptions from './ViewOptions'
 
 /**
@@ -43,16 +45,19 @@ export function ViewContainer<T, S, A>({
   ...props
 }: {
   view: View<T, S, A>
-  setView: (view: View) => void
+  setView: (viewid: string) => void
   gene: GeneticElement | null
 } & BoxProps) {
-  const { activeData, error, loading, loadingAmount, dispatch, state } =
-    useViewData(view, gene)
+  // const { activeData, error, dispatch, state } = useViewData(view, gene)
+  const [loading, setLoading] = useState(false)
+  const [loadAmount, setLoadAmount] = useState(0)
   const idLabel = useId()
   const selectId = useId()
   const [printing, setPrinting] = usePrinting()
 
   const [viewingCitations, setViewingCitations] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const { userViews, views, genericViews } = useConfig()
 
@@ -64,7 +69,6 @@ export function ViewContainer<T, S, A>({
       }, 100)
     }
   }, [printing])
-
   const topBar = useMemo(
     () => (
       <AppBar
@@ -121,7 +125,15 @@ export function ViewContainer<T, S, A>({
                 id={selectId}
                 onChange={(e) => {
                   const view = views.find((view) => view.id == e?.target?.value)
-                  if (view) setView(view)
+                  if (view) {
+                    const pathSegments = location.pathname.split('/')
+                    pathSegments[1] = view.id
+                    const newPath = pathSegments.join('/')
+                    if (newPath !== location.pathname + location.search) {
+                      setView(view.id)
+                      navigate(newPath)
+                    }
+                  }
                 }}
                 sx={{
                   '& .MuiSelect-select': {
@@ -183,7 +195,7 @@ export function ViewContainer<T, S, A>({
                       }}
                       key={view.name}
                       onClick={(e) => {
-                        if (view) setView(view)
+                        if (view) setView(view.id)
                       }}
                     >
                       {view.name}
@@ -194,13 +206,13 @@ export function ViewContainer<T, S, A>({
             </FormControl>
           </Stack>
 
-          <ViewOptions
+          {/* <ViewOptions
             gene={gene}
             state={state}
             view={view}
             loading={loading}
             dispatch={dispatch}
-          />
+          /> */}
           <Button
             variant='text'
             sx={{
@@ -222,10 +234,10 @@ export function ViewContainer<T, S, A>({
             disabled={loading}
             color='secondary'
             onClick={() => {
-              downloadFile(
-                `${view.id}${gene ? '-' + gene.id : ''}.json`,
-                JSON.stringify(activeData, null, 2)
-              )
+              // downloadFile(
+              //   `${view.id}${gene ? '-' + gene.id : ''}.json`,
+              //   JSON.stringify(activeData, null, 2)
+              // )
             }}
           >
             Download data
@@ -233,7 +245,7 @@ export function ViewContainer<T, S, A>({
         </Toolbar>
       </AppBar>
     ),
-    [view.id, gene?.id, loading, activeData, state, dispatch]
+    [view.id, gene?.id, loading]
   )
   return (
     <Box {...props} display='flex' flexDirection='column'>
@@ -243,7 +255,8 @@ export function ViewContainer<T, S, A>({
         </DialogTitle>
         <DialogContent>
           {view.citation ? (
-            <view.citation state={state} activeData={activeData} gene={gene} />
+            // <view.citation state={state} activeData={activeData} gene={gene} />
+            <div></div>
           ) : (
             <Box>No information provided for this view</Box>
           )}
@@ -283,21 +296,28 @@ export function ViewContainer<T, S, A>({
       >
         <ErrorBoundary>
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-          {loading || activeData === undefined ? (
+          {loading ? (
             <LoadingPage
-              loadingAmount={loadingAmount}
+              loadingAmount={loadAmount}
               gene={gene}
               view={view}
-              error={error}
+              error={null}
             />
           ) : (
             <>
-              <view.component
+              {/* <view.component
                 state={state}
                 geneticElement={gene}
                 activeData={activeData}
                 dispatch={dispatch}
-              />
+              /> */}
+              <Outlet
+                context={{
+                  geneticElement: gene,
+                  setLoadAmount: setLoadAmount,
+                  setIsLoading: setLoading,
+                }}
+              ></Outlet>
             </>
           )}
         </ErrorBoundary>
