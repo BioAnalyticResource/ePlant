@@ -17,9 +17,9 @@ export const applyFilter = (cy: Core, selector: string) => {
 
 
 /**
-     * Clears interaction view of nodes without associated edges
-     * @returns {void}
-     */
+ * Clears interaction view of nodes without associated edges
+ * @returns {void}
+ */
 export const cleanNodes = (cy: Core) => {
     // Get all nodes in interaction view
     const nodes = cy.nodes();

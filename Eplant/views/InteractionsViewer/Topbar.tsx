@@ -30,16 +30,20 @@ const Topbar: FC<TopbarProps> = ({ gene }) => {
     interConfSelector: '[interolog_conf <=', // PPPI correlation
     EPDISelector: '[type = "PDI"][method = "E"]',
     PPDISelector: '[type = "PDI"][method = "P"]',
-    fimoConfSelector: '[fimo_conf >= '
-}
+    fimoConfSelector: '[fimo_conf >= ',
+  }
   const zoomValue = 1000
 
-  const applyFilters = () =>{
+  const applyFilters = () => {
     // Create selectors
-			const eppiCorr = selectors.EPPISelector + selectors.corrSelector + EPPICorrValue + ']';
-			const pppiCorr = selectors.PPPISelector + selectors.corrSelector + PPPICorrValue + ']';
-			const pppiConf = selectors.PPPISelector + selectors.interConfSelector + PPPIConfValue + ']';
-			const ppdiConf = selectors.PPDISelector + selectors.fimoConfSelector + PPDIConfValue + ']';
+    const eppiCorr =
+      selectors.EPPISelector + selectors.corrSelector + EPPICorrValue + ']'
+    const pppiCorr =
+      selectors.PPPISelector + selectors.corrSelector + PPPICorrValue + ']'
+    const pppiConf =
+      selectors.PPPISelector + selectors.interConfSelector + PPPIConfValue + ']'
+    const ppdiConf =
+      selectors.PPDISelector + selectors.fimoConfSelector + PPDIConfValue + ']'
   }
   const handleLegendClick = () => {
     setShowLegend(!showLegend)
@@ -84,7 +88,7 @@ const Topbar: FC<TopbarProps> = ({ gene }) => {
         </ButtonGroup>
       </Toolbar>
       <Popup open={showLegend} anchor={legendRef.current}>
-        <Box sx={{zIndex: 120}}>
+        <Box sx={{ zIndex: 120 }}>
           <img src='thumbnails/legendAIV.png' width={200}></img>
         </Box>
       </Popup>
@@ -102,50 +106,37 @@ const Topbar: FC<TopbarProps> = ({ gene }) => {
                 id='filter-option-1'
                 primary='Hide ALL experimentally determined Protein-Protein interactions'
               />
-              <Switch
-                edge='end'
-                onChange={() => {}}
-                checked={false}
-
-              />
+              <Switch edge='end' onChange={() => {}} checked={false} />
             </ListItem>
             <ListItem>
-              <ListItemText id='filter-option-2' primary='Hide only with correlation less than: 0.5 ' />
-              <Switch
-                edge='end'
-                onChange={() => {}}
-                checked={false}
-
+              <ListItemText
+                id='filter-option-2'
+                primary='Hide only with correlation less than: 0.5 '
               />
+              <Switch edge='end' onChange={() => {}} checked={false} />
             </ListItem>
             <ListItem>
-              <ListItemText id='filter-option-3' primary='Hide ALL predicted
+              <ListItemText
+                id='filter-option-3'
+                primary='Hide ALL predicted
             Protein-Protein interactions Hide only with correlation less than:
-            0.5' />
-              <Switch
-                edge='end'
-                onChange={() => {}}
-                checked={false}
-
+            0.5'
               />
+              <Switch edge='end' onChange={() => {}} checked={false} />
             </ListItem>
             <ListItem>
-              <ListItemText id='filter-option-4' primary='Hide only with confidence less than 2' />
-              <Switch
-                edge='end'
-                onChange={() => {}}
-                checked={false}
-
+              <ListItemText
+                id='filter-option-4'
+                primary='Hide only with confidence less than 2'
               />
+              <Switch edge='end' onChange={() => {}} checked={false} />
             </ListItem>
             <ListItem>
-              <ListItemText id='filter-option-5' primary='Hide only with confidence less than 2' />
-              <Switch
-                edge='end'
-                onChange={() => {}}
-                checked={false}
-
+              <ListItemText
+                id='filter-option-5'
+                primary='Hide only with confidence less than 2'
               />
+              <Switch edge='end' onChange={() => {}} checked={false} />
             </ListItem>
           </List>
         </Box>

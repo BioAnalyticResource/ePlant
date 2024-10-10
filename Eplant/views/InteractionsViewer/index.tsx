@@ -20,7 +20,7 @@ import loadInteractions from './scripts/loadInteractions'
 import loadSublocalizations from './scripts/loadSublocalizations'
 import cytoStyles from './cytoStyles'
 import { InteractionsIcon } from './icon'
-import Topbar from './Topbar.1'
+import Topbar from './Topbar'
 // import GeneDialog from './GeneDialog'
 import {
   Interaction,
