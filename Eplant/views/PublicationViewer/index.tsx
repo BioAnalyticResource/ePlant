@@ -14,7 +14,7 @@ import { PublicationViewerData, TabValues } from './types'
 
 const PublicationViewer: View<PublicationViewerData> = {
   name: 'Publication viewer',
-  id: 'publication-viewer',
+  id: 'publications',
   component({
     geneticElement,
     activeData,

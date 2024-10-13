@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react'
 
 import CellEFP from './views/CellEFP'
 import { CellEFPView } from './views/CellEFP/CellEFP'
-import ChromosomeViewer from './views/ChromosomeViewer'
+import { ChromosomeViewerObject } from './views/ChromosomeViewer'
 import DebugView from './views/DebugView'
 import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
@@ -29,12 +29,12 @@ const genericViews = [GetStartedView, FallbackView]
 // Can contain views from the genericViews list too
 const userViews = [
   // GeneInfoView,
-  // PublicationViewer,
+  PublicationViewer,
   // DebugView,
   // PlantEFP,
   CellEFP,
   // ExperimentEFP,
-  // ChromosomeViewer,
+  ChromosomeViewerObject,
 ]
 
 // List of views that are used to lookup a view by id

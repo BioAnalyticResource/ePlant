@@ -1,24 +1,24 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { debounce } from 'lodash'
 import { useOutletContext, useSearchParams } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
-import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import PanZoom from '@eplant/util/PanZoom'
 import { flattenState } from '@eplant/util/router'
 import { ViewDataError } from '@eplant/View/viewData'
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Tooltip, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 
 import Legend from '../eFP/Viewer/legend'
 
+import { CellEFPStateActions } from './actions'
 import { CellEFPDataObject } from './CellEFPDataObject'
 import { CellEFPViewerData, CellEFPViewerState } from './types'
 
 export const CellEFPView = () => {
   const { geneticElement, setIsLoading, setLoadAmount } =
     useOutletContext<ViewContext>()
-
   const [searchParams, setSearchParams] = useSearchParams()
   const [viewState, setViewState] = useState<CellEFPViewerState>({
     transform: {
@@ -26,24 +26,20 @@ export const CellEFPView = () => {
         x: parseInt(searchParams.get('x') || '0') || 0,
         y: parseInt(searchParams.get('y') || '0') || 0,
       },
-      zoom: parseInt(searchParams.get('zoom') || '0') || 0,
+      zoom: parseInt(searchParams.get('zoom') || '1') || 1,
     },
   })
   const { data, isLoading, isError, error } = useQuery<CellEFPViewerData>({
-    queryKey: [`cellEFP-${geneticElement}`],
+    queryKey: [`cellEFP-${geneticElement?.id}`],
     queryFn: async () => {
       if (!geneticElement) {
-        console.log('throwing error')
         throw Error('No gene')
       }
-      const data = await cellEFPLoader(geneticElement, setLoadAmount)
-      console.log(data) // This shows that the data HAS been fetched
+      const data = cellEFPLoader(geneticElement, setLoadAmount)
       return data
     },
     enabled: !!geneticElement,
   })
-  console.log('data', data)
-  console.log('isloading', isLoading)
 
   useEffect(() => {
     const validateParams = () => {
@@ -60,20 +56,30 @@ export const CellEFPView = () => {
 
   useEffect(() => {
     setIsLoading(isLoading)
-  }, [isLoading])
+  }, [isLoading, setIsLoading])
+
+  const debouncedUpdateSearchParams = useCallback(
+    debounce((updatedState) => {
+      setSearchParams(new URLSearchParams(flattenState(updatedState)))
+    }, 200), // 200ms delay before updating the URL
+    [setSearchParams]
+  )
 
   useEffect(() => {
-    setSearchParams(new URLSearchParams(flattenState(viewState)))
-  }, [viewState])
+    debouncedUpdateSearchParams(viewState)
+    return () => {
+      debouncedUpdateSearchParams.cancel()
+    }
+  }, [viewState, debouncedUpdateSearchParams])
 
   const efp = useMemo(() => {
     const Component = CellEFPDataObject.component
     if (data) {
       return <Component data={data} geneticElement={geneticElement} />
     } else {
-      return <div></div>
+      return <div>Yo</div>
     }
-  }, [geneticElement?.id])
+  }, [geneticElement?.id, data])
 
   if (isLoading || isError || !data) return <></>
   return (
@@ -84,11 +90,28 @@ export const CellEFPView = () => {
         position: 'relative',
       }}
     >
-      <Typography variant='h6'>
-        {'Cell EFP'}
-        {': '}
-        {geneticElement?.id}
-      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+        }}
+      >
+        <Typography variant='h6'>
+          {'Cell EFP'}
+          {': '}
+          {geneticElement?.id}
+        </Typography>
+        {CellEFPStateActions.map((action, index) => (
+          <Button
+            key={index}
+            onClick={() => setViewState(action.mutation(viewState))}
+          >
+            <Tooltip title={action.description}>{action.icon}</Tooltip>
+          </Button>
+        ))}
+      </Box>
       <Box
         sx={{
           width: '100%',

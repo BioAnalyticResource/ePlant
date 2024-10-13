@@ -10,6 +10,8 @@ import ErrorBoundary from '@eplant/util/ErrorBoundary'
 import { useViewData } from '@eplant/View/viewData'
 import {
   AppBar,
+  Box,
+  BoxProps,
   Button,
   DialogActions,
   DialogContent,
@@ -22,7 +24,6 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-import Box, { BoxProps } from '@mui/material/Box'
 
 import { View } from '../../../View'
 
@@ -296,7 +297,7 @@ export function ViewContainer<T, S, A>({
       >
         <ErrorBoundary>
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-          {loading ? (
+          {loading && loadAmount < 100 ? (
             <LoadingPage
               loadingAmount={loadAmount}
               gene={gene}

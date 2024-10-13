@@ -29,13 +29,13 @@ import {
 } from './types'
 import ZoomControls from './ZoomControls'
 
-const ChromosomeViewer: View<
+export const ChromosomeViewerObject: View<
   ChromosomeViewerData,
   ChromosomeViewerState,
   ChromosomeViewerAction
 > = {
   name: 'Chromosome Viewer',
-  id: 'chromosome-viewer',
+  id: 'chromosome',
   getInitialState(): ChromosomeViewerState {
     return {
       transform: {
@@ -61,7 +61,7 @@ const ChromosomeViewer: View<
       .then((responseObj: ChromosomesResponseObj) => responseObj['chromosomes'])
 
     return {
-      activeView: ChromosomeViewer.id,
+      activeView: ChromosomeViewerObject.id,
       viewData: chromosomeViewData,
       transform: {
         dx: 0,
@@ -168,4 +168,3 @@ const ChromosomeViewer: View<
     )
   },
 }
-export default ChromosomeViewer

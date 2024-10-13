@@ -3,13 +3,8 @@
 import { useEffect, useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import {
-  Box,
-  CircularProgress,
-  CssBaseline,
-  ThemeProvider,
-  useTheme,
-} from '@mui/material'
+import { Box, CircularProgress, CssBaseline, useTheme } from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles'
 
 import { dark, light } from './css/theme'
 import { ViewContainer } from './UI/Layout/ViewContainer'
@@ -71,26 +66,34 @@ const Eplant = () => {
         setActiveGeneId(params.geneid)
       }
     } else {
-      setActiveGeneId('')
+      // Set active gene to first available if one is already loaded
+      if (genes.length > 0) {
+        setActiveGeneId(genes[0].id)
+      } else {
+        setActiveGeneId('')
+      }
     }
     setActiveViewId(location.pathname.split('/')[1])
   }, [location.pathname])
 
   // On active gene change update the gene path segment
   useEffect(() => {
-    const pathSegments = location.pathname.split('/')
-    const geneid = activeGeneId ? activeGeneId : ''
-    if (pathSegments.length == 3) {
-      pathSegments[pathSegments.length - 1] = geneid
-    } else if (pathSegments.length == 2) {
-      pathSegments.push(geneid)
-    }
+    if (location.pathname !== import.meta.env.BASE_URL) {
+      // Only run this after initial redirect
+      const pathSegments = location.pathname.split('/')
+      const geneid = activeGeneId ? activeGeneId : ''
+      if (pathSegments.length == 3) {
+        pathSegments[pathSegments.length - 1] = geneid
+      } else if (pathSegments.length == 2) {
+        pathSegments.push(geneid)
+      }
 
-    const newPath = pathSegments.join('/') + location.search
-    if (newPath !== location.pathname + location.search) {
-      navigate(newPath)
+      const newPath = pathSegments.join('/') + location.search
+      if (newPath !== location.pathname + location.search) {
+        navigate(newPath)
+      }
     }
-  }, [activeGeneId])
+  }, [activeGeneId, location.pathname])
 
   return (
     <ThemeProvider theme={darkMode ? dark : light}>

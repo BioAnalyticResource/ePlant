@@ -19,7 +19,8 @@ interface ViewerProps {
 //----------
 // COMPONENT
 //----------
-const Viewer: FC<ViewerProps> = ({ chromosomes, scale }) => {
+const ChromosomeViewer = ({ chromosomes, scale }: ViewerProps) => {
+  console.log(chromosomes)
   return (
     <div
       style={{
@@ -50,4 +51,4 @@ const Viewer: FC<ViewerProps> = ({ chromosomes, scale }) => {
   )
 }
 
-export default Viewer
+export default ChromosomeViewer

@@ -4,9 +4,12 @@ import * as ReactDOM from 'react-dom/client'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import ErrorBoundary from './util/ErrorBoundary'
 import { CellEFPView } from './views/CellEFP/CellEFP'
+import { ChromosomeView } from './views/ChromosomeViewer/ChromosomeView'
+import { PublicationsView } from './views/PublicationViewer/PublicationsView'
 import { Config, defaultConfig } from './config'
 import Eplant from './Eplant'
 
@@ -14,17 +17,24 @@ import './css/index.css'
 
 const router = createBrowserRouter([
   {
-    path: import.meta.env.BASE_URL,
+    path: '/',
     element: <Eplant />,
     children: [
       {
-        path: '/:geneid?',
-        element: <Navigate to={'/cell-efp/'} replace={true}></Navigate>,
+        element: <Navigate to={'/cell-efp'} replace={true}></Navigate>,
         index: true,
       },
       {
         path: '/cell-efp/:geneid?',
         element: <CellEFPView></CellEFPView>,
+      },
+      {
+        path: '/publications/:geneid?',
+        element: <PublicationsView></PublicationsView>,
+      },
+      {
+        path: '/chromosome/:geneid?',
+        element: <ChromosomeView></ChromosomeView>,
       },
     ],
     errorElement: <ErrorBoundary></ErrorBoundary>,
@@ -40,6 +50,7 @@ function RootApp() {
         <Config.Provider value={defaultConfig}>
           <QueryClientProvider client={queryClient}>
             <RouterProvider router={router} />
+            <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
         </Config.Provider>
       </Provider>
