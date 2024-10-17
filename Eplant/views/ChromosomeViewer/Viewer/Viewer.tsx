@@ -20,7 +20,6 @@ interface ViewerProps {
 // COMPONENT
 //----------
 const ChromosomeViewer = ({ chromosomes, scale }: ViewerProps) => {
-  console.log(chromosomes)
   return (
     <div
       style={{

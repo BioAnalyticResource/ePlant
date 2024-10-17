@@ -10,7 +10,6 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import useTheme from '@mui/material/styles/useTheme'
 
-import { GeneIcon } from '../icons'
 import { GeneItem } from '../types'
 
 import GeneInfoPopup from './GeneInfoPopup'

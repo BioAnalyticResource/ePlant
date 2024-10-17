@@ -1,9 +1,11 @@
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { debounce } from 'lodash'
 import { useOutletContext, useSearchParams } from 'react-router-dom'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
+import { flattenState } from '@eplant/util/router'
 import { Box, CircularProgress, Snackbar, SnackbarContent } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 
@@ -26,7 +28,7 @@ export const ChromosomeView = () => {
     setMessageOpen(false)
   }
   const { data, isLoading, isError, error } = useQuery<ChromosomeViewerData>({
-    queryKey: [`chromosome-${geneticElement?.id}`],
+    queryKey: [`chromosome`],
     queryFn: async () => {
       if (!geneticElement) {
         throw Error('No gene')
@@ -44,6 +46,20 @@ export const ChromosomeView = () => {
       dZoom: parseInt(searchParams.get('zoom') || '0.7') || 0.7,
     },
   })
+
+  const debouncedUpdateSearchParams = useCallback(
+    debounce((updatedState) => {
+      setSearchParams(new URLSearchParams(flattenState(updatedState)))
+    }, 200), // 200ms delay before updating the URL
+    [setSearchParams]
+  )
+
+  useEffect(() => {
+    debouncedUpdateSearchParams(viewState)
+    return () => {
+      debouncedUpdateSearchParams.cancel()
+    }
+  }, [viewState, debouncedUpdateSearchParams])
 
   if (isLoading || isError || !data) return <></>
   return (
