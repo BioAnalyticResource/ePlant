@@ -14,6 +14,8 @@ import ListItem from '@mui/material/ListItem'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 
+import FilterDialog from './FilterDialog'
+
 interface TopbarProps {
   gene: string
 }
@@ -93,53 +95,7 @@ const Topbar: FC<TopbarProps> = ({ gene }) => {
         </Box>
       </Popup>
       <Popup open={showFilter} anchor={filterRef.current}>
-        <Box>
-          <List
-            sx={(theme) => ({
-              maxWidth: 360,
-              bgcolor: theme.palette.background.default,
-            })}
-            subheader={<ListSubheader>Filter Interactions</ListSubheader>}
-          >
-            <ListItem>
-              <ListItemText
-                id='filter-option-1'
-                primary='Hide ALL experimentally determined Protein-Protein interactions'
-              />
-              <Switch edge='end' onChange={() => {}} checked={false} />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                id='filter-option-2'
-                primary='Hide only with correlation less than: 0.5 '
-              />
-              <Switch edge='end' onChange={() => {}} checked={false} />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                id='filter-option-3'
-                primary='Hide ALL predicted
-            Protein-Protein interactions Hide only with correlation less than:
-            0.5'
-              />
-              <Switch edge='end' onChange={() => {}} checked={false} />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                id='filter-option-4'
-                primary='Hide only with confidence less than 2'
-              />
-              <Switch edge='end' onChange={() => {}} checked={false} />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                id='filter-option-5'
-                primary='Hide only with confidence less than 2'
-              />
-              <Switch edge='end' onChange={() => {}} checked={false} />
-            </ListItem>
-          </List>
-        </Box>
+        <FilterDialog />
       </Popup>
     </AppBar>
   )

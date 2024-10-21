@@ -111,7 +111,7 @@ const nodeMouseOverHandler = (cy: Core, event) => {
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><button title='Load gene into collection'>Load Gene</button>
+                                                    <td><button onclick={title='Load gene into collection'>Load Gene</button>
                                                 </tr>
                                             </table>
                                         </div>`
