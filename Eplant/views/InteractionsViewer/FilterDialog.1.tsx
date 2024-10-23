@@ -1,63 +1,13 @@
 import { FC, useState } from 'react'
-import { Core } from 'cytoscape'
-
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
+import { applyFilter, cleanNodes } from './scripts/filterLogic'
+import { FilterProps, NumberInput } from './FilterDialog'
 
-import {
-  applyFilter,
-  cleanCompoundNode,
-  cleanNodes,
-} from './scripts/filterLogic'
-
-interface FilterProps {
-  cy: Core
-}
-type numberInputProps = {
-  label: string
-  changeFunc: (event: object) => void
-  prefix?: string
-}
-const NumberInput = (props: numberInputProps) => {
-  return (
-    <>
-      <TextField
-        label={props.label}
-        size='small'
-        variant='outlined'
-        color='secondary'
-        type='number'
-        margin='dense'
-        onChange={(event) => {
-          props.changeFunc(event)
-        }}
-        inputProps={{
-          defaultValue: 0,
-          step: 0.1,
-          min: -1,
-          max: 1,
-        }}
-        InputProps={
-          props.prefix
-            ? {
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    {props.prefix}
-                  </InputAdornment>
-                ),
-              }
-            : {}
-        }
-      />
-    </>
-  )
-}
-const FilterDialog: FC<FilterProps> = ({ cy }) => {
+export const FilterDialog: FC<FilterProps> = ({ cy }) => {
   const [eppiSelected, setEppiSelected] = useState<boolean>(false)
   const [eppiCorrSelected, setEppiCorrSelected] = useState<boolean>(false)
   const [eppiCorrValue, setEppiCorrValue] = useState<number>()
@@ -118,16 +68,15 @@ const FilterDialog: FC<FilterProps> = ({ cy }) => {
       selectors.PPDISelector,
       ppdiConf,
     ]
-    cy.elements().show()
     for (let i = 0; i < filterStatus.length; i++) {
       console.log(i)
       applyFilter(cy, filterStatus[i], filters[i])
     }
     // Hide orphaned nodes
-    cleanNodes(cy)
+    cleanNodes()
     // Hide parent nodes
-    cleanCompoundNode(cy, 'COMPOUND_DNA')
-    cleanCompoundNode(cy, 'COMPOUND_PROTEIN')
+    cleanCompoundNode('COMPOUND_DNA')
+    cleanCompoundNode('COMPOUND_PROTEIN')
   }
 
   return (
@@ -290,4 +239,3 @@ const FilterDialog: FC<FilterProps> = ({ cy }) => {
     </FormGroup>
   )
 }
-export default FilterDialog

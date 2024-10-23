@@ -9,11 +9,19 @@ import { Core } from 'cytoscape'
 * @param {String} selector The selector by which to filter edges
 * @return {boolean} The state of the related checkbox element
 */
-export const applyFilter = (cy: Core, selector: string) => {
+export const applyFilter = (cy: Core, status: boolean, selector: string) => {
+  if (status) {
     const edges = cy.edges(selector);
     edges.hide();
+  }
 }
 
+
+export const cleanCompoundNode = (cy: Core, id: string) => {
+  if (cy.nodes('[parent = "' + id + '"]:visible').length === 0) {
+    cy.nodes('#' + id).hide();
+  }
+}
 
 
 /**
@@ -21,19 +29,19 @@ export const applyFilter = (cy: Core, selector: string) => {
  * @returns {void}
  */
 export const cleanNodes = (cy: Core) => {
-    // Get all nodes in interaction view
-    const nodes = cy.nodes();
-    for (let n = 0; n < nodes.length; n = n + 1) {
-        const node = nodes[n];
-        const type = node.data('id').substring(9);
+  // Get all nodes in interaction view
+  const nodes = cy.nodes();
+  for (let n = 0; n < nodes.length; n = n + 1) {
+    const node = nodes[n];
+    const type = node.data('id').substring(9);
 
-        // Remove nodes with no connecting interactions
-        const isOrphaned = node.connectedEdges(':visible').length === 0;
+    // Remove nodes with no connecting interactions
+    const isOrphaned = node.connectedEdges(':visible').length === 0;
 
-        if (type === 'DNA_NODE' && isOrphaned) {
-            node.hide();
-        } else if (type === 'PROTEIN_NODE' && isOrphaned) {
-            node._private.parent.hide();
-        }
+    if (type === 'DNA_NODE' && isOrphaned) {
+      node.hide();
+    } else if (type === 'PROTEIN_NODE' && isOrphaned) {
+      node._private.parent.hide();
     }
+  }
 };

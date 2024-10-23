@@ -7,7 +7,11 @@ import cytoscape, {
 import automove from 'cytoscape-automove'
 import coseBilkent from 'cytoscape-cose-bilkent'
 import popper from 'cytoscape-popper'
-import tippy, { Instance as TippyInstance, Props as TProps } from 'tippy.js'
+import tippy, {
+  followCursor,
+  Instance as TippyInstance,
+  Props as TProps,
+} from 'tippy.js'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewDataError } from '@eplant/View/viewData'
@@ -23,7 +27,6 @@ import { InteractionsIcon } from './icon'
 import Topbar from './Topbar'
 // import GeneDialog from './GeneDialog'
 import {
-  Interaction,
   InteractionsViewAction,
   InteractionsViewData,
   InteractionsViewState,
@@ -38,23 +41,33 @@ declare module 'cytoscape-popper' {
   interface PopperInstance extends TippyInstance {}
 }
 
-function tippyFactory(ref: { getBoundingClientRect: any }, content: any) {
+type Content = {
+  content: any
+  duration: number
+  followCursor: boolean
+  arrow: boolean
+  interactive: boolean
+}
+function tippyFactory(ref: { getBoundingClientRect: any }, content: Content) {
   // Since tippy constructor requires DOM element/elements, create a placeholder
   const dummyDomEle = document.createElement('div')
   const config: Partial<TProps> = {
     getReferenceClientRect: ref.getBoundingClientRect,
-    trigger: 'manual', // mandatory
+    // touch: add this later for touch screen capablities
     // dom element inside the tippy:
-    content: content,
+    content: content.content,
     // your own preferences:
-    arrow: true,
-    placement: 'bottom',
-    hideOnClick: false,
-    sticky: 'reference',
-
-    // if interactive:
-    interactive: true,
+    arrow: content.arrow,
+    placement: 'left',
+    delay: [1000, 1000],
+    animation: 'fade',
+    followCursor: content.followCursor,
+    duration: content.duration,
+    sticky: false,
+    interactive: content.interactive,
+    interactiveBorder: 3,
     appendTo: document.body, // or append dummyDomEle to document.body
+    plugins: [followCursor],
   }
   const tip = tippy(dummyDomEle, config)
   return tip
@@ -78,7 +91,6 @@ const InteractionsViewer: View = {
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void
   ) {
-    console.log('eeee')
     let data: ViewData
     if (gene) {
       const query = gene.id.toUpperCase()
@@ -94,7 +106,7 @@ const InteractionsViewer: View = {
         .then((response) => response.json())
         .then((json) => json[query])
         .then((interactions: [] | undefined) => {
-          console.log(interactions)
+          // console.log(interactions)
           if (interactions === undefined) {
             recursive = 'false'
             return []
@@ -123,14 +135,11 @@ const InteractionsViewer: View = {
     InteractionsViewState,
     InteractionsViewAction
   >) {
-    // const [cy, setCy] = useState<Core>(cytoscape())
+    const [cyto, setCyto] = useState<Core>(cytoscape())
     const cyRef = useRef(null)
-    let cy: Core
     const geneId = geneticElement?.id
-    console.log(activeData)
     const viewData = activeData.viewData
     const elements: any = [...viewData.nodes, ...viewData.edges]
-    const styles = cytoStyles
 
     useEffect(() => {
       const cy: Core = cytoscape({
@@ -138,6 +147,7 @@ const InteractionsViewer: View = {
         elements: elements,
         style: cytoStyles,
       })
+      setCyto(cy)
 
       setLayout(cy, viewData.loadFlags)
       // Listen for mouseover events on nodes
@@ -148,7 +158,7 @@ const InteractionsViewer: View = {
 
     return (
       <div style={{ background: 'white' }}>
-        <Topbar gene={geneId === undefined ? '' : geneId}></Topbar>
+        <Topbar cy={cyto} gene={geneId === undefined ? '' : geneId}></Topbar>
         <div
           ref={cyRef}
           id='cy'
