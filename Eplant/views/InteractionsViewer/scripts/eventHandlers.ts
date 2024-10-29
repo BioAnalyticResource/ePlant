@@ -1,6 +1,5 @@
-import { Core } from 'cytoscape'
+import { Core, EventObject } from 'cytoscape'
 import { PopperInstance } from 'cytoscape-popper'
-import { followCursor } from 'tippy.js'
 
 // import GeneticElement from '@eplant/GeneticElement'
 // import arabidopsis from '@eplant/Species/arabidopsis'
@@ -8,20 +7,21 @@ import { followCursor } from 'tippy.js'
 // import { GeneItem } from '@eplant/views/ChromosomeViewer/types'
 
 // Global
-
+let cy: Core;
 
 // --------------
 // Event Listeners
 // --------------
-export const addNodeListener = (cy: Core) => {
-  cy.on('mouseover', 'node', (event) => {
+export const addNodeListener = (cyto: Core) => {
+  cy = cyto
+  cy.on('mouseover', 'node', (event: EventObject) => {
     const nodeId = event.target.data('id')
     // Check that the node is not a compound node
     if (nodeId !== 'COMPOUND_DNA' && nodeId !== 'COMPOUND_PROTEIN') {
       if (nodeId.substring(0, 3) === 'chr') {
-        chrNodeMouseOverHandler(cy, event)
+        chrNodeMouseOverHandler(event)
       } else {
-        nodeMouseOverHandler(cy, event)
+        nodeMouseOverHandler(event)
       }
     }
   })
@@ -29,12 +29,12 @@ export const addNodeListener = (cy: Core) => {
 
 export const addEdgeListener = (cy: Core) => {
   // Listen for pointer events on edges
-  cy.on('mouseover', 'edge', (event) => {
+  cy.on('mouseover', 'edge', (event: EventObject) => {
     // No tooltip on chr edges
     if (event.target._private.classes.values().next().value == 'chr-edge') {
       return false
     }
-    edgeMouseOverHandler(cy, event)
+    edgeMouseOverHandler(event)
   })
 }
 
@@ -65,7 +65,7 @@ export const addEdgeListener = (cy: Core) => {
 
 
 // Handle regular node hover
-const nodeMouseOverHandler = (cy: Core, event) => {
+const nodeMouseOverHandler = (event: EventObject) => {
   const node = event.target
   const id = node._private.data.content
   fetch(
@@ -128,7 +128,7 @@ const nodeMouseOverHandler = (cy: Core, event) => {
     })
 }
 // Handle edge hover
-const edgeMouseOverHandler = (cy: Core, event) => {
+const edgeMouseOverHandler = (event: EventObject) => {
   const edge = event.target
   const data = edge._private.data
   const references =
@@ -170,7 +170,7 @@ const edgeMouseOverHandler = (cy: Core, event) => {
 }
 
 // Handler chr node hover
-const chrNodeMouseOverHandler = (cy: Core, event) => {
+const chrNodeMouseOverHandler = (event: EventObject) => {
   const node = event.target
   const chrNum = node._private.data.id.substring(3, 4)
   const genes = node._private.data.genes
@@ -221,7 +221,7 @@ const chrNodeMouseOverHandler = (cy: Core, event) => {
 
 
 
-const destroyTip = (cy: Core, tip: PopperInstance) => {
+const destroyTip = (cyto: Core, tip: PopperInstance) => {
   // add handler to node for mouse leave
   cy.on('mouseout', 'node', (event) => {
     const nodeID = event.target.data('id')

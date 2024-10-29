@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
-import cytoscape, {
-  Core,
-  ElementDefinition,
-  ElementsDefinition,
-} from 'cytoscape'
+import cytoscape, { Core } from 'cytoscape'
+// @ts-expect-error addon typing error no fix, still works
 import automove from 'cytoscape-automove'
+// @ts-expect-error addon typing error no fix, still works
 import coseBilkent from 'cytoscape-cose-bilkent'
 import popper from 'cytoscape-popper'
 import tippy, {
   followCursor,
   Instance as TippyInstance,
   Props as TProps,
+  sticky,
 } from 'tippy.js'
 
 import GeneticElement from '@eplant/GeneticElement'
@@ -18,13 +17,13 @@ import { ViewDataError } from '@eplant/View/viewData'
 
 import { View, ViewProps } from '../../View'
 
+import Topbar from './components/Topbar'
 import { addEdgeListener, addNodeListener } from './scripts/eventHandlers'
 import setLayout from './scripts/layout'
 import loadInteractions from './scripts/loadInteractions'
 import loadSublocalizations from './scripts/loadSublocalizations'
 import cytoStyles from './cytoStyles'
 import { InteractionsIcon } from './icon'
-import Topbar from './Topbar'
 // import GeneDialog from './GeneDialog'
 import {
   InteractionsViewAction,
@@ -37,18 +36,10 @@ import {
 CYTOSCAPE PLUGIN SETUP
 ---------------------- */
 declare module 'cytoscape-popper' {
-  interface PopperOptions extends Partial<TProps> {}
   interface PopperInstance extends TippyInstance {}
 }
 
-type Content = {
-  content: any
-  duration: number
-  followCursor: boolean
-  arrow: boolean
-  interactive: boolean
-}
-function tippyFactory(ref: { getBoundingClientRect: any }, content: Content) {
+function tippyFactory(ref: { getBoundingClientRect: any }, content: any) {
   // Since tippy constructor requires DOM element/elements, create a placeholder
   const dummyDomEle = document.createElement('div')
   const config: Partial<TProps> = {
@@ -67,7 +58,7 @@ function tippyFactory(ref: { getBoundingClientRect: any }, content: Content) {
     interactive: content.interactive,
     interactiveBorder: 3,
     appendTo: document.body, // or append dummyDomEle to document.body
-    plugins: [followCursor],
+    plugins: [followCursor, sticky],
   }
   const tip = tippy(dummyDomEle, config)
   return tip
@@ -97,9 +88,6 @@ const InteractionsViewer: View = {
       const url =
         'https://bar.utoronto.ca/eplant/cgi-bin/get_interactions_dapseq.py?locus=' +
         query
-      loadEvent(0)
-      loadEvent(20)
-      loadEvent(40)
       // Fetch interaction data
       let recursive: string = ''
       const interactions = await fetch(url)
@@ -116,7 +104,6 @@ const InteractionsViewer: View = {
         })
       data = loadInteractions(gene, interactions, recursive)
       data.nodes = loadSublocalizations(data.nodes)
-      loadEvent(100)
     } else {
       throw ViewDataError.UNSUPPORTED_GENE
     }
@@ -148,7 +135,6 @@ const InteractionsViewer: View = {
         style: cytoStyles,
       })
       setCyto(cy)
-
       setLayout(cy, viewData.loadFlags)
       // Listen for mouseover events on nodes
       addNodeListener(cy)

@@ -1,12 +1,12 @@
 /** @format */
 
-import { NodeItem, Sublocalization } from '../types'
+import { RawNode, Sublocalization } from '../types'
 
-let nodes: NodeItem[] = []
+let nodes: RawNode[] = []
 
 /* Main function */
-const loadSublocalizations = (cyConfNodes: NodeItem[]) => {
-	nodes = cyConfNodes
+const loadSublocalizations = (cynodes: RawNode[]) => {
+  nodes = cynodes
 	let data = []
 	loadData().then((expData) => {
 		data = expData
@@ -39,8 +39,7 @@ const setSublocalizations = (data: Sublocalization[]) => {
 			return item.id === id
 		})[0]
 		const topLocals = sublocData ? getTopSublocals(sublocData) : []
-		const predicted = sublocData ? sublocData.includes_predicted : true
-		// @ts-ignore
+    const predicted = sublocData ? sublocData.includes_predicted : true
 		const node = setSublocalizationStyle(topLocals, predicted === 'yes', backNodes[n])
 		newNodes.push(node)
 	}
@@ -153,7 +152,7 @@ const getTopSublocals = (subLoc: Sublocalization) => {
  * @param {Object} node Pie protein node
  * @return {Object} The update pie node
  */
-const setSublocalizationStyle = (sublocalizations: [], predicted: boolean, node: NodeItem) => {
+const setSublocalizationStyle = (sublocalizations: any[][], predicted: boolean, node: RawNode) => {
 	// Calculate total sum of scores
 	let total = 0
 	for (let n = 0; n < sublocalizations.length; n++) {

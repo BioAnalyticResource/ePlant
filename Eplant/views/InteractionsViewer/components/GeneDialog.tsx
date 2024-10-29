@@ -17,7 +17,7 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 
-import { GeneItem } from '../ChromosomeViewer/types'
+import { GeneItem } from '../../ChromosomeViewer/types'
 interface GeneDialogProps {
   gene: GeneItem
 }

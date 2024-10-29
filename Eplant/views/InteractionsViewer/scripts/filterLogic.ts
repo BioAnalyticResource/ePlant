@@ -3,7 +3,7 @@ import { Core } from 'cytoscape'
 
 
 /*
-* Applies filter to get edges matching selector
+* Applies filter to hide edges matching selector
 * @param {HTMLElement} checkbox The related checkbox element
 * @param {Number} index The related filterStatus index
 * @param {String} selector The selector by which to filter edges
@@ -12,6 +12,7 @@ import { Core } from 'cytoscape'
 export const applyFilter = (cy: Core, status: boolean, selector: string) => {
   if (status) {
     const edges = cy.edges(selector);
+    // @ts-expect-error hide should exists?
     edges.hide();
   }
 }
@@ -19,6 +20,7 @@ export const applyFilter = (cy: Core, status: boolean, selector: string) => {
 
 export const cleanCompoundNode = (cy: Core, id: string) => {
   if (cy.nodes('[parent = "' + id + '"]:visible').length === 0) {
+    // @ts-expect-error hide should exists?
     cy.nodes('#' + id).hide();
   }
 }
@@ -39,9 +41,11 @@ export const cleanNodes = (cy: Core) => {
     const isOrphaned = node.connectedEdges(':visible').length === 0;
 
     if (type === 'DNA_NODE' && isOrphaned) {
+      // @ts-expect-error hide should exists?
       node.hide();
     } else if (type === 'PROTEIN_NODE' && isOrphaned) {
-      node._private.parent.hide();
+      // @ts-expect-error hide should exists?
+      node.parent.hide();
     }
   }
 };
