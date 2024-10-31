@@ -1,10 +1,10 @@
-import { StateAction } from '@eplant/util/stateUtils'
+import { StateActions } from '@eplant/util/stateUtils'
 import YoutubeSearchedForRoundedIcon from '@mui/icons-material/YoutubeSearchedForRounded'
 
 import { CellEFPViewerState } from './types'
 
-export const CellEFPStateActions: StateAction<CellEFPViewerState>[] = [
-  {
+export const CellEFPStateActions: StateActions<CellEFPViewerState> = {
+  'Reset Pan/Zoom': {
     icon: <YoutubeSearchedForRoundedIcon />,
     mutation: (prevState) => ({
       ...prevState,
@@ -16,6 +16,6 @@ export const CellEFPStateActions: StateAction<CellEFPViewerState>[] = [
         zoom: 1,
       },
     }),
-    description: 'Reset Pan/Zoom',
+    rendered: true,
   },
-]
+}

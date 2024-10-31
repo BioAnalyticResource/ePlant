@@ -1,7 +1,13 @@
+import { ReactElement } from 'react'
+
 import { SvgIconProps } from '@mui/material'
 
-export type StateAction<T> = {
-  icon: React.ReactElement<SvgIconProps>
-  mutation: (prevState: T) => T
-  description: string
+type StateAction<T> = {
+  mutation: (prevState: T, ...args: any[]) => T
+} & (
+  | { rendered: true; icon: ReactElement<SvgIconProps> }
+  | { rendered: false; icon?: never }
+)
+export type StateActions<T> = {
+  [key: string]: StateAction<T>
 }

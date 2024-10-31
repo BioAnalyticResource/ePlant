@@ -9,6 +9,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ErrorBoundary from './util/ErrorBoundary'
 import { CellEFPView } from './views/CellEFP/CellEFP'
 import { ChromosomeView } from './views/ChromosomeViewer/ChromosomeView'
+import { ExperimentEFP } from './views/ExperimentEFP/ExperimentEFP'
+import { PlantEFP } from './views/PlantEFP/PlantEFP'
 import { PublicationsView } from './views/PublicationViewer/PublicationsView'
 import { Config, defaultConfig } from './config'
 import Eplant from './Eplant'
@@ -21,20 +23,28 @@ const router = createBrowserRouter([
     element: <Eplant />,
     children: [
       {
-        element: <Navigate to={'/cell-efp'} replace={true}></Navigate>,
+        element: <Navigate to={'cell-efp/'} replace={true}></Navigate>,
         index: true,
       },
       {
-        path: '/cell-efp/:geneid?',
+        path: 'cell-efp/:geneid?',
         element: <CellEFPView></CellEFPView>,
       },
       {
-        path: '/publications/:geneid?',
+        path: 'publications/:geneid?',
         element: <PublicationsView></PublicationsView>,
       },
       {
-        path: '/chromosome/:geneid?',
+        path: 'chromosome/:geneid?',
         element: <ChromosomeView></ChromosomeView>,
+      },
+      {
+        path: 'plant-efp/:geneid?',
+        element: <PlantEFP></PlantEFP>,
+      },
+      {
+        path: 'tissue/:geneid?',
+        element: <ExperimentEFP></ExperimentEFP>,
       },
     ],
     errorElement: <ErrorBoundary></ErrorBoundary>,

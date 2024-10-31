@@ -31,9 +31,9 @@ const userViews = [
   // GeneInfoView,
   PublicationViewer,
   // DebugView,
-  // PlantEFP,
+  PlantEFP,
   CellEFP,
-  // ExperimentEFP,
+  ExperimentEFP,
   ChromosomeViewerObject,
 ]
 

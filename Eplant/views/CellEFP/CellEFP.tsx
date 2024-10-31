@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { act, useCallback, useEffect, useMemo, useState } from 'react'
 import { debounce } from 'lodash'
 import { useOutletContext, useSearchParams } from 'react-router-dom'
 
@@ -6,6 +6,7 @@ import GeneticElement from '@eplant/GeneticElement'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import PanZoom from '@eplant/util/PanZoom'
 import { flattenState } from '@eplant/util/router'
+import { ActionsPanel } from '@eplant/util/stateUtils/ActionsPanel'
 import { ViewDataError } from '@eplant/View/viewData'
 import { Box, Button, Tooltip, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
@@ -77,7 +78,7 @@ export const CellEFPView = () => {
     if (data) {
       return <Component data={data} geneticElement={geneticElement} />
     } else {
-      return <div>Yo</div>
+      return <div>TODO</div>
     }
   }, [geneticElement?.id, data])
 
@@ -103,15 +104,12 @@ export const CellEFPView = () => {
           {': '}
           {geneticElement?.id}
         </Typography>
-        {CellEFPStateActions.map((action, index) => (
-          <Button
-            key={index}
-            onClick={() => setViewState(action.mutation(viewState))}
-          >
-            <Tooltip title={action.description}>{action.icon}</Tooltip>
-          </Button>
-        ))}
       </Box>
+      <ActionsPanel
+        actions={CellEFPStateActions}
+        prevState={viewState}
+        setState={setViewState}
+      ></ActionsPanel>
       <Box
         sx={{
           width: '100%',

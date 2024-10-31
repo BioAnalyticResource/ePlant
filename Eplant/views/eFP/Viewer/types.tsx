@@ -1,5 +1,8 @@
+import GeneticElement from '@eplant/GeneticElement'
 import { Transform } from '@eplant/util/PanZoom'
 import { ColorMode, EFPData, EFPId } from '@eplant/views/eFP/types'
+
+import EFP from '..'
 
 export type EFPViewerData = {
   views: {
@@ -19,7 +22,6 @@ export type EFPViewerState = {
   colorMode: ColorMode
   sortBy: EFPViewerSortTypes
   maskingEnabled: boolean
-  maskModalVisible: boolean
   maskThreshold: number
 }
 
@@ -32,3 +34,15 @@ export type EFPViewerAction =
   | { type: 'toggle-masking' }
   | { type: 'toggle-mask-modal' }
   | { type: 'set-mask-threshold'; threshold: number }
+
+export type EFPListProps = {
+  geneticElement: GeneticElement
+  views: EFP[]
+  viewData: EFPData[]
+  activeView: EFP
+  setActiveView: (viewID: EFPId) => void
+  height: number
+  colorMode: 'absolute' | 'relative'
+  maskThreshold: number
+  maskingEnabled: boolean
+}

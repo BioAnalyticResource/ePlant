@@ -95,12 +95,12 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
       }
     )
 
-    loadEvent(0.2)
+    loadEvent(20)
     const samples: { [key: string]: number } = {}
     // Fetch the sample names in chunks to give a more accurate progress bar
     const chunks = _.chunk(sampleNames, 20)
-    let loaded = 0.2
-    const loadStep = (1 - loaded) / chunks.length
+    let loaded = 20
+    const loadStep = (100 - loaded) / chunks.length
     const data = (
       await Promise.all(
         chunks.map((names) =>
@@ -132,7 +132,7 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     ).flat()
 
     for (const { name, value } of data) samples[name] = value
-    loadEvent(1)
+    loadEvent(100)
     const groupsData = groups
       .map((group) => {
         const tissues: EFPTissue[] = group.tissues.map((tissue) => ({

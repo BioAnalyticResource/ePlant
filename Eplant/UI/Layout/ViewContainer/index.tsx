@@ -1,13 +1,20 @@
 import { useEffect, useId, useMemo, useState } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
-import { usePrinting } from '@eplant/state'
+import {
+  useActiveGeneId,
+  useGeneticElements,
+  usePrinting,
+  useSpecies,
+} from '@eplant/state'
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
 import { useViewData } from '@eplant/View/viewData'
+import CellEFP from '@eplant/views/CellEFP'
+import FallbackView from '@eplant/views/FallbackView'
 import {
   AppBar,
   Box,
@@ -40,13 +47,9 @@ import ViewOptions from './ViewOptions'
  * @returns
  */
 export function ViewContainer<T, S, A>({
-  view,
-  setView,
   gene,
   ...props
 }: {
-  view: View<T, S, A>
-  setView: (viewid: string) => void
   gene: GeneticElement | null
 } & BoxProps) {
   // const { activeData, error, dispatch, state } = useViewData(view, gene)
@@ -57,10 +60,16 @@ export function ViewContainer<T, S, A>({
   const [printing, setPrinting] = usePrinting()
 
   const [viewingCitations, setViewingCitations] = useState(false)
-  const navigate = useNavigate()
-  const location = useLocation()
 
   const { userViews, views, genericViews } = useConfig()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const params = useParams()
+  const [speciesList] = useSpecies()
+  const [genes, setGenes] = useGeneticElements()
+  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
+  const [activeViewId, setActiveViewId] = useState<string>('')
+  const activeView = views.find((view) => view.id === activeViewId) ?? CellEFP
 
   useEffect(() => {
     if (printing) {
@@ -70,8 +79,61 @@ export function ViewContainer<T, S, A>({
       }, 100)
     }
   }, [printing])
-  const topBar = useMemo(
-    () => (
+
+  // On app url change, make sure loaded gene and view aligns with URL
+  useEffect(() => {
+    const loadGene = async (geneid: string) => {
+      // TODO: This is super jank, should probably write some better utilities for loading genes
+      const species = speciesList.find(
+        (species) => species.name === 'Arabidopsis'
+      )
+      const gene = await species?.api.searchGene(geneid)
+      if (gene) {
+        setGenes([...genes, gene])
+      }
+    }
+    if (params.geneid) {
+      if (params.geneid !== activeGeneId) {
+        if (!genes.find((gene) => gene.id === params.geneid)) {
+          loadGene(params.geneid)
+        }
+        setActiveGeneId(params.geneid)
+      }
+    } else {
+      // Set active gene to first available if one is already loaded
+      if (genes.length > 0) {
+        setActiveGeneId(genes[0].id)
+      } else {
+        setActiveGeneId('')
+      }
+    }
+    setActiveViewId(location.pathname.split('/')[1])
+  }, [location.pathname])
+
+  // On active gene change update the gene path segment
+  useEffect(() => {
+    if (location.pathname !== import.meta.env.BASE_URL) {
+      // Only run this after initial redirect
+      const pathSegments = location.pathname
+        .split('/')
+        .filter((segment) => segment !== '')
+      if (pathSegments.length == 2 && activeGeneId) {
+        pathSegments[pathSegments.length - 1] = activeGeneId
+      } else if (pathSegments.length == 1 && activeGeneId) {
+        pathSegments.push(activeGeneId)
+        // Will never get here as of now, but if we decide to persist activeGene need
+        // to do this.
+      }
+
+      const newPath = '/' + pathSegments.join('/') + '/' + location.search
+      if (newPath !== location.pathname + '/' + location.search) {
+        navigate(newPath)
+      }
+    }
+  }, [activeGeneId])
+
+  const topBar = useMemo(() => {
+    return (
       <AppBar
         variant='elevation'
         sx={(theme) => ({
@@ -102,9 +164,9 @@ export function ViewContainer<T, S, A>({
             {/* View selector dropdown */}
             <FormControl variant='standard'>
               <Select
-                value={view.id}
+                value={activeView.id}
                 renderValue={() => {
-                  if (view.id == 'get-started') {
+                  if (activeView.id == 'get-started') {
                     return <span style={{ paddingLeft: 8 }}>View selector</span>
                   }
                   return (
@@ -115,9 +177,9 @@ export function ViewContainer<T, S, A>({
                       }}
                     >
                       <Box sx={{ paddingRight: 1.5, marginTop: 0.5 }}>
-                        {view.icon && <view.icon />}
+                        {activeView.icon && <activeView.icon />}
                       </Box>
-                      {view.name}
+                      {activeView.name}
                     </span>
                   )
                 }}
@@ -131,7 +193,7 @@ export function ViewContainer<T, S, A>({
                     pathSegments[1] = view.id
                     const newPath = pathSegments.join('/')
                     if (newPath !== location.pathname + location.search) {
-                      setView(view.id)
+                      setActiveViewId(view.id)
                       navigate(newPath)
                     }
                   }
@@ -196,7 +258,7 @@ export function ViewContainer<T, S, A>({
                       }}
                       key={view.name}
                       onClick={(e) => {
-                        if (view) setView(view.id)
+                        if (view) setActiveViewId(view.id)
                       }}
                     >
                       {view.name}
@@ -236,7 +298,7 @@ export function ViewContainer<T, S, A>({
             color='secondary'
             onClick={() => {
               // downloadFile(
-              //   `${view.id}${gene ? '-' + gene.id : ''}.json`,
+              //   `${activeView.id}${gene ? '-' + gene.id : ''}.json`,
               //   JSON.stringify(activeData, null, 2)
               // )
             }}
@@ -245,17 +307,19 @@ export function ViewContainer<T, S, A>({
           </Button>
         </Toolbar>
       </AppBar>
-    ),
-    [view.id, gene?.id, loading]
-  )
+    )
+  }, [activeViewId, gene?.id, loading])
+
   return (
     <Box {...props} display='flex' flexDirection='column'>
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
         <DialogTitle sx={{ minWidth: '512px' }}>
-          <Typography variant='h6'>Data sources for {view.name}</Typography>
+          <Typography variant='h6'>
+            Data sources for {activeView.name}
+          </Typography>
         </DialogTitle>
         <DialogContent>
-          {view.citation ? (
+          {activeView.citation ? (
             // <view.citation state={state} activeData={activeData} gene={gene} />
             <div></div>
           ) : (
@@ -301,7 +365,7 @@ export function ViewContainer<T, S, A>({
             <LoadingPage
               loadingAmount={loadAmount}
               gene={gene}
-              view={view}
+              view={activeView}
               error={null}
             />
           ) : (
