@@ -36,6 +36,9 @@ const MIN_ZOOM = 0.5;
 /** Maximum zoom constraint*/
 const MAX_ZOOM = 3;
 
+/** Maximum x value of the tree(leafs) */
+let maxY = 0;
+
 /**
  * Extracts the primary gene identifier from the API URL
  * 
@@ -184,12 +187,15 @@ function newickToD3(newickString: string, metadata: TreeData, primaryGene: strin
  * @var y - Y coordinate for rendering the visualization
  * @var metadata - Metadata associated with the node
  * @var isPrimaryGene - Whether this node represents the primary gene being analyzed
+ * @var themeColors - colouring for the metadata to match ePlant
+ * @var isHighestY - have we hit the node with the highest Y coordinate
  */
 interface MetadataVisualizationsProps {
   x: number;
   y: number;
   metadata: D3Node['metadata'];
   isPrimaryGene: boolean;
+  isHighestNode: boolean;
   themeColors: {
     nodeColor: string;
     secondaryNodeColor: string;
@@ -199,6 +205,7 @@ interface MetadataVisualizationsProps {
       background: string;
       stroke: string;
       indicator: string;
+      negativeIndicator: string;
       centerLine: string;
     };
   };
@@ -216,18 +223,88 @@ const MetadataVisualizations = ({
   y, 
   metadata,
   isPrimaryGene,
-  themeColors
+  themeColors,
+  isHighestNode
 }: MetadataVisualizationsProps) => {
   if (!metadata) return null;
 
-  /** Normalize values to 0-1 range, with primary gene always at 1 */
-  const sequenceSimilarity = Math.min(isPrimaryGene ? 1 : (metadata.sequence_similarity || 0), 1);
-  const expressionLevel = Math.min(isPrimaryGene ? 1 : (metadata.scc_value || 0), 1);
 
-  return (
-    <g transform={`translate(${x + LABEL_OFFSET + 100}, ${y - BAR_HEIGHT - BAR_SPACING})`}>
-      {/* Expression level bar */}
-      <g transform={`translate(0, ${BAR_HEIGHT + BAR_SPACING})`}>
+  /** Normalize values to 0-1 range, with primary gene always at 1 */
+  const sequenceSimilarity = Math.min(isPrimaryGene ? 100 : (metadata.sequence_similarity || 0));
+  const expressionLevel = Math.min(isPrimaryGene ? 1 : (metadata.scc_value || 0), 1);
+  
+  // Clamp expression level between -1 and 1
+  const clampedExpression = Math.max(Math.min(isPrimaryGene ? 1 : (expressionLevel || 0), 1), -1);
+  
+  // Calculate the width and position of the indicator bar
+  const halfWidth = BAR_WIDTH / 2;
+  const indicatorWidth = Math.abs(clampedExpression) * halfWidth;
+  const indicatorX = clampedExpression >= 0 
+    ? halfWidth  // Start from center for positive values
+    : halfWidth - indicatorWidth;  // Offset left for negative values
+  
+    return (
+      <g transform={`translate(${x + LABEL_OFFSET + 50}, ${y - BAR_HEIGHT - BAR_SPACING})`}>
+        {/* Expression level bar */}
+        <g transform={`translate(0, ${BAR_HEIGHT + BAR_SPACING})`}>
+          {/* Conditionally render title only for the highest positioned node */}
+          {isHighestNode && (
+            <text
+              x={BAR_WIDTH / 2}
+              y={-10}
+              textAnchor="middle"
+              fill={themeColors.textColor}
+              fontSize="12px"
+              fontWeight="bold"
+            >
+              Expression Level
+            </text>
+          )}
+          {/* Background bar */}
+          <rect
+            x={0}
+            y={0}
+            width={BAR_WIDTH}
+            height={BAR_HEIGHT}
+            fill={themeColors.metadataBar.background}
+            stroke={themeColors.metadataBar.stroke}
+            strokeWidth={0.5}
+          />
+          {/* Expression level indicator */}
+          <rect
+            x={indicatorX}
+            y={0}
+            width={indicatorWidth}
+            height={BAR_HEIGHT}
+            fill={clampedExpression >= 0 
+              ? themeColors.metadataBar.indicator 
+              : themeColors.metadataBar.negativeIndicator}
+          />
+          {/* Center line separator */}
+          <line
+            x1={BAR_WIDTH / 2}
+            y1={-1}
+            x2={BAR_WIDTH / 2}
+            y2={BAR_HEIGHT + 1}
+            stroke={themeColors.metadataBar.centerLine}
+            strokeWidth={1}
+          />
+        </g>
+      {/* Sequence Similarity bar */}
+      <g transform={`translate(120, ${BAR_HEIGHT + BAR_SPACING})`}>
+        {/* Conditionally render title only for the highest positioned node */}
+        {isHighestNode && (
+            <text
+              x={BAR_WIDTH / 2}
+              y={-10}
+              textAnchor="middle"
+              fill={themeColors.textColor}
+              fontSize="12px"
+              fontWeight="bold"
+            >
+              Sequence Similarity
+            </text>
+          )}
         {/* Background bar */}
         <rect
           x={0}
@@ -238,22 +315,13 @@ const MetadataVisualizations = ({
           stroke={themeColors.metadataBar.stroke}
           strokeWidth={0.5}
         />
-        {/* Expression level indicator */}
+        {/* Sequence similarity indicator */}
         <rect
-          x={BAR_WIDTH / 2}
+          x={0}
           y={0}
-          width={(BAR_WIDTH / 2) * expressionLevel}
+          width={(sequenceSimilarity)}
           height={BAR_HEIGHT}
           fill={themeColors.metadataBar.indicator}
-        />
-        {/* Center line separator */}
-        <line
-          x1={BAR_WIDTH / 2}
-          y1={-1}
-          x2={BAR_WIDTH / 2}
-          y2={BAR_HEIGHT + 1}
-          stroke={themeColors.metadataBar.centerLine}
-          strokeWidth={1}
         />
       </g>
     </g>
@@ -283,6 +351,7 @@ export const NavigatorViewObject = () => {
       background: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[200],
       stroke: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[400],
       indicator: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black,
+      negativeIndicator: theme.palette.mode === 'dark' ? "#FF0000": "#FF0000",
       centerLine: theme.palette.error.main
     }
   }), [theme.palette.mode]);
@@ -379,6 +448,7 @@ export const NavigatorViewObject = () => {
     
     /** Calculate maximum x-coordinate for consistent layout */
     const maxX = Math.max(...processedNavigator.descendants().map(d => d.y));
+    maxY = Math.min(...processedNavigator.descendants().map(d => d.x));
 
     /** Adjust node positions for better visualization */
     processedNavigator.descendants().forEach(node => {
@@ -414,6 +484,9 @@ export const NavigatorViewObject = () => {
   const allNodes = navigator.descendants().map((node) => {
     const isPrimaryGene = node.data.name.toUpperCase() === primaryGene.toUpperCase();
     let displayName = node.data.name;
+    const isHighestNode = node.x === maxY;
+    console.log("Node data:", node);
+    console.log("maxY:", maxY);
     
     /** Add genome information to leaf node labels */
     if (!node.children && node.data.metadata?.genome) {
@@ -448,10 +521,11 @@ export const NavigatorViewObject = () => {
             {/* Metadata visualization component for expression and similarity data */}
             <MetadataVisualizations
               x={node.y + LABEL_OFFSET * 20}
-              y={node.x - 10}
+              y={node.x - 7}
               metadata={node.data.metadata}
               isPrimaryGene={isPrimaryGene}
               themeColors={themeColors}
+              isHighestNode={isHighestNode}
             />
           </>
         )}
@@ -487,36 +561,44 @@ export const NavigatorViewObject = () => {
 
   /** Render the complete tree visualization */
   return (
-    <div 
-      ref={containerRef} 
-      style={{ 
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_HEIGHT,
-        overflow: 'hidden' /** Prevent scrolling outside container */
-      }}
-    >
-      {/* Main SVG container for the tree visualization */}
-      <svg 
-        ref={svgRef}
-        width={dimensions.width} 
-        height={dimensions.height}
-        style={{ cursor: "grab"}}
+    <div className="flex flex-col w-full">
+      <div className="w-full px-4 py-0 flex items-center">
+        {/* Main title */}
+        <h2 className="text-lg font-bold text-gray-00 flex-1">
+          Navigator View: {primaryGene}
+        </h2>
+      </div>
+      <div 
+        ref={containerRef} 
+        style={{ 
+          width: DEFAULT_WIDTH,
+          height: DEFAULT_HEIGHT,
+          overflow: 'hidden' /** Prevent scrolling outside container */
+        }}
       >
-      {/* Group element for tree content with transformation support 
-          Apply zoom and pan transformations:
-            1. Translate to account for margins
-            2. Scale by zoom factor (transform.k)
-            3. Translate by pan offset (transform.x, transform.y)*/}
-        <g 
-          ref={gRef}
-          transform={`translate(${MARGIN.left}, ${MARGIN.top}) scale(${transform.k}) translate(${transform.x}, ${transform.y})`}
+        {/* Main SVG container for the tree visualization */}
+        <svg 
+          ref={svgRef}
+          width={dimensions.width} 
+          height={dimensions.height}
+          style={{ cursor: "grab"}}
         >
-          {/* Render tree edges first so they appear behind nodes */}
-          {allEdges}
-          {/* Render tree nodes and their labels on top */}
-          {allNodes}
-        </g>
-      </svg>
+        {/* Group element for tree content with transformation support 
+            Apply zoom and pan transformations:
+              1. Translate to account for margins
+              2. Scale by zoom factor (transform.k)
+              3. Translate by pan offset (transform.x, transform.y)*/}
+          <g 
+            ref={gRef}
+            transform={`translate(${MARGIN.left}, ${MARGIN.top}) scale(${transform.k}) translate(${transform.x}, ${transform.y})`}
+          >
+            {/* Render tree edges first so they appear behind nodes */}
+            {allEdges}
+            {/* Render tree nodes and their labels on top */}
+            {allNodes}
+          </g>
+        </svg>
+      </div>
     </div>
   );
 };

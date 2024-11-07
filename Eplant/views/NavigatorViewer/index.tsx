@@ -6,6 +6,7 @@ import GeneticElement from '@eplant/GeneticElement';
 import { View } from '@eplant/View';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
+import { NavigatorIcon } from './icons';
 import NavigatorViewObject from './NavigatorView';
 
 interface NavigatorViewData {
@@ -46,7 +47,7 @@ const NavigatorView: View = {
   },
   
   id: 'navigator-view',
-  icon: () => <HomeOutlinedIcon />,
+  icon: () => <NavigatorIcon />,
 };
 
 // Create a context with a properly formatted default URL
