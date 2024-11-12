@@ -13,6 +13,12 @@ import tippy, {
 } from 'tippy.js'
 
 import GeneticElement from '@eplant/GeneticElement'
+import arabidopsis from '@eplant/Species/arabidopsis'
+import {
+  useActiveGeneId,
+  useGeneticElements,
+  useSetGeneticElements,
+} from '@eplant/state'
 import { ViewDataError } from '@eplant/View/viewData'
 
 import { View, ViewProps } from '../../View'
@@ -102,6 +108,7 @@ const InteractionsViewer: View = {
           recursive = interactions[interactions.length - 1]
           return interactions.slice(0, interactions.length - 1)
         })
+      // psosible solutoon: promise chain to combine these two (promise.o)
       data = loadInteractions(gene, interactions, recursive)
       data.nodes = loadSublocalizations(data.nodes)
     } else {
@@ -123,6 +130,9 @@ const InteractionsViewer: View = {
     InteractionsViewAction
   >) {
     const [cyto, setCyto] = useState<Core>(cytoscape())
+    const [activeGeneId, setActiveGeneId] = useActiveGeneId()
+    const geneticElements = useGeneticElements()
+    const setGeneticElements = useSetGeneticElements()
     const cyRef = useRef(null)
     const geneId = geneticElement?.id
     const viewData = activeData.viewData
@@ -141,6 +151,25 @@ const InteractionsViewer: View = {
       // Listen for mouseover events on edges
       addEdgeListener(cy)
     }, [])
+
+    // Add event listner to load gene button
+    const loadGeneButton = document.querySelector('.loadGene_interactionsView')
+    const id = loadGeneButton?.id
+    const annotation = loadGeneButton?.getAttribute('annotation')
+    const aliases = loadGeneButton?.getAttribute('aliases')?.split(',')
+
+    if (id != null && annotation != null && aliases != null) {
+      loadGeneButton?.addEventListener('click', (event) => {
+        const geneticElement = new GeneticElement(
+          id,
+          annotation,
+          arabidopsis,
+          aliases
+        )
+        setGeneticElements([...geneticElements[0], geneticElement])
+        setActiveGeneId(id)
+      })
+    }
 
     return (
       <div style={{ background: 'white' }}>

@@ -41,6 +41,8 @@ export const addEdgeListener = (cy: Core) => {
 // --------------
 // Event Handlers
 // --------------
+
+// add eventlistener to load gene button
 // Handle load gene button click
 // Tried to set jotai geneticElements atom from outside react component --> I beleieve it is impossible due to the limits of jotai copabilities
 /* class LoadGene {
@@ -112,7 +114,7 @@ const nodeMouseOverHandler = (event: EventObject) => {
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><button onclick={title='Load gene into collection'>Load Gene</button>
+                                                    <td><button id='${gene.id}' class='loadGene_interactionsView' aliases='${gene.aliases.join(",")}' annotation='${gene.annotation}' title='Load gene into collection'>Load Gene</button>
                                                 </tr>
                                             </table>
                                         </div>`
