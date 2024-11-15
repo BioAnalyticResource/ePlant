@@ -1,0 +1,32 @@
+// 3 Colours
+fill={(() => {
+              if (clampedExpression < 0) {
+                // Negative values: cold to neutral
+                const ratio = (clampedExpression + 1) / 1; // normalize -1...0 to 0...1
+                return clampedExpression < -0.5 
+                      ? themeColors.metadataBar.hotColor 
+                      : themeColors.metadataBar.neutralColor;
+                  } else {
+                    // For positive values, blend between neutral and hot
+                    // If closer to 0, use neutral, if closer to 1, use hot
+                    return clampedExpression > 0.5 
+                      ? themeColors.metadataBar.coldColor 
+                      : themeColors.metadataBar.neutralColor;
+                  }
+            })()}
+
+
+// Gradient
+fill={(() => {
+    if (clampedExpression < 0) {
+      // Negative values: red to yellow
+      const ratio = (clampedExpression + 1) / 1; // normalize -1...0 to 0...1
+      return `rgb(255, ${255 * ratio}, 0)`;
+    } else {
+      // Positive values: yellow to blue
+      const ratio = clampedExpression; // already 0...1
+      return `rgb(${255 * (1 - ratio)}, ${255 * (1 - ratio)}, ${255 * ratio})`;
+      // Red and Green decrease together from 255 to 0
+      // Blue stays at maximum (255)
+    }
+  })()}

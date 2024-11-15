@@ -4,9 +4,8 @@ import ReactDOM from 'react-dom/client';
 
 import GeneticElement from '@eplant/GeneticElement';
 import { View } from '@eplant/View';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
-import { NavigatorIcon } from './icons';
+import { NavigatorIcon } from './Icons/NavigatorView';
 import NavigatorViewObject from './NavigatorView';
 
 interface NavigatorViewData {
@@ -17,7 +16,7 @@ interface NavigatorViewData {
 const NavigatorView: View = {
   name: 'Navigator View',
   component: ({ activeData, geneticElement }) => {
-    // Construct API URL using genetic element data
+    /** Construct API URL using genetic element data */
     const baseUrl = 'https://bar.utoronto.ca/webservices/eplant_navigator/cgi-bin/eplant_navigator_service.cgi';
     const gene = geneticElement?.id || 'AT3G24650';
     // Extract species name properly - assuming it's a string property

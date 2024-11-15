@@ -2,18 +2,29 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
 import * as d3 from "d3";
 
-import { useTheme } from '@mui/material/styles';
+import { PaletteColor, useTheme } from '@mui/material/styles';
 
+import CellEFPIcon from './Icons/CellEFPIcon';
+import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon'; /** Placeholder icon for those that are not yet implemented in ePlant3 */
+import PlantEFPIcon from './Icons/PlantEFPIcon'
 import { NavigatorContext } from './index';
+import ToolTip from './ToolTips';
+
 
 /** Margin configuration for the SVG container */
-const MARGIN = { top: 50, right: 400, bottom: 50, left: 50 };
+const MARGIN = { top: 50, right: 600, bottom: 50, left: 10 };
 
 /** Default width of the visualization container in pixels */
 const DEFAULT_WIDTH = 1200;
 
-/** Default height of the visualization container in pixels */
-const DEFAULT_HEIGHT = 600;
+/** Minimum height of the visualization */
+const MIN_HEIGHT = 600;
+
+/** Maximum height of the visualization to prevent excessive scaling */
+const MAX_HEIGHT = 2000;
+
+/** Minimum vertical space between nodes */
+const HEIGHT_PER_NODE = 30;
 
 /** Width of metadata visualization bars in pixels */
 const BAR_WIDTH = 100;
@@ -28,7 +39,7 @@ const BAR_SPACING = 2;
 const LABEL_OFFSET = 10;
 
 /** Radius of tree nodes in pixels */
-const NODE_RADIUS = 4;
+const NODE_RADIUS = 3;
 
 /** Minimum zoom constraint*/
 const MIN_ZOOM = 0.5;
@@ -38,6 +49,23 @@ const MAX_ZOOM = 3;
 
 /** Maximum x value of the tree(leafs) */
 let maxY = 0;
+
+/** Static declaration of genome label colors */
+const genomeColors: { [key: string]: string } = {
+  "SOYBEAN": "#0876FC",    // Light blue
+  "TOMATO": "#FFA500",     // Orange
+  "POTATO": "#808000",     // Olive green
+  "GRAPE": "#808080",      // Grey
+  "MAIZE": "#00FFFF",      // Cyan
+  "BARLEY": "#FFDC00",     // Yellow
+  "RICE": "#008000",       // Green
+  "default": "#000000"     // Default color: black
+};
+
+/** Function to get color for each genome type */
+const getGenomeColor = (genomeType: string | undefined): string => {
+  return genomeType && genomeColors[genomeType] ? genomeColors[genomeType] : genomeColors["default"];
+};
 
 /**
  * Extracts the primary gene identifier from the API URL
@@ -126,7 +154,7 @@ function newickToD3(newickString: string, metadata: TreeData, primaryGene: strin
    * @throws {Error} If the node string format is invalid
    */
   function parseNode(str: string): D3Node {
-    // Handle leaf nodes (no children)
+    /** Handle leaf nodes (no children) */
     if (!str.includes("(")) {
       const [name, lengthStr] = str.split(":");
       const cleanName = name.trim();
@@ -207,13 +235,31 @@ interface MetadataVisualizationsProps {
       indicator: string;
       negativeIndicator: string;
       centerLine: string;
+      hotColor: string;
+      neutralColor: string;
+      coldColor: string;
     };
   };
 }
 
+/** Calculate dimensions based on number of leaf nodes */
+const calculateDimensions = (leafCount: number = 0) => {
+  // If no leafCount provided, use MIN_HEIGHT as default
+  const requiredHeight = leafCount === 0 
+    ? MIN_HEIGHT 
+    : Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, leafCount * HEIGHT_PER_NODE));
+
+  return {
+    width: DEFAULT_WIDTH,
+    height: requiredHeight,
+    boundsWidth: DEFAULT_WIDTH - MARGIN.left - MARGIN.right,
+    boundsHeight: requiredHeight - MARGIN.top - MARGIN.bottom
+  };
+};
+
 /**
  * Component for rendering metadata visualizations next to tree nodes
- * Displays expression level and sequence similarity using color-coded bars
+ * Displays expression similarity and sequence similarity using color-coded bars
  * 
  * @param props - Component properties
  * @returns JSX element containing metadata visualizations
@@ -228,103 +274,194 @@ const MetadataVisualizations = ({
 }: MetadataVisualizationsProps) => {
   if (!metadata) return null;
 
-
   /** Normalize values to 0-1 range, with primary gene always at 1 */
   const sequenceSimilarity = Math.min(isPrimaryGene ? 100 : (metadata.sequence_similarity || 0));
-  const expressionLevel = Math.min(isPrimaryGene ? 1 : (metadata.scc_value || 0), 1);
+  const expressionSimilarity = Math.min(isPrimaryGene ? 1 : (metadata.scc_value || 0), 1);
   
-  // Clamp expression level between -1 and 1
-  const clampedExpression = Math.max(Math.min(isPrimaryGene ? 1 : (expressionLevel || 0), 1), -1);
+  /** Clamp expression similarity between -1 and 1 */
+  const clampedExpression = Math.max(Math.min(isPrimaryGene ? 1 : (expressionSimilarity || 0), 1), -1);
   
-  // Calculate the width and position of the indicator bar
+  /** Calculate the width and position of the indicator bar */
   const halfWidth = BAR_WIDTH / 2;
   const indicatorWidth = Math.abs(clampedExpression) * halfWidth;
   const indicatorX = clampedExpression >= 0 
-    ? halfWidth  // Start from center for positive values
-    : halfWidth - indicatorWidth;  // Offset left for negative values
+    ? halfWidth  /** Start from center for positive values */
+    : halfWidth - indicatorWidth;  /** Offset left for negative values */
   
     return (
       <g transform={`translate(${x + LABEL_OFFSET + 50}, ${y - BAR_HEIGHT - BAR_SPACING})`}>
-        {/* Expression level bar */}
-        <g transform={`translate(0, ${BAR_HEIGHT + BAR_SPACING})`}>
-          {/* Conditionally render title only for the highest positioned node */}
-          {isHighestNode && (
-            <text
-              x={BAR_WIDTH / 2}
-              y={-10}
-              textAnchor="middle"
-              fill={themeColors.textColor}
-              fontSize="12px"
-              fontWeight="bold"
-            >
-              Expression Level
-            </text>
-          )}
-          {/* Background bar */}
-          <rect
-            x={0}
-            y={0}
-            width={BAR_WIDTH}
-            height={BAR_HEIGHT}
-            fill={themeColors.metadataBar.background}
-            stroke={themeColors.metadataBar.stroke}
-            strokeWidth={0.5}
-          />
-          {/* Expression level indicator */}
-          <rect
-            x={indicatorX}
-            y={0}
-            width={indicatorWidth}
-            height={BAR_HEIGHT}
-            fill={clampedExpression >= 0 
-              ? themeColors.metadataBar.indicator 
-              : themeColors.metadataBar.negativeIndicator}
-          />
-          {/* Center line separator */}
-          <line
-            x1={BAR_WIDTH / 2}
-            y1={-1}
-            x2={BAR_WIDTH / 2}
-            y2={BAR_HEIGHT + 1}
-            stroke={themeColors.metadataBar.centerLine}
-            strokeWidth={1}
-          />
-        </g>
-      {/* Sequence Similarity bar */}
-      <g transform={`translate(120, ${BAR_HEIGHT + BAR_SPACING})`}>
-        {/* Conditionally render title only for the highest positioned node */}
-        {isHighestNode && (
-            <text
-              x={BAR_WIDTH / 2}
-              y={-10}
-              textAnchor="middle"
-              fill={themeColors.textColor}
-              fontSize="12px"
-              fontWeight="bold"
-            >
-              Sequence Similarity
-            </text>
-          )}
-        {/* Background bar */}
-        <rect
-          x={0}
-          y={0}
-          width={BAR_WIDTH}
-          height={BAR_HEIGHT}
-          fill={themeColors.metadataBar.background}
-          stroke={themeColors.metadataBar.stroke}
-          strokeWidth={0.5}
-        />
-        {/* Sequence similarity indicator */}
-        <rect
-          x={0}
-          y={0}
-          width={(sequenceSimilarity)}
-          height={BAR_HEIGHT}
-          fill={themeColors.metadataBar.indicator}
-        />
+        {/* Expression similarity bar with tooltip */}
+        <ToolTip
+          content={
+            <div>
+              <div className="font-bold mb-1">Expression Similarity</div>
+              <div>Value: {clampedExpression.toFixed(2)}</div>
+              <div>Range: -1 to 1</div>
+              <div className="text-xs mt-1">
+                Indicates correlation of expression patterns with the primary gene
+              </div>
+            </div>
+          }
+        >
+          <g transform={`translate(0, ${BAR_HEIGHT + BAR_SPACING})`}>
+            {/* Conditionally render title and labels only for the highest positioned node */}
+            {isHighestNode && (
+              <>
+                <text
+                  x={BAR_WIDTH / 2}
+                  y={-20}
+                  textAnchor="middle"
+                  fill={themeColors.textColor}
+                  fontSize="11px"
+                  fontWeight="bold"
+                >
+                  Expression Similarity
+                </text>
+                {/* Expression similarity scale labels */}
+                <text
+                  x={0}
+                  y={-7}
+                  textAnchor="middle"
+                  fill={themeColors.textColor}
+                  fontSize="10px"
+                >
+                  -1
+                </text>
+                <text
+                  x={BAR_WIDTH / 2}
+                  y={-7}
+                  textAnchor="middle"
+                  fill={themeColors.textColor}
+                  fontSize="10px"
+                >
+                  0
+                </text>
+                <text
+                  x={BAR_WIDTH}
+                  y={-7}
+                  textAnchor="middle"
+                  fill={themeColors.textColor}
+                  fontSize="10px"
+                >
+                  1
+                </text>
+              </>
+            )}
+            {/* Background bar */}
+            <rect
+              x={0}
+              y={0}
+              width={BAR_WIDTH}
+              height={BAR_HEIGHT}
+              fill={themeColors.metadataBar.background}
+              stroke={themeColors.metadataBar.stroke}
+              strokeWidth={0.5}
+            />
+            {/* Expression similarity indicator */}
+            <rect
+              x={indicatorX}
+              y={0}
+              width={indicatorWidth}
+              height={BAR_HEIGHT}
+              fill={(() => {
+                if (clampedExpression < 0) {
+                  const ratio = (clampedExpression + 1) / 1;
+                  return `rgb(${255 * (ratio)}, ${255 * (ratio)}, ${255 * (1 - ratio)})`; /** Increase blue, decrease red and yellow */
+                } else {
+                  const ratio = clampedExpression;
+                  return `rgb(255, ${255 * (1 - ratio)}, 0)`; /** Static red and blue, decrease yellow */
+                }
+              })()}
+            />
+            {/* Center line separator */}
+            <line
+              x1={BAR_WIDTH / 2}
+              y1={-4}
+              x2={BAR_WIDTH / 2}
+              y2={BAR_HEIGHT + 4}
+              stroke={themeColors.metadataBar.centerLine}
+              strokeWidth={2}
+            />
+          </g>
+        </ToolTip>
+    
+        {/* Sequence Similarity bar with tooltip */}
+        <ToolTip
+          content={
+            <div>
+              <div className="font-bold mb-1">Sequence Similarity</div>
+              <div>Value: {sequenceSimilarity.toFixed(1)}%</div>
+              <div className="text-xs mt-1">
+                Percentage of sequence similarity with the primary gene
+              </div>
+            </div>
+          }
+        >
+          <g transform={`translate(120, ${BAR_HEIGHT + BAR_SPACING})`}>
+            {/* Conditionally render title and labels only for the highest positioned node */}
+            {isHighestNode && (
+              <>
+                <text
+                  x={BAR_WIDTH / 2}
+                  y={-20}
+                  textAnchor="middle"
+                  fill={themeColors.textColor}
+                  fontSize="11px"
+                  fontWeight="bold"
+                >
+                  Sequence Similarity
+                </text>
+                {/* Sequence similarity scale labels */}
+                <text
+                  x={0}
+                  y={-7}
+                  textAnchor="middle"
+                  fill={themeColors.textColor}
+                  fontSize="10px"
+                >
+                  0%
+                </text>
+                <text
+                  x={BAR_WIDTH / 2}
+                  y={-7}
+                  textAnchor="middle"
+                  fill={themeColors.textColor}
+                  fontSize="10px"
+                >
+                  50%
+                </text>
+                <text
+                  x={BAR_WIDTH}
+                  y={-7}
+                  textAnchor="middle"
+                  fill={themeColors.textColor}
+                  fontSize="10px"
+                >
+                  100%
+                </text>
+              </>
+            )}
+            {/* Background bar */}
+            <rect
+              x={0}
+              y={0}
+              width={BAR_WIDTH}
+              height={BAR_HEIGHT}
+              fill={themeColors.metadataBar.background}
+              stroke={themeColors.metadataBar.stroke}
+              strokeWidth={0.5}
+            />
+            {/* Sequence similarity indicator */}
+            <rect
+              x={0}
+              y={0}
+              width={(sequenceSimilarity)}
+              height={BAR_HEIGHT}
+              fill={themeColors.metadataBar.indicator}
+            />
+          </g>
+        </ToolTip>
       </g>
-    </g>
   );
 };
 
@@ -341,6 +478,9 @@ export const NavigatorViewObject = () => {
   const gRef = useRef<SVGGElement | null>(null);
   const theme = useTheme();
 
+  /** Initialize dimensions with default calculation */
+  const [dimensions, setDimensions] = useState(calculateDimensions());
+
   /** Configuration of Colours for Light and Dark Mode */
   const themeColors = useMemo(() => ({
     nodeColor: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black,
@@ -348,11 +488,14 @@ export const NavigatorViewObject = () => {
     edgeColor: theme.palette.mode === 'dark' ? theme.palette.grey[500] : theme.palette.grey[800],
     textColor: theme.palette.text.primary,
     metadataBar: {
-      background: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[200],
+      background: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[400],
       stroke: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[400],
-      indicator: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black,
-      negativeIndicator: theme.palette.mode === 'dark' ? "#FF0000": "#FF0000",
-      centerLine: theme.palette.error.main
+      indicator: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black, // delete if using gradient scaling
+      negativeIndicator: theme.palette.mode === 'dark' ? "#FF0000": "#FF0000", // delete if using gradient scaling
+      centerLine: theme.palette.error.main,
+      hotColor: "#FF0000", // delete if using gradient scaling
+      neutralColor: "#FFFF00", // delete if using gradient scaling
+      coldColor: "#0000FF" // delete if using gradient scaling
     }
   }), [theme.palette.mode]);
 
@@ -364,14 +507,6 @@ export const NavigatorViewObject = () => {
   const [primaryGene, setPrimaryGene] = useState<string>(extractPrimaryGene(apiUrl));
   const [species, setSpecies] = useState<string>(extractSpecies(apiUrl));
   const [transform, setTransform] = useState<d3.ZoomTransform>(d3.zoomIdentity);
-
-  /** Dimensions state for responsive layout */
-  const [dimensions, setDimensions] = useState({ 
-    width: DEFAULT_WIDTH, 
-    height: DEFAULT_HEIGHT,
-    boundsWidth: DEFAULT_WIDTH - MARGIN.left - MARGIN.right,
-    boundsHeight: DEFAULT_HEIGHT - MARGIN.top - MARGIN.bottom
-  });
 
   /** Update primary gene and species when API URL changes */
   useEffect(() => {
@@ -401,7 +536,6 @@ export const NavigatorViewObject = () => {
       }
     };
     fetchData();
-
 
     /** Cleanup function to reset state and clear SVG */
     return () => {
@@ -434,6 +568,20 @@ export const NavigatorViewObject = () => {
     }
   }, [treeData, primaryGene, species]);
 
+  /** Update dimensions when hierarchy changes */
+  useEffect(() => {
+    if (hierarchy) {
+      const leafCount = hierarchy.leaves().length;
+      const newDimensions = calculateDimensions(leafCount);
+      setDimensions(newDimensions);
+
+      // Update container height if ref exists
+      if (containerRef.current) {
+        containerRef.current.style.height = `${newDimensions.height}px`;
+      }
+    }
+  }, [hierarchy]);
+
   /** Generate tree layout using D3's cluster layout */
   const navigator = useMemo(() => {
     if (!dimensions.boundsHeight || !dimensions.boundsWidth || !hierarchy) return null;
@@ -441,8 +589,15 @@ export const NavigatorViewObject = () => {
     /** Create cluster layout with specified dimensions */
     const navigatorGenerator = d3
       .cluster<D3Node>()
-      .size([dimensions.boundsHeight * 0.8, dimensions.boundsWidth * 0.4])
-      .separation(() => 1);
+      .size([dimensions.boundsHeight * 0.9, dimensions.boundsWidth * 0.2])
+      .separation((a, b) => {
+        // If nodes share the same parent, use smaller spacing
+        if (a.parent === b.parent) {
+          return 2.0; // Adjust this value for closer spacing within groups
+        }
+        // If nodes have different parents, use larger spacing
+        return 3.0; // Adjust this value for wider spacing between groups
+      });
 
     const processedNavigator = navigatorGenerator(hierarchy);
     
@@ -458,7 +613,7 @@ export const NavigatorViewObject = () => {
       } else {
         /** Internal nodes positioned based on depth */
         const depthRatio = node.depth / processedNavigator.height;
-        node.y = maxX * depthRatio;
+        node.y = maxX * depthRatio * 0.8;
 
         /** Store parent y-coordinate for edge drawing */
         node.children.forEach(child => {
@@ -485,24 +640,24 @@ export const NavigatorViewObject = () => {
     const isPrimaryGene = node.data.name.toUpperCase() === primaryGene.toUpperCase();
     let displayName = node.data.name;
     const isHighestNode = node.x === maxY;
-    console.log("Node data:", node);
-    console.log("maxY:", maxY);
     
     /** Add genome information to leaf node labels */
     if (!node.children && node.data.metadata?.genome) {
-      displayName = `${node.data.name} (${node.data.metadata.genome})`;
+      displayName = `${node.data.name}`;
     }
     
     return (
       <g key={node.data.name} className="node">
-        {/* Node circle */}
-        <circle
-          cx={node.y}
-          cy={node.x}
-          r={NODE_RADIUS}
-          fill={isPrimaryGene ? themeColors.nodeColor : themeColors.secondaryNodeColor}
-          stroke="none"
-        />
+        {/* Node circle: only draw for leaf and root nodes*/}
+        {(!node.children || node === navigator) && (
+          <circle
+            cx={node.y}
+            cy={node.x}
+            r={NODE_RADIUS}
+            fill={isPrimaryGene ? themeColors.nodeColor : themeColors.secondaryNodeColor}
+            stroke="none"
+          />
+        )}
         {/* Label and metadata for leaf nodes */}
         {!node.children && (
           <>
@@ -516,17 +671,132 @@ export const NavigatorViewObject = () => {
               fontWeight={isPrimaryGene ? "bold" : "normal"}
               fill={themeColors.textColor}
             >
-              {displayName}
+              {displayName.toUpperCase()}
             </text>
+            {/* Genome label aligned in its own column */}
+            {!node.children && node.data.metadata?.genome && (
+              <text
+                x={node.y + LABEL_OFFSET * 25}
+                y={node.x}
+                fontSize={12}
+                textAnchor="end"
+                dominantBaseline="middle"
+                fontWeight={"bold"}
+                fill={getGenomeColor(node.data.metadata.genome.toUpperCase())}
+              >
+                {node.data.metadata.genome.toUpperCase()}
+              </text>
+            )}
+
             {/* Metadata visualization component for expression and similarity data */}
             <MetadataVisualizations
-              x={node.y + LABEL_OFFSET * 20}
+              x={node.y + LABEL_OFFSET * 25}
               y={node.x - 7}
               metadata={node.data.metadata}
               isPrimaryGene={isPrimaryGene}
               themeColors={themeColors}
               isHighestNode={isHighestNode}
             />
+
+            {/* Placeholder Icon Group */}
+            <g 
+              transform={`translate(${node.y + LABEL_OFFSET * 60}, ${node.x - 9})`}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                console.log('Placeholder Icon clicked');
+                window.location.href = "#";
+              }}
+            >
+              <rect
+                width={16}
+                height={16}
+                fill="transparent"
+                style={{ pointerEvents: 'all' }}
+              />
+              <g style={{ pointerEvents: 'none' }}>
+                <GeneInfoViewIcon />
+              </g>
+            </g>
+
+            {/* Plant EFP Icon Group */}
+            <g 
+              transform={`translate(${node.y + LABEL_OFFSET * 63}, ${node.x - 9})`}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                console.log('Plant Icon clicked');
+                window.location.href = "#";
+              }}
+            >
+              <rect
+                width={16}
+                height={16}
+                fill="transparent"
+                style={{ pointerEvents: 'all' }}
+              />
+              <g style={{ pointerEvents: 'none' }}>
+                <PlantEFPIcon />
+              </g>
+            </g>
+
+            {/* Cell EFP Icon Group */}
+            <g 
+              transform={`translate(${node.y + LABEL_OFFSET * 66}, ${node.x - 11})`}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                console.log('Cell Icon clicked');
+                window.location.href = "#";
+              }}
+            >
+              <rect
+                width={20}
+                height={20}
+                fill="transparent"
+                style={{ pointerEvents: 'all' }}
+              />
+              <g style={{ pointerEvents: 'none' }}>
+                <CellEFPIcon/>
+              </g>
+            </g>
+            
+            {/* Placeholder Icon Group */}
+            <g 
+              transform={`translate(${(node.y + LABEL_OFFSET * 69) + 8}, ${node.x - 9})`}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                console.log('Placeholder Icon clicked');
+                window.location.href = "#";
+              }}
+            >
+              <rect
+                width={16}
+                height={16}
+                fill="transparent"
+                style={{ pointerEvents: 'all' }}
+              />
+              <g style={{ pointerEvents: 'none' }}>
+                <GeneInfoViewIcon/>
+              </g>
+            </g>
+
+            {/* Placeholder Icon Group */}
+            <g 
+              transform={`translate(${(node.y + LABEL_OFFSET * 72) + 8}, ${node.x - 9})`}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                console.log('Placeholder Icon clicked');
+                window.location.href = "#";
+              }}
+            >
+              <rect
+                width={16}
+                height={16}
+                fill="transparent"
+                style={{ pointerEvents: 'all' }}
+              />
+              <g style={{ pointerEvents: 'none' }}>
+                <GeneInfoViewIcon/>
+              </g>
+            </g>
           </>
         )}
       </g>
@@ -572,7 +842,7 @@ export const NavigatorViewObject = () => {
         ref={containerRef} 
         style={{ 
           width: DEFAULT_WIDTH,
-          height: DEFAULT_HEIGHT,
+          height: calculateDimensions().boundsHeight,
           overflow: 'hidden' /** Prevent scrolling outside container */
         }}
       >
