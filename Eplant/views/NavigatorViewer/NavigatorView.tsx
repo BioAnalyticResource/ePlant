@@ -232,11 +232,7 @@ interface MetadataVisualizationsProps {
       background: string;
       stroke: string;
       indicator: string;
-      negativeIndicator: string;
       centerLine: string;
-      hotColor: string;
-      neutralColor: string;
-      coldColor: string;
     };
   };
 }
@@ -539,15 +535,12 @@ export const NavigatorViewObject = () => {
     secondaryNodeColor: theme.palette.mode === 'dark' ? theme.palette.primary.light : '#69b3a2',
     edgeColor: theme.palette.mode === 'dark' ? theme.palette.grey[500] : theme.palette.grey[800],
     textColor: theme.palette.text.primary,
+    genomeColors: theme.palette.mode === 'dark' ? genomeColors.default = "#FFFFFF": genomeColors.default = "#000000",
     metadataBar: {
       background: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[400],
       stroke: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[400],
       indicator: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black, // delete if using gradient scaling
-      negativeIndicator: theme.palette.mode === 'dark' ? "#FF0000": "#FF0000", // delete if using gradient scaling
       centerLine: theme.palette.error.main,
-      hotColor: "#FF0000", // delete if using gradient scaling
-      neutralColor: "#FFFF00", // delete if using gradient scaling
-      coldColor: "#0000FF" // delete if using gradient scaling
     }
   }), [theme.palette.mode]);
 
