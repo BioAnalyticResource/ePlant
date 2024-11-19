@@ -8,7 +8,6 @@ import CellEFPIcon from './Icons/CellEFPIcon';
 import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon'; /** Placeholder icon for those that are not yet implemented in ePlant3 */
 import PlantEFPIcon from './Icons/PlantEFPIcon'
 import { NavigatorContext } from './index';
-import ToolTip from './ToolTips';
 
 
 /** Margin configuration for the SVG container */
@@ -272,6 +271,82 @@ const MetadataVisualizations = ({
   themeColors,
   isHighestNode
 }: MetadataVisualizationsProps) => {
+  const expressionBarRef = useRef<SVGRectElement>(null);
+  const sequenceBarRef = useRef<SVGRectElement>(null);
+  useEffect(() => {
+    // Create tooltip div if it doesn't exist
+    const tooltip = d3.select('body').selectAll<HTMLDivElement, unknown>('.d3-tooltip')
+      .data([null])
+      .join('div')
+      .attr('class', 'd3-tooltip')
+      .style('position', 'absolute')
+      .style('visibility', 'hidden')
+      .style('background', 'rgba(0,0,0,0.8)')
+      .style('color', 'white')
+      .style('padding', '8px')
+      .style('border-radius', '4px')
+      .style('pointer-events', 'none')
+      .style('backdrop-filter', 'blur(7px)');
+
+    // Expression Bar Tooltip
+    const expressionBar = d3.select(expressionBarRef.current);
+    if (expressionBar) {
+      expressionBar
+        .on('mouseover', (event) => {
+          const clampedExpression = Math.max(
+            Math.min(isPrimaryGene ? 1 : (metadata?.scc_value || 0), 1), 
+            -1
+          );
+
+          tooltip
+            .style('visibility', 'visible')
+            .html(`
+              <div>
+                <div style="font-weight: bold; margin-bottom: 4px;">Expression Similarity</div>
+                <div>Value: ${clampedExpression.toFixed(2)}</div>
+                <div style="font-size: 0.75rem; margin-top: 4px;">
+                  Indicates correlation of expression patterns with the primary gene
+                </div>
+              </div>
+            `)
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`);
+        })
+        .on('mouseout', () => {
+          tooltip.style('visibility', 'hidden');
+        });
+    }
+
+    // Sequence Bar Tooltip
+    const sequenceBar = d3.select(sequenceBarRef.current);
+    if (sequenceBar) {
+      sequenceBar
+        .on('mouseover', (event) => {
+          const sequenceSimilarity = Math.min(
+            isPrimaryGene ? 100 : (metadata?.sequence_similarity || 0)
+          );
+
+          tooltip
+            .style('visibility', 'visible')
+            .html(`
+              <div>
+                <div style="font-weight: bold; margin-bottom: 4px;">Sequence Similarity</div>
+                <div>Value: ${sequenceSimilarity.toFixed(1)}%</div>
+                <div style="font-size: 0.75rem; margin-top: 4px;">
+                  Percentage of sequence similarity with the primary gene
+                </div>
+              </div>
+            `)
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`);
+        })
+        .on('mouseout', () => {
+          tooltip.style('visibility', 'hidden');
+        });
+    }
+  }, [metadata, isPrimaryGene]);
+
+  
   if (!metadata) return null;
 
   /** Normalize values to 0-1 range, with primary gene always at 1 */
@@ -291,18 +366,6 @@ const MetadataVisualizations = ({
     return (
       <g transform={`translate(${x + LABEL_OFFSET + 50}, ${y - BAR_HEIGHT - BAR_SPACING})`}>
         {/* Expression similarity bar with tooltip */}
-        <ToolTip
-          content={
-            <div>
-              <div className="font-bold mb-1">Expression Similarity</div>
-              <div>Value: {clampedExpression.toFixed(2)}</div>
-              <div>Range: -1 to 1</div>
-              <div className="text-xs mt-1">
-                Indicates correlation of expression patterns with the primary gene
-              </div>
-            </div>
-          }
-        >
           <g transform={`translate(0, ${BAR_HEIGHT + BAR_SPACING})`}>
             {/* Conditionally render title and labels only for the highest positioned node */}
             {isHighestNode && (
@@ -359,6 +422,7 @@ const MetadataVisualizations = ({
             />
             {/* Expression similarity indicator */}
             <rect
+              ref={expressionBarRef}
               x={indicatorX}
               y={0}
               width={indicatorWidth}
@@ -383,84 +447,72 @@ const MetadataVisualizations = ({
               strokeWidth={2}
             />
           </g>
-        </ToolTip>
     
         {/* Sequence Similarity bar with tooltip */}
-        <ToolTip
-          content={
-            <div>
-              <div className="font-bold mb-1">Sequence Similarity</div>
-              <div>Value: {sequenceSimilarity.toFixed(1)}%</div>
-              <div className="text-xs mt-1">
-                Percentage of sequence similarity with the primary gene
-              </div>
-            </div>
-          }
-        >
-          <g transform={`translate(120, ${BAR_HEIGHT + BAR_SPACING})`}>
-            {/* Conditionally render title and labels only for the highest positioned node */}
-            {isHighestNode && (
-              <>
-                <text
-                  x={BAR_WIDTH / 2}
-                  y={-20}
-                  textAnchor="middle"
-                  fill={themeColors.textColor}
-                  fontSize="11px"
-                  fontWeight="bold"
-                >
-                  Sequence Similarity
-                </text>
-                {/* Sequence similarity scale labels */}
-                <text
-                  x={0}
-                  y={-7}
-                  textAnchor="middle"
-                  fill={themeColors.textColor}
-                  fontSize="10px"
-                >
-                  0%
-                </text>
-                <text
-                  x={BAR_WIDTH / 2}
-                  y={-7}
-                  textAnchor="middle"
-                  fill={themeColors.textColor}
-                  fontSize="10px"
-                >
-                  50%
-                </text>
-                <text
-                  x={BAR_WIDTH}
-                  y={-7}
-                  textAnchor="middle"
-                  fill={themeColors.textColor}
-                  fontSize="10px"
-                >
-                  100%
-                </text>
-              </>
-            )}
-            {/* Background bar */}
-            <rect
-              x={0}
-              y={0}
-              width={BAR_WIDTH}
-              height={BAR_HEIGHT}
-              fill={themeColors.metadataBar.background}
-              stroke={themeColors.metadataBar.stroke}
-              strokeWidth={0.5}
-            />
-            {/* Sequence similarity indicator */}
-            <rect
-              x={0}
-              y={0}
-              width={(sequenceSimilarity)}
-              height={BAR_HEIGHT}
-              fill={themeColors.metadataBar.indicator}
-            />
-          </g>
-        </ToolTip>
+        <g transform={`translate(120, ${BAR_HEIGHT + BAR_SPACING})`}>
+          {/* Conditionally render title and labels only for the highest positioned node */}
+          {isHighestNode && (
+            <>
+              <text
+                x={BAR_WIDTH / 2}
+                y={-20}
+                textAnchor="middle"
+                fill={themeColors.textColor}
+                fontSize="11px"
+                fontWeight="bold"
+              >
+                Sequence Similarity
+              </text>
+              {/* Sequence similarity scale labels */}
+              <text
+                x={0}
+                y={-7}
+                textAnchor="middle"
+                fill={themeColors.textColor}
+                fontSize="10px"
+              >
+                0%
+              </text>
+              <text
+                x={BAR_WIDTH / 2}
+                y={-7}
+                textAnchor="middle"
+                fill={themeColors.textColor}
+                fontSize="10px"
+              >
+                50%
+              </text>
+              <text
+                x={BAR_WIDTH}
+                y={-7}
+                textAnchor="middle"
+                fill={themeColors.textColor}
+                fontSize="10px"
+              >
+                100%
+              </text>
+            </>
+          )}
+          {/* Background bar */}
+          <rect
+            x={0}
+            y={0}
+            width={BAR_WIDTH}
+            height={BAR_HEIGHT}
+            fill={themeColors.metadataBar.background}
+            stroke={themeColors.metadataBar.stroke}
+            strokeWidth={0.5}
+          />
+          {/* Sequence similarity indicator */}
+          <rect
+            ref={sequenceBarRef}
+            x={0}
+            y={0}
+            width={(sequenceSimilarity)}
+            height={BAR_HEIGHT}
+            fill={themeColors.metadataBar.indicator}
+          />
+        </g>
       </g>
   );
 };
