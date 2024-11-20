@@ -1,7 +1,9 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
 import * as d3 from "d3";
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 
+import { Alert, AlertTitle,CircularProgress } from '@mui/material';
 import { PaletteColor, useTheme } from '@mui/material/styles';
 
 import CellEFPIcon from './Icons/CellEFPIcon';
@@ -45,9 +47,6 @@ const MIN_ZOOM = 0.5;
 
 /** Maximum zoom constraint*/
 const MAX_ZOOM = 3;
-
-/** Maximum x value of the tree(leafs) */
-let maxY = 0;
 
 /** Static declaration of genome label colors */
 const genomeColors: { [key: string]: string } = {
@@ -513,6 +512,52 @@ const MetadataVisualizations = ({
   );
 };
 
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Cache data for 1 hour
+      staleTime: 1000 * 60 * 60,
+      // Keep previously fetched data in cache
+      cacheTime: 1000 * 60 * 60,
+      // Prevent unnecessary refetching
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false
+    }
+  }
+});
+
+const fetchGeneData = async (apiUrl: string): Promise<TreeData> => {
+  const response = await fetch(apiUrl);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  const data = await response.json();
+  if (data.status !== "success") {
+    throw new Error("Failed to load tree data");
+  }
+  return data;
+};
+
+// Custom hook for gene data fetching
+const useGeneData = (apiUrl: string) => {
+  return useQuery<TreeData, Error>(
+    ['geneData', apiUrl], 
+    () => fetchGeneData(apiUrl), 
+    {
+      // Keep previous data during refetch
+      keepPreviousData: true,
+      // Prevent unnecessary refetches
+      staleTime: Infinity, // Cache indefinitely
+      // Only refetch if data is explicitly invalidated
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false
+    }
+  );
+};
+
 /**
  * Main component for rendering the phylogenetic tree navigator
  * Handles data fetching, tree layout, and interactive visualization
@@ -544,123 +589,142 @@ export const NavigatorViewObject = () => {
     }
   }), [theme.palette.mode]);
 
-  
+
   /** State management */
-  const [treeData, setTreeData] = useState<TreeData | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const { apiUrl } = useContext(NavigatorContext);
   const [primaryGene, setPrimaryGene] = useState<string>(extractPrimaryGene(apiUrl));
   const [species, setSpecies] = useState<string>(extractSpecies(apiUrl));
   const [transform, setTransform] = useState<d3.ZoomTransform>(d3.zoomIdentity);
 
-  /** Update primary gene and species when API URL changes */
-  useEffect(() => {
-    setPrimaryGene(extractPrimaryGene(apiUrl));
-    setSpecies(extractSpecies(apiUrl));
-  }, [apiUrl]); /** Triggers updates based on apiUrl, similar to other components later */
+   // Keep track of current gene to detect changes
+   const prevGeneRef = useRef<string>(primaryGene);
+   const prevTreeDataRef = useRef<any>(null);
+ 
+  // Use the custom hook for data fetching
+  const { data: treeData, error, isLoading } = useGeneData(apiUrl);
 
-  useEffect(() => {
-    /**
-     * Fetches tree data from the API
-     * 
-     * @throws {Error} If the network request fails
-     */
-    const fetchData = async () => {
-      try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        if (data.status === "success") {
-          setTreeData(data);
-          setError(null);
-        } else {
-          setError("Failed to load tree data");
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch data");
-      }
-    };
-    fetchData();
-
-    /** Cleanup function to reset state and clear SVG */
-    return () => {
-      setTreeData(null);
-      setError(null);
+  /** Safe cleanup function */
+  const cleanupD3Elements = useCallback(() => {
+    try {
       if (svgRef.current) {
-        d3.select(svgRef.current).selectAll("*").remove();
+        d3.select(svgRef.current).on('.zoom', null);
       }
-    };
-  }, [apiUrl]);
+      if (gRef.current) {
+        d3.select(gRef.current).selectAll('*').remove();
+      }
+    } catch (error) {
+      console.error('Cleanup error:', error);
+    }
+  }, []);
+
+/** Reset state when API URL changes */
+useEffect(() => {
+  const newGene = extractPrimaryGene(apiUrl);
+  const newSpecies = extractSpecies(apiUrl);
+  
+  // Add more robust validation
+  if (newGene && newSpecies && (newGene !== prevGeneRef.current || newSpecies !== species)) {
+    // Ensure data is valid before updating
+    if (treeData && treeData.tree) {
+      setPrimaryGene(newGene);
+      setSpecies(newSpecies);
+      setTransform(d3.zoomIdentity);
+      
+      const cleanupTimer = setTimeout(() => {
+        cleanupD3Elements();
+      }, 50);
+      
+      prevGeneRef.current = newGene;
+      
+      return () => clearTimeout(cleanupTimer);
+    }
+  }
+}, [apiUrl, species, cleanupD3Elements, treeData]);
 
   /** Create D3 hierarchy from tree data */
   const hierarchy = useMemo(() => {
     if (!treeData) return null;
+    
     try {
-      const d3Data = newickToD3(treeData.tree, treeData, primaryGene, species);
-      const hierarchyData = d3.hierarchy(d3Data);
+      // Clear any existing D3 data
+      if (gRef.current) {
+        d3.select(gRef.current).selectAll('*').remove();
+      }
       
-      /** Sort nodes alphabetically by leaf names */
-      hierarchyData.sort((a, b) => {
-        const aName = a.leaves()[0]?.data.name || '';
-        const bName = b.leaves()[0]?.data.name || '';
-        return bName.localeCompare(aName);
+      const d3Data = newickToD3(treeData.tree, treeData, primaryGene, species);
+      const newHierarchy = d3.hierarchy(d3Data);
+      
+      // Clear any cached properties
+      newHierarchy.descendants().forEach(node => {
+        delete (node as any).x0;
+        delete (node as any).y0;
+        delete (node as any).parentY;
+        delete (node as any).previousX;
+        delete (node as any).previousY;
       });
       
-      return hierarchyData;
+      return newHierarchy;
     } catch (error) {
       console.error("Error parsing Newick string:", error);
       return null;
     }
   }, [treeData, primaryGene, species]);
 
+
   /** Update dimensions when hierarchy changes */
   useEffect(() => {
-    if (hierarchy) {
-      const leafCount = hierarchy.leaves().length;
-      const newDimensions = calculateDimensions(leafCount);
-      setDimensions(newDimensions);
+    if (!isLoading && treeData && hierarchy) {
+      try {
+        const leafCount = hierarchy.leaves().length;
+        const newDimensions = calculateDimensions(leafCount);
+        setDimensions(newDimensions);
 
-      // Update container height if ref exists
-      if (containerRef.current) {
-        containerRef.current.style.height = `${newDimensions.height}px`;
+        if (containerRef.current) {
+          containerRef.current.style.height = `${newDimensions.height}px`;
+        }
+      } catch (error) {
+        console.error('Error updating dimensions:', error);
       }
     }
-  }, [hierarchy]);
+  }, [hierarchy, isLoading, treeData]);
 
   /** Generate tree layout using D3's cluster layout */
   const navigator = useMemo(() => {
     if (!dimensions.boundsHeight || !dimensions.boundsWidth || !hierarchy) return null;
 
-    /** Create cluster layout with specified dimensions */
+    // Clear any existing layout data
+    hierarchy.descendants().forEach(node => {
+      delete (node as any).x;
+      delete (node as any).y;
+      delete (node as any).parentY;
+    });
+
     const navigatorGenerator = d3
       .cluster<D3Node>()
       .size([dimensions.boundsHeight * 0.9, dimensions.boundsWidth * 0.2])
-      .separation((a, b) => {
-        // If nodes share the same parent, use smaller spacing
-        if (a.parent === b.parent) {
-          return 2.0; // Adjust this value for closer spacing within groups
-        }
-        // If nodes have different parents, use larger spacing
-        return 3.0; // Adjust this value for wider spacing between groups
-      });
+      .separation((a, b) => a.parent === b.parent ? 1.5 : 2.5);
 
     const processedNavigator = navigatorGenerator(hierarchy);
     
-    /** Calculate maximum x-coordinate for consistent layout */
-    const maxX = Math.max(...processedNavigator.descendants().map(d => d.y));
-    maxY = Math.min(...processedNavigator.descendants().map(d => d.x));
+    const xExtent = d3.extent(processedNavigator.descendants(), d => d.x) as [number, number];
+    const yExtent = d3.extent(processedNavigator.descendants(), d => d.y) as [number, number];
+    
+    const xScale = d3.scaleLinear()
+      .domain(xExtent)
+      .range([0, dimensions.boundsHeight * 0.9]);
 
-    /** Adjust node positions for better visualization */
+    const yScale = d3.scaleLinear()
+      .domain(yExtent)
+      .range([0, dimensions.boundsWidth * 0.2]);
+
+    // Process nodes with fresh coordinates
     processedNavigator.descendants().forEach(node => {
-      if (!node.children) {
-        /** Leaf nodes aligned at maximum x */
-        node.y = maxX;
-      } else {
-        /** Internal nodes positioned based on depth */
-        const depthRatio = node.depth / processedNavigator.height;
-        node.y = maxX * depthRatio * 0.8;
+      node.x = xScale(node.x);
+      node.y = yScale(node.y);
 
-        /** Store parent y-coordinate for edge drawing */
+      if (!node.children) {
+        node.y = yScale(yExtent[1]);
+      } else if (node.children) {
         node.children.forEach(child => {
           (child as any).parentY = node.y;
         });
@@ -669,22 +733,29 @@ export const NavigatorViewObject = () => {
 
     return processedNavigator;
   }, [hierarchy, dimensions.boundsWidth, dimensions.boundsHeight]);
-
-  /** Error handling */
-  if (error) {
-    return <div className="error-message" style={{ color: themeColors.textColor }}>Error: {error}</div>;
+  
+  /** Only show loading state if we have no data at all */
+  if (isLoading && !prevTreeDataRef.current && !treeData) {
+    return (
+      <div className="flex flex-col w-full">
+        <div className="w-full px-4 py-0 flex items-center">
+          <h2 className="text-lg font-bold text-gray-800 flex-1">
+            Loading Navigator View...
+          </h2>
+        </div>
+        <div className="flex justify-center items-center" style={{ height: dimensions.height }}>
+          <CircularProgress color="primary" />
+        </div>
+      </div>
+    );
   }
 
-  /** Loading state */
-  if (!treeData || !hierarchy || !dimensions.width || !navigator) {
-    return null;
-  }
 
   /** Generate node elements for rendering */
-  const allNodes = navigator.descendants().map((node) => {
+  const allNodes = navigator?.descendants().map((node) => {
     const isPrimaryGene = node.data.name.toUpperCase() === primaryGene.toUpperCase();
     let displayName = node.data.name;
-    const isHighestNode = node.x === maxY;
+    const isHighestNode = node.x === Math.min(...navigator.descendants().map(d => d.y));
     
     /** Add genome information to leaf node labels */
     if (!node.children && node.data.metadata?.genome) {
@@ -877,25 +948,30 @@ export const NavigatorViewObject = () => {
   });
 
   /** Generate edge elements for rendering */
-  const allEdges = navigator.links().map((link) => {
+  const allEdges = navigator?.links().map((link) => {
     /** Create an elbow-shaped path for each edge using SVG path commands:
     * M: Move to starting point (source node)
     * H: Draw horizontal line to parent's y-coordinate
     * V: Draw vertical line to target's x-coordinate
     * H: Draw horizontal line to target node 
     */
+    const sourceX = link.source.x;
+    const sourceY = link.source.y;
+    const targetX = link.target.x;
+    const targetY = link.target.y;
+    const parentY = (link as any).target.parentY ?? link.source.y;
     const path = `
-      M${link.source.y},${link.source.x}
-      H${(link as any).target.parentY}
-      V${link.target.x}
-      H${link.target.y}
+      M${sourceY},${sourceX}
+      H${parentY}
+      V${targetX}
+      H${targetY}
     `;
 
     return (
       <path
         key={`${link.source.data.name}-${link.target.data.name}`}
         fill="none"
-        stroke="#999"
+        stroke={themeColors.edgeColor}
         strokeWidth={1}
         d={path}
       />
@@ -946,4 +1022,12 @@ export const NavigatorViewObject = () => {
   );
 };
 
-export default NavigatorViewObject;
+const WrappedNavigatorViewObject = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <NavigatorViewObject />
+    </QueryClientProvider>
+  );
+};
+
+export default WrappedNavigatorViewObject;

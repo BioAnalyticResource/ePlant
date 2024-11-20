@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom/client';
 import GeneticElement from '@eplant/GeneticElement';
 import { View } from '@eplant/View';
 
-import { NavigatorIcon } from './Icons/NavigatorView';
+import { NavigatorIcon } from './Icons/NavigatorViewIcon';
 import NavigatorViewObject from './NavigatorView';
 
 
@@ -32,7 +32,8 @@ const NavigatorView: View = {
     );
   },
   
-  async getInitialData(gene: GeneticElement | null) {
+  async getInitialData(gene: GeneticElement | null, loadEvent: (progress: number) => void) {
+    loadEvent(1);
     return null;
   },
 
