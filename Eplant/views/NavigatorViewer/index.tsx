@@ -8,10 +8,10 @@ import { View } from '@eplant/View';
 import { NavigatorIcon } from './Icons/NavigatorView';
 import NavigatorViewObject from './NavigatorView';
 
+
 interface NavigatorViewData {
   apiUrl: string;
 }
-
 
 const NavigatorView: View = {
   name: 'Navigator View',

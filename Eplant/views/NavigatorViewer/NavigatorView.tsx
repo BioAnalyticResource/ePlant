@@ -539,7 +539,7 @@ export const NavigatorViewObject = () => {
     metadataBar: {
       background: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[400],
       stroke: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[400],
-      indicator: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black, // delete if using gradient scaling
+      indicator: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black,
       centerLine: theme.palette.error.main,
     }
   }), [theme.palette.mode]);
@@ -552,6 +552,7 @@ export const NavigatorViewObject = () => {
   const [primaryGene, setPrimaryGene] = useState<string>(extractPrimaryGene(apiUrl));
   const [species, setSpecies] = useState<string>(extractSpecies(apiUrl));
   const [transform, setTransform] = useState<d3.ZoomTransform>(d3.zoomIdentity);
+  const [isReady, setIsReady] = useState(false);
 
   /** Update primary gene and species when API URL changes */
   useEffect(() => {
@@ -676,7 +677,7 @@ export const NavigatorViewObject = () => {
   }
 
   /** Loading state */
-  if (!treeData || !hierarchy || !dimensions.width || !navigator) {
+  if (!treeData || !hierarchy || !dimensions.width || !dimensions.height ||!navigator) {
     return null;
   }
 
@@ -841,6 +842,34 @@ export const NavigatorViewObject = () => {
               <g style={{ pointerEvents: 'none' }}>
                 <GeneInfoViewIcon/>
               </g>
+            </g>
+
+            {/* CoGE */}
+            <g 
+              transform={`translate(${(node.y + LABEL_OFFSET * 80)}, ${node.x + 5})`}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                const url = `https://genomevolution.org/CoGe/`;
+                window.open(url, "_blank");
+              }}
+            >
+              <text style={{ pointerEvents: 'all', fill: theme.palette.text.primary}}>
+                CoGE
+              </text>
+            </g>
+
+            {/* Gramene */}
+            <g 
+              transform={`translate(${(node.y + LABEL_OFFSET * 85)}, ${node.x + 5})`}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                const url = `https://ensembl.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=${node.data.name}`;
+                window.open(url, "_blank");
+              }}
+            >
+              <text style={{ pointerEvents: 'all', fill: theme.palette.text.primary}}>
+                Gramene
+              </text>
             </g>
           </>
         )}
