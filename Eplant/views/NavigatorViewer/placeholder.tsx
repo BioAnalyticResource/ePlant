@@ -50,14 +50,14 @@ const MAX_ZOOM = 3;
 
 /** Static declaration of genome label colors */
 const genomeColors: { [key: string]: string } = {
-  "SOYBEAN": "#0876FC",    // Light blue
-  "TOMATO": "#FFA500",     // Orange
-  "POTATO": "#808000",     // Olive green
-  "GRAPE": "#808080",      // Grey
-  "MAIZE": "#00FFFF",      // Cyan
-  "BARLEY": "#FFDC00",     // Yellow
-  "RICE": "#008000",       // Green
-  "default": "#000000"     // Default color: black
+  "SOYBEAN": "#0876FC",    /** Light blue */
+  "TOMATO": "#FFA500",     /** Orange */
+  "POTATO": "#808000",     /** Olive green */
+  "GRAPE": "#808080",      /** Grey */
+  "MAIZE": "#00FFFF",      /** Cyan */
+  "BARLEY": "#FFDC00",     /** Yellow */
+  "RICE": "#008000",       /** Green */
+  "default": "#000000"     /** Default color: black */
 };
 
 /** Function to get color for each genome type */
@@ -238,7 +238,7 @@ interface MetadataVisualizationsProps {
 
 /** Calculate dimensions based on number of leaf nodes */
 const calculateDimensions = (leafCount: number = 0) => {
-  // If no leafCount provided, use MIN_HEIGHT as default
+  /** If no leafCount provided, use MIN_HEIGHT as default */
   const requiredHeight = leafCount === 0 
     ? MIN_HEIGHT 
     : Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, leafCount * HEIGHT_PER_NODE));
@@ -269,7 +269,7 @@ const MetadataVisualizations = ({
   const expressionBarRef = useRef<SVGRectElement>(null);
   const sequenceBarRef = useRef<SVGRectElement>(null);
   useEffect(() => {
-    // Create tooltip div if it doesn't exist
+    /** Create tooltip div if it doesn't exist */
     const tooltip = d3.select('body').selectAll<HTMLDivElement, unknown>('.d3-tooltip')
       .data([null])
       .join('div')
@@ -283,7 +283,7 @@ const MetadataVisualizations = ({
       .style('pointer-events', 'none')
       .style('backdrop-filter', 'blur(7px)');
 
-    // Expression Bar Tooltip
+    /** Expression Bar Tooltip */
     const expressionBar = d3.select(expressionBarRef.current);
     if (expressionBar) {
       expressionBar
@@ -312,7 +312,7 @@ const MetadataVisualizations = ({
         });
     }
 
-    // Sequence Bar Tooltip
+    /** Sequence Bar Tooltip */
     const sequenceBar = d3.select(sequenceBarRef.current);
     if (sequenceBar) {
       sequenceBar
@@ -516,11 +516,11 @@ const MetadataVisualizations = ({
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Cache data for 1 hour
+      /** Cache data for 1 hour */
       staleTime: 1000 * 60 * 60,
-      // Keep previously fetched data in cache
+      /** Keep previously fetched data in cache */
       cacheTime: 1000 * 60 * 60,
-      // Prevent unnecessary refetching
+      /** Prevent unnecessary refetching */
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false
@@ -540,17 +540,17 @@ const fetchGeneData = async (apiUrl: string): Promise<TreeData> => {
   return data;
 };
 
-// Custom hook for gene data fetching
+/** Custom hook for gene data fetching */ 
 const useGeneData = (apiUrl: string) => {
   return useQuery<TreeData, Error>(
-    ['geneData', apiUrl], 
+    ['geneData', apiUrl], /** Keep separate caches for each URL */
     () => fetchGeneData(apiUrl), 
     {
-      // Keep previous data during refetch
+      /** Keep previous data during refetch  */ 
       keepPreviousData: true,
-      // Prevent unnecessary refetches
-      staleTime: Infinity, // Cache indefinitely
-      // Only refetch if data is explicitly invalidated
+      /** Prevent unnecessary refetches  */ 
+      staleTime: Infinity, /** Cache indefinitely  */ 
+      /** Only refetch if data is explicitly invalidated  */ 
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       refetchOnMount: false
@@ -596,11 +596,11 @@ export const NavigatorViewObject = () => {
   const [species, setSpecies] = useState<string>(extractSpecies(apiUrl));
   const [transform, setTransform] = useState<d3.ZoomTransform>(d3.zoomIdentity);
 
-   // Keep track of current gene to detect changes
+   /** Keep track of current gene to detect changes */
    const prevGeneRef = useRef<string>(primaryGene);
    const prevTreeDataRef = useRef<any>(null);
  
-  // Use the custom hook for data fetching
+  /** Use the custom hook for data fetching */
   const { data: treeData, error, isLoading } = useGeneData(apiUrl);
 
   /** Safe cleanup function */
@@ -622,9 +622,9 @@ useEffect(() => {
   const newGene = extractPrimaryGene(apiUrl);
   const newSpecies = extractSpecies(apiUrl);
   
-  // Add more robust validation
+  /** Add more robust validation */
   if (newGene && newSpecies && (newGene !== prevGeneRef.current || newSpecies !== species)) {
-    // Ensure data is valid before updating
+    /** Ensure data is valid before updating */
     if (treeData && treeData.tree) {
       setPrimaryGene(newGene);
       setSpecies(newSpecies);
@@ -646,7 +646,7 @@ useEffect(() => {
     if (!treeData) return null;
     
     try {
-      // Clear any existing D3 data
+      /** Clear any existing D3 data */
       if (gRef.current) {
         d3.select(gRef.current).selectAll('*').remove();
       }
@@ -654,7 +654,7 @@ useEffect(() => {
       const d3Data = newickToD3(treeData.tree, treeData, primaryGene, species);
       const newHierarchy = d3.hierarchy(d3Data);
       
-      // Clear any cached properties
+      /** Clear any cached properties */
       newHierarchy.descendants().forEach(node => {
         delete (node as any).x0;
         delete (node as any).y0;
@@ -692,7 +692,7 @@ useEffect(() => {
   const navigator = useMemo(() => {
     if (!dimensions.boundsHeight || !dimensions.boundsWidth || !hierarchy) return null;
 
-    // Clear any existing layout data
+    /** Clear any existing layout data */
     hierarchy.descendants().forEach(node => {
       delete (node as any).x;
       delete (node as any).y;
@@ -717,7 +717,7 @@ useEffect(() => {
       .domain(yExtent)
       .range([0, dimensions.boundsWidth * 0.2]);
 
-    // Process nodes with fresh coordinates
+    /** Process nodes with fresh coordinates */
     processedNavigator.descendants().forEach(node => {
       node.x = xScale(node.x);
       node.y = yScale(node.y);
@@ -749,7 +749,6 @@ useEffect(() => {
       </div>
     );
   }
-
 
   /** Generate node elements for rendering */
   const allNodes = navigator?.descendants().map((node) => {
@@ -819,7 +818,7 @@ useEffect(() => {
               transform={`translate(${node.y + LABEL_OFFSET * 60}, ${node.x - 9})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                console.log('Placeholder Icon clicked');
+                console.log('Cell Icon clicked');
                 window.location.href = "#";
               }}
             >
@@ -830,7 +829,7 @@ useEffect(() => {
                 style={{ pointerEvents: 'all' }}
               />
               <g style={{ pointerEvents: 'none' }}>
-                <GeneInfoViewIcon />
+                <GeneInfoViewIcon/>
               </g>
             </g>
 
@@ -919,7 +918,7 @@ useEffect(() => {
               transform={`translate(${(node.y + LABEL_OFFSET * 80)}, ${node.x + 5})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                const url = `https://genomevolution.org/CoGe/`;
+                const url = `https:/** */genomevolution.org/CoGe/`;
                 window.open(url, "_blank");
               }}
             >
@@ -933,7 +932,7 @@ useEffect(() => {
               transform={`translate(${(node.y + LABEL_OFFSET * 85)}, ${node.x + 5})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                const url = `https://ensembl.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=${node.data.name}`;
+                const url = `https:/** */ensembl.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=${node.data.name}`;
                 window.open(url, "_blank");
               }}
             >
