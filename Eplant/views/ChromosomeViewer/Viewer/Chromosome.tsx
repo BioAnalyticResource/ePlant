@@ -1,9 +1,9 @@
 // -------
 // IMPORTS
 // -------
-import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
-import { useCollections, useGeneticElements } from '@eplant/state'
+import { useCollections } from '@eplant/state'
 import { Unstable_Popup as Popup } from '@mui/base/Unstable_Popup'
 import ArrowLeft from '@mui/icons-material/ArrowLeft'
 import Box from '@mui/material/Box'
@@ -17,28 +17,32 @@ import {
   GeneAnnotationItem,
   GeneRange,
 } from '../types'
-
-import GeneAnnotation from './GeneAnnotation'
-import GeneList from './GeneList'
 import {
   getChromosomeSvg,
   getChromosomeXCoordinate,
-  getGeneAnnotation,
   pixelToBp,
-} from './utilities'
+} from '../utilities'
+
+import GeneAnnotation from './GeneAnnotation'
+import GeneList from './GeneList'
 
 //----------
 // TYPES
 //----------
 interface ChromosomeProps {
-  scale: number
   chromosome: ChromosomeItem
+  annotations: GeneAnnotationItem[]
+  scale: number
 }
 
 //----------
 // COMPONENT
 //----------
-const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
+const Chromosome: FC<ChromosomeProps> = ({
+  chromosome,
+  annotations,
+  scale,
+}) => {
   // State
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [anchorOrigin, setAnchorOrigin] = useState<number[]>([])
@@ -47,13 +51,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
     start: 0,
     end: 0,
   })
-  // Gene Annotation drawing
-  const [geneAnnotationArray, setGeneAnnotationArray] = useState<
-    GeneAnnotationItem[]
-  >([])
 
-  // Global State
-  const [geneticElements] = useGeneticElements()
   const [collections] = useCollections()
   const theme = useTheme()
 
@@ -72,45 +70,6 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
 
   // Gene List popover variables
   const openPopup = Boolean(anchorEl)
-
-  // Fire before paint, converts geneticElements into geneAnnotationArray
-  useLayoutEffect(() => {
-    // TODO: move this to top level to prevent uneccessary api calls
-    const poplar = false
-    const species = poplar ? 'Populus_trichocarpa' : 'Arabidopsis_thaliana'
-    let newGeneAnnotationArray: GeneAnnotationItem[] = []
-    geneticElements.map((gene) => {
-      // for each item in geneticElements, fetch it's gene information to add to it's geneAnnotation
-      fetch(
-        `https://bar.utoronto.ca/eplant${
-          poplar ? '_poplar' : ''
-        }/cgi-bin/querygene.cgi?species=${species}&term=${gene.id}`
-      )
-        .then((response) => response.json())
-        .then((geneItem) => {
-          if (geneItem.chromosome === chromosome.id) {
-            newGeneAnnotationArray = geneAnnotationArray
-            const geneAnnotation: GeneAnnotationItem =
-              getGeneAnnotation(geneItem)
-
-            // Make sure new geneAnnotation is not already in geneAnnotationArray
-            const isDuplicate = newGeneAnnotationArray.some((gene) => {
-              if (gene.id === geneAnnotation.id) {
-                return true
-              }
-              return false
-            })
-            if (!isDuplicate) {
-              newGeneAnnotationArray.push(geneAnnotation)
-              setGeneAnnotationArray(newGeneAnnotationArray)
-            }
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    })
-  }, [])
 
   // Execute on first render, after paint
   useEffect(() => {
@@ -288,7 +247,7 @@ const Chromosome: FC<ChromosomeProps> = ({ scale, chromosome }) => {
         </g>
         {/* GENES ANNOTATION TAGS */}
         <g id={`${chromosome.id}_geneAnnotationTags`}>
-          {geneAnnotationArray.map((gene, i) => {
+          {annotations.map((gene, i) => {
             // Flatten collections into array of gene IDs - important for not drawing removed gene annotations
             const flatGeneCollection = collections.flatMap(
               (collection) => collection.genes
