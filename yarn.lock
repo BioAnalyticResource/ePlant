@@ -1304,6 +1304,18 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@tanstack/query-core@5.61.5":
+  version "5.61.5"
+  resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.61.5.tgz"
+  integrity sha512-iG5vqurEOEbv+paP6kW3zPENa99kSIrd1THISJMaTwVlJ+N5yjVDNOUwp9McK2DWqWCXM3v13ubBbAyhxT78UQ==
+
+"@tanstack/react-query@^5.61.5":
+  version "5.61.5"
+  resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.61.5.tgz"
+  integrity sha512-rjy8aqPgBBEz/rjJnpnuhi8TVkVTorMUsJlM3lMvrRb5wK6yzfk34Er0fnJ7w/4qyF01SnXsLB/QsTBsLF5PaQ==
+  dependencies:
+    "@tanstack/query-core" "5.61.5"
+
 "@testing-library/dom@^9.0.0", "@testing-library/dom@>=7.21.4":
   version "9.3.4"
   resolved "https://registry.npmjs.org/@testing-library/dom/-/dom-9.3.4.tgz"
@@ -6491,7 +6503,7 @@ react-zoomable-ui@^0.11.0:
     hammerjs "^2.0.8"
     ts-invariant "^0.10.3"
 
-react@*, "react@^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0", "react@^16.14.0 || ^17.0.0 || ^18.0.0", "react@^16.3.0 || ^17.0.0 || ^18.0.0", "react@^16.3.0-0 || ^17.0.0 || ^18.0.0", "react@^16.3.0-0 || ^17.0.0-0 || ^18.0.0-0", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0-0 || ^17.0.0-0 || ^18.0.0-0", "react@^17.0.0 || ^18.0.0", react@^18.0.0, react@^18.2.0, react@^18.3.1, "react@>= 16.3.0", "react@>= 16.8.0", react@>=0.14.9, react@>=16.13, react@>=16.13.1, react@>=16.3.0, react@>=16.6.0, react@>=16.8, react@>=16.8.0, react@>=17.0.0, "react@16 - 18", "react@16.x || 17.x || 18.x":
+react@*, "react@^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0", "react@^16.14.0 || ^17.0.0 || ^18.0.0", "react@^16.3.0 || ^17.0.0 || ^18.0.0", "react@^16.3.0-0 || ^17.0.0 || ^18.0.0", "react@^16.3.0-0 || ^17.0.0-0 || ^18.0.0-0", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0-0 || ^17.0.0-0 || ^18.0.0-0", "react@^17.0.0 || ^18.0.0", "react@^18 || ^19", react@^18.0.0, react@^18.2.0, react@^18.3.1, "react@>= 16.3.0", "react@>= 16.8.0", react@>=0.14.9, react@>=16.13, react@>=16.13.1, react@>=16.3.0, react@>=16.6.0, react@>=16.8, react@>=16.8.0, react@>=17.0.0, "react@16 - 18", "react@16.x || 17.x || 18.x":
   version "18.3.1"
   resolved "https://registry.npmjs.org/react/-/react-18.3.1.tgz"
   integrity sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==
