@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { Alert, AlertTitle,CircularProgress } from '@mui/material';
 import { PaletteColor, useTheme } from '@mui/material/styles';
 
+import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
+
 import CellEFPIcon from './Icons/CellEFPIcon';
 import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon'; /** Placeholder icon for those that are not yet implemented in ePlant3 */
 import PlantEFPIcon from './Icons/PlantEFPIcon'
@@ -61,7 +63,7 @@ const genomeColors: { [key: string]: string } = {
 };
 
 /** Function to get color for each genome type */
-const getGenomeColor = (genomeType: string | undefined): string => {
+const getGenomeColor = (genomeType: string): string => {
   return genomeType && genomeColors[genomeType] ? genomeColors[genomeType] : genomeColors["default"];
 };
 
@@ -120,7 +122,7 @@ interface TreeData {
  */
 interface D3Node {
   name: string;
-  value?: number;
+  value: number;
   children?: D3Node[];
   metadata?: {
     genome?: string;
@@ -161,7 +163,7 @@ function newickToD3(newickString: string, metadata: TreeData, primaryGene: strin
       
       return {
         name: cleanName,
-        value: lengthStr ? parseFloat(lengthStr) : undefined,
+        value: parseFloat(lengthStr),
         metadata: {
           genome: isPrimaryGene ? species : metadata.genomes[upperName],
           scc_value: metadata.SCC_values[upperName],
@@ -198,7 +200,7 @@ function newickToD3(newickString: string, metadata: TreeData, primaryGene: strin
     
     return {
       name: name || "internal",
-      value: lengthStr ? parseFloat(lengthStr) : undefined,
+      value: parseFloat(lengthStr),
       children
     };
   }
@@ -603,20 +605,6 @@ export const NavigatorViewObject = () => {
   /** Use the custom hook for data fetching */
   const { data: treeData, error, isLoading } = useGeneData(apiUrl);
 
-  /** Safe cleanup function */
-  const cleanupD3Elements = useCallback(() => {
-    try {
-      if (svgRef.current) {
-        d3.select(svgRef.current).on('.zoom', null);
-      }
-      if (gRef.current) {
-        d3.select(gRef.current).selectAll('*').remove();
-      }
-    } catch (error) {
-      console.error('Cleanup error:', error);
-    }
-  }, []);
-
 /** Reset state when API URL changes */
 useEffect(() => {
   const newGene = extractPrimaryGene(apiUrl);
@@ -630,27 +618,16 @@ useEffect(() => {
       setSpecies(newSpecies);
       setTransform(d3.zoomIdentity);
       
-      const cleanupTimer = setTimeout(() => {
-        cleanupD3Elements();
-      }, 50);
-      
       prevGeneRef.current = newGene;
-      
-      return () => clearTimeout(cleanupTimer);
     }
   }
-}, [apiUrl, species, cleanupD3Elements, treeData]);
+}, [apiUrl, species, treeData]);
 
   /** Create D3 hierarchy from tree data */
   const hierarchy = useMemo(() => {
     if (!treeData) return null;
     
     try {
-      /** Clear any existing D3 data */
-      if (gRef.current) {
-        d3.select(gRef.current).selectAll('*').remove();
-      }
-      
       const d3Data = newickToD3(treeData.tree, treeData, primaryGene, species);
       const newHierarchy = d3.hierarchy(d3Data);
       
@@ -733,25 +710,9 @@ useEffect(() => {
 
     return processedNavigator;
   }, [hierarchy, dimensions.boundsWidth, dimensions.boundsHeight]);
-  
-  /** Only show loading state if we have no data at all */
-  if (isLoading && !prevTreeDataRef.current && !treeData) {
-    return (
-      <div className="flex flex-col w-full">
-        <div className="w-full px-4 py-0 flex items-center">
-          <h2 className="text-lg font-bold text-gray-800 flex-1">
-            Loading Navigator View...
-          </h2>
-        </div>
-        <div className="flex justify-center items-center" style={{ height: dimensions.height }}>
-          <CircularProgress color="primary" />
-        </div>
-      </div>
-    );
-  }
 
   /** Generate node elements for rendering */
-  const allNodes = navigator?.descendants().map((node) => {
+  const allNodes = navigator?.descendants().map((node, index: number) => {
     const isPrimaryGene = node.data.name.toUpperCase() === primaryGene.toUpperCase();
     let displayName = node.data.name;
     const isHighestNode = node.x === Math.min(...navigator.descendants().map(d => d.y));
@@ -760,9 +721,10 @@ useEffect(() => {
     if (!node.children && node.data.metadata?.genome) {
       displayName = `${node.data.name}`;
     }
+    const uniqueKey = `${node.data.name}-${index}`;
     
     return (
-      <g key={node.data.name} className="node">
+      <g key={uniqueKey} className="node">
         {/* Node circle: only draw for leaf and root nodes*/}
         {(!node.children || node === navigator) && (
           <circle
@@ -918,7 +880,7 @@ useEffect(() => {
               transform={`translate(${(node.y + LABEL_OFFSET * 80)}, ${node.x + 5})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                const url = `https:/** */genomevolution.org/CoGe/`;
+                const url = `https://genomevolution.org/CoGe/`;
                 window.open(url, "_blank");
               }}
             >
@@ -932,7 +894,7 @@ useEffect(() => {
               transform={`translate(${(node.y + LABEL_OFFSET * 85)}, ${node.x + 5})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                const url = `https:/** */ensembl.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=${node.data.name}`;
+                const url = `https://ensembl.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=${node.data.name}`;
                 window.open(url, "_blank");
               }}
             >
@@ -947,7 +909,7 @@ useEffect(() => {
   });
 
   /** Generate edge elements for rendering */
-  const allEdges = navigator?.links().map((link) => {
+  const allEdges = navigator?.links().map((link, index: number) => {
     /** Create an elbow-shaped path for each edge using SVG path commands:
     * M: Move to starting point (source node)
     * H: Draw horizontal line to parent's y-coordinate
@@ -966,9 +928,11 @@ useEffect(() => {
       H${targetY}
     `;
 
+    const uniqueKey = `${link.source.data.name}-${link.target.data.name}-${index}`;
+
     return (
       <path
-        key={`${link.source.data.name}-${link.target.data.name}`}
+        key={uniqueKey}
         fill="none"
         stroke={themeColors.edgeColor}
         strokeWidth={1}
@@ -980,12 +944,13 @@ useEffect(() => {
   /** Render the complete tree visualization */
   return (
     <div className="flex flex-col w-full">
+    {!isLoading && (
       <div className="w-full px-4 py-0 flex items-center">
-        {/* Main title */}
-        <h2 className="text-lg font-bold text-gray-00 flex-1">
+        <h2 className="text-lg font-bold text-gray-800 flex-1">
           Navigator View: {primaryGene}
         </h2>
       </div>
+    )}
       <div 
         ref={containerRef} 
         style={{ 
@@ -994,6 +959,30 @@ useEffect(() => {
           overflow: 'hidden' /** Prevent scrolling outside container */
         }}
       >
+        {/* Conditional loading animation */}
+        {isLoading && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'inherit',
+              zIndex: 10, /** Ensure it's above the SVG content */
+            }}
+          >
+            <LoadingImage
+              style={{
+                maxWidth: '100%',
+                maxHeight: '300px',
+              }}
+            />
+          </div>
+        )}
         {/* Main SVG container for the tree visualization */}
         <svg 
           ref={svgRef}
