@@ -1,7 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
 import * as d3 from "d3";
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 
 import { Alert, AlertTitle,CircularProgress } from '@mui/material';
 import { PaletteColor, useTheme } from '@mui/material/styles';
@@ -11,44 +10,9 @@ import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
 import CellEFPIcon from './Icons/CellEFPIcon';
 import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon'; /** Placeholder icon for those that are not yet implemented in ePlant3 */
 import PlantEFPIcon from './Icons/PlantEFPIcon'
+import * as constants from './constants';
 import { NavigatorContext } from './index';
 
-
-/** Margin configuration for the SVG container */
-const MARGIN = { top: 50, right: 600, bottom: 50, left: 10 };
-
-/** Default width of the visualization container in pixels */
-const DEFAULT_WIDTH = 1200;
-
-/** Minimum height of the visualization */
-const MIN_HEIGHT = 600;
-
-/** Maximum height of the visualization to prevent excessive scaling */
-const MAX_HEIGHT = 2000;
-
-/** Minimum vertical space between nodes */
-const HEIGHT_PER_NODE = 30;
-
-/** Width of metadata visualization bars in pixels */
-const BAR_WIDTH = 100;
-
-/** Height of metadata visualization bars in pixels */
-const BAR_HEIGHT = 12;
-
-/** Vertical spacing between bars in pixels */
-const BAR_SPACING = 2;
-
-/** Horizontal offset for text labels from nodes in pixels */
-const LABEL_OFFSET = 10;
-
-/** Radius of tree nodes in pixels */
-const NODE_RADIUS = 3;
-
-/** Minimum zoom constraint*/
-const MIN_ZOOM = 0.5;
-
-/** Maximum zoom constraint*/
-const MAX_ZOOM = 3;
 
 /** Static declaration of genome label colors */
 const genomeColors: { [key: string]: string } = {
@@ -130,6 +94,17 @@ interface D3Node {
     sequence_similarity?: number;
     efp_link?: string;
   };
+}
+
+/**
+ * Interface representing a cached data entry
+ *
+ * @var data - The cached data object of type T
+ * @var timestamp - Timestamp of when the data was cached (in milliseconds since epoch)
+ */
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
 }
 
 /**
@@ -242,14 +217,14 @@ interface MetadataVisualizationsProps {
 const calculateDimensions = (leafCount: number = 0) => {
   /** If no leafCount provided, use MIN_HEIGHT as default */
   const requiredHeight = leafCount === 0 
-    ? MIN_HEIGHT 
-    : Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, leafCount * HEIGHT_PER_NODE));
+    ? constants.MIN_HEIGHT 
+    : Math.max(constants.MIN_HEIGHT, Math.min(constants.MAX_HEIGHT, leafCount * constants.HEIGHT_PER_NODE));
 
   return {
-    width: DEFAULT_WIDTH,
+    width: constants.DEFAULT_WIDTH,
     height: requiredHeight,
-    boundsWidth: DEFAULT_WIDTH - MARGIN.left - MARGIN.right,
-    boundsHeight: requiredHeight - MARGIN.top - MARGIN.bottom
+    boundsWidth: constants.DEFAULT_WIDTH - constants.MARGIN.left - constants.MARGIN.right,
+    boundsHeight: requiredHeight - constants.MARGIN.top - constants.MARGIN.bottom
   };
 };
 
@@ -354,21 +329,21 @@ const MetadataVisualizations = ({
   const clampedExpression = Math.max(Math.min(isPrimaryGene ? 1 : (expressionSimilarity || 0), 1), -1);
   
   /** Calculate the width and position of the indicator bar */
-  const halfWidth = BAR_WIDTH / 2;
+  const halfWidth = constants.BAR_WIDTH / 2;
   const indicatorWidth = Math.abs(clampedExpression) * halfWidth;
   const indicatorX = clampedExpression >= 0 
     ? halfWidth  /** Start from center for positive values */
     : halfWidth - indicatorWidth;  /** Offset left for negative values */
   
     return (
-      <g transform={`translate(${x + LABEL_OFFSET + 50}, ${y - BAR_HEIGHT - BAR_SPACING})`}>
+      <g transform={`translate(${x + constants.LABEL_OFFSET + 50}, ${y - constants.BAR_HEIGHT - constants.BAR_SPACING})`}>
         {/* Expression similarity bar with tooltip */}
-          <g transform={`translate(0, ${BAR_HEIGHT + BAR_SPACING})`}>
+          <g transform={`translate(0, ${constants.BAR_HEIGHT + constants.BAR_SPACING})`}>
             {/* Conditionally render title and labels only for the highest positioned node */}
             {isHighestNode && (
               <>
                 <text
-                  x={BAR_WIDTH / 2}
+                  x={constants.BAR_WIDTH / 2}
                   y={-20}
                   textAnchor="middle"
                   fill={themeColors.textColor}
@@ -388,7 +363,7 @@ const MetadataVisualizations = ({
                   -1
                 </text>
                 <text
-                  x={BAR_WIDTH / 2}
+                  x={constants.BAR_WIDTH / 2}
                   y={-7}
                   textAnchor="middle"
                   fill={themeColors.textColor}
@@ -397,7 +372,7 @@ const MetadataVisualizations = ({
                   0
                 </text>
                 <text
-                  x={BAR_WIDTH}
+                  x={constants.BAR_WIDTH}
                   y={-7}
                   textAnchor="middle"
                   fill={themeColors.textColor}
@@ -411,8 +386,8 @@ const MetadataVisualizations = ({
             <rect
               x={0}
               y={0}
-              width={BAR_WIDTH}
-              height={BAR_HEIGHT}
+              width={constants.BAR_WIDTH}
+              height={constants.BAR_HEIGHT}
               fill={themeColors.metadataBar.background}
               stroke={themeColors.metadataBar.stroke}
               strokeWidth={0.5}
@@ -423,7 +398,7 @@ const MetadataVisualizations = ({
               x={indicatorX}
               y={0}
               width={indicatorWidth}
-              height={BAR_HEIGHT}
+              height={constants.BAR_HEIGHT}
               fill={(() => {
                 if (clampedExpression < 0) {
                   const ratio = (clampedExpression + 1) / 1;
@@ -436,22 +411,22 @@ const MetadataVisualizations = ({
             />
             {/* Center line separator */}
             <line
-              x1={BAR_WIDTH / 2}
+              x1={constants.BAR_WIDTH / 2}
               y1={-4}
-              x2={BAR_WIDTH / 2}
-              y2={BAR_HEIGHT + 4}
+              x2={constants.BAR_WIDTH / 2}
+              y2={constants.BAR_HEIGHT + 4}
               stroke={themeColors.metadataBar.centerLine}
               strokeWidth={2}
             />
           </g>
     
         {/* Sequence Similarity bar with tooltip */}
-        <g transform={`translate(120, ${BAR_HEIGHT + BAR_SPACING})`}>
+        <g transform={`translate(120, ${constants.BAR_HEIGHT + constants.BAR_SPACING})`}>
           {/* Conditionally render title and labels only for the highest positioned node */}
           {isHighestNode && (
             <>
               <text
-                x={BAR_WIDTH / 2}
+                x={constants.BAR_WIDTH / 2}
                 y={-20}
                 textAnchor="middle"
                 fill={themeColors.textColor}
@@ -471,7 +446,7 @@ const MetadataVisualizations = ({
                 0%
               </text>
               <text
-                x={BAR_WIDTH / 2}
+                x={constants.BAR_WIDTH / 2}
                 y={-7}
                 textAnchor="middle"
                 fill={themeColors.textColor}
@@ -480,7 +455,7 @@ const MetadataVisualizations = ({
                 50%
               </text>
               <text
-                x={BAR_WIDTH}
+                x={constants.BAR_WIDTH}
                 y={-7}
                 textAnchor="middle"
                 fill={themeColors.textColor}
@@ -494,8 +469,8 @@ const MetadataVisualizations = ({
           <rect
             x={0}
             y={0}
-            width={BAR_WIDTH}
-            height={BAR_HEIGHT}
+            width={constants.BAR_WIDTH}
+            height={constants.BAR_HEIGHT}
             fill={themeColors.metadataBar.background}
             stroke={themeColors.metadataBar.stroke}
             strokeWidth={0.5}
@@ -506,7 +481,7 @@ const MetadataVisualizations = ({
             x={0}
             y={0}
             width={(sequenceSimilarity)}
-            height={BAR_HEIGHT}
+            height={constants.BAR_HEIGHT}
             fill={themeColors.metadataBar.indicator}
           />
         </g>
@@ -514,50 +489,62 @@ const MetadataVisualizations = ({
   );
 };
 
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      /** Cache data for 1 hour */
-      staleTime: 1000 * 60 * 60,
-      /** Keep previously fetched data in cache */
-      cacheTime: 1000 * 60 * 60,
-      /** Prevent unnecessary refetching */
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false
-    }
-  }
-});
+const geneDataCache: Record<string, CacheEntry<TreeData>> = {};
 
 const fetchGeneData = async (apiUrl: string): Promise<TreeData> => {
+  /** Check if data exists in cache and is still valid */
+  const cachedEntry = geneDataCache[apiUrl];
+  const currentTime = Date.now();
+
+  if (cachedEntry && (currentTime - cachedEntry.timestamp) < constants.CACHE_DURATION) {
+    return cachedEntry.data;
+  }
+
+  /** Fetch new data if not in cache or cache has expired */
   const response = await fetch(apiUrl);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
   const data = await response.json();
+  
   if (data.status !== "success") {
     throw new Error("Failed to load tree data");
   }
+
+  /** Store in cache */
+  geneDataCache[apiUrl] = {
+    data,
+    timestamp: currentTime
+  };
+
   return data;
 };
 
-/** Custom hook for gene data fetching */ 
+/** Custom hook for gene data fetching with basic caching */
 const useGeneData = (apiUrl: string) => {
-  return useQuery<TreeData, Error>(
-    ['geneData', apiUrl], /** Keep separate caches for each URL */
-    () => fetchGeneData(apiUrl), 
-    {
-      /** Keep previous data during refetch  */ 
-      keepPreviousData: true,
-      /** Prevent unnecessary refetches  */ 
-      staleTime: Infinity, /** Cache indefinitely  */ 
-      /** Only refetch if data is explicitly invalidated  */ 
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      refetchOnMount: false
-    }
-  );
+  const [data, setData] = useState<TreeData | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const fetchedData = await fetchGeneData(apiUrl);
+        setData(fetchedData);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+        setData(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [apiUrl]);
+
+  return { data, error, isLoading };
 };
 
 /**
@@ -730,7 +717,7 @@ useEffect(() => {
           <circle
             cx={node.y}
             cy={node.x}
-            r={NODE_RADIUS}
+            r={constants.NODE_RADIUS}
             fill={isPrimaryGene ? themeColors.nodeColor : themeColors.secondaryNodeColor}
             stroke="none"
           />
@@ -740,7 +727,7 @@ useEffect(() => {
           <>
             {/* Node label with optional genome information */}
             <text
-              x={node.y + LABEL_OFFSET}
+              x={node.y + constants.LABEL_OFFSET}
               y={node.x}
               fontSize={12}
               textAnchor="start"
@@ -753,7 +740,7 @@ useEffect(() => {
             {/* Genome label aligned in its own column */}
             {!node.children && node.data.metadata?.genome && (
               <text
-                x={node.y + LABEL_OFFSET * 25}
+                x={node.y + constants.LABEL_OFFSET * 25}
                 y={node.x}
                 fontSize={12}
                 textAnchor="end"
@@ -767,7 +754,7 @@ useEffect(() => {
 
             {/* Metadata visualization component for expression and similarity data */}
             <MetadataVisualizations
-              x={node.y + LABEL_OFFSET * 25}
+              x={node.y + constants.LABEL_OFFSET * 25}
               y={node.x - 7}
               metadata={node.data.metadata}
               isPrimaryGene={isPrimaryGene}
@@ -777,7 +764,7 @@ useEffect(() => {
 
             {/* Placeholder Icon Group */}
             <g 
-              transform={`translate(${node.y + LABEL_OFFSET * 60}, ${node.x - 9})`}
+              transform={`translate(${node.y + constants.LABEL_OFFSET * 60}, ${node.x - 9})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 console.log('Cell Icon clicked');
@@ -797,7 +784,7 @@ useEffect(() => {
 
             {/* Plant EFP Icon Group */}
             <g 
-              transform={`translate(${node.y + LABEL_OFFSET * 63}, ${node.x - 9})`}
+              transform={`translate(${node.y + constants.LABEL_OFFSET * 63}, ${node.x - 9})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 console.log('Plant Icon clicked');
@@ -817,7 +804,7 @@ useEffect(() => {
 
             {/* Cell EFP Icon Group */}
             <g 
-              transform={`translate(${node.y + LABEL_OFFSET * 66}, ${node.x - 11})`}
+              transform={`translate(${node.y + constants.LABEL_OFFSET * 66}, ${node.x - 11})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 console.log('Cell Icon clicked');
@@ -837,7 +824,7 @@ useEffect(() => {
             
             {/* Placeholder Icon Group */}
             <g 
-              transform={`translate(${(node.y + LABEL_OFFSET * 69) + 8}, ${node.x - 9})`}
+              transform={`translate(${(node.y + constants.LABEL_OFFSET * 69) + 8}, ${node.x - 9})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 console.log('Placeholder Icon clicked');
@@ -857,7 +844,7 @@ useEffect(() => {
 
             {/* Placeholder Icon Group */}
             <g 
-              transform={`translate(${(node.y + LABEL_OFFSET * 72) + 8}, ${node.x - 9})`}
+              transform={`translate(${(node.y + constants.LABEL_OFFSET * 72) + 8}, ${node.x - 9})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 console.log('Placeholder Icon clicked');
@@ -877,7 +864,7 @@ useEffect(() => {
 
             {/* CoGE */}
             <g 
-              transform={`translate(${(node.y + LABEL_OFFSET * 80)}, ${node.x + 5})`}
+              transform={`translate(${(node.y + constants.LABEL_OFFSET * 80)}, ${node.x + 5})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 const url = `https://genomevolution.org/CoGe/`;
@@ -891,7 +878,7 @@ useEffect(() => {
 
             {/* Gramene */}
             <g 
-              transform={`translate(${(node.y + LABEL_OFFSET * 85)}, ${node.x + 5})`}
+              transform={`translate(${(node.y + constants.LABEL_OFFSET * 85)}, ${node.x + 5})`}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 const url = `https://ensembl.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=${node.data.name}`;
@@ -954,7 +941,7 @@ useEffect(() => {
       <div 
         ref={containerRef} 
         style={{ 
-          width: DEFAULT_WIDTH,
+          width: constants.DEFAULT_WIDTH,
           height: calculateDimensions().boundsHeight,
           overflow: 'hidden' /** Prevent scrolling outside container */
         }}
@@ -997,7 +984,7 @@ useEffect(() => {
               3. Translate by pan offset (transform.x, transform.y)*/}
           <g 
             ref={gRef}
-            transform={`translate(${MARGIN.left}, ${MARGIN.top}) scale(${transform.k}) translate(${transform.x}, ${transform.y})`}
+            transform={`translate(${constants.MARGIN.left}, ${constants.MARGIN.top}) scale(${transform.k}) translate(${transform.x}, ${transform.y})`}
           >
             {/* Render tree edges first so they appear behind nodes */}
             {allEdges}
@@ -1012,9 +999,7 @@ useEffect(() => {
 
 const WrappedNavigatorViewObject = () => {
   return (
-    <QueryClientProvider client={queryClient}>
       <NavigatorViewObject />
-    </QueryClientProvider>
   );
 };
 
