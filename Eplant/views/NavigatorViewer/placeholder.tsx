@@ -2,8 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "r
 import React from "react";
 import * as d3 from "d3";
 
-import { Alert, AlertTitle,CircularProgress } from '@mui/material';
-import { PaletteColor, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
 
@@ -26,9 +25,69 @@ const genomeColors: { [key: string]: string } = {
   "default": "#000000"     /** Default color: black */
 };
 
-/** Function to get color for each genome type */
+
+/** 
+ * Retrieves the color associated with a specific genome type from the predefined color palette
+ * @param genomeType - The name of the genome/species to retrieve a color for
+ * @returns A color hex code corresponding to the genome type. 
+ * If the genome type is not found in the color palette, returns the default color.
+ */
 const getGenomeColor = (genomeType: string): string => {
   return genomeType && genomeColors[genomeType] ? genomeColors[genomeType] : genomeColors["default"];
+};
+
+/** Static declaration of Gramene links for different species */
+const grameneLinks: { [key: string]: string } = {
+  "POPLAR": "https://ensembl.gramene.org/Populus_trichocarpa/Search/Results?species=Populus_trichocarpa;idx=;q={geneName}",
+  "SOYBEAN": "https://ensembl.gramene.org/Glycine_max/Gene/Summary?g={geneName}",
+  "M. TRUNCATULA": "https://ensembl.gramene.org/Medicago_truncatula/Gene/Summary?g={geneName}",
+  "TOMATO": "https://ensembl.gramene.org/Solanum_lycopersicum/Search/Results?species=Solanum_lycopersicum;idx=;q={geneName}",
+  "POTATO": "", // Placeholder for N/A
+  "GRAPE": "https://ensembl.gramene.org/Vitis_vinifera/Search/Results?species=Vitis_vinifera;idx=;q={geneName}",
+  "RICE": "https://ensembl.gramene.org/Oryza_indica/Search/Results?species=Oryza_indica;idx=;q={geneName}",
+  "MAIZE": "https://ensembl.gramene.org/Zea_mays/Search/Results?species=Zea_mays;idx=;q={geneName}",
+  "BARLEY": "https://ensembl.gramene.org/Hordeum_vulgare/Search/Results?species=Hordeum_vulgare;idx=;q={geneName}",
+  "default": "https://ensembl.gramene.org/Arabidopsis_thaliana/Gene/Summary?g={geneName}"
+};
+
+/** 
+ * Generate Gramene link based on species and gene name
+ * @param species - The species name
+ * @param geneName - The gene name
+ * @returns Formatted Gramene link or empty string if no link available
+ */
+const getGrameneLink = (species: string | undefined, geneName: string): string => {
+  /** Handle undefined species */
+  if (!species) {
+    return grameneLinks['default'].replace('{geneName}', geneName);
+  }
+  
+  /** Normalize species name to uppercase */
+  const normalizedSpecies = species.toUpperCase();
+
+  /** Get the link template, fallback to default if not found */
+  const linkTemplate = grameneLinks[normalizedSpecies] || grameneLinks['default'];
+
+  /** Special case handling for specific species */
+  let processedGeneName = geneName;
+  /** SOYBEAN: Replace period with underscore */
+  if (normalizedSpecies === 'SOYBEAN') {
+    processedGeneName = geneName.replace(/\./g, '_')
+  }
+  /** RICE: Remove underscore */
+  if (normalizedSpecies === 'RICE') {
+    processedGeneName = geneName.replace(/_/g, '');
+  }
+  /** MAIZE: Remove everything after underscore */
+  if (normalizedSpecies === 'MAIZE') {
+    processedGeneName = geneName.split('_')[0];
+  }
+  /** BARLEY: Only works for MLOC genes */
+  if (normalizedSpecies === 'BARLEY' && !geneName.startsWith('MLOC')) {
+    return '';
+  }
+  /** Replace {geneName} in the template */
+  return linkTemplate.replace('{geneName}', processedGeneName);
 };
 
 /**
@@ -201,7 +260,8 @@ interface MetadataVisualizationsProps {
   isHighestNode: boolean;
   themeColors: {
     nodeColor: string;
-    secondaryNodeColor: string;
+    leafNodeColor: string;
+    rootNodeColor: string;
     edgeColor: string;
     textColor: string;
     metadataBar: {
@@ -245,79 +305,6 @@ const MetadataVisualizations = ({
 }: MetadataVisualizationsProps) => {
   const expressionBarRef = useRef<SVGRectElement>(null);
   const sequenceBarRef = useRef<SVGRectElement>(null);
-  useEffect(() => {
-    /** Create tooltip div if it doesn't exist */
-    const tooltip = d3.select('body').selectAll<HTMLDivElement, unknown>('.d3-tooltip')
-      .data([null])
-      .join('div')
-      .attr('class', 'd3-tooltip')
-      .style('position', 'absolute')
-      .style('visibility', 'hidden')
-      .style('background', 'rgba(0,0,0,0.8)')
-      .style('color', 'white')
-      .style('padding', '8px')
-      .style('border-radius', '4px')
-      .style('pointer-events', 'none')
-      .style('backdrop-filter', 'blur(7px)');
-
-    /** Expression Bar Tooltip */
-    const expressionBar = d3.select(expressionBarRef.current);
-    if (expressionBar) {
-      expressionBar
-        .on('mouseover', (event) => {
-          const clampedExpression = Math.max(
-            Math.min(isPrimaryGene ? 1 : (metadata?.scc_value || 0), 1), 
-            -1
-          );
-
-          tooltip
-            .style('visibility', 'visible')
-            .html(`
-              <div>
-                <div style="font-weight: bold; margin-bottom: 4px;">Expression Similarity</div>
-                <div>Value: ${clampedExpression.toFixed(2)}</div>
-                <div style="font-size: 0.75rem; margin-top: 4px;">
-                  Indicates correlation of expression patterns with the primary gene
-                </div>
-              </div>
-            `)
-            .style('left', `${event.pageX + 10}px`)
-            .style('top', `${event.pageY - 10}px`);
-        })
-        .on('mouseout', () => {
-          tooltip.style('visibility', 'hidden');
-        });
-    }
-
-    /** Sequence Bar Tooltip */
-    const sequenceBar = d3.select(sequenceBarRef.current);
-    if (sequenceBar) {
-      sequenceBar
-        .on('mouseover', (event) => {
-          const sequenceSimilarity = Math.min(
-            isPrimaryGene ? 100 : (metadata?.sequence_similarity || 0)
-          );
-
-          tooltip
-            .style('visibility', 'visible')
-            .html(`
-              <div>
-                <div style="font-weight: bold; margin-bottom: 4px;">Sequence Similarity</div>
-                <div>Value: ${sequenceSimilarity.toFixed(1)}%</div>
-                <div style="font-size: 0.75rem; margin-top: 4px;">
-                  Percentage of sequence similarity with the primary gene
-                </div>
-              </div>
-            `)
-            .style('left', `${event.pageX + 10}px`)
-            .style('top', `${event.pageY - 10}px`);
-        })
-        .on('mouseout', () => {
-          tooltip.style('visibility', 'hidden');
-        });
-    }
-  }, [metadata, isPrimaryGene]);
-
   
   if (!metadata) return null;
 
@@ -384,6 +371,7 @@ const MetadataVisualizations = ({
             )}
             {/* Background bar */}
             <rect
+              ref={expressionBarRef}
               x={0}
               y={0}
               width={constants.BAR_WIDTH}
@@ -417,6 +405,41 @@ const MetadataVisualizations = ({
               y2={constants.BAR_HEIGHT + 4}
               stroke={themeColors.metadataBar.centerLine}
               strokeWidth={2}
+            />
+            {/* Tooltip bar */}
+            <rect
+              x={0}
+              y={0}
+              width={constants.BAR_WIDTH}
+              height={constants.BAR_HEIGHT}
+              fill="transparent"
+              onMouseOver={(event) => {
+                const clampedExpression = Math.max(
+                  Math.min(isPrimaryGene ? 1 : (metadata?.scc_value || 0), 1),
+                  -1
+                );
+                d3.select('.d3-tooltip')
+                  .style('visibility', 'visible')
+                  .html(`
+                    <div>
+                      <div style="font-weight: bold; margin-bottom: 4px;">Expression Similarity</div>
+                      <div>Value: ${clampedExpression.toFixed(2)}</div>
+                      <div style="font-size: 0.75rem; margin-top: 4px;">
+                        Indicates correlation of expression patterns with the primary gene
+                      </div>
+                    </div>
+                  `)
+                  .style('left', `${event.pageX + 10}px`)
+                  .style('top', `${event.pageY - 10}px`);
+              }}
+              onMouseMove={(event) => {
+                d3.select('.d3-tooltip')
+                  .style('left', `${event.pageX + 10}px`)
+                  .style('top', `${event.pageY - 10}px`);
+              }}
+              onMouseOut={() => {
+                d3.select('.d3-tooltip').style('visibility', 'hidden');
+              }}
             />
           </g>
     
@@ -467,22 +490,56 @@ const MetadataVisualizations = ({
           )}
           {/* Background bar */}
           <rect
+            ref={sequenceBarRef}
             x={0}
             y={0}
             width={constants.BAR_WIDTH}
             height={constants.BAR_HEIGHT}
             fill={themeColors.metadataBar.background}
             stroke={themeColors.metadataBar.stroke}
-            strokeWidth={0.5}
+            strokeWidth={0.5}     
           />
           {/* Sequence similarity indicator */}
           <rect
-            ref={sequenceBarRef}
             x={0}
             y={0}
             width={(sequenceSimilarity)}
             height={constants.BAR_HEIGHT}
             fill={themeColors.metadataBar.indicator}
+          />
+          {/* Tooltip bar */}
+          <rect
+            x={0}
+            y={0}
+            width={constants.BAR_WIDTH}
+            height={constants.BAR_HEIGHT}
+            fill="transparent"
+            onMouseOver={(event) => {
+              const sequenceSimilarity = Math.min(
+                isPrimaryGene ? 100 : (metadata?.sequence_similarity || 0)
+              );
+              d3.select('.d3-tooltip')
+                .style('visibility', 'visible')
+                .html(`
+                  <div>
+                    <div style="font-weight: bold; margin-bottom: 4px;">Sequence Similarity</div>
+                    <div>Value: ${sequenceSimilarity.toFixed(1)}%</div>
+                    <div style="font-size: 0.75rem; margin-top: 4px;">
+                      Percentage of sequence similarity with the primary gene
+                    </div>
+                  </div>
+                `)
+                .style('left', `${event.pageX + 10}px`)
+                .style('top', `${event.pageY - 10}px`);
+            }}
+            onMouseMove={(event) => {
+              d3.select('.d3-tooltip')
+                .style('left', `${event.pageX + 10}px`)
+                .style('top', `${event.pageY - 10}px`);
+            }}
+            onMouseOut={() => {
+              d3.select('.d3-tooltip').style('visibility', 'hidden');
+            }}
           />
         </g>
       </g>
@@ -566,7 +623,8 @@ export const NavigatorViewObject = () => {
   /** Configuration of Colours for Light and Dark Mode */
   const themeColors = useMemo(() => ({
     nodeColor: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black,
-    secondaryNodeColor: theme.palette.mode === 'dark' ? theme.palette.primary.light : '#69b3a2',
+    leafNodeColor: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.light, /** Same green color currently */
+    rootNodeColor: theme.palette.mode === 'dark' ? '#EE4B2B' : '#EE4B2B',
     edgeColor: theme.palette.mode === 'dark' ? theme.palette.grey[500] : theme.palette.grey[800],
     textColor: theme.palette.text.primary,
     genomeColors: theme.palette.mode === 'dark' ? genomeColors.default = "#FFFFFF": genomeColors.default = "#000000",
@@ -574,7 +632,7 @@ export const NavigatorViewObject = () => {
       background: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[400],
       stroke: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[400],
       indicator: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black,
-      centerLine: theme.palette.error.main,
+      centerLine: theme.palette.error.main
     }
   }), [theme.palette.mode]);
 
@@ -698,6 +756,32 @@ useEffect(() => {
     return processedNavigator;
   }, [hierarchy, dimensions.boundsWidth, dimensions.boundsHeight]);
 
+  /** Create a single tooltip instance */
+  const tooltip = d3.select('.d3-tooltip');
+
+  /** Add tooltip to elements */
+  const addTooltip = (
+    element: d3.Selection<SVGGElement, unknown, null, undefined>, 
+    text: string
+  ) => {
+    element
+      .on('mouseover', (event: MouseEvent) => {
+        tooltip
+          .style('visibility', 'visible')
+          .html(text)
+          .style('left', `${event.pageX + 10}px`)
+          .style('top', `${event.pageY - 10}px`);
+      })
+      .on('mousemove', (event: MouseEvent) => {
+        tooltip
+          .style('left', `${event.pageX + 10}px`)
+          .style('top', `${event.pageY - 10}px`);
+      })
+      .on('mouseout', () => {
+        tooltip.style('visibility', 'hidden');
+      });
+  };
+
   /** Generate node elements for rendering */
   const allNodes = navigator?.descendants().map((node, index: number) => {
     const isPrimaryGene = node.data.name.toUpperCase() === primaryGene.toUpperCase();
@@ -718,7 +802,7 @@ useEffect(() => {
             cx={node.y}
             cy={node.x}
             r={constants.NODE_RADIUS}
-            fill={isPrimaryGene ? themeColors.nodeColor : themeColors.secondaryNodeColor}
+            fill={node === navigator ? themeColors.rootNodeColor: isPrimaryGene ? themeColors.nodeColor : themeColors.leafNodeColor}
             stroke="none"
           />
         )}
@@ -762,13 +846,20 @@ useEffect(() => {
               isHighestNode={isHighestNode}
             />
 
-            {/* Placeholder Icon Group */}
+            {/* Placeholder World Icon Group */}
             <g 
               transform={`translate(${node.y + constants.LABEL_OFFSET * 60}, ${node.x - 9})`}
-              style={{ cursor: 'pointer' }}
+              ref={(el) => {
+                if (el) {
+                  addTooltip(
+                    d3.select(el), 
+                    'World'
+                  );
+                }
+              }}
               onClick={() => {
-                console.log('Cell Icon clicked');
-                window.location.href = "#";
+                const url = `#`;
+                window.open(url, "_blank");
               }}
             >
               <rect
@@ -785,10 +876,17 @@ useEffect(() => {
             {/* Plant EFP Icon Group */}
             <g 
               transform={`translate(${node.y + constants.LABEL_OFFSET * 63}, ${node.x - 9})`}
-              style={{ cursor: 'pointer' }}
+              ref={(el) => {
+                if (el) {
+                  addTooltip(
+                    d3.select(el), 
+                    'Plant'
+                  );
+                }
+              }}
               onClick={() => {
-                console.log('Plant Icon clicked');
-                window.location.href = "#";
+                const url = `#`;
+                window.open(url, "_blank");
               }}
             >
               <rect
@@ -805,10 +903,17 @@ useEffect(() => {
             {/* Cell EFP Icon Group */}
             <g 
               transform={`translate(${node.y + constants.LABEL_OFFSET * 66}, ${node.x - 11})`}
-              style={{ cursor: 'pointer' }}
+              ref={(el) => {
+                if (el) {
+                  addTooltip(
+                    d3.select(el), 
+                    'Cell'
+                  );
+                }
+              }}
               onClick={() => {
-                console.log('Cell Icon clicked');
-                window.location.href = "#";
+                const url = `#`;
+                window.open(url, "_blank");
               }}
             >
               <rect
@@ -822,13 +927,20 @@ useEffect(() => {
               </g>
             </g>
             
-            {/* Placeholder Icon Group */}
+            {/* Placeholder Molecule Icon Group */}
             <g 
               transform={`translate(${(node.y + constants.LABEL_OFFSET * 69) + 8}, ${node.x - 9})`}
-              style={{ cursor: 'pointer' }}
+              ref={(el) => {
+                if (el) {
+                  addTooltip(
+                    d3.select(el), 
+                    'Molecule'
+                  );
+                }
+              }}
               onClick={() => {
-                console.log('Placeholder Icon clicked');
-                window.location.href = "#";
+                const url = `#`;
+                window.open(url, "_blank");
               }}
             >
               <rect
@@ -842,13 +954,20 @@ useEffect(() => {
               </g>
             </g>
 
-            {/* Placeholder Icon Group */}
+            {/* Placeholder Interactions Icon Group */}
             <g 
               transform={`translate(${(node.y + constants.LABEL_OFFSET * 72) + 8}, ${node.x - 9})`}
-              style={{ cursor: 'pointer' }}
+              ref={(el) => {
+                if (el) {
+                  addTooltip(
+                    d3.select(el), 
+                    'Interactions'
+                  );
+                }
+              }}
               onClick={() => {
-                console.log('Placeholder Icon clicked');
-                window.location.href = "#";
+                const url = `#`;
+                window.open(url, "_blank");
               }}
             >
               <rect
@@ -865,13 +984,20 @@ useEffect(() => {
             {/* CoGE */}
             <g 
               transform={`translate(${(node.y + constants.LABEL_OFFSET * 80)}, ${node.x + 5})`}
-              style={{ cursor: 'pointer' }}
+              ref={(el) => {
+                if (el) {
+                  addTooltip(
+                    d3.select(el), 
+                    'Open gene page on CoGE'
+                  );
+                }
+              }}
               onClick={() => {
                 const url = `https://genomevolution.org/CoGe/`;
                 window.open(url, "_blank");
               }}
             >
-              <text style={{ pointerEvents: 'all', fill: theme.palette.text.primary}}>
+              <text style={{ cursor: 'pointer', fill: theme.palette.text.primary}}>
                 CoGE
               </text>
             </g>
@@ -879,13 +1005,20 @@ useEffect(() => {
             {/* Gramene */}
             <g 
               transform={`translate(${(node.y + constants.LABEL_OFFSET * 85)}, ${node.x + 5})`}
-              style={{ cursor: 'pointer' }}
+              ref={(el) => {
+                if (el) {
+                  addTooltip(
+                    d3.select(el), 
+                    'Open gene page on Gramene'
+                  );
+                }
+              }}
               onClick={() => {
-                const url = `https://ensembl.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=${node.data.name}`;
+                const url = getGrameneLink(node.data.metadata?.genome, node.data.name);
                 window.open(url, "_blank");
               }}
             >
-              <text style={{ pointerEvents: 'all', fill: theme.palette.text.primary}}>
+              <text style={{ cursor: 'pointer', fill: theme.palette.text.primary}}>
                 Gramene
               </text>
             </g>
@@ -970,6 +1103,24 @@ useEffect(() => {
             />
           </div>
         )}
+
+        {/* Error message when no data is available */}
+        {!isLoading && (!allEdges || allEdges.length === 0) && (!allNodes || allNodes.length === 0) && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+              textAlign: "center",
+              color: "red",
+              fontSize: "1.2rem",
+            }}
+          >
+            <p>No data available for the selected gene.</p>
+          </div>
+        )}
+
         {/* Main SVG container for the tree visualization */}
         <svg 
           ref={svgRef}
@@ -978,7 +1129,6 @@ useEffect(() => {
           style={{ cursor: "grab"}}
         >
         {/* Group element for tree content with transformation support 
-            Apply zoom and pan transformations:
               1. Translate to account for margins
               2. Scale by zoom factor (transform.k)
               3. Translate by pan offset (transform.x, transform.y)*/}
