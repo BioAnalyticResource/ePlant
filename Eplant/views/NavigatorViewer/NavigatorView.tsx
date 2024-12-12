@@ -2,9 +2,6 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "r
 import React from "react";
 import * as d3 from "d3";
 
-import { useConfig } from "@eplant/config";
-import GeneticElement, { Species } from "@eplant/GeneticElement";
-import { View } from "@eplant/View";
 import { useTheme } from '@mui/material/styles';
 
 import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
