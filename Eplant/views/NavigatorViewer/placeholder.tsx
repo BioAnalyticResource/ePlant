@@ -2,6 +2,9 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "r
 import React from "react";
 import * as d3 from "d3";
 
+import { useConfig } from "@eplant/config";
+import GeneticElement, { Species } from "@eplant/GeneticElement";
+import { View } from "@eplant/View";
 import { useTheme } from '@mui/material/styles';
 
 import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
@@ -10,7 +13,7 @@ import CellEFPIcon from './Icons/CellEFPIcon';
 import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon'; /** Placeholder icon for those that are not yet implemented in ePlant3 */
 import PlantEFPIcon from './Icons/PlantEFPIcon'
 import * as constants from './constants';
-import { NavigatorContext } from './index';
+import { NavigatorContext, useViewSwitch, ViewSwitchProvider} from './index';
 
 
 /** Static declaration of genome label colors */
@@ -86,7 +89,7 @@ const getGrameneLink = (species: string | undefined, geneName: string): string =
   if (normalizedSpecies === 'BARLEY' && !geneName.startsWith('MLOC')) {
     return '';
   }
-  /** Replace {geneName} in the template */
+  /** Replace geneName in the template */
   return linkTemplate.replace('{geneName}', processedGeneName);
 };
 
@@ -119,12 +122,12 @@ function extractSpecies(url: string): string {
 /**
   * Interface representing the tree data structure received from the API
   * 
-  * @var tree - Newick format string representing the phylogenetic tree 
-  * @var efp_links - Map of gene identifiers to their expression profile URLs
-  * @var genomes - Map of gene identifiers to their genome information
-  * @var SCC_values - Map of gene identifiers to their expression correlation values
-  * @var sequence_similarity - Map of gene identifiers to their sequence similarity scores
-  * @var maximum_values - Map of gene identifiers to their maximum normalized values
+  * @param tree - Newick format string representing the phylogenetic tree 
+  * @param efp_links - Map of gene identifiers to their expression profile URLs
+  * @param genomes - Map of gene identifiers to their genome information
+  * @param SCC_values - Map of gene identifiers to their expression correlation values
+  * @param sequence_similarity - Map of gene identifiers to their sequence similarity scores
+  * @param maximum_values - Map of gene identifiers to their maximum normalized values
 */
 interface TreeData {
   tree: string;
@@ -138,10 +141,10 @@ interface TreeData {
 /**
  * Interface representing a node in the D3 hierarchy structure
  * 
- * @var name - Node identifier or name
- * @var value - Optional numerical value representing branch length
- * @var children - Optional array of child nodes in the tree
- * @var metadata - Optional metadata associated with the node
+ * @param name - Node identifier or name
+ * @param value - Optional numerical value representing branch length
+ * @param children - Optional array of child nodes in the tree
+ * @param metadata - Optional metadata associated with the node
  */
 interface D3Node {
   name: string;
@@ -158,8 +161,8 @@ interface D3Node {
 /**
  * Interface representing a cached data entry
  *
- * @var data - The cached data object of type T
- * @var timestamp - Timestamp of when the data was cached (in milliseconds since epoch)
+ * @param data - The cached data object of type T
+ * @param timestamp - Timestamp of when the data was cached (in milliseconds since epoch)
  */
 interface CacheEntry<T> {
   data: T;
@@ -174,7 +177,7 @@ interface CacheEntry<T> {
  * @param primaryGene - Identifier of the primary gene being analyzed
  * @param species - Species name for the primary gene
  * @returns A D3-compatible tree structure
- * @throws {Error} If the Newick string format is invalid
+ * @throws Error If the Newick string format is invalid
  */
 function newickToD3(newickString: string, metadata: TreeData, primaryGene: string, species: string): D3Node {
   /** Remove trailing semicolon and whitespace */
@@ -185,7 +188,7 @@ function newickToD3(newickString: string, metadata: TreeData, primaryGene: strin
    * 
    * @param str - Node string to parse (e.g., "A:0.1" or "(A:0.1,B:0.2)")
    * @returns Parsed D3Node object
-   * @throws {Error} If the node string format is invalid
+   * @throws Error If the node string format is invalid
    */
   function parseNode(str: string): D3Node {
     /** Handle leaf nodes (no children) */
@@ -245,12 +248,12 @@ function newickToD3(newickString: string, metadata: TreeData, primaryGene: strin
 /**
  * Props interface for the MetadataVisualizations component
  * 
- * @var x - X coordinate for rendering the visualization
- * @var y - Y coordinate for rendering the visualization
- * @var metadata - Metadata associated with the node
- * @var isPrimaryGene - Whether this node represents the primary gene being analyzed
- * @var themeColors - colouring for the metadata to match ePlant
- * @var isHighestY - have we hit the node with the highest Y coordinate
+ * @param x - X coordinate for rendering the visualization
+ * @param y - Y coordinate for rendering the visualization
+ * @param metadata - Metadata associated with the node
+ * @param isPrimaryGene - Whether this node represents the primary gene being analyzed
+ * @param themeColors - colouring for the metadata to match ePlant
+ * @param isHighestY - have we hit the node with the highest Y coordinate
  */
 interface MetadataVisualizationsProps {
   x: number;
@@ -616,6 +619,7 @@ export const NavigatorViewObject = () => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const gRef = useRef<SVGGElement | null>(null);
   const theme = useTheme();
+  const { switchView } = useViewSwitch();
 
   /** Initialize dimensions with default calculation */
   const [dimensions, setDimensions] = useState(calculateDimensions());
@@ -756,30 +760,56 @@ useEffect(() => {
     return processedNavigator;
   }, [hierarchy, dimensions.boundsWidth, dimensions.boundsHeight]);
 
-  /** Create a single tooltip instance */
-  const tooltip = d3.select('.d3-tooltip');
+  /** Create a single tooltip instance, seemingly works for metadata as well but if failing add this to metadata as well*/
+  const tooltip = d3.select('body').selectAll<HTMLDivElement, unknown>('.d3-tooltip')
+    .data([null])
+    .join('div')
+    .attr('class', 'd3-tooltip')
+    .style('position', 'absolute')
+    .style('visibility', 'hidden')
+    .style('background', theme.palette.primary.light)
+    .style('color', 'white')
+    .style('padding', '6px')
+    .style('border-radius', '0px') /** Sharp edges */
+    .style('pointer-events', 'none')
+    .style('backdrop-filter', 'blur(7px)');
 
   /** Add tooltip to elements */
   const addTooltip = (
     element: d3.Selection<SVGGElement, unknown, null, undefined>, 
     text: string
   ) => {
+    let isHidden = false;
     element
-      .on('mouseover', (event: MouseEvent) => {
+    .on('mouseover', (event: MouseEvent) => {
+      if (!isHidden) {
         tooltip
           .style('visibility', 'visible')
           .html(text)
           .style('left', `${event.pageX + 10}px`)
           .style('top', `${event.pageY - 10}px`);
-      })
-      .on('mousemove', (event: MouseEvent) => {
+      }
+    })
+    .on('mousemove', (event: MouseEvent) => {
+      if (!isHidden) {
         tooltip
           .style('left', `${event.pageX + 10}px`)
           .style('top', `${event.pageY - 10}px`);
-      })
-      .on('mouseout', () => {
-        tooltip.style('visibility', 'hidden');
-      });
+      }
+    })
+    .on('mouseout', () => {
+      tooltip.style('visibility', 'hidden');
+    });
+
+    element.on('click', () => {
+      isHidden = true; /** Mark the tooltip as hidden */
+      tooltip.style('visibility', 'hidden');
+    });
+  
+    /** Reactivate the tooltip on hover */
+    tooltip.on('mouseover', () => {
+      isHidden = false; /** Reset the hidden state */
+    });
   };
 
   /** Generate node elements for rendering */
@@ -866,7 +896,7 @@ useEffect(() => {
                 width={16}
                 height={16}
                 fill="transparent"
-                style={{ pointerEvents: 'all' }}
+                style={{ cursor: 'pointer' }}
               />
               <g style={{ pointerEvents: 'none' }}>
                 <GeneInfoViewIcon/>
@@ -884,16 +914,18 @@ useEffect(() => {
                   );
                 }
               }}
-              onClick={() => {
-                const url = `#`;
-                window.open(url, "_blank");
+              onClick={(event) => {
+                /** Extract the geneName */
+                const geneName = displayName;
+                /** Call switch view function to swap the view using designated view id and gene name */
+                switchView('plant', geneName);
               }}
             >
               <rect
                 width={16}
                 height={16}
                 fill="transparent"
-                style={{ pointerEvents: 'all' }}
+                style={{ cursor: 'pointer' }}
               />
               <g style={{ pointerEvents: 'none' }}>
                 <PlantEFPIcon />
@@ -911,16 +943,18 @@ useEffect(() => {
                   );
                 }
               }}
-              onClick={() => {
-                const url = `#`;
-                window.open(url, "_blank");
+              onClick={(event) => {
+                /** Extract the geneName */
+                const geneName = displayName;
+                /** Call switch view function to swap the view using designated view id and gene name */
+                switchView('Cell eFP', geneName);
               }}
             >
               <rect
                 width={20}
                 height={20}
                 fill="transparent"
-                style={{ pointerEvents: 'all' }}
+                style={{ cursor: 'pointer' }}
               />
               <g style={{ pointerEvents: 'none' }}>
                 <CellEFPIcon/>
@@ -947,7 +981,7 @@ useEffect(() => {
                 width={16}
                 height={16}
                 fill="transparent"
-                style={{ pointerEvents: 'all' }}
+                style={{ cursor: 'pointer' }}
               />
               <g style={{ pointerEvents: 'none' }}>
                 <GeneInfoViewIcon/>
@@ -974,7 +1008,7 @@ useEffect(() => {
                 width={16}
                 height={16}
                 fill="transparent"
-                style={{ pointerEvents: 'all' }}
+                style={{ cursor: 'pointer' }}
               />
               <g style={{ pointerEvents: 'none' }}>
                 <GeneInfoViewIcon/>
@@ -1149,7 +1183,10 @@ useEffect(() => {
 
 const WrappedNavigatorViewObject = () => {
   return (
+    <ViewSwitchProvider>
       <NavigatorViewObject />
+    </ViewSwitchProvider>
+      
   );
 };
 
