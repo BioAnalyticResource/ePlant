@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { debounce } from 'lodash'
+import { useEffect, useRef, useState } from 'react'
 import { useOutletContext, useSearchParams } from 'react-router-dom'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
+import { useURLState } from '@eplant/state/URLStateManager'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
-import { flattenState } from '@eplant/util/router'
 import { Box, CircularProgress, Snackbar, SnackbarContent } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 
@@ -15,6 +14,7 @@ import {
   ChromosomesResponseObj,
   ChromosomeViewerData,
   ChromosomeViewerState,
+  ChromosomeViewerStateScheme,
   Transform,
 } from './types'
 import ZoomControls from './ZoomControls'
@@ -22,6 +22,9 @@ import ZoomControls from './ZoomControls'
 export const ChromosomeView = () => {
   const { geneticElement, setIsLoading, setLoadAmount } =
     useOutletContext<ViewContext>()
+  const { state, setState, initializeState } =
+    useURLState<ChromosomeViewerState>()
+
   const spaceRef = useRef<Space | null>(null)
   const [messageOpen, setMessageOpen] = useState(true)
   const handleClose = () => {
@@ -38,42 +41,46 @@ export const ChromosomeView = () => {
     },
     enabled: !!geneticElement,
   })
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [viewState, setViewState] = useState<ChromosomeViewerState>({
+  const defaultState = {
     transform: {
-      dx: parseInt(searchParams.get('x') || '300') || 300,
-      dy: parseInt(searchParams.get('y') || '0') || 300,
-      dZoom: parseInt(searchParams.get('zoom') || '0.7') || 0.7,
+      dx: 300,
+      dy: 300,
+      dZoom: 0.7,
     },
-  })
+  }
+  const validateState = (params: URLSearchParams): ChromosomeViewerState => {
+    const validatedState = {
+      transform: {
+        dx: parseInt(params.get('x') || '300') || 300,
+        dy: parseInt(params.get('y') || '0') || 300,
+        dZoom: parseInt(params.get('zoom') || '0.7') || 0.7,
+      },
+    }
 
-  const debouncedUpdateSearchParams = useCallback(
-    debounce((updatedState) => {
-      setSearchParams(new URLSearchParams(flattenState(updatedState)))
-    }, 200), // 200ms delay before updating the URL
-    [setSearchParams]
-  )
+    return validatedState
+  }
 
   useEffect(() => {
-    debouncedUpdateSearchParams(viewState)
-    return () => {
-      debouncedUpdateSearchParams.cancel()
-    }
-  }, [viewState, debouncedUpdateSearchParams])
+    initializeState(ChromosomeViewerStateScheme)
+  }, [])
 
-  if (isLoading || isError || !data) return <></>
+  useEffect(() => {
+    setIsLoading(isLoading)
+  }, [isLoading, setIsLoading])
+
+  if (isLoading || isError || !data || !state) return <></>
   return (
     <Box>
       {/* ZOOM CONTROLS */}
-      <ZoomControls spaceRef={spaceRef} scale={viewState.transform.dZoom} />
+      <ZoomControls spaceRef={spaceRef} scale={state.transform.dZoom} />
       {/* CHROMOSOME VIEWER */}
       <Space
         ref={spaceRef}
         onCreate={(vp) => {
           vp.camera.recenter(
-            viewState.transform.dx,
-            viewState.transform.dy,
-            viewState.transform.dZoom
+            state.transform.dx,
+            state.transform.dy,
+            state.transform.dZoom
           )
           vp.setBounds({
             x: [-650, 1300],
@@ -87,15 +94,15 @@ export const ChromosomeView = () => {
             dy: vp.centerY,
             dZoom: vp.zoomFactor,
           }
-          setViewState({
-            ...viewState,
+          setState({
+            ...state,
             transform: transform,
           })
         }}
       >
         <ChromosomeViewer
           chromosomes={data.viewData}
-          scale={viewState.transform.dZoom}
+          scale={state.transform.dZoom}
         />
       </Space>
       <Snackbar

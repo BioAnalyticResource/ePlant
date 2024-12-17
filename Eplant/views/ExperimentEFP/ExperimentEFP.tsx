@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
-import { debounce } from 'lodash'
-import { useOutletContext, useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useOutletContext } from 'react-router-dom'
 
+import { useURLState } from '@eplant/state/URLStateManager'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
-import { flattenState } from '@eplant/util/router'
 import { useQuery } from '@tanstack/react-query'
 
 import { EFPViewerActions } from '../eFP/Viewer/actions'
@@ -12,29 +11,18 @@ import {
   EFPViewerLoader,
   ValidateEFPViewerParams,
 } from '../eFP/Viewer/EFPViewer'
-import { EFPViewerData, EFPViewerState } from '../eFP/Viewer/types'
+import {
+  EFPViewerData,
+  EFPViewerState,
+  EFPViewerStateScheme,
+} from '../eFP/Viewer/types'
 
 import { experimentEFPs, experimentEFPViews } from './efps'
 
 export const ExperimentEFP = () => {
   const { geneticElement, setIsLoading, setLoadAmount } =
     useOutletContext<ViewContext>()
-
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [viewState, setViewState] = useState<EFPViewerState>({
-    activeView: '',
-    colorMode: 'absolute',
-    transform: {
-      offset: {
-        x: 0,
-        y: 0,
-      },
-      zoom: 1,
-    },
-    sortBy: 'name',
-    maskingEnabled: false,
-    maskThreshold: 100,
-  })
+  const { state, setState, initializeState } = useURLState<EFPViewerState>()
   const { data, isLoading, isError, error } = useQuery<EFPViewerData>({
     queryKey: [`tissue-${geneticElement?.id}`],
     queryFn: async () => {
@@ -52,37 +40,38 @@ export const ExperimentEFP = () => {
     enabled: !!geneticElement,
   })
 
+  const defaultState: EFPViewerState = {
+    activeView: '',
+    colorMode: 'absolute',
+    transform: {
+      offset: {
+        x: 0,
+        y: 0,
+      },
+      zoom: 1,
+    },
+    sortBy: 'name',
+    maskingEnabled: false,
+    maskThreshold: 100,
+  }
+
   useEffect(() => {
-    setViewState(ValidateEFPViewerParams(searchParams, experimentEFPs))
+    initializeState(EFPViewerStateScheme)
   }, [])
 
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
 
-  const debouncedUpdateSearchParams = useCallback(
-    debounce((updatedState) => {
-      setSearchParams(new URLSearchParams(flattenState(updatedState)))
-    }, 200), // 200ms delay before updating the URL
-    [setSearchParams]
-  )
-
-  useEffect(() => {
-    debouncedUpdateSearchParams(viewState)
-    return () => {
-      debouncedUpdateSearchParams.cancel()
-    }
-  }, [viewState, debouncedUpdateSearchParams])
-
-  if (isLoading || isError || !data) return <></>
+  if (isLoading || isError || !data || !state) return <></>
   return (
     <EFPViewer
       data={data}
-      state={viewState}
+      state={state}
       geneticElement={geneticElement}
       efps={experimentEFPs}
       actions={EFPViewerActions}
-      setViewState={setViewState}
+      setViewState={setState}
     ></EFPViewer>
   )
 }

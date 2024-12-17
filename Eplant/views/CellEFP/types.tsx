@@ -1,15 +1,13 @@
+import { z } from 'zod'
+
 import { Transform } from '@eplant/util/PanZoom'
-import { ColorMode, EFPData, EFPId } from '@eplant/views/eFP/types'
+import { EFPData } from '@eplant/views/eFP/types'
 
 export type CellEFPViewerData = {
   viewData: EFPData
 }
 
 export type EFPViewerSortTypes = 'expression-level' | 'name'
-
-export type CellEFPViewerState = {
-  transform: Transform
-}
 
 export type CellEFPViewerAction =
   | { type: 'reset-transform' }
@@ -20,3 +18,15 @@ export type CellEFPSearchParams = {
   y: string
   zoom: string
 }
+
+export const CellEFPStateScheme = z.object({
+  transform: z.object({
+    offset: z.object({
+      x: z.number().default(0),
+      y: z.number().default(0),
+    }),
+    zoom: z.number().min(0.25).max(4).default(1),
+  }),
+})
+
+export type CellEFPViewerState = z.infer<typeof CellEFPStateScheme>

@@ -1,25 +1,21 @@
 // import useStateWithStorage from '@eplant/util/useStateWithStorage'
 
-import { useEffect, useState } from 'react'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useEffect } from 'react'
 
 import { Box, CircularProgress, CssBaseline, useTheme } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 
 import { dark, light } from './css/theme'
+import { URLStateProvider } from './state/URLStateManager'
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import Sidebar, { collapsedSidebarWidth, sidebarWidth } from './UI/Sidebar'
-import { ViewDataError } from './View/viewData'
-import FallbackView from './views/FallbackView'
 import { useConfig } from './config'
 import {
   useActiveGeneId,
-  useActiveViewId,
   useDarkMode,
   useGeneticElements,
   usePageLoad,
   useSidebarState,
-  useSpecies,
 } from './state'
 import { updateColors } from './updateColors'
 export type EplantProps = Record<string, never>
@@ -46,47 +42,49 @@ const Eplant = () => {
   return (
     <ThemeProvider theme={darkMode ? dark : light}>
       <CssBaseline />
-      <Sidebar />
-      <Box
-        sx={(theme) => ({
-          height: `calc(100% - ${theme.spacing(1)})`,
-          left: `${isCollapse ? collapsedSidebarWidth : sidebarWidth}px`,
-          right: '0px',
-          position: 'absolute',
-          marginTop: '0.5rem',
-          boxSizing: 'border-box',
-          transition: 'left 1s ease-out',
-          backgroundColor: theme.palette.background.paper,
-        })}
-      >
+      <URLStateProvider>
+        <Sidebar />
         <Box
-          sx={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'stretch',
-            justifyContent: 'stretch',
-          }}
+          sx={(theme) => ({
+            height: `calc(100% - ${theme.spacing(1)})`,
+            left: `${isCollapse ? collapsedSidebarWidth : sidebarWidth}px`,
+            right: '0px',
+            position: 'absolute',
+            marginTop: '0.5rem',
+            boxSizing: 'border-box',
+            transition: 'left 1s ease-out',
+            backgroundColor: theme.palette.background.paper,
+          })}
         >
-          <div />
-          {loaded ? (
-            <ViewContainer
-              gene={genes.find((gene) => gene.id === activeGeneId) ?? null}
-              sx={{
-                width: '100%',
-                height: '100%',
-              }}
-            ></ViewContainer>
-          ) : (
-            <div>
-              <CircularProgress
-                variant='indeterminate'
-                value={globalProgress * 100}
-              />
-            </div>
-          )}
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'stretch',
+              justifyContent: 'stretch',
+            }}
+          >
+            <div />
+            {loaded ? (
+              <ViewContainer
+                gene={genes.find((gene) => gene.id === activeGeneId) ?? null}
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              ></ViewContainer>
+            ) : (
+              <div>
+                <CircularProgress
+                  variant='indeterminate'
+                  value={globalProgress * 100}
+                />
+              </div>
+            )}
+          </Box>
         </Box>
-      </Box>
+      </URLStateProvider>
     </ThemeProvider>
   )
 }

@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 // Centromere
 export interface CentromereItem {
   id: string
@@ -46,9 +48,16 @@ export type Transform = {
 export type ChromosomeViewerData = {
   viewData: ChromosomeItem[]
 }
-export type ChromosomeViewerState = {
-  transform: Transform
-}
+export const ChromosomeViewerStateScheme = z.object({
+  transform: z.object({
+    dx: z.number().default(300),
+    dy: z.number().default(300),
+    dZoom: z.number().min(0.25).max(4).default(0.7),
+  }),
+})
+
+export type ChromosomeViewerState = z.infer<typeof ChromosomeViewerStateScheme>
+
 export type ChromosomeViewerAction = {
   type: 'set-transform'
   transform: Transform

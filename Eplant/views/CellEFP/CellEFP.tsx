@@ -3,6 +3,7 @@ import { debounce } from 'lodash'
 import { useOutletContext, useSearchParams } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
+import { useURLState } from '@eplant/state/URLStateManager'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import PanZoom from '@eplant/util/PanZoom'
 import { flattenState } from '@eplant/util/router'
@@ -15,21 +16,16 @@ import Legend from '../eFP/Viewer/legend'
 
 import { CellEFPStateActions } from './actions'
 import { CellEFPDataObject } from './CellEFPDataObject'
-import { CellEFPViewerData, CellEFPViewerState } from './types'
+import {
+  CellEFPStateScheme,
+  CellEFPViewerData,
+  CellEFPViewerState,
+} from './types'
 
 export const CellEFPView = () => {
   const { geneticElement, setIsLoading, setLoadAmount } =
     useOutletContext<ViewContext>()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [viewState, setViewState] = useState<CellEFPViewerState>({
-    transform: {
-      offset: {
-        x: parseInt(searchParams.get('x') || '0') || 0,
-        y: parseInt(searchParams.get('y') || '0') || 0,
-      },
-      zoom: parseInt(searchParams.get('zoom') || '1') || 1,
-    },
-  })
+  const { state, setState, initializeState } = useURLState<CellEFPViewerState>()
   const { data, isLoading, isError, error } = useQuery<CellEFPViewerData>({
     queryKey: [`cellEFP-${geneticElement?.id}`],
     queryFn: async () => {
@@ -42,36 +38,22 @@ export const CellEFPView = () => {
     enabled: !!geneticElement,
   })
 
+  const defaultState = {
+    transform: {
+      offset: {
+        x: 0,
+        y: 0,
+      },
+      zoom: 1,
+    },
+  }
   useEffect(() => {
-    const validateParams = () => {
-      if (viewState.transform.zoom <= 0.25 || viewState.transform.zoom >= 4) {
-        console.log(
-          `Invalid zoom of ${viewState.transform.zoom}, defaulting to 0.`
-        )
-        setViewState({ transform: { ...viewState.transform, zoom: 0 } })
-      }
-    }
-
-    validateParams()
+    initializeState(CellEFPStateScheme)
   }, [])
 
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
-
-  const debouncedUpdateSearchParams = useCallback(
-    debounce((updatedState) => {
-      setSearchParams(new URLSearchParams(flattenState(updatedState)))
-    }, 200), // 200ms delay before updating the URL
-    [setSearchParams]
-  )
-
-  useEffect(() => {
-    debouncedUpdateSearchParams(viewState)
-    return () => {
-      debouncedUpdateSearchParams.cancel()
-    }
-  }, [viewState, debouncedUpdateSearchParams])
 
   const efp = useMemo(() => {
     const Component = CellEFPDataObject.component
@@ -82,7 +64,7 @@ export const CellEFPView = () => {
     }
   }, [geneticElement?.id, data])
 
-  if (isLoading || isError || !data) return <></>
+  if (isLoading || isError || !data || !state) return <></>
   return (
     <Box
       sx={{
@@ -107,8 +89,8 @@ export const CellEFPView = () => {
       </Box>
       <ActionsPanel
         actions={CellEFPStateActions}
-        prevState={viewState}
-        setState={setViewState}
+        prevState={state}
+        setState={setState}
       ></ActionsPanel>
       <Box
         sx={{
@@ -151,9 +133,9 @@ export const CellEFPView = () => {
                 height: '100%',
                 zIndex: 0,
               })}
-              transform={viewState.transform}
+              transform={state.transform}
               onTransformChange={(transform) => {
-                setViewState({ ...viewState, transform: transform })
+                setState({ ...state, transform: transform })
               }}
             >
               {efp}

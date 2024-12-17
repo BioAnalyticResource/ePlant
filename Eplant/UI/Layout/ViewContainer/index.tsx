@@ -5,10 +5,12 @@ import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import {
   useActiveGeneId,
+  useActiveViewId,
   useGeneticElements,
   usePrinting,
   useSpecies,
 } from '@eplant/state'
+import { URLStateProvider } from '@eplant/state/URLStateManager'
 import Modal from '@eplant/UI/Modal'
 import downloadFile from '@eplant/util/downloadFile'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
@@ -68,7 +70,7 @@ export function ViewContainer<T, S, A>({
   const [speciesList] = useSpecies()
   const [genes, setGenes] = useGeneticElements()
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
-  const [activeViewId, setActiveViewId] = useState<string>('')
+  const [activeViewId, setActiveViewId] = useActiveViewId()
   const activeView = views.find((view) => view.id === activeViewId) ?? CellEFP
 
   useEffect(() => {
@@ -107,8 +109,12 @@ export function ViewContainer<T, S, A>({
         setActiveGeneId('')
       }
     }
-    setActiveViewId(location.pathname.split('/')[1])
-  }, [location.pathname])
+
+    const urlView =
+      views.find((view) => view.id === location.pathname.split('/')[1]) ??
+      CellEFP
+    setActiveViewId(urlView.id)
+  }, [])
 
   // On active gene change update the gene path segment
   useEffect(() => {
@@ -132,6 +138,10 @@ export function ViewContainer<T, S, A>({
     }
   }, [activeGeneId])
 
+  // TODO: This currently re-renders even on just a gene change because location is in
+  // dependency array. Location **has** to be a dependency in this case or else it goes stale
+  // (see how useMemo deals with dependencies). Might want to break this out
+  // into a seperate component as well.
   const topBar = useMemo(() => {
     return (
       <AppBar
@@ -308,7 +318,7 @@ export function ViewContainer<T, S, A>({
         </Toolbar>
       </AppBar>
     )
-  }, [activeViewId, gene?.id, loading])
+  }, [activeViewId, gene?.id, loading, location])
 
   return (
     <Box {...props} display='flex' flexDirection='column'>
@@ -370,12 +380,6 @@ export function ViewContainer<T, S, A>({
             />
           ) : (
             <>
-              {/* <view.component
-                state={state}
-                geneticElement={gene}
-                activeData={activeData}
-                dispatch={dispatch}
-              /> */}
               <Outlet
                 context={{
                   geneticElement: gene,
