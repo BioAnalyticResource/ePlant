@@ -3,14 +3,15 @@
 import { Core, NodeCollection, NodeSingular, NodeSingularPosition, Position } from 'cytoscape'
 
 import { Edge, LoadFlags, Node } from '../types'
+
+let cy: Core;
+let loadFlags: LoadFlags;
+
 /**
  * Used to lay out nodes. DNA nodes are positioned in alignment, while
  * protein nodes are positioned by layout.
  * @returns {void}
  */
-let cy: Core;
-let loadFlags: LoadFlags;
-
 const setLayout = (cytoscape: Core, flags: LoadFlags) => {
   cy = cytoscape
   loadFlags = flags

@@ -1,10 +1,6 @@
 import { Core, EventObject } from 'cytoscape'
 import { PopperInstance } from 'cytoscape-popper'
 
-// import GeneticElement from '@eplant/GeneticElement'
-// import arabidopsis from '@eplant/Species/arabidopsis'
-// import { useActiveGeneId, useGeneticElements, useSetActiveGeneId, useSetGeneticElements } from '@eplant/state'
-// import { GeneItem } from '@eplant/views/ChromosomeViewer/types'
 
 // Global
 let cy: Core;
@@ -12,6 +8,10 @@ let cy: Core;
 // --------------
 // Event Listeners
 // --------------
+/**
+ * Add event listener for nodes
+ * @returns {None}
+**/
 export const addNodeListener = (cyto: Core) => {
   cy = cyto
   cy.on('mouseover', 'node', (event: EventObject) => {
@@ -19,14 +19,17 @@ export const addNodeListener = (cyto: Core) => {
     // Check that the node is not a compound node
     if (nodeId !== 'COMPOUND_DNA' && nodeId !== 'COMPOUND_PROTEIN') {
       if (nodeId.substring(0, 3) === 'chr') {
-        chrNodeMouseOverHandler(event)
+        handleChrNodeHover(event)
       } else {
-        nodeMouseOverHandler(event)
+        handleNodeHover(event)
       }
     }
   })
 }
-
+/**
+ * Add event listener for edges connecting nodes
+ * @returns {None}
+**/
 export const addEdgeListener = (cy: Core) => {
   // Listen for pointer events on edges
   cy.on('mouseover', 'edge', (event: EventObject) => {
@@ -34,40 +37,18 @@ export const addEdgeListener = (cy: Core) => {
     if (event.target._private.classes.values().next().value == 'chr-edge') {
       return false
     }
-    edgeMouseOverHandler(event)
+    handleEdgeHover(event)
   })
 }
 
 // --------------
 // Event Handlers
 // --------------
-
-// add eventlistener to load gene button
-// Handle load gene button click
-// Tried to set jotai geneticElements atom from outside react component --> I beleieve it is impossible due to the limits of jotai copabilities
-/* class LoadGene {
-    geneticElements = useGeneticElements()
-    setGeneticElements = useSetGeneticElements()
-    activeGeneId = useActiveGeneId()
-    setActiveGeneId = useSetActiveGeneId()
-
-    public handleLoadGeneClick = (gene: GeneticElement) => {
-        if (gene != null) {
-            const geneticElement = new GeneticElement(
-                gene.id,
-                gene.annotation,
-                arabidopsis,
-                gene.aliases
-            )
-            this.setGeneticElements([...this.geneticElements[0], geneticElement])
-            this.setActiveGeneId(geneticElement.id)
-        }
-    }
-} */
-
-
-// Handle regular node hover
-const nodeMouseOverHandler = (event: EventObject) => {
+/**
+ * Handle hover over edge node and create appropriate tooltip
+ * @returns {void}
+**/
+const handleNodeHover = (event: EventObject) => {
   const node = event.target
   const id = node._private.data.content
   fetch(
@@ -80,44 +61,44 @@ const nodeMouseOverHandler = (event: EventObject) => {
         content: () => {
           const content = document.createElement('div')
 
-          content.innerHTML = `<style>
-                                            .tooltip {
-                                            padding: 8px;
-                                            background: white;
-                                            minHeight: 100px;
-                                            maxHeight: 200px
-                                            width: 200px;
-                                            font-size: 10px;
-                                            color: black;
-                                            border: 1px solid black;
-                                            }
-                                            label {
-                                            color: grey;
-                                            }
-                                        </style>
-                                        <div class="tooltip">
-                                            <table>
-                                                <tr>
-                                                    <td><label>Identifier: </label></td>
-                                                    <td>${gene.id}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label>Aliases: </label></td>
-                                                    <td>
-                                                        ${gene.aliases.length > 0 ? gene.aliases.slice(0, 3) : 'N/A'}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label>Annotation: </label></td>
-                                                    <td>
-                                                        ${gene.annotation != '' ? gene.annotation : 'N/A'}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><button id='${gene.id}' class='loadGene_interactionsView' aliases='${gene.aliases.join(",")}' annotation='${gene.annotation}' title='Load gene into collection'>Load Gene</button>
-                                                </tr>
-                                            </table>
-                                        </div>`
+          content.innerHTML = `
+            <style>
+              .tooltip {
+                padding: 8px;
+                background: white;
+                minHeight: 100px;
+                maxHeight: 200px
+                width: 200px;
+                font-size: 10px;
+                color: black;
+                border: 1px solid black;
+              } label {
+                color: grey;
+              }
+            </style>
+            <div class="tooltip">
+              <table>
+                <tr>
+                  <td><label>Identifier: </label></td>
+                  <td>${gene.id}</td>
+                </tr>
+                <tr>
+                  <td><label>Aliases: </label></td>
+                  <td>
+                    ${gene.aliases.length > 0 ? gene.aliases.slice(0, 3) : 'N/A'}
+                  </td>
+                </tr>
+                <tr>
+                  <td><label>Annotation: </label></td>
+                  <td>
+                    ${gene.annotation != '' ? gene.annotation : 'N/A'}
+                  </td>
+                </tr>
+                <tr>
+                  <td><button id='${gene.id}' class='loadGene_interactionsView' aliases='${gene.aliases.join(",")}' annotation='${gene.annotation}' title='Load gene into collection'>Load Gene</button>
+                </tr>
+              </table>
+            </div>`
           const props = {
             content: content, duration: 200, arrow: false, followCursor: false, interactive: true
           }
@@ -126,11 +107,15 @@ const nodeMouseOverHandler = (event: EventObject) => {
       })
 
       tip.show()
-      destroyTip(cy, tip)
+      addMouseOutListener(cy, tip)
     })
 }
-// Handle edge hover
-const edgeMouseOverHandler = (event: EventObject) => {
+
+/**
+ * Handle hover over edge connecting nodes and create appropriate tooltip
+ * @returns {void}
+**/
+const handleEdgeHover = (event: EventObject) => {
   const edge = event.target
   const data = edge._private.data
   const references =
@@ -143,7 +128,7 @@ const edgeMouseOverHandler = (event: EventObject) => {
       const content = document.createElement('div')
 
       content.innerHTML = `
-          <style>
+        <style>
           .tooltip {
             padding: 8px;
             background: white;
@@ -155,12 +140,11 @@ const edgeMouseOverHandler = (event: EventObject) => {
             color: black;
             border: 1px solid black;
           }
-          </style>
-          <div class="tooltip">
-            <p>${data.tooltip}</p>
-            <p>Reference: \n${references}</p>
-
-		 </div>`
+        </style>
+        <div class="tooltip">
+          <p>${data.tooltip}</p>
+          <p>Reference: \n${references}</p>
+        </div>`
       const props = {
         content: content, duration: 1000, arrow: true, followCursor: true, interactive: false
       }
@@ -168,11 +152,14 @@ const edgeMouseOverHandler = (event: EventObject) => {
     }
   })
   tip.show()
-  destroyTip(cy, tip)
+  addMouseOutListener(cy, tip)
 }
 
-// Handler chr node hover
-const chrNodeMouseOverHandler = (event: EventObject) => {
+/**
+ * Handle hover over chromosome node and create appropriate tooltip
+ * @returns {void}
+**/
+const handleChrNodeHover = (event: EventObject) => {
   const node = event.target
   const chrNum = node._private.data.id.substring(3, 4)
   const genes = node._private.data.genes
@@ -181,34 +168,33 @@ const chrNodeMouseOverHandler = (event: EventObject) => {
       const content = document.createElement('div')
 
       content.innerHTML = `
-                    <style>
-                    .tooltip {
-                        padding: 8px;
-                        background: white;
-                        minHeight: 100px;
-                        maxHeight: 150px;
-                        width: 300px;
-                        color: black;
-                        border: 1px solid black;
-                        font-size: 10px;
-                    }
-                    label {
-                        color: grey;
-                    }
-                    </style>
-                    <div class="tooltip">
-                        <table>
-                        <tr>
-                            <td><label>Chr ${chrNum}: </label></td>
-                            <td>${genes.length} Protein-DNA Interactions.</td>
-                        </tr>
-                        <tr>
-                            <td><label>Identifiers: </label></td>
-                            <td>${genes.join(', ')}</td>
-                        </tr>
-                        </table>
-                    </div>
-                `
+        <style>
+          .tooltip {
+              padding: 8px;
+              background: white;
+              minHeight: 100px;
+              maxHeight: 150px;
+              width: 300px;
+              color: black;
+              border: 1px solid black;
+              font-size: 10px;
+          } label {
+            color: grey;
+          }
+        </style>
+        <div class="tooltip">
+          <table>
+          <tr>
+            <td><label>Chr ${chrNum}: </label></td>
+            <td>${genes.length} Protein-DNA Interactions.</td>
+          </tr>
+          <tr>
+            <td><label>Identifiers: </label></td>
+            <td>${genes.join(', ')}</td>
+          </tr>
+          </table>
+        </div>
+      `
       const props = {
         content: content, duration: 200, arrow: false, followCursor: false, interactive: true
       }
@@ -216,14 +202,19 @@ const chrNodeMouseOverHandler = (event: EventObject) => {
     }
   })
   tip.show()
-
-  destroyTip(cy, tip)
+  addMouseOutListener(cy, tip)
 }
 
 
 
 
-const destroyTip = (cyto: Core, tip: PopperInstance) => {
+/**
+ * Destroys tooltip on mouse out
+ * @param {Core} cyto cytoscape instance
+ * @param {PopperInstance} tip the tooltip to destroy
+ * @returns {void}
+**/
+const addMouseOutListener = (cyto: Core, tip: PopperInstance) => {
   // add handler to node for mouse leave
   cy.on('mouseout', 'node', (event) => {
     const nodeID = event.target.data('id')
@@ -237,9 +228,15 @@ const destroyTip = (cyto: Core, tip: PopperInstance) => {
   })
 }
 
-// --------
-// Helpers
-// --------
+
+// ---------------
+// Helper Functions
+// ----------------
+/**
+ * Generate sanitized links from reference string
+ * @param {string} reference unsanitized reference string
+ * @returns {string[]} array of links
+**/
 const generateLinks = (reference: string): string[] => {
   const AL1_HYPERLINK = 'http://interactome.dfci.harvard.edu/A_thaliana/'
 

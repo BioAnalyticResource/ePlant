@@ -1,14 +1,11 @@
 import { Core } from 'cytoscape'
 
-
-
-/*
-* Applies filter to hide edges matching selector
-* @param {HTMLElement} checkbox The related checkbox element
-* @param {Number} index The related filterStatus index
-* @param {String} selector The selector by which to filter edges
-* @return {boolean} The state of the related checkbox element
-*/
+/**
+  * Applies filter to edges matching selector
+  * @param {boolean} status The related filterStatus index
+  * @param {String} selector The selector by which to filter edges
+  * @returns {void}
+  **/
 export const applyFilter = (cy: Core, status: boolean, selector: string) => {
   if (status) {
     const edges = cy.edges(selector);
@@ -17,7 +14,11 @@ export const applyFilter = (cy: Core, status: boolean, selector: string) => {
   }
 }
 
-
+/**
+  * Hide all layers of node matching id
+  * @param {string} id id of the node to hide
+  * @returns {void}
+  **/
 export const cleanCompoundNode = (cy: Core, id: string) => {
   if (cy.nodes('[parent = "' + id + '"]:visible').length === 0) {
     // @ts-expect-error hide should exists?

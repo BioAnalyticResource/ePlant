@@ -25,6 +25,7 @@ const loadViewData = (gene: GeneticElement, data: Interaction[], recursive: stri
   geneticElement = gene
   getLoadFlags(data, recursive)
   loadInteractions(data)
+  nodes = loadSublocalizations(nodes)
   return {
     nodes: nodes,
     edges: edges,
@@ -101,20 +102,7 @@ const loadInteractionsNoDNA = (data: Interaction[]) => {
   createInteractions(createFunctions, data)
 }
 
-// ------------------------------------
-// Helper functions for State
-// ------------------------------------
-/* const nodesPush = (node: RawNode) => {
-  const newNodes = nodes
-  newNodes.push(node)
-  setNodes(newNodes)
-}
-const edgesPush = (edge: RawEdge) => {
-  const newEdges = edges
-  newEdges.push(edge)
-  setEdges(newEdges)
-}
-*/
+
 // ------------------------------------
 // Level 2 Functions
 // ------------------------------------
@@ -177,7 +165,7 @@ const createChromosomes = (data: Interaction[]) => {
   }
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++
+// ------------
 // Node creators
 // ------------
 /**
@@ -192,7 +180,6 @@ const createCompoundDNA = () => {
     },
     classes: 'compound-top'
   }
-  //nodesPush(dnaCompound)
   nodes.push(dnaCompound)
 }
 
@@ -208,7 +195,6 @@ const createCompoundProtein = () => {
     },
     classes: 'compound-top'
   }
-  //nodesPush(proteinCompound)
   nodes.push(proteinCompound)
 }
 
@@ -245,9 +231,6 @@ const createQueryNode = (query: string) => {
     },
     classes: 'protein-node loaded'
   }
-  //nodesPush(compound)
-  //nodesPush(border)
-  //nodesPush(node)
   nodes.push(compound, border, node)
 }
 /**
@@ -292,9 +275,6 @@ const createProteinNode = (id: string) => {
   if (loadFlags.existsPDI) {
     compound.data.parent = 'COMPOUND_PROTEIN'
   }
-  // if (gene && gene.isLoadedViews) {
-  // 	node.classes = 'protein-node loaded'
-  // }
   /* 	nodesPush(compound)
   nodesPush(border)
   nodesPush(node)
@@ -343,7 +323,7 @@ const createChromosomeNode = (id: string, n: number) => {
   return { node: node }
 }
 
-// +++++++++++++++++++++++++++++++++++
+// -----------
 // Edge Creators and Helper Functions
 //------------
 
@@ -436,16 +416,18 @@ const createChromosomeEdge = (id: string, method: string) => {
 const setProteinEdgeStyles = (edge: RawEdge): RawEdge => {
   // Set edge style and size based on confidence
   edge.data.lineStyle = 'solid'
+  console.log(edge.data.method, edge.data.interolog_conf)
   if (edge.data.method === 'E') {
     edge.data.size = 6
-  } else if (edge.data.interolog_conf != undefined) {
-    if (edge.data.interolog_conf > 10) {
-      edge.data.size = 6
-    } else if (edge.data.interolog_conf > 5) {
-      edge.data.size = 4
-    } else if (edge.data.interolog_conf > 2) {
-      edge.data.size = 1
-    }
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
+  } else if (edge.data.interolog_conf > 10) {
+    edge.data.size = 6
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
+  } else if (edge.data.interolog_conf > 5) {
+    edge.data.size = 4
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
+  } else if (edge.data.interolog_conf > 2) {
+    edge.data.size = 1
   } else {
     edge.data.lineStyle = 'dashed'
     edge.data.size = 1
@@ -453,16 +435,18 @@ const setProteinEdgeStyles = (edge: RawEdge): RawEdge => {
 
   if (edge.data.method === 'E') {
     edge.data.lineColor = '#99CC00'
-  } else if (edge.data.correlation != undefined) {
-    if (edge.data.correlation > 0.8) {
-      edge.data.lineColor = '#B1171D'
-    } else if (edge.data.correlation > 0.7) {
-      edge.data.lineColor = '#D32E09'
-    } else if (edge.data.correlation > 0.6) {
-      edge.data.lineColor = '#E97911'
-    } else if (edge.data.correlation > 0.5) {
-      edge.data.lineColor = '#EEB807'
-    }
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
+  } else if (edge.data.correlation > 0.8) {
+    edge.data.lineColor = '#B1171D'
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
+  } else if (edge.data.correlation > 0.7) {
+    edge.data.lineColor = '#D32E09'
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
+  } else if (edge.data.correlation > 0.6) {
+    edge.data.lineColor = '#E97911'
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
+  } else if (edge.data.correlation > 0.5) {
+  edge.data.lineColor = '#EEB807'
   } else {
     edge.data.lineColor = '#A0A0A0'
   }
@@ -471,12 +455,12 @@ const setProteinEdgeStyles = (edge: RawEdge): RawEdge => {
 }
 
 /**
- * Sets edge styles for DNA edges
+ * Sets edge styles for DNA edges (Chromosome Edges)
  * @param {Object} edge The edge object with completed data entry
  * @return {Object} Edge object with styles
  */
 const setDNAEdgeStyles = (edge: RawEdge) => {
-// Set edge defaults
+  // Set edge defaults
 
   if (edge.data.method == 'E') {
     edge.data.lineStyle = 'solid'
@@ -519,7 +503,7 @@ const setEdgeTooltipContent = (edge: RawEdge) => {
   const final = firstLine + '<br>' + dataLines
   return final
 }
-//+++++++++++++++++++++++++++++++++++++
+// ---------------
 // Create Functions
 //----------------
 /**

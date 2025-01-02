@@ -5,13 +5,12 @@ import { RawNode, Sublocalization } from '../types'
 let nodes: RawNode[] = []
 
 /* Main function */
-const loadSublocalizations = (cynodes: RawNode[]) => {
+const loadSublocalizations = (cynodes: RawNode[]): RawNode[] => {
   nodes = cynodes
 	let data = []
 	loadData().then((expData) => {
 		data = expData
-		nodes = setSublocalizations(data)
-
+    nodes = setSublocalizations(data)
 	})
 	return nodes
 
@@ -19,7 +18,7 @@ const loadSublocalizations = (cynodes: RawNode[]) => {
 export default loadSublocalizations
 /**
  * Set the sublocalization for each pie node
- * @param {Object} data JSON sublocalization object from webservice
+ * @param {Sublocalization[]} data JSON sublocalization object from webservice
  * @return {void}
  */
 const setSublocalizations = (data: Sublocalization[]) => {
@@ -123,7 +122,7 @@ const loadData = async () => {
 
 /**
  * Return the top 4 sublocalizations of each node
- * @param  {Object} data The sublocalization data for one gene
+ * @param  {Sublocalization} subLoc The sublocalization data for one gene
  * @return {Array} Array of sublocalizations and score
  */
 const getTopSublocals = (subLoc: Sublocalization) => {
@@ -148,8 +147,8 @@ const getTopSublocals = (subLoc: Sublocalization) => {
 /**
  * Set the cytoscape styles for pie nodes
  * @param {Array} sublocalizations Array of top 4 sublocalizations and score
- * @param {Boolean} pred Whether sublocalizations are predicted
- * @param {Object} node Pie protein node
+ * @param {boolean} predicted Whether sublocalizations are predicted
+ * @param {RawNode} node Pie protein node
  * @return {Object} The update pie node
  */
 const setSublocalizationStyle = (sublocalizations: any[][], predicted: boolean, node: RawNode) => {

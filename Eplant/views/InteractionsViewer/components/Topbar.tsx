@@ -21,7 +21,6 @@ import {
   cleanNodes,
 } from '../scripts/filterLogic'
 
-import FilterDialog from './FilterDialog'
 import NumberInput from './NumberInput'
 
 interface TopbarProps {
@@ -116,10 +115,10 @@ const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
 
   return (
     <AppBar position='sticky' color='default' sx={{ overflow: 'overlay' }}>
-      <Toolbar variant='regular' sx={{ flexWrap: 'wrap', pb: 1 }}>
+      <Toolbar variant='regular' sx={{ flexWrap: 'wrap' }}>
         {/* VIEW TITLE */}
         <Typography variant='h6' sx={{ flexGrow: 2 }}>
-          Interactions Viewer: {gene}
+          ID: {gene}
         </Typography>
         <ButtonGroup variant='outlined' sx={{}}>
           {/* LEGEND BUTTON */}
@@ -159,8 +158,8 @@ const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
           setShowLegend(!showLegend)
         }}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
+          vertical: 'top',
+          horizontal: 'left',
         }}
         transformOrigin={{
           vertical: 'top',
@@ -168,7 +167,15 @@ const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
         }}
         anchorEl={legendRef.current}
       >
-        <Box sx={{ zIndex: 120 }}>
+        <Box sx={{ zIndex: 120, display: 'flex', flexDirection: 'column' }}>
+          <IconButton
+            sx={{ position: 'absolute', right: 0 }}
+            color='secondary'
+            size='small'
+            onClick={handleLegendClick}
+          >
+            <Close />
+          </IconButton>
           <img src='thumbnails/legendAIV.png' width={200}></img>
         </Box>
       </Popover>

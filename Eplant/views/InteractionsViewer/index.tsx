@@ -110,7 +110,6 @@ const InteractionsViewer: View = {
         })
       // psosible solutoon: promise chain to combine these two (promise.o)
       data = loadInteractions(gene, interactions, recursive)
-      data.nodes = loadSublocalizations(data.nodes)
     } else {
       throw ViewDataError.UNSUPPORTED_GENE
     }
@@ -150,6 +149,23 @@ const InteractionsViewer: View = {
       addNodeListener(cy)
       // Listen for mouseover events on edges
       addEdgeListener(cy)
+      // add loadgene listener // NOT WORKING
+      const loadGeneButton = document.querySelector("loadGene_interactionsView")
+      loadGeneButton?.addEventListener("click", ()=>{
+        const id = loadGeneButton.getAttribute("id")
+        const aliases = loadGeneButton.getAttribute("aliases")?.split(",")
+        const annotation = loadGeneButton.getAttribute("annotation")
+        if (id != null && annotation != null && aliases != null) {
+        const geneticElement = new GeneticElement(
+            id,
+            annotation,
+            arabidopsis,
+            aliases
+        )
+        setGeneticElements([...geneticElements[0], geneticElement])
+        setActiveGeneId(geneticElement.id)
+      }
+    })
     }, [])
 
     // Add event listner to load gene button
@@ -172,7 +188,7 @@ const InteractionsViewer: View = {
     }
 
     return (
-      <div style={{ background: 'white' }}>
+      <div style={{ background: 'white', overflow: 'hidden' }}>
         <Topbar cy={cyto} gene={geneId === undefined ? '' : geneId}></Topbar>
         <div
           ref={cyRef}
