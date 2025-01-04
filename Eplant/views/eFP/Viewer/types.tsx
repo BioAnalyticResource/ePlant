@@ -26,7 +26,7 @@ const transformSchema = z.object({
   zoom: z.number().min(0.25).max(4).default(1),
 })
 
-export const EFPViewerStateScheme = z.object({
+export const EFPViewerStateSchema = z.object({
   activeView: z.string().default(''),
   colorMode: z.enum(['absolute', 'relative']).default('absolute'),
   transform: transformSchema,
@@ -34,7 +34,8 @@ export const EFPViewerStateScheme = z.object({
   maskingEnabled: z.boolean().default(false),
   maskThreshold: z.number().default(100),
 })
-export type EFPViewerState = z.infer<typeof EFPViewerStateScheme>
+
+export type EFPViewerState = z.infer<typeof EFPViewerStateSchema>
 export type EFPViewerAction =
   | { type: 'set-view'; id: EFPId }
   | { type: 'reset-transform' }
@@ -55,4 +56,5 @@ export type EFPListProps = {
   colorMode: 'absolute' | 'relative'
   maskThreshold: number
   maskingEnabled: boolean
+  transform: Transform
 }

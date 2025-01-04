@@ -10,20 +10,20 @@ import ErrorBoundary from './util/ErrorBoundary'
 import { CellEFPView } from './views/CellEFP/CellEFP'
 import { ChromosomeView } from './views/ChromosomeViewer/ChromosomeView'
 import { ExperimentEFP } from './views/ExperimentEFP/ExperimentEFP'
+import { GeneInfoView } from './views/GeneInfoView/GeneInfo'
 import { PlantEFP } from './views/PlantEFP/PlantEFP'
 import { PublicationsView } from './views/PublicationViewer/PublicationsView'
 import { Config, defaultConfig } from './config'
 import Eplant from './Eplant'
 
 import './css/index.css'
-
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Eplant />,
     children: [
       {
-        element: <Navigate to={'cell-efp/'} replace={true}></Navigate>,
+        element: <Navigate to={'gene-info/'} replace={true}></Navigate>,
         index: true,
       },
       {
@@ -46,6 +46,10 @@ const router = createBrowserRouter([
         path: 'tissue/:geneid?',
         element: <ExperimentEFP></ExperimentEFP>,
       },
+      {
+        path: 'gene-info/:geneid?',
+        element: <GeneInfoView></GeneInfoView>,
+      },
     ],
     errorElement: <ErrorBoundary></ErrorBoundary>,
   },
@@ -55,16 +59,16 @@ const queryClient = new QueryClient()
 
 function RootApp() {
   return (
-    <React.StrictMode>
-      <Provider>
-        <Config.Provider value={defaultConfig}>
-          <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
-        </Config.Provider>
-      </Provider>
-    </React.StrictMode>
+    // <React.StrictMode>
+    <Provider>
+      <Config.Provider value={defaultConfig}>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </Config.Provider>
+    </Provider>
+    // </React.StrictMode>
   )
 }
 

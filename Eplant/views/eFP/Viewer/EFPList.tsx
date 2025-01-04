@@ -36,6 +36,7 @@ const EFPListItem = memo(
             }}
             colorMode={data.colorMode}
             maskingEnabled={data.maskingEnabled}
+            transform={data.transform}
           />
         </div>
       </Tooltip>
@@ -49,7 +50,8 @@ const EFPListItem = memo(
       prev.data.activeView === next.data.activeView &&
       prev.index == next.index &&
       prev.data.maskingEnabled == next.data.maskingEnabled &&
-      prev.data.maskThreshold == next.data.maskThreshold
+      prev.data.maskThreshold == next.data.maskThreshold &&
+      prev.data.transform == next.data.transform
     )
   }
 )

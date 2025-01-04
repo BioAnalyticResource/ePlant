@@ -1,41 +1,58 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import _ from 'lodash'
+import { useOutletContext } from 'react-router-dom'
+import { z } from 'zod'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { useSetActiveViewId } from '@eplant/state'
+import { useURLState } from '@eplant/state/URLStateProvider'
+import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { Alert, Box, IconButton, Snackbar } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { useQuery } from '@tanstack/react-query'
 
-import { View, ViewProps } from '../../View'
+import { View } from '../../View'
 
 import { CodeBody } from './CodeBody'
 import { GeneModel } from './GeneModel'
 import { GeneSequence } from './GeneSequence'
+import { geneInfoLoader } from './loader'
 import { SecondaryText } from './SecondaryText'
-import {
-  GeneInfoViewAction,
-  GeneInfoViewData,
-  GeneInfoViewState,
-} from './types'
+import { GeneInfoViewData } from './types'
 import { ViewButton } from './ViewButton'
 
-export default function GeneInfoViewer({
-  geneticElement,
-  activeData,
-}: ViewProps<GeneInfoViewData, GeneInfoViewState, GeneInfoViewAction>) {
+export const GeneInfoView = () => {
+  const [snackBarOpen, setSnackBarOpen] = useState(false)
+  const { geneticElement, setIsLoading, setLoadAmount, setActiveActions } =
+    useOutletContext<ViewContext>()
+  const { state, setState, initializeState } = useURLState<null>()
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
-
-  const [snackBarOpen, setSnackBarOpen] = useState(false)
+  const { data, isLoading, isError, error } = useQuery<GeneInfoViewData>({
+    queryKey: [`geneInfo-${geneticElement?.id}`],
+    queryFn: async () => {
+      if (!geneticElement) {
+        throw Error('No gene')
+      }
+      const data = geneInfoLoader(geneticElement, setLoadAmount)
+      return data
+    },
+    enabled: !!geneticElement,
+  })
   const copyToClipboard = (text: string) => {
     setSnackBarOpen(true)
     navigator.clipboard.writeText(text)
   }
 
+  useEffect(() => {
+    initializeState(z.object({}))
+  })
+
+  if (isLoading || isError || !data) return <></>
   return (
     <Stack direction='row' gap={'20px'}>
       <ViewSwitcher geneticElement={geneticElement} />
@@ -59,31 +76,29 @@ export default function GeneInfoViewer({
         </div>
         <div>
           <Typography variant='body1'>Full name</Typography>
-          <SecondaryText>{activeData.name}</SecondaryText>
+          <SecondaryText>{data.name}</SecondaryText>
         </div>
         <div>
           <Typography variant='body1'>Brief description</Typography>
-          <SecondaryText>{activeData.brief_description}</SecondaryText>
+          <SecondaryText>{data.brief_description}</SecondaryText>
         </div>
         <div>
           <Typography variant='body1'>Computational description</Typography>
-          <SecondaryText>
-            {activeData.computational_description}
-          </SecondaryText>{' '}
+          <SecondaryText>{data.computational_description}</SecondaryText>{' '}
         </div>
         <div>
           <Typography variant='body1'>Curator summary</Typography>
-          <SecondaryText>{activeData.curator_summary}</SecondaryText>
+          <SecondaryText>{data.curator_summary}</SecondaryText>
         </div>
         <div>
           <Typography variant='body1'>Location & Gene model</Typography>
           <div>
             <SecondaryText>
-              {activeData.location}: {activeData.chromosome_start} to{' '}
-              {activeData.chromosome_end}, Strand {activeData.strand}
+              {data.location}: {data.chromosome_start} to {data.chromosome_end},
+              Strand {data.strand}
             </SecondaryText>
             <div>
-              {activeData.features.map((f) => (
+              {data.features.map((f) => (
                 <GeneModel key={f.uniqueID} margin={5} feature={f}></GeneModel>
               ))}
             </div>
@@ -100,10 +115,10 @@ export default function GeneInfoViewer({
             <div>
               <GeneSequence
                 geneticElement={geneticElement}
-                activeData={activeData}
+                activeData={data}
               ></GeneSequence>
               <IconButton
-                onClick={() => copyToClipboard(activeData.geneSequence)}
+                onClick={() => copyToClipboard(data.geneSequence)}
                 color='secondary'
                 sx={{ ml: 1 }}
               >
@@ -123,7 +138,7 @@ export default function GeneInfoViewer({
             </div>
           </div>
         </div>
-        {activeData.geneticElementType == 'protein_coding' ? (
+        {data.geneticElementType == 'protein_coding' ? (
           <div>
             <Typography variant='body1'>Protein sequence</Typography>
             <div>
@@ -133,12 +148,12 @@ export default function GeneInfoViewer({
             </div>
             <div>
               <CodeBody variant='caption' style={{ wordBreak: 'break-word' }}>
-                {activeData.proteinSequence}
+                {data.proteinSequence}
               </CodeBody>
               <IconButton
                 onClick={() => {
-                  if (activeData.proteinSequence) {
-                    copyToClipboard(activeData.proteinSequence)
+                  if (data.proteinSequence) {
+                    copyToClipboard(data.proteinSequence)
                   }
                 }}
                 color='secondary'

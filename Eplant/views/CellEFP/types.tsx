@@ -19,7 +19,7 @@ export type CellEFPSearchParams = {
   zoom: string
 }
 
-export const CellEFPStateScheme = z.object({
+export const CellEFPStateSchema = z.object({
   transform: z.object({
     offset: z.object({
       x: z.number().default(0),
@@ -29,4 +29,4 @@ export const CellEFPStateScheme = z.object({
   }),
 })
 
-export type CellEFPViewerState = z.infer<typeof CellEFPStateScheme>
+export type CellEFPViewerState = z.infer<typeof CellEFPStateSchema>

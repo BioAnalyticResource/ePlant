@@ -354,6 +354,7 @@ export function Collections(props: {
   selectedGene?: string
 }) {
   const [genes, setGenes] = useGeneticElements()
+  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [collections, setCollections] = useCollections()
 
   const sensors = useSensors(
@@ -433,7 +434,10 @@ export function Collections(props: {
                 return cols
               })
             }}
-            deleteGene={(g) => deleteGene(g)}
+            deleteGene={(g) => {
+              deleteGene(g)
+              setActiveGeneId('')
+            }}
             setOpen={() => {
               setCollections((collections) => {
                 const cols = collections.slice()

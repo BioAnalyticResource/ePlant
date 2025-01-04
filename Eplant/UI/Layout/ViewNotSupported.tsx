@@ -58,7 +58,7 @@ export default function NotSupported(props: {
       >
         {props.geneticElement
           ? 'No data is available for this gene.'
-          : `The ${props.viewName.toLowerCase()} requires a selected gene.`}
+          : `The ${props.viewName.toLowerCase()} view requires a selected gene.`}
       </Typography>
     </Stack>
   )

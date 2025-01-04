@@ -6,7 +6,7 @@ import { Box, CircularProgress, CssBaseline, useTheme } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 
 import { dark, light } from './css/theme'
-import { URLStateProvider } from './state/URLStateManager'
+import { URLStateProvider } from './state/URLStateProvider'
 import { ViewContainer } from './UI/Layout/ViewContainer'
 import Sidebar, { collapsedSidebarWidth, sidebarWidth } from './UI/Sidebar'
 import { useConfig } from './config'
@@ -42,8 +42,8 @@ const Eplant = () => {
   return (
     <ThemeProvider theme={darkMode ? dark : light}>
       <CssBaseline />
+      <Sidebar />
       <URLStateProvider>
-        <Sidebar />
         <Box
           sx={(theme) => ({
             height: `calc(100% - ${theme.spacing(1)})`,

@@ -3,7 +3,7 @@ import { useOutletContext, useSearchParams } from 'react-router-dom'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { useURLState } from '@eplant/state/URLStateManager'
+import { useURLState } from '@eplant/state/URLStateProvider'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import { Box, CircularProgress, Snackbar, SnackbarContent } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
@@ -41,26 +41,9 @@ export const ChromosomeView = () => {
     },
     enabled: !!geneticElement,
   })
-  const defaultState = {
-    transform: {
-      dx: 300,
-      dy: 300,
-      dZoom: 0.7,
-    },
-  }
-  const validateState = (params: URLSearchParams): ChromosomeViewerState => {
-    const validatedState = {
-      transform: {
-        dx: parseInt(params.get('x') || '300') || 300,
-        dy: parseInt(params.get('y') || '0') || 300,
-        dZoom: parseInt(params.get('zoom') || '0.7') || 0.7,
-      },
-    }
-
-    return validatedState
-  }
 
   useEffect(() => {
+    // On mount, set the active actions and initialize the state
     initializeState(ChromosomeViewerStateScheme)
   }, [])
 

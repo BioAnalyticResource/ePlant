@@ -41,9 +41,16 @@ export default function LoadingPage(props: {
 }) {
   const theme = useTheme()
   if (props.error == ViewDataError.UNSUPPORTED_GENE)
-    return <NotSupported geneticElement={props.gene} view={props.view} />
+    return (
+      <NotSupported geneticElement={props.gene} viewName={props.view.name} />
+    )
   if (props.error == ViewDataError.FAILED_TO_LOAD)
-    return <FailedToLoad geneticElement={props.gene} view={props.view} />
+    return (
+      <FailedToLoad
+        geneticElementId={props.gene?.id}
+        viewId={props.view.name}
+      />
+    )
   return (
     <Stack gap={4}>
       <LinearProgress variant='determinate' value={props.loadingAmount * 100} />

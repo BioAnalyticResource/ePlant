@@ -39,4 +39,21 @@ async function searchGene(s: string) {
   return gene
 }
 
+async function getGene(s: string) {
+  const data = (
+    await axios.get(
+      'https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=' +
+        s
+    )
+  ).data
+  if (!data.id || !data.annotation || !data.aliases) return null
+  const gene = new GeneticElement(
+    data.id,
+    data.annotation,
+    arabidopsis,
+    data.aliases
+  )
+  return gene
+}
+
 export default arabidopsis

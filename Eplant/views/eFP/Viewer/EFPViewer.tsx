@@ -1,11 +1,9 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
 import Dropdown from '@eplant/UI/Dropdown'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import PanZoom from '@eplant/util/PanZoom'
-import { StateActions } from '@eplant/util/stateUtils'
-import { ActionsPanel } from '@eplant/util/stateUtils/ActionsPanel'
 import useDimensions from '@eplant/util/useDimensions'
 import { ViewDataError } from '@eplant/View/viewData'
 import { Box, MenuItem, Typography } from '@mui/material'
@@ -24,7 +22,6 @@ interface EFPViewerProps {
   state: EFPViewerState
   geneticElement: GeneticElement | null
   efps: EFP[]
-  actions: StateActions<EFPViewerState>
   setViewState: (state: EFPViewerState) => void
 }
 export const EFPViewer = ({
@@ -32,7 +29,6 @@ export const EFPViewer = ({
   state,
   geneticElement,
   efps,
-  actions,
   setViewState,
 }: EFPViewerProps) => {
   const [maskModalVisible, setMaskModalVisible] = useState(false)
@@ -48,14 +44,19 @@ export const EFPViewer = ({
   const sortedViewData = viewIndices.map((i) => data.viewData[i])
   const sortedEfps = viewIndices.map((i) => efps[i])
 
-  let activeViewIndex = useMemo(
-    () => sortedEfps.findIndex((v) => v.id == state.activeView),
-    [state.activeView, ...sortedEfps.map((v) => v.id)]
-  )
-  if (activeViewIndex == -1) {
-    activeViewIndex = 0
-    setViewState({ ...state, activeView: efps[0].id })
-  }
+  const activeViewIndex = useMemo(() => {
+    const index = sortedEfps.findIndex((v) => v.id == state.activeView)
+    return index >= 0 ? index : 0
+  }, [state.activeView, ...sortedEfps.map((v) => v.id)])
+
+  useEffect(() => {
+    if (!geneticElement) return
+    setViewState({
+      ...state,
+      activeView: sortedEfps[activeViewIndex].id,
+    })
+  }, [state.activeView])
+
   const efp = useMemo(() => {
     const Component = sortedEfps[activeViewIndex].component
     return (
@@ -127,9 +128,7 @@ export const EFPViewer = ({
                 <MenuItem
                   selected={state.activeView == view.id ? true : false}
                   onClick={() =>
-                    setViewState(
-                      actions['Set Active View'].mutation(state, view.id)
-                    )
+                    setViewState({ ...state, activeView: view.id })
                   }
                   key={view.id}
                 >
@@ -149,9 +148,7 @@ export const EFPViewer = ({
                 <MenuItem
                   selected={state.sortBy == 'name' ? true : false}
                   key='byName'
-                  onClick={() =>
-                    setViewState(actions['Sort by'].mutation(state, 'name'))
-                  }
+                  onClick={() => setViewState({ ...state, sortBy: 'name' })}
                 >
                   By name
                 </MenuItem>,
@@ -159,9 +156,7 @@ export const EFPViewer = ({
                   selected={state.sortBy == 'expression-level' ? true : false}
                   key='byExpression'
                   onClick={() =>
-                    setViewState(
-                      actions['Sort by'].mutation(state, 'expression')
-                    )
+                    setViewState({ ...state, sortBy: 'expression-level' })
                   }
                 >
                   By expression level
@@ -177,13 +172,14 @@ export const EFPViewer = ({
             activeView={sortedEfps[activeViewIndex]}
             viewData={sortedViewData}
             setActiveView={(viewID: EFPId) =>
-              setViewState(actions['Set Active View'].mutation(state, viewID))
+              setViewState({ ...state, activeView: viewID })
             }
             geneticElement={geneticElement}
             views={sortedEfps}
             colorMode={state.colorMode}
             maskThreshold={state.maskThreshold}
             maskingEnabled={state.maskingEnabled}
+            transform={state.transform}
           />
         </Box>
         {/* main canvas area */}
@@ -220,9 +216,7 @@ export const EFPViewer = ({
                 isVisible={maskModalVisible}
                 onClose={() => setMaskModalVisible(false)}
                 onSubmit={(threshold) =>
-                  setViewState(
-                    actions['Set Mask Threshold'].mutation(state, threshold)
-                  )
+                  setViewState({ ...state, maskThreshold: threshold })
                 }
               />
               <Legend
@@ -250,18 +244,11 @@ export const EFPViewer = ({
                 })}
                 transform={state.transform}
                 onTransformChange={(transform) => {
-                  setViewState(
-                    actions['Set Transform'].mutation(state, transform)
-                  )
+                  setViewState({ ...state, transform: transform })
                 }}
               >
                 {efp}
               </PanZoom>
-              <ActionsPanel
-                actions={actions}
-                prevState={state}
-                setState={setViewState}
-              ></ActionsPanel>
             </>
           ) : (
             <div

@@ -1,15 +1,13 @@
-import { act, useCallback, useEffect, useMemo, useState } from 'react'
-import { debounce } from 'lodash'
-import { useOutletContext, useSearchParams } from 'react-router-dom'
+import { useEffect, useMemo } from 'react'
+import { useOutletContext } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { useURLState } from '@eplant/state/URLStateManager'
+import { validateType } from '@eplant/state/stateUtils'
+import { useURLState } from '@eplant/state/URLStateProvider'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import PanZoom from '@eplant/util/PanZoom'
-import { flattenState } from '@eplant/util/router'
-import { ActionsPanel } from '@eplant/util/stateUtils/ActionsPanel'
 import { ViewDataError } from '@eplant/View/viewData'
-import { Box, Button, Tooltip, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 
 import Legend from '../eFP/Viewer/legend'
@@ -17,13 +15,13 @@ import Legend from '../eFP/Viewer/legend'
 import { CellEFPStateActions } from './actions'
 import { CellEFPDataObject } from './CellEFPDataObject'
 import {
-  CellEFPStateScheme,
+  CellEFPStateSchema,
   CellEFPViewerData,
   CellEFPViewerState,
 } from './types'
 
 export const CellEFPView = () => {
-  const { geneticElement, setIsLoading, setLoadAmount } =
+  const { geneticElement, setIsLoading, setLoadAmount, setActiveActions } =
     useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<CellEFPViewerState>()
   const { data, isLoading, isError, error } = useQuery<CellEFPViewerData>({
@@ -37,18 +35,10 @@ export const CellEFPView = () => {
     },
     enabled: !!geneticElement,
   })
-
-  const defaultState = {
-    transform: {
-      offset: {
-        x: 0,
-        y: 0,
-      },
-      zoom: 1,
-    },
-  }
   useEffect(() => {
-    initializeState(CellEFPStateScheme)
+    // On mount, set the active actions and initialize the state
+    setActiveActions(CellEFPStateActions)
+    initializeState(CellEFPStateSchema)
   }, [])
 
   useEffect(() => {
@@ -65,6 +55,7 @@ export const CellEFPView = () => {
   }, [geneticElement?.id, data])
 
   if (isLoading || isError || !data || !state) return <></>
+
   return (
     <Box
       sx={{
@@ -87,11 +78,11 @@ export const CellEFPView = () => {
           {geneticElement?.id}
         </Typography>
       </Box>
-      <ActionsPanel
+      {/* <ActionsPanel
         actions={CellEFPStateActions}
         prevState={state}
         setState={setState}
-      ></ActionsPanel>
+      ></ActionsPanel> */}
       <Box
         sx={{
           width: '100%',

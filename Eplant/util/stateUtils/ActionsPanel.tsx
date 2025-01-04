@@ -1,33 +1,26 @@
+import { useURLState } from '@eplant/state/URLStateProvider'
 import { Box, Button, Grid, Tooltip } from '@mui/material'
 
-import { StateActions } from '.'
+import { StateAction } from '.'
 
 interface ActionsPanelProps<T> {
-  actions: StateActions<T>
-  prevState: T
-  setState: (newState: T) => void
+  actions: StateAction<T>[]
 }
 
-export const ActionsPanel = <T,>({
-  actions,
-  prevState,
-  setState,
-}: ActionsPanelProps<T>) => {
-  const actionButtons = Object.entries(actions)
-    .filter(([_, action]) => action.rendered)
-    .map(([key, action]) => {
-      if (action.rendered) {
-        return (
-          <Tooltip key={key} title={key}>
-            <Button
-              startIcon={action.icon}
-              onClick={() => setState(action.mutation(prevState))}
-            ></Button>
-          </Tooltip>
-        )
-      }
-      return null // Should never get here but need this to make TS compiler happy
-    })
+export const ActionsPanel = <T,>({ actions }: ActionsPanelProps<T>) => {
+  const { state, setState, initializeState } = useURLState<T>()
+  const actionButtons = actions.map((action) => {
+    return (
+      <Tooltip key={action.name} title={action.description}>
+        <Button
+          startIcon={action.icon}
+          onClick={() => {
+            if (state) setState(action.mutation(state))
+          }}
+        ></Button>
+      </Tooltip>
+    )
+  })
 
   const rows = []
   for (let i = 0; i < actionButtons.length; i += 5) {

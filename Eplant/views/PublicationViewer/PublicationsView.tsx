@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import axios from 'axios'
 import { useOutletContext } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
+import { useURLState } from '@eplant/state/URLStateProvider'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import { Tab, Tabs, Typography, useTheme } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
-
-import { CellEFPViewerData } from '../CellEFP/types'
 
 import { GeneRIFs } from './GeneRIFs'
 import { Publications } from './Publications'
 import {
   GeneRIFsData,
   PublicationData,
+  PublicationsViewerState,
+  PublicationsViewStateSchema,
   PublicationViewerData,
   TabValues,
 } from './types'
@@ -21,7 +22,8 @@ import {
 export const PublicationsView = () => {
   const { geneticElement, setIsLoading, setLoadAmount } =
     useOutletContext<ViewContext>()
-  const [tab, setTab] = useState<TabValues>('publications')
+  const { state, setState, initializeState } =
+    useURLState<PublicationsViewerState>()
   const { data, isLoading, isError, error } = useQuery<PublicationViewerData>({
     queryKey: [`publications-${geneticElement?.id}`],
     queryFn: async () => {
@@ -34,23 +36,29 @@ export const PublicationsView = () => {
     enabled: !!geneticElement,
   })
   const theme = useTheme()
+  useEffect(() => {
+    initializeState(PublicationsViewStateSchema)
+  }, [])
 
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
 
-  if (isLoading || isError || !data) return <></>
+  if (isLoading || isError || !data || !state) return <></>
   return (
     <div>
       <Typography variant='h6'>
         Publications related to {geneticElement?.id}
       </Typography>
-      <Tabs value={tab} onChange={(e, val: TabValues) => setTab(val)}>
+      <Tabs
+        value={state.tab}
+        onChange={(e, val: TabValues) => setState({ ...state, tab: val })}
+      >
         <Tab label='PUBLICATIONS' value='publications' />
         <Tab label='GENE RIFS' value='geneRIFs' />
       </Tabs>
       <div
-        hidden={tab !== 'publications'}
+        hidden={state.tab !== 'publications'}
         style={{
           background: theme.palette.background.paperOverlay,
           padding: '0rem 1rem',
@@ -60,12 +68,12 @@ export const PublicationsView = () => {
           borderColor: theme.palette.background.edgeLight,
         }}
       >
-        {tab === 'publications' && (
+        {state.tab === 'publications' && (
           <Publications publications={data.publications} />
         )}
       </div>
       <div
-        hidden={tab !== 'geneRIFs'}
+        hidden={state.tab !== 'geneRIFs'}
         style={{
           background: theme.palette.background.paperOverlay,
           padding: '0rem 1rem',
@@ -75,7 +83,7 @@ export const PublicationsView = () => {
           borderColor: theme.palette.background.edgeLight,
         }}
       >
-        {tab === 'geneRIFs' && <GeneRIFs geneRIFs={data.geneRIFs} />}
+        {state.tab === 'geneRIFs' && <GeneRIFs geneRIFs={data.geneRIFs} />}
       </div>
     </div>
   )

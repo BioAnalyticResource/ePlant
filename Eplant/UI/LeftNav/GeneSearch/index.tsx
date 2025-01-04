@@ -29,7 +29,7 @@ export function SearchGroup({
   const [speciesList, setSpeciesList] = useSpecies()
   const [species, setSpecies] = useState<Species>()
 
-  // Commedned out until we get multi-species support
+  // Commented out until we get multi-species support
   // const [searchingByExpression, setSearchingByExpression] = useState<boolean>(false)
   // const [searchingByPhenotype, setSearchingByPhenotype] = useState<boolean>(false)
   // const [speciesList, setSpeciesList] = useSpecies()
