@@ -22,7 +22,7 @@ export const PlantEFP = () => {
   const { state, setState, initializeState } = useURLState<EFPViewerState>()
 
   const { data, isLoading, isError, error } = useQuery<EFPViewerData>({
-    queryKey: [`plantEFP-${geneticElement?.id}`],
+    queryKey: [`plant-efp-${geneticElement?.id}`],
     queryFn: async () => {
       if (!geneticElement) {
         throw Error('No gene')

@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
 
-import { validateType } from '@eplant/state/stateUtils'
 import { useURLState } from '@eplant/state/URLStateProvider'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import { useQuery } from '@tanstack/react-query'

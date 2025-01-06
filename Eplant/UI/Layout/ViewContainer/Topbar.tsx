@@ -1,9 +1,10 @@
 import { useId } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
-import { useActiveViewId } from '@eplant/state'
+import { queryClient } from '@eplant/main'
+import { useActiveGeneId, useActiveViewId } from '@eplant/state'
 import { useURLState } from '@eplant/state/URLStateProvider'
+import downloadFile from '@eplant/util/downloadFile'
 import { ActionsPanel } from '@eplant/util/stateUtils/ActionsPanel'
 import { View } from '@eplant/View'
 import {
@@ -19,7 +20,7 @@ import {
 } from '@mui/material'
 
 interface TopBarProps {
-  activeView: View<any, any, any>
+  activeView: View<any, any>
   setViewingCitations: (value: boolean) => void
   loading: boolean
   activeActions: any[]
@@ -32,11 +33,10 @@ export const TopBar = ({
 }: TopBarProps) => {
   const { userViews, views } = useConfig()
   const [activeViewId, setActiveViewId] = useActiveViewId()
+  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const { setState } = useURLState<any>()
-  const location = useLocation()
   const idLabel = useId()
   const selectId = useId()
-
   const handleChangeView = (e: any) => {
     const view = views.find((view) => view.id === e.target.value)
     if (view) {
@@ -182,10 +182,21 @@ export const TopBar = ({
           disabled={loading}
           color='secondary'
           onClick={() => {
-            // downloadFile(
-            //   `${activeView.id}${gene ? '-' + gene.id : ''}.json`,
-            //   JSON.stringify(activeData, null, 2)
-            // )
+            let data = queryClient.getQueryData([
+              `${activeView.id}-${activeGeneId}`,
+            ])
+
+            if (!data) {
+              // Some views don't cache based on geneId
+              data = queryClient.getQueryData([activeView.id])
+            }
+            console.log(`${activeView.id}-${activeGeneId}`)
+            console.log(data)
+            console.log(JSON.stringify(data, null, 2))
+            downloadFile(
+              `${activeView.id}${activeGeneId ? '-' + activeGeneId : ''}.json`,
+              JSON.stringify(data, null, 2)
+            )
           }}
         >
           Download data

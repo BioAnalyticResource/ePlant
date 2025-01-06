@@ -1,8 +1,7 @@
 import { SVGProps } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { View } from '@eplant/View'
-import { ViewDataError } from '@eplant/View/viewData'
+import { View, ViewDataError } from '@eplant/View'
 import { Player } from '@lottiefiles/react-lottie-player'
 import { Box, LinearProgress, Stack, Typography, useTheme } from '@mui/material'
 

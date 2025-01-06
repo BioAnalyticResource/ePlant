@@ -49,7 +49,6 @@ export const getStateFromParams = <T extends ZodTypeAny>(
     }
   }
   extractParams(schema)
-  console.log('rawObject', rawObject)
   const result = schema.safeParse(unflattenObject(rawObject))
   return result.success ? result.data : {}
 }

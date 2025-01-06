@@ -36,16 +36,6 @@ export const EFPViewerStateSchema = z.object({
 })
 
 export type EFPViewerState = z.infer<typeof EFPViewerStateSchema>
-export type EFPViewerAction =
-  | { type: 'set-view'; id: EFPId }
-  | { type: 'reset-transform' }
-  | { type: 'set-transform'; transform: Transform }
-  | { type: 'toggle-color-mode' }
-  | { type: 'sort-by'; by: EFPViewerSortTypes }
-  | { type: 'toggle-masking' }
-  | { type: 'toggle-mask-modal' }
-  | { type: 'set-mask-threshold'; threshold: number }
-
 export type EFPListProps = {
   geneticElement: GeneticElement
   views: EFP[]

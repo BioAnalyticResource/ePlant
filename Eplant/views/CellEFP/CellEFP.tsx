@@ -2,11 +2,10 @@ import { useEffect, useMemo } from 'react'
 import { useOutletContext } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { validateType } from '@eplant/state/stateUtils'
 import { useURLState } from '@eplant/state/URLStateProvider'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import PanZoom from '@eplant/util/PanZoom'
-import { ViewDataError } from '@eplant/View/viewData'
+import { ViewDataError } from '@eplant/View'
 import { Box, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 
@@ -19,13 +18,14 @@ import {
   CellEFPViewerData,
   CellEFPViewerState,
 } from './types'
+import CellEFP from '.'
 
 export const CellEFPView = () => {
   const { geneticElement, setIsLoading, setLoadAmount, setActiveActions } =
     useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<CellEFPViewerState>()
   const { data, isLoading, isError, error } = useQuery<CellEFPViewerData>({
-    queryKey: [`cellEFP-${geneticElement?.id}`],
+    queryKey: [`cell-efp-${geneticElement?.id}`],
     queryFn: async () => {
       if (!geneticElement) {
         throw Error('No gene')

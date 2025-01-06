@@ -12,9 +12,7 @@ import {
 } from '@eplant/state'
 import Modal from '@eplant/UI/Modal'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
-import { StateAction } from '@eplant/util/stateUtils'
-import { ViewDataError } from '@eplant/View/viewData'
-import CellEFP from '@eplant/views/CellEFP'
+import { StateAction, ViewDataError } from '@eplant/View'
 import GeneInfoView from '@eplant/views/GeneInfoView'
 import {
   Box,
@@ -63,8 +61,6 @@ export function ViewContainer<T, S, A>({
   const activeView =
     views.find((view) => view.id === activeViewId) ?? GeneInfoView
 
-  console.log('activeView', activeView)
-  console.log('activeGene', activeGeneId)
   // On app url change, make sure loaded gene and view aligns with URL
   useEffect(() => {
     const loadGene = async (geneid: string) => {
@@ -81,7 +77,6 @@ export function ViewContainer<T, S, A>({
     }
     if (params.geneid) {
       if (params.geneid !== activeGeneId) {
-        console.log('loading gene', params.geneid)
         if (!genes.find((g) => g.id === params.geneid)) {
           loadGene(params.geneid)
         }
@@ -104,26 +99,27 @@ export function ViewContainer<T, S, A>({
 
   // On active gene change update the gene path segment
   useEffect(() => {
-    console.log('updating path', activeGeneId, location.pathname)
     if (location.pathname !== import.meta.env.BASE_URL) {
       // Only run this after initial redirect
       const pathSegments = location.pathname
         .split('/')
         .filter((segment) => segment !== '')
-      if (pathSegments.length == 2 && activeGeneId) {
+      if (pathSegments.length == 2 && gene) {
         pathSegments[pathSegments.length - 1] = activeGeneId
-      } else if (pathSegments.length == 1 && activeGeneId) {
+      } else if (pathSegments.length == 1 && gene) {
         pathSegments.push(activeGeneId)
         // Will never get here as of now, but if we decide to persist activeGene need
         // to do this.
+      } else {
+        // No gene selected, remove gene path segment
+        pathSegments.pop()
       }
-
       const newPath = '/' + pathSegments.join('/') + '/' + location.search
       if (newPath !== location.pathname + '/' + location.search) {
         navigate(newPath)
       }
     }
-  }, [activeGeneId])
+  }, [activeGeneId, gene])
 
   useEffect(() => {
     const pathSegments = location.pathname.split('/')
@@ -143,8 +139,7 @@ export function ViewContainer<T, S, A>({
         </DialogTitle>
         <DialogContent>
           {activeView.citation ? (
-            // <view.citation state={state} activeData={activeData} gene={gene} />
-            <div></div>
+            <activeView.citation />
           ) : (
             <Box>No information provided for this view</Box>
           )}
@@ -190,14 +185,14 @@ export function ViewContainer<T, S, A>({
         <ErrorBoundary>
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
 
-          {activeGeneId === '' ? (
+          {!gene ? (
             <LoadingPage
               loadingAmount={loadAmount}
               gene={gene}
               view={activeView}
               error={ViewDataError.UNSUPPORTED_GENE}
             />
-          ) : (loading && loadAmount < 100) || !gene ? (
+          ) : loading && loadAmount < 100 ? (
             <LoadingPage
               loadingAmount={loadAmount}
               gene={gene}

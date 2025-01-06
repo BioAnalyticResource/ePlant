@@ -1,6 +1,5 @@
 import { z } from 'zod'
 
-import { Transform } from '@eplant/util/PanZoom'
 import { EFPData } from '@eplant/views/eFP/types'
 
 export type CellEFPViewerData = {
@@ -8,10 +7,6 @@ export type CellEFPViewerData = {
 }
 
 export type EFPViewerSortTypes = 'expression-level' | 'name'
-
-export type CellEFPViewerAction =
-  | { type: 'reset-transform' }
-  | { type: 'set-transform'; transform: Transform }
 
 export type CellEFPSearchParams = {
   x: string

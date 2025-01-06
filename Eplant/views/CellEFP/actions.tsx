@@ -1,4 +1,4 @@
-import { StateAction } from '@eplant/util/stateUtils'
+import { StateAction } from '@eplant/View'
 import YoutubeSearchedForRoundedIcon from '@mui/icons-material/YoutubeSearchedForRounded'
 
 import { CellEFPViewerState } from './types'

@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { ViewDataError } from '@eplant/View/viewData'
+import { ViewDataError } from '@eplant/View'
 import { CircularProgress, Typography } from '@mui/material'
 
 import { getEFPSampleData } from '../../eFP'

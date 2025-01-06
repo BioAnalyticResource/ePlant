@@ -1,4 +1,5 @@
-import { StateAction } from '@eplant/util/stateUtils'
+import { StateAction } from '@eplant/View'
+import BuildRoundedIcon from '@mui/icons-material/BuildRounded'
 import ColorLensIcon from '@mui/icons-material/ColorLens'
 import YoutubeSearchedForRoundedIcon from '@mui/icons-material/YoutubeSearchedForRounded'
 
@@ -26,6 +27,15 @@ export const EFPViewerActions: StateAction<EFPViewerState>[] = [
     mutation: (prevState) => ({
       ...prevState,
       colorMode: prevState.colorMode == 'absolute' ? 'relative' : 'absolute',
+    }),
+  },
+  {
+    name: 'Toggle Masking',
+    description: 'Toggle colour masking',
+    icon: <BuildRoundedIcon />,
+    mutation: (prevState) => ({
+      ...prevState,
+      maskingEnabled: !prevState.maskingEnabled,
     }),
   },
 ]

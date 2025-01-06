@@ -1,7 +1,6 @@
 import { useURLState } from '@eplant/state/URLStateProvider'
+import { StateAction } from '@eplant/View'
 import { Box, Button, Grid, Tooltip } from '@mui/material'
-
-import { StateAction } from '.'
 
 interface ActionsPanelProps<T> {
   actions: StateAction<T>[]

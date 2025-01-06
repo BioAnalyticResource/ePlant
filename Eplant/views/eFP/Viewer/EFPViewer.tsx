@@ -5,7 +5,7 @@ import Dropdown from '@eplant/UI/Dropdown'
 import NotSupported from '@eplant/UI/Layout/ViewNotSupported'
 import PanZoom from '@eplant/util/PanZoom'
 import useDimensions from '@eplant/util/useDimensions'
-import { ViewDataError } from '@eplant/View/viewData'
+import { ViewDataError } from '@eplant/View'
 import { Box, MenuItem, Typography } from '@mui/material'
 
 import { ColorMode, EFPId } from '../types'
@@ -57,6 +57,12 @@ export const EFPViewer = ({
     })
   }, [state.activeView])
 
+  useEffect(() => {
+    if (state.maskingEnabled) {
+      setMaskModalVisible(true)
+    }
+  }, [state.maskingEnabled])
+
   const efp = useMemo(() => {
     const Component = sortedEfps[activeViewIndex].component
     return (
@@ -72,7 +78,6 @@ export const EFPViewer = ({
             maskingEnabled: state.maskingEnabled,
           }}
           geneticElement={geneticElement}
-          dispatch={() => {}}
         />
       </>
     )
@@ -215,9 +220,10 @@ export const EFPViewer = ({
                 state={state}
                 isVisible={maskModalVisible}
                 onClose={() => setMaskModalVisible(false)}
-                onSubmit={(threshold) =>
+                onSubmit={(threshold) => {
                   setViewState({ ...state, maskThreshold: threshold })
-                }
+                  setMaskModalVisible(false)
+                }}
               />
               <Legend
                 sx={(theme) => ({

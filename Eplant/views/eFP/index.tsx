@@ -1,15 +1,13 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { View, ViewProps } from '@eplant/View'
-import { ViewDataError } from '@eplant/View/viewData'
+import { ViewDataError } from '@eplant/View'
 import { CircularProgress, Typography } from '@mui/material'
 
 import SVGTooltip from './Viewer/EFPTooltip'
 import { useEFPSVG, useStyles } from './svg'
 import {
-  EFPAction,
   EFPData,
   EFPGroup,
   EFPId,
@@ -25,7 +23,7 @@ interface efpTooptipProps {
   data: EFPData
   state: EFPState
 }
-export default class EFP implements View<EFPData, EFPState, EFPAction> {
+export default class EFP {
   getInitialState: () => EFPState = () => ({
     colorMode: 'absolute',
     renderAsThumbnail: false,
@@ -180,7 +178,11 @@ export default class EFP implements View<EFPData, EFPState, EFPAction> {
     state,
     geneticElement,
     activeData,
-  }: ViewProps<EFPData, EFPState, EFPAction>): JSX.Element {
+  }: {
+    state: EFPState
+    geneticElement: GeneticElement | null
+    activeData: EFPData
+  }): JSX.Element {
     const { view } = useEFPSVG(
       {
         svgURL: this.svgURL,
