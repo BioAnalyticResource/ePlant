@@ -28,14 +28,12 @@ const genericViews = [GetStartedView, FallbackView]
 // List of views that a user can select from
 // Can contain views from the genericViews list too
 const userViews = [
-  // GeneInfoView,
+  GeneInfoView,
   PublicationViewer,
-  // DebugView,
   PlantEFP,
   CellEFP,
   ExperimentEFP,
   ChromosomeViewerObject,
-  GeneInfoView,
 ]
 
 // List of views that are used to lookup a view by id
@@ -46,7 +44,7 @@ export const defaultConfig = {
   userViews,
   views,
   rootPath: import.meta.env.BASE_URL,
-  defaultView: 'cell-efp',
+  defaultView: 'gene-info',
   defaultSpecies: '',
 }
 
