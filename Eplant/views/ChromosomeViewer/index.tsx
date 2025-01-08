@@ -6,10 +6,11 @@
  * --------------------
  *  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
+import { useGeneticElements } from '@eplant/state'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Snackbar from '@mui/material/Snackbar'
@@ -25,8 +26,10 @@ import {
   ChromosomeViewerAction,
   ChromosomeViewerData,
   ChromosomeViewerState,
+  GeneAnnotationItem,
   Transform,
 } from './types'
+import { getGeneAnnotation } from './utilities'
 import ZoomControls from './ZoomControls'
 
 export const ChromosomeViewerObject: View<
