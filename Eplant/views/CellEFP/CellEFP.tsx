@@ -18,7 +18,6 @@ import {
   CellEFPViewerData,
   CellEFPViewerState,
 } from './types'
-import CellEFP from '.'
 
 export const CellEFPView = () => {
   const { geneticElement, setIsLoading, setLoadAmount, setActiveActions } =
@@ -43,7 +42,7 @@ export const CellEFPView = () => {
 
   useEffect(() => {
     setIsLoading(isLoading)
-  }, [isLoading, setIsLoading])
+  }, [isLoading])
 
   const efp = useMemo(() => {
     const Component = CellEFPDataObject.component

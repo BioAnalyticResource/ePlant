@@ -1,5 +1,5 @@
 import GeneticElement from '@eplant/GeneticElement'
-import { StateAction } from '@eplant/util/stateUtils'
+import { StateAction } from '@eplant/View'
 
 export type ViewContext = {
   geneticElement: GeneticElement | null

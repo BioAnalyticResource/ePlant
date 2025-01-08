@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import GeneticElement from '@eplant/GeneticElement'
 import { View } from '@eplant/View'
-import { useViewData } from '@eplant/View/viewData'
 import { Box, Button, ButtonProps, LinearProgress } from '@mui/material'
 
 export const ViewButton = styled(function ViewButton({

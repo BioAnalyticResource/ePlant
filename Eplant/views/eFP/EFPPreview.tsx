@@ -76,7 +76,6 @@ export default function EFPPreview({
             maskingEnabled: maskingEnabled,
           }}
           geneticElement={gene}
-          dispatch={() => {}}
         />
         <div
           style={{

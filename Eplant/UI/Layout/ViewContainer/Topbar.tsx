@@ -5,7 +5,7 @@ import { queryClient } from '@eplant/main'
 import { useActiveGeneId, useActiveViewId } from '@eplant/state'
 import { useURLState } from '@eplant/state/URLStateProvider'
 import downloadFile from '@eplant/util/downloadFile'
-import { ActionsPanel } from '@eplant/util/stateUtils/ActionsPanel'
+import { ActionsPanel } from '@eplant/util/Actions/ActionsPanel'
 import { View } from '@eplant/View'
 import {
   AppBar,

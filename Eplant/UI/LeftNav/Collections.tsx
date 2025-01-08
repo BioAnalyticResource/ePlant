@@ -436,7 +436,6 @@ export function Collections(props: {
             }}
             deleteGene={(g) => {
               deleteGene(g)
-              setActiveGeneId('')
             }}
             setOpen={() => {
               setCollections((collections) => {
