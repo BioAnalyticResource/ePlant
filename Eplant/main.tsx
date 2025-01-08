@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { StrictMode } from 'react'
 import { Provider } from 'jotai'
 import * as ReactDOM from 'react-dom/client'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { CellEFPView } from './views/CellEFP/CellEFP'
 import { ChromosomeView } from './views/ChromosomeViewer/ChromosomeView'
 import { ExperimentEFP } from './views/ExperimentEFP/ExperimentEFP'
 import { GeneInfoView } from './views/GeneInfoView/GeneInfo'
+import GetStartedView from './views/GetStartedView/GetStartedView'
 import { PlantEFP } from './views/PlantEFP/PlantEFP'
 import { PublicationsView } from './views/PublicationViewer/PublicationsView'
 import { Config, defaultConfig } from './config'
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
         path: 'gene-info/:geneid?',
         element: <GeneInfoView></GeneInfoView>,
       },
+      {
+        path: 'get-started/:geneid?',
+        element: <GetStartedView></GetStartedView>,
+      },
     ],
     errorElement: <ErrorBoundary></ErrorBoundary>,
   },
@@ -59,16 +64,16 @@ export const queryClient = new QueryClient()
 
 function RootApp() {
   return (
-    // <React.StrictMode>
-    <Provider>
-      <Config.Provider value={defaultConfig}>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </Config.Provider>
-    </Provider>
-    // </React.StrictMode>
+    <StrictMode>
+      <Provider>
+        <Config.Provider value={defaultConfig}>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </Config.Provider>
+      </Provider>
+    </StrictMode>
   )
 }
 

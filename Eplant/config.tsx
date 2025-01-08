@@ -1,16 +1,13 @@
 import { createContext, useContext } from 'react'
 
 import CellEFP from './views/CellEFP'
-import { CellEFPView } from './views/CellEFP/CellEFP'
 import { ChromosomeViewerObject } from './views/ChromosomeViewer'
-import DebugView from './views/DebugView'
 import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
 import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
-import GeneticElement from './GeneticElement'
 import { type View } from './View'
 
 export type EplantConfig = {
@@ -28,6 +25,7 @@ const genericViews = [GetStartedView, FallbackView]
 // List of views that a user can select from
 // Can contain views from the genericViews list too
 const userViews = [
+  GetStartedView,
   GeneInfoView,
   PublicationViewer,
   PlantEFP,

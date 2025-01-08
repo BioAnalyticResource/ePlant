@@ -20,7 +20,7 @@ import {
 } from './types'
 
 export const PublicationsView = () => {
-  const { geneticElement, setIsLoading, setLoadAmount } =
+  const { geneticElement, setIsLoading, setLoadAmount, setActiveActions } =
     useOutletContext<ViewContext>()
   const { state, setState, initializeState } =
     useURLState<PublicationsViewerState>()
@@ -38,6 +38,7 @@ export const PublicationsView = () => {
   const theme = useTheme()
   useEffect(() => {
     initializeState(PublicationsViewStateSchema)
+    setActiveActions([])
   }, [])
 
   useEffect(() => {

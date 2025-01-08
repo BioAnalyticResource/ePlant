@@ -1,17 +1,22 @@
-import React from 'react'
+import { useEffect } from 'react'
+import { useOutletContext } from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
-import { ViewProps } from '@eplant/View'
+import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import { Filter1, Filter2, Filter3 } from '@mui/icons-material'
 import { Grid, Link, Stack, Typography, useTheme } from '@mui/material'
 
 import Tile from './Tile'
 
-export default function GetStartedView({
-  geneticElement,
-}: ViewProps<Record<string, undefined>, undefined, undefined>) {
+export default function GetStartedView() {
+  const { setActiveActions } = useOutletContext<ViewContext>()
+  // const { state, setState, initializeState } = useURLState<>()
   const theme = useTheme()
   const { views } = useConfig()
+  useEffect(() => {
+    // On mount, set the active actions and initialize the state
+    setActiveActions([])
+  }, [])
   return (
     <Stack spacing={3}>
       <div>

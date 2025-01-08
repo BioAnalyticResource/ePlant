@@ -4,8 +4,8 @@ import { useConfig } from '@eplant/config'
 import { queryClient } from '@eplant/main'
 import { useActiveGeneId, useActiveViewId } from '@eplant/state'
 import { useURLState } from '@eplant/state/URLStateProvider'
-import downloadFile from '@eplant/util/downloadFile'
 import { ActionsPanel } from '@eplant/util/Actions/ActionsPanel'
+import downloadFile from '@eplant/util/downloadFile'
 import { View } from '@eplant/View'
 import {
   AppBar,

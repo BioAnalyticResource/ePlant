@@ -49,7 +49,7 @@ export const GeneInfoView = () => {
   }
 
   useEffect(() => {
-    initializeState(z.object({}))
+    setActiveActions([])
   })
 
   if (isLoading || isError || !data) return <></>
