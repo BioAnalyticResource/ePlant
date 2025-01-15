@@ -10,7 +10,9 @@ import CellEFPIcon from './Icons/CellEFPIcon';
 import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon'; /** Placeholder icon for those that are not yet implemented in ePlant3 */
 import PlantEFPIcon from './Icons/PlantEFPIcon'
 import * as constants from './constants';
-import { NavigatorContext, useViewSwitch, ViewSwitchProvider} from './index';
+import { useViewSwitch } from './geneViewHelpers';
+//import { NavigatorContext, useViewSwitch, ViewSwitchProvider} from './index';
+import { NavigatorContext, ViewSwitchProvider} from './index';
 
 
 /** Static declaration of genome label colors */
