@@ -13,7 +13,6 @@ import tippy, {
 } from 'tippy.js'
 
 import GeneticElement from '@eplant/GeneticElement'
-import arabidopsis from '@eplant/Species/arabidopsis'
 import {
   useActiveGeneId,
   useGeneticElements,
@@ -100,7 +99,6 @@ const InteractionsViewer: View = {
         .then((response) => response.json())
         .then((json) => json[query])
         .then((interactions: [] | undefined) => {
-          // console.log(interactions)
           if (interactions === undefined) {
             recursive = 'false'
             return []
@@ -108,6 +106,7 @@ const InteractionsViewer: View = {
           recursive = interactions[interactions.length - 1]
           return interactions.slice(0, interactions.length - 1)
         })
+      console.log(performance.now())
       // psosible solutoon: promise chain to combine these two (promise.o)
       data = loadInteractions(gene, interactions, recursive)
     } else {
@@ -143,49 +142,124 @@ const InteractionsViewer: View = {
         elements: elements,
         style: cytoStyles,
       })
+
       setCyto(cy)
+      /*
+          AIV.returnSVGandMapManThenChain = function () {
+        return $.ajax({
+            url: "https://bar.utoronto.ca/interactions2/cgi-bin/suba4.php",
+            type: "POST",
+            data: JSON.stringify( AIV.returnLocalizationPOSTJSON() ),
+            contentType : 'application/json',
+            dataType: 'json'
+        })
+            .then(function(SUBAJSON){
+                AIV.addLocalizationDataToNodes(SUBAJSON);
+
+                //Loop through ATG protein nodes and add a SVG string property for bg-image css
+                AIV.cy.startBatch();
+                AIV.parseProteinNodes(AIV.createSVGPieDonutCartStr.bind(AIV), true);
+                AIV.cy.endBatch();
+                AIV.effectorsLocHouseCleaning();
+                if (!AIV.SUBA4LoadState){
+                    AIV.returnBGImageSVGasCSS().update();
+                }
+
+                //Update the HTML table with our SUBA data
+                AIV.transferLocDataToTable();
+                AIV.SUBA4LoadState = true;
+            })
+            .catch(function(err){
+                alertify.logPosition("top right");
+                alertify.error(`Error made when requesting to SUBA webservice, status code: ${err.status}`);
+            })
+            .then(function(){ // chain this AJAX call to the above as the mapman relies on the drawing of the SVG pie donuts, i.e. wait for above sync code to finish
+                if (!AIV.mapManLoadState) { //don't make another ajax call if we already have MapMan data in our nodes (this logic is for our checkbox)
+                    return $.ajax({
+                        url: AIV.createGETMapManURL(),
+                        type: 'GET',
+                        dataType: 'json'
+                    });
+                }
+            })
+            .catch(function(err){
+                alertify.logPosition("top right");
+                alertify.error(`Error made when requesting to MapMan webservice (note: we cannot load more than 700 MapMan numbers), status code: ${err.status}`);
+            })
+            .then(function(resMapManJSON){
+                if (typeof resMapManJSON !== 'undefined' && resMapManJSON.status === "fail"){ throw new Error ('MapMan server call failed!')}
+                AIV.cy.startBatch();
+                AIV.processMapMan(resMapManJSON);
+                AIV.cy.endBatch();
+                AIV.mapManLoadState = true;
+            })
+            .catch(function(err){
+                alertify.logPosition("top right");
+                alertify.error(`Error processing MapMan data; ${err}`);
+            });
+    };
+`    */
+
       setLayout(cy, viewData.loadFlags)
       // Listen for mouseover events on nodes
       addNodeListener(cy)
       // Listen for mouseover events on edges
       addEdgeListener(cy)
-      // add loadgene listener // NOT WORKING
-      const loadGeneButton = document.querySelector("loadGene_interactionsView")
-      loadGeneButton?.addEventListener("click", ()=>{
-        const id = loadGeneButton.getAttribute("id")
-        const aliases = loadGeneButton.getAttribute("aliases")?.split(",")
-        const annotation = loadGeneButton.getAttribute("annotation")
-        if (id != null && annotation != null && aliases != null) {
-        const geneticElement = new GeneticElement(
-            id,
-            annotation,
-            arabidopsis,
-            aliases
-        )
-        setGeneticElements([...geneticElements[0], geneticElement])
-        setActiveGeneId(geneticElement.id)
-      }
-    })
+      // // add loadgene listener // NOT WORKING
+      // const loadGeneButton = document.querySelector("loadGene_interactionsView")
+      // loadGeneButton?.addEventListener("click", ()=>{
+      //   const id = loadGeneButton.getAttribute("id")
+      //   const aliases = loadGeneButton.getAttribute("aliases")?.split(",")
+      //   const annotation = loadGeneButton.getAttribute("annotation")
+      //   if (id != null && annotation != null && aliases != null) {
+      //     const geneticElement = new GeneticElement(
+      //         id,
+      //         annotation,
+      //         arabidopsis,
+      //         aliases
+      //     )
+      //     setGeneticElements([...geneticElements[0], geneticElement])
+      //     setActiveGeneId(geneticElement.id)
+      //   }
+      // })
     }, [])
 
-    // Add event listner to load gene button
-    const loadGeneButton = document.querySelector('.loadGene_interactionsView')
-    const id = loadGeneButton?.id
-    const annotation = loadGeneButton?.getAttribute('annotation')
-    const aliases = loadGeneButton?.getAttribute('aliases')?.split(',')
-
-    if (id != null && annotation != null && aliases != null) {
-      loadGeneButton?.addEventListener('click', (event) => {
-        const geneticElement = new GeneticElement(
-          id,
-          annotation,
-          arabidopsis,
-          aliases
-        )
-        setGeneticElements([...geneticElements[0], geneticElement])
-        setActiveGeneId(id)
+    /**
+     * @function parseProteinNodes - parse through every protein (non-effector) node that exists in the DOM and perform the callback function on each node
+     * @param {function} cb -  callback function
+     * @param {boolean} [needNodeRef=false] - optional boolean to determine if callback should be performed on node object reference
+     */
+    const parseProteinNode = (cb: (id: any) => null, needNodeRef = false) => {
+      cyto.filter('.protien_back').forEach(function (node) {
+        const nodeID = node.data('name')
+        if (nodeID.match(/^AT[1-5MC]G\d{5}$/i)) {
+          //only get AGI IDs, i.e. exclude effectors
+          if (needNodeRef) {
+            cb(node)
+          } else {
+            cb(nodeID)
+          }
+        }
       })
     }
+    // // Add event listner to load gene button
+    // const loadGeneButton = document.querySelector('.loadGene_interactionsView')
+    // const id = loadGeneButton?.id
+    // const annotation = loadGeneButton?.getAttribute('annotation')
+    // const aliases = loadGeneButton?.getAttribute('aliases')?.split(',')
+
+    // if (id != null && annotation != null && aliases != null) {
+    //   loadGeneButton?.addEventListener('click', (event) => {
+    //     const geneticElement = new GeneticElement(
+    //       id,
+    //       annotation,
+    //       arabidopsis,
+    //       aliases
+    //     )
+    //     setGeneticElements([...geneticElements[0], geneticElement])
+    //     setActiveGeneId(id)
+    //   })
+    // }
 
     return (
       <div style={{ background: 'white', overflow: 'hidden' }}>

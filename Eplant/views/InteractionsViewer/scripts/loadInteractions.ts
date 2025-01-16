@@ -416,7 +416,6 @@ const createChromosomeEdge = (id: string, method: string) => {
 const setProteinEdgeStyles = (edge: RawEdge): RawEdge => {
   // Set edge style and size based on confidence
   edge.data.lineStyle = 'solid'
-  console.log(edge.data.method, edge.data.interolog_conf)
   if (edge.data.method === 'E') {
     edge.data.size = 6
     // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
@@ -446,7 +445,7 @@ const setProteinEdgeStyles = (edge: RawEdge): RawEdge => {
     edge.data.lineColor = '#E97911'
     // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
   } else if (edge.data.correlation > 0.5) {
-  edge.data.lineColor = '#EEB807'
+    edge.data.lineColor = '#EEB807'
   } else {
     edge.data.lineColor = '#A0A0A0'
   }

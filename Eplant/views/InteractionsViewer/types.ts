@@ -52,6 +52,7 @@ export interface NodeData {
   content?: string
   geneticElement?: GeneticElement
   genes?: string[]
+  svgDonut?: string
   pie1Size?: number
   pie2Size?: number
   pie3Size?: number

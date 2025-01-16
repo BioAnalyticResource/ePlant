@@ -1,7 +1,7 @@
 import { Core } from 'cytoscape'
 
 /**
-  * Applies filter to edges matching selector
+  * Applies filter  to edges matching selector
   * @param {boolean} status The related filterStatus index
   * @param {String} selector The selector by which to filter edges
   * @returns {void}

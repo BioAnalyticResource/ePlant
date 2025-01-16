@@ -148,7 +148,7 @@ const transformAverage = (nodes: NodeCollection, offset: boolean) => {
   let avgX = 0
   let avgY = 0
 
-  // Get range and average of values
+  // Get range and  average of values
   for (let n = 0; n < nodes.length; n++) {
     const posX = nodes[n].position('x')
     const posY = nodes[n].position('y')
