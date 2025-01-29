@@ -11,7 +11,6 @@ import CellEFPIcon from './Icons/CellEFPIcon';
 import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon'; /** Placeholder icon for those that are not yet implemented in ePlant3 */
 import PlantEFPIcon from './Icons/PlantEFPIcon'
 import * as constants from './constants';
-//import { NavigatorContext, useViewSwitch, ViewSwitchProvider} from './index';
 import { NavigatorContext, ViewSwitchProvider} from './index';
 
 
@@ -50,6 +49,21 @@ const grameneLinks: { [key: string]: string } = {
   "MAIZE": "https://ensembl.gramene.org/Zea_mays/Search/Results?species=Zea_mays;idx=;q={geneName}",
   "BARLEY": "https://ensembl.gramene.org/Hordeum_vulgare/Search/Results?species=Hordeum_vulgare;idx=;q={geneName}",
   "default": "https://ensembl.gramene.org/Arabidopsis_thaliana/Gene/Summary?g={geneName}"
+};
+
+/**
+ * Static declaration of other ePlant site links for non-Arabidopsis species
+ */
+const ePlantLinks:{ [key: string]: string } = {
+  "POPLAR": "https://bar.utoronto.ca/eplant_poplar/",
+  "SOYBEAN": "https://bar.utoronto.ca/eplant_soybean/",
+  "M. TRUNCATULA": "https://bar.utoronto.ca/eplant_medicago/",
+  "TOMATO": "https://bar.utoronto.ca/eplant_tomato/",
+  "POTATO": "https://bar.utoronto.ca/eplant_potato/",
+  "GRAPE": "",
+  "RICE": "https://bar.utoronto.ca/eplant_rice/",
+  "MAIZE": "https://bar.utoronto.ca/eplant_maize/",
+  "BARLEY": "https://bar.utoronto.ca/eplant_barley/",
 };
 
 /** 
@@ -916,8 +930,19 @@ useEffect(() => {
               onClick={(event) => {
                 /** Extract the geneName */
                 const geneName = displayName;
-                /** Call switch view function to swap the view using designated view id and gene name */
+                /** Get species from node data or props - default to Arabidopsis */
+                const species = node.data.metadata?.genome;
+                
                 switchViewAndGene('plant', geneName);
+
+               /** Call switch view function with species information */
+                if (!species || !(species in ePlantLinks)) {
+                  /** Call switch view function to swap the view using designated view id and gene name */
+                  switchViewAndGene('plant', geneName);
+                } else {
+                  /** Handle external species navigation */
+                  switchViewAndGene('plant', geneName, ePlantLinks[species]);
+                }
               }}
             >
               <rect
@@ -945,8 +970,19 @@ useEffect(() => {
               onClick={(event) => {
                 /** Extract the geneName */
                 const geneName = displayName;
-                /** Call switch view function to swap the view using designated view id and gene name */
+                /** Get species from node data or props - default to Arabidopsis */
+                const species = node.data.metadata?.genome;
+                
                 switchViewAndGene('Cell eFP', geneName);
+
+               /** Call switch view function with species information */
+                if (!species || !(species in ePlantLinks)) {
+                  /** Call switch view function to swap the view using designated view id and gene name */
+                  switchViewAndGene('Cell eFP', geneName);
+                } else {
+                  /** Handle external species navigation */
+                  switchViewAndGene('Cell eFP', geneName, ePlantLinks[species]);
+                }
               }}
             >
               <rect

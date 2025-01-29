@@ -19,7 +19,7 @@ interface ViewSwitchContextType {
   /** Function to switch gene only */
   switchGeneOnly: (geneName: string) => Promise<void>;
   /** Function to switch both view and gene */
-  switchViewAndGene: (viewId: string, geneName: string) => Promise<void>;
+  switchViewAndGene: (viewId: string, geneName: string, species?: string) => Promise<void>;
 }
 
 /** Default context value */
@@ -112,11 +112,24 @@ export const createViewSwitchProvider = () => {
     };
 
     /**
+     * Handles navigation to external species links
+     * @param speciesUrl - The URL to navigate to
+     * @param geneName - The gene identifier
+     */
+        const handleExternalSpecies = (speciesUrl: string, geneName: string): void => {
+          /** const fullUrl = `${speciesUrl}${geneName}`; */ 
+          const fullUrl = `${speciesUrl}`;
+          window.open(fullUrl, '_blank');
+        };
+
+    /**
      * Switches only the view, keeping the current gene
      * @param viewId - ID of the view to switch to
      */
     const switchViewOnly = async (viewId: string): Promise<void> => {
+      
       const targetView = validateView(viewId);
+      
       if (targetView) {
         setActiveViewId(targetView.id);
         setActiveView(targetView);
@@ -127,8 +140,15 @@ export const createViewSwitchProvider = () => {
      * Switches only the gene, keeping the current view
      * @param geneName - Name of the gene to switch to
      */
-    const switchGeneOnly = async (geneName: string): Promise<void> => {
+    const switchGeneOnly = async (geneName: string, speciesUrl?: string): Promise<void> => {
+      
+      if (speciesUrl) {
+        handleExternalSpecies(speciesUrl, geneName);
+        return;
+      }
+      
       const geneticElement = await loadGene(geneName);
+      
       if (geneticElement) {
         addGeneticElements([geneticElement]);
         setActiveGeneId(geneticElement.id);
@@ -141,7 +161,13 @@ export const createViewSwitchProvider = () => {
      * @param viewId - ID of the view to switch to
      * @param geneName - Name of the gene to switch to
      */
-    const switchViewAndGene = async (viewId: string, geneName: string): Promise<void> => {
+    const switchViewAndGene = async (viewId: string, geneName: string, speciesUrl?: string): Promise<void> => {
+      
+      if (speciesUrl) {
+        handleExternalSpecies(speciesUrl, geneName);
+        return;
+      }
+
       const targetView = validateView(viewId);
       const geneticElement = await loadGene(geneName);
 
@@ -161,7 +187,7 @@ export const createViewSwitchProvider = () => {
           activeGene, 
           switchViewOnly,
           switchGeneOnly,
-          switchViewAndGene 
+          switchViewAndGene
         }}
       >
         {children}
