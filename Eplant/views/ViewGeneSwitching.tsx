@@ -144,7 +144,6 @@ export const createViewSwitchProvider = () => {
       
       if (speciesUrl) {
         handleExternalSpecies(speciesUrl, geneName);
-        return;
       }
       
       const geneticElement = await loadGene(geneName);
@@ -165,7 +164,6 @@ export const createViewSwitchProvider = () => {
       
       if (speciesUrl) {
         handleExternalSpecies(speciesUrl, geneName);
-        return;
       }
 
       const targetView = validateView(viewId);

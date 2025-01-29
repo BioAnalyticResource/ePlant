@@ -2,6 +2,8 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "r
 import React from "react";
 import * as d3 from "d3";
 
+import { useConfig } from "@eplant/config";
+import { useSpecies } from "@eplant/state";
 import { useTheme } from '@mui/material/styles';
 
 import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
@@ -633,6 +635,9 @@ export const NavigatorViewObject = () => {
   const gRef = useRef<SVGGElement | null>(null);
   const theme = useTheme();
   const { switchViewAndGene } = useViewSwitch();
+  const { userViews } = useConfig();
+  const [speciesList] = useSpecies();
+  const speciesAPI = speciesList.length ? speciesList[0] : undefined;
 
   /** Initialize dimensions with default calculation */
   const [dimensions, setDimensions] = useState(calculateDimensions());
@@ -824,6 +829,7 @@ useEffect(() => {
       isHidden = false; /** Reset the hidden state */
     });
   };
+  
 
   /** Generate node elements for rendering */
   const allNodes = navigator?.descendants().map((node, index: number) => {
@@ -900,18 +906,35 @@ useEffect(() => {
                   );
                 }
               }}
-              onClick={() => {
-                const url = `#`;
-                window.open(url, "_blank");
+              onClick={(event) => {
+                /** Extract the geneName */
+                const geneName = displayName;
+                /** Get species from node data or props - default to Arabidopsis */
+                const species = node.data.metadata?.genome;
+                
+                /** Validate view and gene */
+                const isValidView = userViews.some(view => view.id === 'world');
+
+                if (isValidView) {
+                /** Call switch view function with species information */
+                  if (!species || !(species in ePlantLinks)) {
+                    /** Call switch view function to swap the view using designated view id and gene name */
+                    switchViewAndGene('world', geneName);
+                  } else {
+                    /** Handle external species navigation */
+                    switchViewAndGene('world', geneName, ePlantLinks[species]);
+                  }
+                }
               }}
+              style={{ cursor: (userViews.some(view => view.id === 'world')) ? 'pointer' : 'not-allowed' }}
             >
               <rect
                 width={16}
                 height={16}
                 fill="transparent"
                 style={{ cursor: 'pointer' }}
-              />
-              <g style={{ pointerEvents: 'none' }}>
+              />  
+              <g style={{ pointerEvents: 'none', opacity: (userViews.some(view => view.id === 'world')) ? 1 : 0.5 }}>
                 <GeneInfoViewIcon/>
               </g>
             </g>
@@ -927,23 +950,27 @@ useEffect(() => {
                   );
                 }
               }}
-              onClick={(event) => {
+              onClick={async (event) => {
                 /** Extract the geneName */
                 const geneName = displayName;
                 /** Get species from node data or props - default to Arabidopsis */
                 const species = node.data.metadata?.genome;
-                
-                switchViewAndGene('plant', geneName);
 
-               /** Call switch view function with species information */
-                if (!species || !(species in ePlantLinks)) {
-                  /** Call switch view function to swap the view using designated view id and gene name */
-                  switchViewAndGene('plant', geneName);
-                } else {
-                  /** Handle external species navigation */
-                  switchViewAndGene('plant', geneName, ePlantLinks[species]);
+                /** Validate view and gene */
+                const isValidView = userViews.some(view => view.id === 'plant');
+
+                if (isValidView) {
+                  /** Call switch view function with species information */
+                  if (!species || !(species in ePlantLinks)) {
+                    /** Call switch view function to swap the view using designated view id and gene name */
+                    switchViewAndGene('plant', geneName);
+                  } else {
+                    /** Handle external species navigation */
+                    switchViewAndGene('plant', geneName, ePlantLinks[species]);
+                  }
                 }
               }}
+              style={{ cursor: (userViews.some(view => view.id === 'plant')) ? 'pointer' : 'not-allowed' }}
             >
               <rect
                 width={16}
@@ -951,7 +978,7 @@ useEffect(() => {
                 fill="transparent"
                 style={{ cursor: 'pointer' }}
               />
-              <g style={{ pointerEvents: 'none' }}>
+              <g style={{ pointerEvents: 'none', opacity: (userViews.some(view => view.id === 'plant')) ? 1 : 0.5 }}>
                 <PlantEFPIcon />
               </g>
             </g>
@@ -972,18 +999,22 @@ useEffect(() => {
                 const geneName = displayName;
                 /** Get species from node data or props - default to Arabidopsis */
                 const species = node.data.metadata?.genome;
-                
-                switchViewAndGene('Cell eFP', geneName);
 
+               /** Validate view and gene */
+               const isValidView = userViews.some(view => view.id === 'Cell eFP');
+
+               if (isValidView) {
                /** Call switch view function with species information */
-                if (!species || !(species in ePlantLinks)) {
-                  /** Call switch view function to swap the view using designated view id and gene name */
-                  switchViewAndGene('Cell eFP', geneName);
-                } else {
-                  /** Handle external species navigation */
-                  switchViewAndGene('Cell eFP', geneName, ePlantLinks[species]);
-                }
-              }}
+                 if (!species || !(species in ePlantLinks)) {
+                   /** Call switch view function to swap the view using designated view id and gene name */
+                   switchViewAndGene('Cell eFP', geneName);
+                 } else {
+                   /** Handle external species navigation */
+                   switchViewAndGene('Cell eFP', geneName, ePlantLinks[species]);
+                 }
+               }
+             }}
+             style={{ cursor: (userViews.some(view => view.id === 'Cell eFP')) ? 'pointer' : 'not-allowed' }}
             >
               <rect
                 width={20}
@@ -991,7 +1022,7 @@ useEffect(() => {
                 fill="transparent"
                 style={{ cursor: 'pointer' }}
               />
-              <g style={{ pointerEvents: 'none' }}>
+              <g style={{ pointerEvents: 'none', opacity: (userViews.some(view => view.id === 'Cell eFP')) ? 1 : 0.5 }}>
                 <CellEFPIcon/>
               </g>
             </g>
@@ -1007,10 +1038,26 @@ useEffect(() => {
                   );
                 }
               }}
-              onClick={() => {
-                const url = `#`;
-                window.open(url, "_blank");
-              }}
+              onClick={(event) => {
+                /** Extract the geneName */
+                const geneName = displayName;
+                /** Get species from node data or props - default to Arabidopsis */
+                const species = node.data.metadata?.genome;
+
+               /** Validate view and gene */
+               const isValidView = userViews.some(view => view.id === 'Molecule');
+
+               if (isValidView) {
+               /** Call switch view function with species information */
+                 if (!species || !(species in ePlantLinks)) {
+                   /** Call switch view function to swap the view using designated view id and gene name */
+                   switchViewAndGene('Molecule', geneName);
+                 } else {
+                   /** Handle external species navigation */
+                   switchViewAndGene('Molecule', geneName, ePlantLinks[species]);
+                 }
+               }
+             }}
             >
               <rect
                 width={16}
@@ -1018,7 +1065,7 @@ useEffect(() => {
                 fill="transparent"
                 style={{ cursor: 'pointer' }}
               />
-              <g style={{ pointerEvents: 'none' }}>
+              <g style={{ pointerEvents: 'none', opacity: (userViews.some(view => view.id === 'Molecule')) ? 1 : 0.5 }}>
                 <GeneInfoViewIcon/>
               </g>
             </g>
@@ -1034,10 +1081,26 @@ useEffect(() => {
                   );
                 }
               }}
-              onClick={() => {
-                const url = `#`;
-                window.open(url, "_blank");
-              }}
+              onClick={(event) => {
+                /** Extract the geneName */
+                const geneName = displayName;
+                /** Get species from node data or props - default to Arabidopsis */
+                const species = node.data.metadata?.genome;
+
+               /** Validate view and gene */
+               const isValidView = userViews.some(view => view.id === 'Interactions');
+
+               if (isValidView) {
+               /** Call switch view function with species information */
+                 if (!species || !(species in ePlantLinks)) {
+                   /** Call switch view function to swap the view using designated view id and gene name */
+                   switchViewAndGene('Interactions', geneName);
+                 } else {
+                   /** Handle external species navigation */
+                   switchViewAndGene('Interactions', geneName, ePlantLinks[species]);
+                 }
+               }
+             }}
             >
               <rect
                 width={16}
@@ -1045,7 +1108,7 @@ useEffect(() => {
                 fill="transparent"
                 style={{ cursor: 'pointer' }}
               />
-              <g style={{ pointerEvents: 'none' }}>
+              <g style={{ pointerEvents: 'none', opacity: (userViews.some(view => view.id === 'Interactions')) ? 1 : 0.5 }}>
                 <GeneInfoViewIcon/>
               </g>
             </g>
