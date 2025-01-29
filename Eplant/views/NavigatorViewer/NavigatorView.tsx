@@ -10,7 +10,7 @@ import CellEFPIcon from './Icons/CellEFPIcon';
 import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon'; /** Placeholder icon for those that are not yet implemented in ePlant3 */
 import PlantEFPIcon from './Icons/PlantEFPIcon'
 import * as constants from './constants';
-import { useViewSwitch } from './geneViewHelpers';
+import { useViewSwitch } from '../ViewGeneSwitching';
 //import { NavigatorContext, useViewSwitch, ViewSwitchProvider} from './index';
 import { NavigatorContext, ViewSwitchProvider} from './index';
 
@@ -618,7 +618,7 @@ export const NavigatorViewObject = () => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const gRef = useRef<SVGGElement | null>(null);
   const theme = useTheme();
-  const { switchView } = useViewSwitch();
+  const { switchViewAndGene } = useViewSwitch();
 
   /** Initialize dimensions with default calculation */
   const [dimensions, setDimensions] = useState(calculateDimensions());
@@ -917,7 +917,7 @@ useEffect(() => {
                 /** Extract the geneName */
                 const geneName = displayName;
                 /** Call switch view function to swap the view using designated view id and gene name */
-                switchView('plant', geneName);
+                switchViewAndGene('plant', geneName);
               }}
             >
               <rect
@@ -946,7 +946,7 @@ useEffect(() => {
                 /** Extract the geneName */
                 const geneName = displayName;
                 /** Call switch view function to swap the view using designated view id and gene name */
-                switchView('Cell eFP', geneName);
+                switchViewAndGene('Cell eFP', geneName);
               }}
             >
               <rect

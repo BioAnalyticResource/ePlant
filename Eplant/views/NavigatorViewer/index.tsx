@@ -4,7 +4,7 @@ import GeneticElement from '@eplant/GeneticElement';
 import { View } from '@eplant/View';
 
 import { NavigatorIcon } from './Icons/NavigatorViewIcon';
-import { createViewSwitchProvider } from './geneViewHelpers';
+import { createViewSwitchProvider } from '../ViewGeneSwitching';
 import NavigatorViewObject from './NavigatorView';
 
 /** Use the provider from helper function */
@@ -20,8 +20,8 @@ const NavigatorView: View = {
   name: 'Navigator View',
   component: ({ geneticElement }) => {
     const baseUrl = 'https://bar.utoronto.ca/webservices/eplant_navigator/cgi-bin/eplant_navigator_service.cgi';
-    const gene = geneticElement?.id || 'AT3G24650';
-    const species = geneticElement?.species?.name || 'Arabidopsis';
+    const gene = geneticElement?.id || '';
+    const species = geneticElement?.species?.name || '';
 
     const apiUrl = `${baseUrl}?primaryGene=${encodeURIComponent(gene)}&species=${encodeURIComponent(species)}&dataset=Developmental&checkedspecies=arabidopsis_poplar_medicago_soybean_rice_barley_maize_potato_tomato_grape`;
 
