@@ -3,8 +3,9 @@ import React from 'react';
 import GeneticElement from '@eplant/GeneticElement';
 import { View } from '@eplant/View';
 
-import { NavigatorIcon } from './Icons/NavigatorViewIcon';
 import { createViewSwitchProvider } from '../ViewGeneSwitching';
+
+import { NavigatorIcon } from './Icons/NavigatorViewIcon';
 import NavigatorViewObject from './NavigatorView';
 
 /** Use the provider from helper function */
