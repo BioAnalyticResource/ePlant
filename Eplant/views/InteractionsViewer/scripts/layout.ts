@@ -1,11 +1,17 @@
 /** @format */
 
-import { Core, NodeCollection, NodeSingular, NodeSingularPosition, Position } from 'cytoscape'
+import {
+  Core,
+  NodeCollection,
+  NodeSingular,
+  NodeSingularPosition,
+  Position,
+} from 'cytoscape'
 
 import { Edge, LoadFlags, Node } from '../types'
 
-let cy: Core;
-let loadFlags: LoadFlags;
+let cy: Core
+let loadFlags: LoadFlags
 
 /**
  * Used to lay out nodes. DNA nodes are positioned in alignment, while
@@ -38,7 +44,7 @@ const setLayout = (cytoscape: Core, flags: LoadFlags) => {
       backNode.positions(pos)
       return pos
     },
-    when: 'matching'
+    when: 'matching',
   })
   cy.minZoom(0.2)
   cy.fit()
@@ -74,7 +80,7 @@ const positionProtein = () => {
           transformAverage(proteinNodes, loadFlags.existsPDI)
           positionProteinBack(proteinNodes)
           // cb(); ??
-        }
+        },
       })
       .run()
   } else {
@@ -88,7 +94,7 @@ const positionProtein = () => {
           transformAverage(proteinNodes, false)
           positionProteinBack(proteinNodes)
           // cb() ??
-        }
+        },
       })
       .run()
   }
@@ -121,14 +127,10 @@ const positionChr = () => {
   for (let i = 0; i < chrNodes.length; i++) {
     const x = chrPositions[i][0]
     const y = chrPositions[i][1]
-    const id = '#' + chrNodes[i].data("id")
+    const id = '#' + chrNodes[i].data('id')
     cy.$(id).position({ x: x, y: y })
   }
 }
-
-
-
-
 
 // ----------------
 // Helper functions
@@ -170,7 +172,7 @@ const transformAverage = (nodes: NodeCollection, offset: boolean) => {
     const curY = node.position('y')
     return {
       x: offset ? curX + avgX : curX - avgX,
-      y: curY - avgY
+      y: curY - avgY,
     }
   })
 }

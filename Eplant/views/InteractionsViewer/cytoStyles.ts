@@ -17,12 +17,12 @@ const styles: any = [
   {
     selector: '.compound-top',
     style: {
-      'shape': 'roundrectangle',
+      shape: 'roundrectangle',
       'background-color': '#F3F3F3',
       'text-background-color': 'white',
       'text-wrap': 'wrap',
-      'width': '300px',
-      'color': '#000',
+      width: '300px',
+      color: '#000',
       'font-size': '10px',
       'font-weight': 'bold',
       'text-outline-width': '0px',
@@ -34,7 +34,7 @@ const styles: any = [
     style: {
       'background-opacity': '0',
       'text-background-opacity': '1',
-      'label': 'Protein-DNA\nInteractions',
+      label: 'Protein-DNA\nInteractions',
     },
   },
   {
@@ -42,21 +42,21 @@ const styles: any = [
     style: {
       'background-opacity': '0',
       'text-background-opacity': '1',
-      'label': 'Protein-Protein\nInteractions',
+      label: 'Protein-Protein\nInteractions',
     },
   },
   {
     selector: '.protein-compound',
     style: {
       'background-opacity': 0,
-      'events': 'no',
+      events: 'no',
     },
   },
   {
     selector: '.protein-back[borderWidth]',
     style: {
-      'height': 'data(height)',
-      'width': 'data(width)',
+      height: 'data(height)',
+      width: 'data(width)',
       'pie-size': '100%',
       'pie-1-background-color': 'data(pie1Colour)',
       'pie-1-background-size': 'data(pie1Size)',
@@ -72,33 +72,33 @@ const styles: any = [
       'pie-4-background-opacity': 1,
       'border-width': 'data(borderWidth)',
       'border-color': '#99CC00',
-      'events': 'no',
+      events: 'no',
     },
   },
   {
     selector: '.protein-node',
     style: {
-      'height': '36px',
-      'width': '36px',
-      'padding': '3px 3px 3px 3px',
+      height: '36px',
+      width: '36px',
+      padding: '3px 3px 3px 3px',
       'text-valign': 'center',
-      'content': 'data(content)',
-      'events': 'yes',
+      content: 'data(content)',
+      events: 'yes',
       'z-index': 10,
     },
   },
   {
     selector: '[id $= "QUERY_BACK"]',
     style: {
-      'height': '60px',
-      'width': '60px',
+      height: '60px',
+      width: '60px',
     },
   },
   {
     selector: '[id $= "QUERY_NODE"]',
     style: {
-      'height': '48px',
-      'width': '48px',
+      height: '48px',
+      width: '48px',
       'font-size': '11px',
       'z-index': 10000000,
     },
@@ -106,21 +106,21 @@ const styles: any = [
   {
     selector: '.dna-node',
     style: {
-      'shape': 'square',
-      'width': '34px',
-      'height': '34px',
+      shape: 'square',
+      width: '34px',
+      height: '34px',
       'border-width': '4px',
-      'padding': '3px 3px 3px 3px',
+      padding: '3px 3px 3px 3px',
       'border-color': '#030303',
       'text-valign': 'center',
-      'content': 'data(content)',
+      content: 'data(content)',
       'z-index': 10,
     },
   },
   {
     selector: 'edge',
     style: {
-      'width': 'data(size)',
+      width: 'data(size)',
       'line-style': 'data(lineStyle)',
       'line-color': 'data(lineColor)',
       'control-point-distance': '50px',
@@ -157,8 +157,8 @@ const styles: any = [
     style: {
       'background-color': '#3C3C3C',
       'text-background-color': '#3C3C3C',
-      'color': '#FFFFFF',
+      color: '#FFFFFF',
     },
-  }
+  },
 ]
 export default styles

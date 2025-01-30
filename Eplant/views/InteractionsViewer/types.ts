@@ -1,6 +1,6 @@
-import { EdgeSingular, NodeSingular } from "cytoscape"
+import { EdgeSingular, NodeSingular } from 'cytoscape'
 
-import GeneticElement from "@eplant/GeneticElement"
+import GeneticElement from '@eplant/GeneticElement'
 /* Level 1 - API results */
 export interface Interaction {
   source: string
@@ -13,17 +13,17 @@ export interface Interaction {
   recursive?: string
 }
 export interface SublocalizationData {
-  'unclear'?: number,
-  'cytosol'?: number,
-  'mitochondrion'?: number,
-  'plastid'?: number,
-  'vacuole'?: number,
-  'nucleus'?: number,
-  'endoplasmic reticulum'?: number,
-  'extracellular'?: number,
-  'golgi'?: number,
-  'plasma membrane'?: number,
-  'peroxisome'?: number
+  unclear?: number
+  cytosol?: number
+  mitochondrion?: number
+  plastid?: number
+  vacuole?: number
+  nucleus?: number
+  'endoplasmic reticulum'?: number
+  extracellular?: number
+  golgi?: number
+  'plasma membrane'?: number
+  peroxisome?: number
 }
 export interface Sublocalization {
   id: string
@@ -112,4 +112,3 @@ export type InteractionsViewData = {
 }
 export type InteractionsViewState = null
 export type InteractionsViewAction = null
-

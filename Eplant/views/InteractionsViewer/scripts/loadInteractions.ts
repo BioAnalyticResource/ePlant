@@ -7,18 +7,22 @@ import { Interaction, LoadFlags, RawEdge, RawNode } from '../types'
 import loadSublocalizations from './loadSublocalizations'
 
 let query = ''
-let geneticElement: GeneticElement;
+let geneticElement: GeneticElement
 let loadFlags: LoadFlags = {
   empty: true,
   existsPDI: false,
   existsPPI: false,
-  recursive: false
+  recursive: false,
 }
-let nodes: RawNode[];
-let edges: RawEdge[];
+let nodes: RawNode[]
+let edges: RawEdge[]
 
 /* Main function */
-const loadViewData = (gene: GeneticElement, data: Interaction[], recursive: string) => {
+const loadViewData = (
+  gene: GeneticElement,
+  data: Interaction[],
+  recursive: string
+) => {
   nodes = []
   edges = []
   query = gene.id.toUpperCase()
@@ -29,13 +33,13 @@ const loadViewData = (gene: GeneticElement, data: Interaction[], recursive: stri
   return {
     nodes: nodes,
     edges: edges,
-    loadFlags: loadFlags
+    loadFlags: loadFlags,
   }
 }
 export default loadViewData
 
 // -----------------
-// Level 1 functions
+// Handler functions
 // -----------------
 /**
  *  Get flags used in futher loading
@@ -52,7 +56,7 @@ const getLoadFlags = (data: Interaction[], recursive: string) => {
     empty: checkEmpty(data),
     existsPDI: checkExistsPDI(data),
     existsPPI: checkExistsPPI(data),
-    recursive: checkRecursive(data, recursive)
+    recursive: checkRecursive(data, recursive),
   }
   loadFlags = flags
 }
@@ -85,12 +89,18 @@ const loadInteractions = (data: Interaction[]) => {
     createNoInteractionNode()
   }
 }
+
+/**
+ * Generate chromosome-node interactions
+ * @return {void}
+ */
 const loadInteractionsChr = (data: Interaction[]) => {
   createQueryNode(query)
   createChromosomes(data)
   const createFunctions = [createSelfQPI, createQPI, createPPI, createChr]
   createInteractions(createFunctions, data)
 }
+
 /**
  * Convert interactions from JSON to cytoscape node/edges without PDIs
  * @return {void}
@@ -98,26 +108,31 @@ const loadInteractionsChr = (data: Interaction[]) => {
 const loadInteractionsNoDNA = (data: Interaction[]) => {
   createQueryNode(query)
   const createFunctions = [createSelfQPI, createQPI, createPPI]
-
   createInteractions(createFunctions, data)
 }
 
-
 // ------------------------------------
-// Level 2 Functions
+// Cytoscape creation Functions
 // ------------------------------------
 /**
  * Creates interactions using creation functions
  * @param  {Array} funcArr Array of functions which to call to construct graph
  * @return {void}
  */
-const createInteractions = (funcArray: Array<(data: Interaction) => boolean>, data: Interaction[]) => {
+const createInteractions = (
+  funcArray: Array<(data: Interaction) => boolean>,
+  data: Interaction[]
+) => {
   data = data.slice()
   for (let n = 0; n < funcArray.length; n++) {
     const addedIndices = []
     for (let i = 0; i < data.length - 1; i++) {
       const re = /^At[\dCM]g\d{5}$/i
-      if (re.test(data[i].source) && re.test(data[i].target) && funcArray[n](data[i])) {
+      if (
+        re.test(data[i].source) &&
+        re.test(data[i].target) &&
+        funcArray[n](data[i])
+      ) {
         addedIndices.unshift(i)
       }
     }
@@ -138,8 +153,22 @@ const createInteractions = (funcArray: Array<(data: Interaction) => boolean>, da
  */
 const createChromosomes = (data: Interaction[]) => {
   const chrs: string[] = []
-  const chrNums: Record<string, number> = { '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 }
-  const methods: Record<string, string> = { '1': 'P', '2': 'P', '3': 'P', '4': 'P', '5': 'P', 'C': 'P', 'M': 'P' }
+  const chrNums: Record<string, number> = {
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0,
+    '5': 0,
+  }
+  const methods: Record<string, string> = {
+    '1': 'P',
+    '2': 'P',
+    '3': 'P',
+    '4': 'P',
+    '5': 'P',
+    C: 'P',
+    M: 'P',
+  }
   for (let k = 0; k < data.length - 1; k++) {
     const chr = data[k].target.substring(2, 3)
     if (data[k].index === '2') {
@@ -176,9 +205,9 @@ const createCompoundDNA = () => {
   const dnaCompound = {
     group: 'nodes',
     data: {
-      id: 'COMPOUND_DNA'
+      id: 'COMPOUND_DNA',
     },
-    classes: 'compound-top'
+    classes: 'compound-top',
   }
   nodes.push(dnaCompound)
 }
@@ -191,9 +220,9 @@ const createCompoundProtein = () => {
   const proteinCompound = {
     group: 'nodes',
     data: {
-      id: 'COMPOUND_PROTEIN'
+      id: 'COMPOUND_PROTEIN',
     },
-    classes: 'compound-top'
+    classes: 'compound-top',
   }
   nodes.push(proteinCompound)
 }
@@ -207,18 +236,18 @@ const createQueryNode = (query: string) => {
   const compound = {
     group: 'nodes',
     data: {
-      id: query + 'QUERY_COMPOUND'
+      id: query + 'QUERY_COMPOUND',
     },
-    classes: 'protein-compound'
+    classes: 'protein-compound',
   }
 
   const border = {
     group: 'nodes',
     data: {
       id: query + 'QUERY_BACK',
-      parent: query + 'QUERY_COMPOUND'
+      parent: query + 'QUERY_COMPOUND',
     },
-    classes: 'protein-back'
+    classes: 'protein-back',
   }
 
   const node = {
@@ -227,9 +256,9 @@ const createQueryNode = (query: string) => {
       id: query + 'QUERY_NODE',
       content: query,
       geneticElement: geneticElement,
-      parent: query + 'QUERY_COMPOUND'
+      parent: query + 'QUERY_COMPOUND',
     },
-    classes: 'protein-node loaded'
+    classes: 'protein-node loaded',
   }
   nodes.push(compound, border, node)
 }
@@ -247,18 +276,18 @@ const createProteinNode = (id: string) => {
     group: 'nodes',
     data: {
       id: id + 'PROTEIN_COMPOUND',
-      parent: ''
+      parent: '',
     },
-    classes: 'protein-compound'
+    classes: 'protein-compound',
   }
 
   const border = {
     group: 'nodes',
     data: {
       id: id + 'PROTEIN_BACK',
-      parent: id + 'PROTEIN_COMPOUND'
+      parent: id + 'PROTEIN_COMPOUND',
     },
-    classes: 'protein-back'
+    classes: 'protein-back',
   }
 
   const node = {
@@ -267,9 +296,9 @@ const createProteinNode = (id: string) => {
       id: id + 'PROTEIN_NODE',
       content: id,
       geneticElement: newGeneticElement,
-      parent: id + 'PROTEIN_COMPOUND'
+      parent: id + 'PROTEIN_COMPOUND',
     },
-    classes: 'protein-node'
+    classes: 'protein-node',
   }
 
   if (loadFlags.existsPDI) {
@@ -291,12 +320,12 @@ const createNoInteractionNode = () => {
   const noInteractionNode = {
     group: 'nodes',
     data: {
-      id: 'noInteractionLabel'
+      id: 'noInteractionLabel',
     },
     position: {
       x: 0,
-      y: 400
-    }
+      y: 400,
+    },
   }
   //nodesPush(noInteractionNode)
   nodes.push(noInteractionNode)
@@ -314,18 +343,18 @@ const createChromosomeNode = (id: string, n: number) => {
       id: 'chr' + id,
       content: 'Chr ' + id + ': ' + n + ' PDIs',
       parent: 'COMPOUND_DNA',
-      genes: []
+      genes: [],
     },
-    classes: 'dna-node'
+    classes: 'dna-node',
   }
   //nodesPush(node)
   nodes.push(node)
   return { node: node }
 }
 
-// -----------
+// ----------------------------------
 // Edge Creators and Helper Functions
-//------------
+//-----------------------------------
 
 // Creators
 /**
@@ -356,9 +385,9 @@ const createProteinEdge = (data: Interaction) => {
       // css styles
       size: 0,
       lineStyle: '',
-      lineColor: ''
+      lineColor: '',
     },
-    classes: 'protein-edge'
+    classes: 'protein-edge',
   }
 
   if (method === 'P') {
@@ -397,9 +426,9 @@ const createChromosomeEdge = (id: string, method: string) => {
       size: 0,
       lineStyle: '',
       lineColor: '',
-      arrowColor: ''
+      arrowColor: '',
     },
-    classes: 'chr-edge'
+    classes: 'chr-edge',
   }
   edge = setDNAEdgeStyles(edge)
   edge.data.tooltip = setEdgeTooltipContent(edge)
@@ -616,7 +645,11 @@ const createPPI = (data: Interaction) => {
 
   const existsQuery = existsQuerySource || existsQueryTarget
 
-  if (index < 2 && (existsProteinSource || existsProteinTarget) && !existsQuery) {
+  if (
+    index < 2 &&
+    (existsProteinSource || existsProteinTarget) &&
+    !existsQuery
+  ) {
     // Create source node if not pre-existing
     if (!existsProteinSource) {
       createProteinNode(data.source.toUpperCase())
@@ -652,14 +685,18 @@ const createChr = (data: Interaction) => {
   // Predicted DNA
   // Asher
   if (data.published == false && data.index === '2') {
-    chrNode.data.genes?.push('<span style="color:#A0A0A0">' + data.target + '</span>')
+    chrNode.data.genes?.push(
+      '<span style="color:#A0A0A0">' + data.target + '</span>'
+    )
   } else {
-    chrNode.data.genes?.push('<span style="color:#669900">' + data.target + '</span>')
+    chrNode.data.genes?.push(
+      '<span style="color:#669900">' + data.target + '</span>'
+    )
   }
   return true
 }
 //++++++++++++++++++++++++++++++++++++++
-const createRecursiveLabel = () => { }
+const createRecursiveLabel = () => {}
 
 // ------------------------------------
 // Helper functions for getLoadFlags()

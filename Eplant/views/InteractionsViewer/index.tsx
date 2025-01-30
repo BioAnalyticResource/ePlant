@@ -13,12 +13,11 @@ import tippy, {
 } from 'tippy.js'
 
 import GeneticElement from '@eplant/GeneticElement'
-import {
-  useActiveGeneId,
-  useGeneticElements,
-  useSetGeneticElements,
-} from '@eplant/state'
 import { ViewDataError } from '@eplant/View/viewData'
+import CheckCircle from '@mui/icons-material/CheckCircle'
+import Alert from '@mui/material/Alert'
+import IconButton from '@mui/material/IconButton'
+import Snackbar from '@mui/material/Snackbar'
 
 import { View, ViewProps } from '../../View'
 
@@ -31,6 +30,7 @@ import cytoStyles from './cytoStyles'
 import { InteractionsIcon } from './icon'
 // import GeneDialog from './GeneDialog'
 import {
+  Interaction,
   InteractionsViewAction,
   InteractionsViewData,
   InteractionsViewState,
@@ -87,30 +87,46 @@ const InteractionsViewer: View = {
     gene: GeneticElement | null,
     loadEvent: (progress: number) => void
   ) {
-    let data: ViewData
+    let data: ViewData = {
+      nodes: [],
+      edges: [],
+      loadFlags: {
+        empty: true,
+        existsPDI: false,
+        existsPPI: false,
+        recursive: false,
+      },
+    }
+
     if (gene) {
+      let recursive: string, interactions: Array<Interaction>
       const query = gene.id.toUpperCase()
       const url =
         'https://bar.utoronto.ca/eplant/cgi-bin/get_interactions_dapseq.py?locus=' +
         query
-      // Fetch interaction data
-      let recursive: string = ''
-      const interactions = await fetch(url)
-        .then((response) => response.json())
-        .then((json) => json[query])
-        .then((interactions: [] | undefined) => {
-          if (interactions === undefined) {
-            recursive = 'false'
-            return []
-          }
-          recursive = interactions[interactions.length - 1]
-          return interactions.slice(0, interactions.length - 1)
-        })
-      console.log(performance.now())
-      // psosible solutoon: promise chain to combine these two (promise.o)
-      data = loadInteractions(gene, interactions, recursive)
-    } else {
-      throw ViewDataError.UNSUPPORTED_GENE
+      try {
+        // Fetch interaction data
+        const response = await fetch(url)
+        const json = await response.json()
+        const interactionsData = json[query]
+
+        if (interactionsData === undefined) {
+          recursive = 'false'
+          interactions = []
+        } else {
+          // recursive is always the last element in the array
+          recursive = interactionsData[interactionsData.length - 1]
+          // the interaction are everythign else
+          interactions = interactionsData.slice(0, interactionsData.length - 1)
+        }
+        // Load interactions
+        data = loadInteractions(gene, interactions, recursive)
+
+        // Load sublocalizations
+        // data.nodes = await loadSublocalizations(data.nodes)
+      } catch (error) {
+        throw ViewDataError.UNSUPPORTED_GENE
+      }
     }
     return {
       activeView: InteractionsViewer.id,
@@ -128,13 +144,15 @@ const InteractionsViewer: View = {
     InteractionsViewAction
   >) {
     const [cyto, setCyto] = useState<Core>(cytoscape())
-    const [activeGeneId, setActiveGeneId] = useActiveGeneId()
-    const geneticElements = useGeneticElements()
-    const setGeneticElements = useSetGeneticElements()
+    // const [activeGeneId, setActiveGeneId] = useActiveGeneId()
+    // const geneticElements = useGeneticElements()
+    // const setGeneticElements = useSetGeneticElements()
     const cyRef = useRef(null)
     const geneId = geneticElement?.id
     const viewData = activeData.viewData
     const elements: any = [...viewData.nodes, ...viewData.edges]
+    // Snackbar state
+    const [snackbarOpen, setSnackbarOpen] = useState(true)
 
     useEffect(() => {
       const cy: Core = cytoscape({
@@ -144,123 +162,19 @@ const InteractionsViewer: View = {
       })
 
       setCyto(cy)
-      /*
-          AIV.returnSVGandMapManThenChain = function () {
-        return $.ajax({
-            url: "https://bar.utoronto.ca/interactions2/cgi-bin/suba4.php",
-            type: "POST",
-            data: JSON.stringify( AIV.returnLocalizationPOSTJSON() ),
-            contentType : 'application/json',
-            dataType: 'json'
-        })
-            .then(function(SUBAJSON){
-                AIV.addLocalizationDataToNodes(SUBAJSON);
-
-                //Loop through ATG protein nodes and add a SVG string property for bg-image css
-                AIV.cy.startBatch();
-                AIV.parseProteinNodes(AIV.createSVGPieDonutCartStr.bind(AIV), true);
-                AIV.cy.endBatch();
-                AIV.effectorsLocHouseCleaning();
-                if (!AIV.SUBA4LoadState){
-                    AIV.returnBGImageSVGasCSS().update();
-                }
-
-                //Update the HTML table with our SUBA data
-                AIV.transferLocDataToTable();
-                AIV.SUBA4LoadState = true;
-            })
-            .catch(function(err){
-                alertify.logPosition("top right");
-                alertify.error(`Error made when requesting to SUBA webservice, status code: ${err.status}`);
-            })
-            .then(function(){ // chain this AJAX call to the above as the mapman relies on the drawing of the SVG pie donuts, i.e. wait for above sync code to finish
-                if (!AIV.mapManLoadState) { //don't make another ajax call if we already have MapMan data in our nodes (this logic is for our checkbox)
-                    return $.ajax({
-                        url: AIV.createGETMapManURL(),
-                        type: 'GET',
-                        dataType: 'json'
-                    });
-                }
-            })
-            .catch(function(err){
-                alertify.logPosition("top right");
-                alertify.error(`Error made when requesting to MapMan webservice (note: we cannot load more than 700 MapMan numbers), status code: ${err.status}`);
-            })
-            .then(function(resMapManJSON){
-                if (typeof resMapManJSON !== 'undefined' && resMapManJSON.status === "fail"){ throw new Error ('MapMan server call failed!')}
-                AIV.cy.startBatch();
-                AIV.processMapMan(resMapManJSON);
-                AIV.cy.endBatch();
-                AIV.mapManLoadState = true;
-            })
-            .catch(function(err){
-                alertify.logPosition("top right");
-                alertify.error(`Error processing MapMan data; ${err}`);
-            });
-    };
-`    */
 
       setLayout(cy, viewData.loadFlags)
       // Listen for mouseover events on nodes
       addNodeListener(cy)
       // Listen for mouseover events on edges
       addEdgeListener(cy)
-      // // add loadgene listener // NOT WORKING
-      // const loadGeneButton = document.querySelector("loadGene_interactionsView")
-      // loadGeneButton?.addEventListener("click", ()=>{
-      //   const id = loadGeneButton.getAttribute("id")
-      //   const aliases = loadGeneButton.getAttribute("aliases")?.split(",")
-      //   const annotation = loadGeneButton.getAttribute("annotation")
-      //   if (id != null && annotation != null && aliases != null) {
-      //     const geneticElement = new GeneticElement(
-      //         id,
-      //         annotation,
-      //         arabidopsis,
-      //         aliases
-      //     )
-      //     setGeneticElements([...geneticElements[0], geneticElement])
-      //     setActiveGeneId(geneticElement.id)
-      //   }
-      // })
+      // not implemented yet - add loadgene listener (waiting for loadgene atom to be made)
     }, [])
 
-    /**
-     * @function parseProteinNodes - parse through every protein (non-effector) node that exists in the DOM and perform the callback function on each node
-     * @param {function} cb -  callback function
-     * @param {boolean} [needNodeRef=false] - optional boolean to determine if callback should be performed on node object reference
-     */
-    const parseProteinNode = (cb: (id: any) => null, needNodeRef = false) => {
-      cyto.filter('.protien_back').forEach(function (node) {
-        const nodeID = node.data('name')
-        if (nodeID.match(/^AT[1-5MC]G\d{5}$/i)) {
-          //only get AGI IDs, i.e. exclude effectors
-          if (needNodeRef) {
-            cb(node)
-          } else {
-            cb(nodeID)
-          }
-        }
-      })
+    // Function to close the Snackbar
+    const handleCloseSnackbar = () => {
+      setSnackbarOpen(false)
     }
-    // // Add event listner to load gene button
-    // const loadGeneButton = document.querySelector('.loadGene_interactionsView')
-    // const id = loadGeneButton?.id
-    // const annotation = loadGeneButton?.getAttribute('annotation')
-    // const aliases = loadGeneButton?.getAttribute('aliases')?.split(',')
-
-    // if (id != null && annotation != null && aliases != null) {
-    //   loadGeneButton?.addEventListener('click', (event) => {
-    //     const geneticElement = new GeneticElement(
-    //       id,
-    //       annotation,
-    //       arabidopsis,
-    //       aliases
-    //     )
-    //     setGeneticElements([...geneticElements[0], geneticElement])
-    //     setActiveGeneId(id)
-    //   })
-    // }
-
     return (
       <div style={{ background: 'white', overflow: 'hidden' }}>
         <Topbar cy={cyto} gene={geneId === undefined ? '' : geneId}></Topbar>
@@ -269,6 +183,42 @@ const InteractionsViewer: View = {
           id='cy'
           style={{ width: '100%', height: '80vh' }}
         ></div>
+        {/* MUI Snackbar */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={5000} // Auto-hide after 5 seconds
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          sx={{
+            '& .MuiSnackbar-root': {
+              bottom: '50px',
+              right: '24px',
+            },
+          }}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity='info'
+            action={
+              <IconButton
+                color='inherit'
+                onClick={handleCloseSnackbar} // Close the Snackbar when clicked
+              >
+                <CheckCircle />
+              </IconButton>
+            }
+            sx={{
+              width: '300px',
+              fontSize: '0.875rem',
+              padding: '8px 16px',
+              maxHeight: '100px', // Limit height
+              overflow: 'auto', // Add scroll if content overflows
+            }}
+          >
+            Are protein localization colours not visible? Interact with the view
+            to fix
+          </Alert>
+        </Snackbar>
       </div>
     )
   },

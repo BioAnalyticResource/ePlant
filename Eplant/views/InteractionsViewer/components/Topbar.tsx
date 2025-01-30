@@ -158,7 +158,7 @@ const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
           setShowLegend(!showLegend)
         }}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: 'left',
         }}
         transformOrigin={{

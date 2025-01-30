@@ -1,9 +1,8 @@
 import { Core, EventObject } from 'cytoscape'
 import { PopperInstance } from 'cytoscape-popper'
 
-
 // Global
-let cy: Core;
+let cy: Core
 
 // --------------
 // Event Listeners
@@ -11,7 +10,7 @@ let cy: Core;
 /**
  * Add event listener for nodes
  * @returns {None}
-**/
+ **/
 export const addNodeListener = (cyto: Core) => {
   cy = cyto
   cy.on('mouseover', 'node', (event: EventObject) => {
@@ -26,10 +25,11 @@ export const addNodeListener = (cyto: Core) => {
     }
   })
 }
+
 /**
  * Add event listener for edges connecting nodes
  * @returns {None}
-**/
+ **/
 export const addEdgeListener = (cy: Core) => {
   // Listen for pointer events on edges
   cy.on('mouseover', 'edge', (event: EventObject) => {
@@ -47,13 +47,13 @@ export const addEdgeListener = (cy: Core) => {
 /**
  * Handle hover over edge node and create appropriate tooltip
  * @returns {void}
-**/
+ **/
 const handleNodeHover = (event: EventObject) => {
   const node = event.target
   const id = node._private.data.content
   fetch(
     'https://bar.utoronto.ca/eplant/cgi-bin/querygene.cgi?species=Arabidopsis_thaliana&term=' +
-    id
+      id
   )
     .then((response) => response.json())
     .then((gene) => {
@@ -85,7 +85,9 @@ const handleNodeHover = (event: EventObject) => {
                 <tr>
                   <td><label>Aliases: </label></td>
                   <td>
-                    ${gene.aliases.length > 0 ? gene.aliases.slice(0, 3) : 'N/A'}
+                    ${
+                      gene.aliases.length > 0 ? gene.aliases.slice(0, 3) : 'N/A'
+                    }
                   </td>
                 </tr>
                 <tr>
@@ -95,15 +97,25 @@ const handleNodeHover = (event: EventObject) => {
                   </td>
                 </tr>
                 <tr>
-                  <td><button id='${gene.id}' class='loadGene_interactionsView' aliases='${gene.aliases.join(",")}' annotation='${gene.annotation}' title='Load gene into collection'>Load Gene</button>
+                  <td><button id='${
+                    gene.id
+                  }' class='loadGene_interactionsView' aliases='${gene.aliases.join(
+                    ','
+                  )}' annotation='${
+                    gene.annotation
+                  }' title='Load gene into collection'>Load Gene</button>
                 </tr>
               </table>
             </div>`
           const props = {
-            content: content, duration: 200, arrow: false, followCursor: false, interactive: true
+            content: content,
+            duration: 200,
+            arrow: false,
+            followCursor: false,
+            interactive: true,
           }
           return props
-        }
+        },
       })
 
       tip.show()
@@ -114,13 +126,15 @@ const handleNodeHover = (event: EventObject) => {
 /**
  * Handle hover over edge connecting nodes and create appropriate tooltip
  * @returns {void}
-**/
+ **/
 const handleEdgeHover = (event: EventObject) => {
   const edge = event.target
   const data = edge._private.data
   const references =
     data.reference != 'None'
-      ? generateLinks(data.reference).map((link, i) => `<a href=${link}>${link}</a>\n`)
+      ? generateLinks(data.reference).map(
+          (link, i) => `<a href=${link}>${link}</a>\n`
+        )
       : 'N/A'
 
   const tip = edge.popper({
@@ -146,10 +160,14 @@ const handleEdgeHover = (event: EventObject) => {
           <p>Reference: \n${references}</p>
         </div>`
       const props = {
-        content: content, duration: 1000, arrow: true, followCursor: true, interactive: false
+        content: content,
+        duration: 1000,
+        arrow: true,
+        followCursor: true,
+        interactive: false,
       }
       return props
-    }
+    },
   })
   tip.show()
   addMouseOutListener(cy, tip)
@@ -158,7 +176,7 @@ const handleEdgeHover = (event: EventObject) => {
 /**
  * Handle hover over chromosome node and create appropriate tooltip
  * @returns {void}
-**/
+ **/
 const handleChrNodeHover = (event: EventObject) => {
   const node = event.target
   const chrNum = node._private.data.id.substring(3, 4)
@@ -196,24 +214,25 @@ const handleChrNodeHover = (event: EventObject) => {
         </div>
       `
       const props = {
-        content: content, duration: 200, arrow: false, followCursor: false, interactive: true
+        content: content,
+        duration: 200,
+        arrow: false,
+        followCursor: false,
+        interactive: true,
       }
       return props
-    }
+    },
   })
   tip.show()
   addMouseOutListener(cy, tip)
 }
-
-
-
 
 /**
  * Destroys tooltip on mouse out
  * @param {Core} cyto cytoscape instance
  * @param {PopperInstance} tip the tooltip to destroy
  * @returns {void}
-**/
+ **/
 const addMouseOutListener = (cyto: Core, tip: PopperInstance) => {
   // add handler to node for mouse leave
   cy.on('mouseout', 'node', (event) => {
@@ -228,7 +247,6 @@ const addMouseOutListener = (cyto: Core, tip: PopperInstance) => {
   })
 }
 
-
 // ---------------
 // Helper Functions
 // ----------------
@@ -236,7 +254,7 @@ const addMouseOutListener = (cyto: Core, tip: PopperInstance) => {
  * Generate sanitized links from reference string
  * @param {string} reference unsanitized reference string
  * @returns {string[]} array of links
-**/
+ **/
 const generateLinks = (reference: string): string[] => {
   const AL1_HYPERLINK = 'http://interactome.dfci.harvard.edu/A_thaliana/'
 
