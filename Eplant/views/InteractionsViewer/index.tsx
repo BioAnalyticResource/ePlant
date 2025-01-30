@@ -14,7 +14,7 @@ import tippy, {
 
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewDataError } from '@eplant/View/viewData'
-import CheckCircle from '@mui/icons-material/CheckCircle'
+import Close from '@mui/icons-material/Close'
 import Alert from '@mui/material/Alert'
 import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
@@ -25,7 +25,6 @@ import Topbar from './components/Topbar'
 import { addEdgeListener, addNodeListener } from './scripts/eventHandlers'
 import setLayout from './scripts/layout'
 import loadInteractions from './scripts/loadInteractions'
-import loadSublocalizations from './scripts/loadSublocalizations'
 import cytoStyles from './cytoStyles'
 import { InteractionsIcon } from './icon'
 // import GeneDialog from './GeneDialog'
@@ -149,8 +148,17 @@ const InteractionsViewer: View = {
     // const setGeneticElements = useSetGeneticElements()
     const cyRef = useRef(null)
     const geneId = geneticElement?.id
-    const viewData = activeData.viewData
-    const elements: any = [...viewData.nodes, ...viewData.edges]
+    const viewData = activeData?.viewData || {
+      nodes: [],
+      edges: [],
+      loadFlags: {
+        empty: true,
+        existsPDI: false,
+        existsPPI: false,
+        recursive: false,
+      },
+    }
+    const elements: any = [...(viewData.nodes || []), ...(viewData.edges || [])]
     // Snackbar state
     const [snackbarOpen, setSnackbarOpen] = useState(true)
 
@@ -202,9 +210,10 @@ const InteractionsViewer: View = {
             action={
               <IconButton
                 color='inherit'
+                title='Close'
                 onClick={handleCloseSnackbar} // Close the Snackbar when clicked
               >
-                <CheckCircle />
+                <Close />
               </IconButton>
             }
             sx={{
