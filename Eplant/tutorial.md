@@ -32,6 +32,10 @@
   - [How to create a new `View`](#how-to-create-a-new-view)
     - [Steps to Update `config.ts`](#steps-to-update-configts)
     - [Example](#example)
+    - [View Switching Functionality](#view-switching-functionality)
+- [Documentation and Commenting Style](#documentation-and-commenting-style)
+- [Eslint Code Standards](#eslint-code-standards)
+- [Local Testing Requirements](#local-testing-requirements)
 - [Eplant2](#eplant2)
   - [API](#api)
 
@@ -365,6 +369,65 @@ const genericViews = [GetStartedView, FallbackView, NewView]
 // Update the views list
 const views = [...genericViews, ...userViews]
 ```
+
+#### View Switching Functionality
+
+If your new view has function to swap to a different view and/or gene available on ePlant, you may benefit from the generalized view switching component file (name tbd). 
+
+To utilize the component:
+1. Import createViewSwitchProvider into your index file and export it: 
+```
+export const ViewSwitchProvider = createViewSwitchProvider();
+```
+2. Import your exported provider into your view's main component and wrap your component in the view's return statement:
+```
+const App = () => {
+  return (
+    <ViewSwitchProvider>
+      <YourComponent />
+    </ViewSwitchProvider>
+  );
+};
+```
+3.  Import and use useViewSwitch in your main component whenever you want to invoke the switching functionality. For example: `switchViewAndGene('Cell eFP', geneName);`
+
+There are 3 main swithing functions you can invoke based on needs.
+```
+  /** Function to switch view only */
+  switchViewOnly: (viewId: string) => Promise<void>;
+
+  /** Function to switch gene only */
+  switchGeneOnly: (geneName: string, speciesUrl?: string) => Promise<void>;
+
+  /** Function to switch both view and gene */
+  switchViewAndGene: (viewId: string, geneName: string, speciesUrl?: string) => Promise<void>;
+  ```
+
+## Documentation and Commenting Style
+
+It is important to maintain a common standard for commenting code and documentation. If you want to make contributions to the project, we ask that you follow the TSdoc(typescript) commenting style. As an example this includes adding function/class headers and comments as seen below:
+```
+/**
+ * Extracts the primary gene identifier from the API URL
+ * 
+ * @param url - The complete API URL containing query parameters
+ * @returns The primary gene identifier, or an empty string not found
+ * 
+ * Uses regex to find the primaryGene parameter in the URL
+ */
+function extractPrimaryGene(url: string): string {
+  const match = url.match(/primaryGene=([^&]+)/);
+  return match ? match[1] : "";
+}
+```
+
+## ESlint Code Standards
+
+The codebase relies on ESlint to handle automatic checking for issues with the code. With ESlint, you will not need to manually parse all of your code for accurate documentation, imports order, etc. When running ePlant locally in a browser, if there are any outstanding issues, it will be made known to you automatically. A common way to fix any issues without much thought is to run `npx eslint . --fix`. The `.` can be replaced if you do not want to check and fix every file in your current working directory. Documentation issues are not as big of a concern as others and your local site may work as normal, but to keep in line with our standards, please resolve any issues and warnings before making a pull request.
+
+## Local Testing Requirements
+
+To allow ESlint to work, and to run the site locally you are required to install Node.js and NPM on your system. Once installed, you can activate a local connection to the site using `npm run dev` and connecting to the generated web access point.
 
 ## Eplant2
 
