@@ -1,6 +1,7 @@
 import React from 'react';
 
 import GeneticElement from '@eplant/GeneticElement';
+import { getCitation } from '@eplant/util/citations';
 import { View } from '@eplant/View';
 
 import { createViewSwitchProvider } from '../ViewGeneSwitching';
@@ -46,6 +47,36 @@ const NavigatorView: View = {
   },
   id: 'navigator-view',
   icon: () => <NavigatorIcon />,
+
+  citation({ gene }) {
+    const citation = getCitation("Navigator viewer") as { [key: string]: string };
+  
+    return (
+      <div>
+      {citation.source && (
+        <p>
+          {citation.source}
+        </p>
+      )}
+      {/* Waese et al. 2017 + Creative Commons License */}
+      <p>
+        This image was generated with the Navigator viewer at{" "}
+        <a href="https://bar.utoronto.ca/eplant" target="_blank" rel="noopener noreferrer">
+          bar.utoronto.ca/eplant
+        </a>{" "}
+        by Waese et al. 2017.
+      </p>
+      
+      <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">
+        <img
+          alt="Creative Commons License"
+          src="https://i.creativecommons.org/l/by/4.0/80x15.png"
+          title="The ePlant output for your gene of interest is available under a Creative Commons Attribution 4.0 International License and may be freely used in publications etc."
+        />
+      </a>
+    </div>
+    );
+  }
 };
 
 export default NavigatorView;
