@@ -1,10 +1,6 @@
 /** @format */
 
-import {
-  Core,
-  NodeCollection,
-  NodeSingular,
-} from 'cytoscape'
+import { Core, NodeCollection, NodeSingular } from 'cytoscape'
 
 import { LoadFlags, Node } from '../types'
 
