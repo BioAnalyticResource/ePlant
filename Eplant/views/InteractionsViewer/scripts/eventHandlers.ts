@@ -9,6 +9,7 @@ let cy: Core
 // --------------
 /**
  * Add event listener for nodes
+ * @param {Core} cyto cytoscape instance
  * @returns {None}
  **/
 export const addNodeListener = (cyto: Core) => {
@@ -27,7 +28,8 @@ export const addNodeListener = (cyto: Core) => {
 }
 
 /**
- * Add event listener for edges connecting nodes
+ * Add event listener for edges connecting nodes\
+ * @param {Core} cy
  * @returns {None}
  **/
 export const addEdgeListener = (cy: Core) => {
@@ -46,6 +48,7 @@ export const addEdgeListener = (cy: Core) => {
 // --------------
 /**
  * Handle hover over edge node and create appropriate tooltip
+ * @param {EventObject} event the current event object
  * @returns {void}
  **/
 const handleNodeHover = (event: EventObject) => {
@@ -125,6 +128,7 @@ const handleNodeHover = (event: EventObject) => {
 
 /**
  * Handle hover over edge connecting nodes and create appropriate tooltip
+ * @param {EventObject} event the current event object
  * @returns {void}
  **/
 const handleEdgeHover = (event: EventObject) => {
@@ -175,6 +179,7 @@ const handleEdgeHover = (event: EventObject) => {
 
 /**
  * Handle hover over chromosome node and create appropriate tooltip
+ * @param {EventObject} event the current event object
  * @returns {void}
  **/
 const handleChrNodeHover = (event: EventObject) => {
@@ -241,7 +246,7 @@ const addMouseOutListener = (cyto: Core, tip: PopperInstance) => {
       tip.destroy()
     }
   })
-  // add handler to edge for mouse leave
+  // destroy tooltip on edge mouse out
   cy.on('mouseout', 'edge', (event) => {
     tip.destroy()
   })

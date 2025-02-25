@@ -7,6 +7,13 @@ interface IconProps {
   stroke?: string
   strokeWidth?: number
 }
+/** Creates SVG element for interactions view icon
+ * @param {number} width icon width in px
+ * @param {number} height icon height in px
+ * @param {string} fill icon fill color
+ * @param {string} stroke icon stroke color
+ * @param {number} strokeWidth icon stroke width
+ * */
 export const InteractionsIcon: FC<IconProps> = ({
   width = 24,
   height = 24,

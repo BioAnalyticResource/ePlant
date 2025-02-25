@@ -1,5 +1,3 @@
-/// YET TO IMPLEMENT
-
 import React, { FC, useEffect, useState } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
@@ -9,7 +7,6 @@ import {
   useGeneticElements,
   useSetGeneticElements,
 } from '@eplant/state'
-import { Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import useTheme from '@mui/material/styles/useTheme'
 import Table from '@mui/material/Table'
@@ -21,6 +18,9 @@ import { GeneItem } from '../../ChromosomeViewer/types'
 interface GeneDialogProps {
   gene: GeneItem
 }
+/** Gene dialog to show gene infomation when hovering over gene node. currently not implemented due to restrictions of cytoscape
+ * @param {GeneItem} gene GeneItem object to show in table format in the dialog
+ * */
 const GeneDialog: FC<GeneDialogProps> = ({ gene }) => {
   // Global State
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()

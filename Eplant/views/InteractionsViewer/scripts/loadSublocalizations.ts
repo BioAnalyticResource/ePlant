@@ -4,7 +4,11 @@ import { RawNode, Sublocalization } from '../types'
 
 let nodes: RawNode[] = []
 
-/* Main function */
+/** Main function to call loadData and then assign the sublocalization colors to the proper nodes
+ *
+ * @param {RawNode[]} cynodes array of nodes with missing sublocalization data
+ * @returns {RawNode[]} array of nodes with proper sublocalization data
+ */
 const loadSublocalizations = (cynodes: RawNode[]): RawNode[] => {
   nodes = cynodes
   loadData().then((data) => {
@@ -13,7 +17,10 @@ const loadSublocalizations = (cynodes: RawNode[]): RawNode[] => {
   return nodes
 }
 export default loadSublocalizations
-// Extract protein IDs from nodes
+
+/** Extract protein IDs from nodes
+ * @returns {string[]} array of protein ids
+ */
 const getProteinIds = (): string[] => {
   const ids: string[] = []
   for (let n = 0; n < nodes.length; n++) {
@@ -26,13 +33,21 @@ const getProteinIds = (): string[] => {
   }
   return ids
 }
-// Get IDs of genes without experimental data
+/** Get IDs of genes without experimental data
+ * @param {Sublocalization[]} data array of objects containing gene id and sublocalization data
+ * @returns {string[]} the predicted gene ids
+ */
 const getPredictedIds = (data: Sublocalization[]): string[] => {
   return data
     .filter((subLoc) => subLoc.includes_experimental === 'no')
     .map((subLoc) => subLoc.id)
 }
-// Merge predicted data into experimental data
+
+/** Get IDs of genes without experimental data
+ * @param {Sublocalization[]} expData array of experimental gene ids and corrosponding sublocalization data
+ * @param {Sublocalization[]} predictedData array of predicted gene ids and corrosponding sublocalization data
+ * @returns {Sublocalization[]} merged experimental and predicted gene ids and corrosponding sublocalization data
+ */
 const mergeData = (
   expData: Sublocalization[],
   predictedData: Sublocalization[]
@@ -49,7 +64,9 @@ const mergeData = (
   }
   return expData
 }
-
+/** Load sublocalization data from webservice
+ * @returns {Promise<Sublocalization[]>} Promise containing sublocalization array
+ */
 const loadData = async (): Promise<Sublocalization[]> => {
   const ids = getProteinIds()
   const urlSUBA = 'https://bar.utoronto.ca/eplant/cgi-bin/groupsuba4.php'
@@ -197,13 +214,12 @@ const setSublocalizationStyle = (
 }
 
 /**
- * create SVG donut string which will be set as the background image for the node
+ * (NOT IN USE) create SVG donut string which will be set as the background image for the node
  * @param {Array} sublocalizations Array of top 4 sublocalizations and score
  * @param {boolean} predicted Whether sublocalizations are predicted
  * @param {RawNode} node Pie protein node
  * @return {Object} The update pie node
  */
-
 const createSVGPieDonutStr = (
   sublocalizations: any[][],
   predicted: boolean,

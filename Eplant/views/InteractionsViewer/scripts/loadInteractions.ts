@@ -1,6 +1,6 @@
 /** @format */
 
-import GeneticElement, { Species } from '@eplant/GeneticElement'
+import GeneticElement from '@eplant/GeneticElement'
 
 import { Interaction, LoadFlags, RawEdge, RawNode } from '../types'
 
@@ -17,7 +17,12 @@ let loadFlags: LoadFlags = {
 let nodes: RawNode[]
 let edges: RawEdge[]
 
-/* Main function */
+/** Main function to get the cytoscape flags, create nodes from interactions, and then add subloc info to the nodes
+ * @param {GeneticElement} gene
+ * @param {Interaction[]} data array of interactions returned from webservice
+ * @param {string} recursive whether the interactions are recursive
+ * @returns
+ */
 const loadViewData = (
   gene: GeneticElement,
   data: Interaction[],
@@ -38,9 +43,9 @@ const loadViewData = (
 }
 export default loadViewData
 
-// -----------------
+// =================
 // Handler functions
-// -----------------
+// =================
 /**
  *  Get flags used in futher loading
  * * empty{boolean}: Whether interactions exist in data
@@ -66,9 +71,6 @@ const getLoadFlags = (data: Interaction[], recursive: string) => {
  * @return {void}
  */
 const loadInteractions = (data: Interaction[]) => {
-  if (!loadFlags?.recursive) {
-    createRecursiveLabel()
-  }
   if (!loadFlags.empty) {
     // Create top level compound nodes
     if (loadFlags.existsPDI) {
@@ -86,7 +88,6 @@ const loadInteractions = (data: Interaction[]) => {
     }
   } else {
     createQueryNode(query)
-    createNoInteractionNode()
   }
 }
 
@@ -111,9 +112,9 @@ const loadInteractionsNoDNA = (data: Interaction[]) => {
   createInteractions(createFunctions, data)
 }
 
-// ------------------------------------
+// ============================
 // Cytoscape creation Functions
-// ------------------------------------
+// ============================
 /**
  * Creates interactions using creation functions
  * @param  {Array} funcArr Array of functions which to call to construct graph
@@ -194,9 +195,9 @@ const createChromosomes = (data: Interaction[]) => {
   }
 }
 
-// ------------
+// =============
 // Node creators
-// ------------
+// =============
 /**
  * Creates top level dna compound node
  * @return {void}
@@ -304,10 +305,6 @@ const createProteinNode = (id: string) => {
   if (loadFlags.existsPDI) {
     compound.data.parent = 'COMPOUND_PROTEIN'
   }
-  /* 	nodesPush(compound)
-  nodesPush(border)
-  nodesPush(node)
-  */
   nodes.push(compound, border, node)
   return { compound: compound, border: border, node: node }
 }
@@ -324,10 +321,9 @@ const createNoInteractionNode = () => {
     },
     position: {
       x: 0,
-      y: 400,
+      y: 0,
     },
   }
-  //nodesPush(noInteractionNode)
   nodes.push(noInteractionNode)
 }
 
@@ -347,16 +343,16 @@ const createChromosomeNode = (id: string, n: number) => {
     },
     classes: 'dna-node',
   }
-  //nodesPush(node)
   nodes.push(node)
   return { node: node }
 }
 
-// ----------------------------------
+// ==================================
 // Edge Creators and Helper Functions
-//-----------------------------------
-
+// ==================================
+// --------
 // Creators
+// --------
 /**
  * Create edges representing PPIs
  * @param  {Object} data JSON interaction data
@@ -432,11 +428,11 @@ const createChromosomeEdge = (id: string, method: string) => {
   }
   edge = setDNAEdgeStyles(edge)
   edge.data.tooltip = setEdgeTooltipContent(edge)
-  // edgesPush(edge)
   edges.push(edge)
 }
-
+// -------
 // Helpers
+// -------
 /**
  * Sets edge styles for protein edges
  * @param {Object} edge The edge object with completed data entry
@@ -489,7 +485,6 @@ const setProteinEdgeStyles = (edge: RawEdge): RawEdge => {
  */
 const setDNAEdgeStyles = (edge: RawEdge) => {
   // Set edge defaults
-
   if (edge.data.method == 'E') {
     edge.data.lineStyle = 'solid'
     edge.data.size = 6
@@ -531,9 +526,9 @@ const setEdgeTooltipContent = (edge: RawEdge) => {
   const final = firstLine + '<br>' + dataLines
   return final
 }
-// ---------------
+// ----------------
 // Create Functions
-//----------------
+// ----------------
 /**
  * Check if a node already exists in the collection of all nodes
  * @param  {String} searchID The ID of the element to be compared against the collection
@@ -695,13 +690,10 @@ const createChr = (data: Interaction) => {
   }
   return true
 }
-//++++++++++++++++++++++++++++++++++++++
-const createRecursiveLabel = () => {}
 
-// ------------------------------------
+// ===================================
 // Helper functions for getLoadFlags()
-// ------------------------------------
-
+// ===================================
 /**
  * Returns if protein-dna interactions exists in data
  * @param  {Object} data JSON format interaction data

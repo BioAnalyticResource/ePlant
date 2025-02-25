@@ -8,6 +8,12 @@ interface numberInputProps {
   changeFunc: (event: ChangeEvent) => void
   prefix?: string
 }
+
+/** Number selector for filter dialog
+ * @param {string} label number selector label
+ * @param {func} changeFunc function to call on change
+ * @param {string} prefix prefix to prepend to number
+ */
 const NumberInput = (props: numberInputProps) => {
   return (
     <>

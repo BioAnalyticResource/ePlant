@@ -8,7 +8,7 @@ import {
   Position,
 } from 'cytoscape'
 
-import { Edge, LoadFlags, Node } from '../types'
+import { LoadFlags, Node } from '../types'
 
 let cy: Core
 let loadFlags: LoadFlags
@@ -79,6 +79,7 @@ const positionProtein = () => {
         stop: function () {
           transformAverage(proteinNodes, loadFlags.existsPDI)
           positionProteinBack(proteinNodes)
+          positionQueryBack()
           // cb(); ??
         },
       })
@@ -111,7 +112,23 @@ const positionProteinBack = (nodes: NodeCollection) => {
     const position = nodes[i]._private.position
     // @ts-expect-error typing error with _private, if removed breaks functionality
     const id = nodes[i]._private.data.id.substring(0, 9)
+    console.log(`Updating position of ${id}PROTEIN_BACK to`, position)
     cy.$('#' + id + 'PROTEIN_BACK').position(position)
+  }
+}
+/**
+ * Updates the position of query back node to be the same as query node.
+ * @return {void}
+ */
+const positionQueryBack = () => {
+  const queryNodes = cy.nodes('[id $= "QUERY_NODE"]')
+  for (let i = 0; i < queryNodes.length; i++) {
+    // @ts-expect-error typing error with _private, if removed breaks functionality
+    const position = queryNodes[i]._private.position
+    // @ts-expect-error typing error with _private, if removed breaks functionality
+    const id = queryNodes[i]._private.data.id.substring(0, 9)
+    console.log(`Updating position of ${id}QUERY_BACK to`, position)
+    cy.$('#' + id + 'QUERY_BACK').position(position)
   }
 }
 /**
@@ -260,7 +277,7 @@ const positionDNACircular = (numNodes: number) => {
       separationWeight = 1 + rows * 0.3
     }
     // Stagger rows, weight radius by number of nodes
-    // NOTE: can implement switch case here
+    // NOTE: can possibly implement switch case here
     if (j % rows === 7) {
       radius += separationWeight * 315
     } else if (j % rows === 6) {

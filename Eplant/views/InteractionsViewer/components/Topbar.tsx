@@ -27,7 +27,10 @@ interface TopbarProps {
   cy: Core
   gene: string
 }
-
+/** Interactions view toolbar, contains gene id header, legend and filter buttons
+ * @param {Core} cy cytoscape instance
+ * @param {string} gene current gene id
+ *  */
 const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
   const [showLegend, setShowLegend] = useState<boolean>(false)
   const legendRef = useRef(null)
@@ -212,7 +215,7 @@ const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
               justifyContent: 'space-between',
             }}
           >
-            <Typography variant='h4'>Filtrer Data</Typography>
+            <Typography variant='h4'>Filter Interactions</Typography>
             <IconButton color='secondary' onClick={handleFilterClick}>
               <Close />
             </IconButton>
@@ -375,11 +378,16 @@ const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
             </Box>
             {/* APPLY FILTERS BUTTON */}
             <Button
-              sx={{ mt: 1 }}
+              sx={(theme) => ({
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.primary.contrastText,
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.dark,
+                },
+              })}
               type='submit'
               onClick={handleApplyFilters}
               variant='contained'
-              color='info'
             >
               Apply filters
             </Button>
