@@ -79,7 +79,6 @@ const positionProtein = () => {
         stop: function () {
           transformAverage(proteinNodes, loadFlags.existsPDI)
           positionProteinBack(proteinNodes)
-          positionQueryBack()
           // cb(); ??
         },
       })
@@ -116,21 +115,7 @@ const positionProteinBack = (nodes: NodeCollection) => {
     cy.$('#' + id + 'PROTEIN_BACK').position(position)
   }
 }
-/**
- * Updates the position of query back node to be the same as query node.
- * @return {void}
- */
-const positionQueryBack = () => {
-  const queryNodes = cy.nodes('[id $= "QUERY_NODE"]')
-  for (let i = 0; i < queryNodes.length; i++) {
-    // @ts-expect-error typing error with _private, if removed breaks functionality
-    const position = queryNodes[i]._private.position
-    // @ts-expect-error typing error with _private, if removed breaks functionality
-    const id = queryNodes[i]._private.data.id.substring(0, 9)
-    console.log(`Updating position of ${id}QUERY_BACK to`, position)
-    cy.$('#' + id + 'QUERY_BACK').position(position)
-  }
-}
+
 /**
  * Positions Chr nodes
  * @return {void}
