@@ -4,8 +4,6 @@ import {
   Core,
   NodeCollection,
   NodeSingular,
-  NodeSingularPosition,
-  Position,
 } from 'cytoscape'
 
 import { LoadFlags, Node } from '../types'

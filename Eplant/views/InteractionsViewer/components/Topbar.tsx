@@ -1,4 +1,4 @@
-import { ChangeEvent, createRef, FC, forwardRef, useRef, useState } from 'react'
+import { ChangeEvent, FC, useRef, useState } from 'react'
 import { Core } from 'cytoscape'
 
 import { FilterAlt, QuestionMark } from '@mui/icons-material'
