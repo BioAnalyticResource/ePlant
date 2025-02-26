@@ -9,14 +9,8 @@ import { Grid, Link, Stack, Typography, useTheme } from '@mui/material'
 import Tile from './Tile'
 
 export default function GetStartedView() {
-  const { setActiveActions } = useOutletContext<ViewContext>()
-  // const { state, setState, initializeState } = useURLState<>()
   const theme = useTheme()
   const { views } = useConfig()
-  useEffect(() => {
-    // On mount, set the active actions and initialize the state
-    setActiveActions([])
-  }, [])
   return (
     <Stack spacing={3}>
       <div>

@@ -8,12 +8,12 @@ import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
-import { type View } from './View'
+import { type ViewMetadata } from './View'
 
 export type EplantConfig = {
-  readonly genericViews: View[]
-  readonly userViews: View[]
-  readonly views: View[]
+  readonly genericViews: ViewMetadata[]
+  readonly userViews: ViewMetadata[]
+  readonly views: ViewMetadata[]
   readonly rootPath: string
   readonly defaultView: string
   readonly defaultSpecies: string

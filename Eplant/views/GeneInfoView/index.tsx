@@ -1,6 +1,6 @@
 import { Link, Typography } from '@mui/material'
 
-import { View } from '../../View'
+import { ViewMetadata } from '../../View'
 
 import GeneInfoViewIcon from './icon'
 import { GeneInfoViewData } from './types'
@@ -8,7 +8,7 @@ import { GeneInfoViewData } from './types'
 /**
  * Show information about a gene, including its sequence and features.
  */
-const GeneInfoView: View<GeneInfoViewData> = {
+const GeneInfoView: ViewMetadata<GeneInfoViewData> = {
   name: 'Gene info viewer',
   id: 'gene-info',
   icon: () => <GeneInfoViewIcon />,

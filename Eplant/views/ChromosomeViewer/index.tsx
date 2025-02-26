@@ -16,7 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Snackbar from '@mui/material/Snackbar'
 import SnackbarContent from '@mui/material/SnackbarContent'
 
-import { View } from '../../View'
+import { ViewMetadata } from '../../View'
 
 import ChromosomeView from './Viewer/Viewer'
 import { ChromosomeIcon } from './icons'
@@ -32,7 +32,7 @@ import {
 import { getGeneAnnotation } from './utilities'
 import ZoomControls from './ZoomControls'
 
-export const ChromosomeViewerObject: View<
+export const ChromosomeViewerObject: ViewMetadata<
   ChromosomeViewerData,
   ChromosomeViewerState
 > = {

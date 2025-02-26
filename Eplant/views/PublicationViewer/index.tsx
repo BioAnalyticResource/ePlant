@@ -1,12 +1,12 @@
 import { Link } from '@mui/material'
 
 import ThumbnailLight from '../../../thumbnails/publication-viewer-light.png'
-import { View } from '../../View'
+import { ViewMetadata } from '../../View'
 
 import PublicationViewerIcon from './icon'
 import { PublicationViewerData } from './types'
 
-const PublicationViewer: View<PublicationViewerData> = {
+const PublicationViewer: ViewMetadata<PublicationViewerData> = {
   name: 'Publication viewer',
   id: 'publications',
   icon: () => <PublicationViewerIcon />,

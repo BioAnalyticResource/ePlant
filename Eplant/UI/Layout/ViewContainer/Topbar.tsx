@@ -6,7 +6,7 @@ import { useActiveGeneId, useActiveViewId } from '@eplant/state'
 import { useURLState } from '@eplant/state/URLStateProvider'
 import { ActionsPanel } from '@eplant/util/Actions/ActionsPanel'
 import downloadFile from '@eplant/util/downloadFile'
-import { View } from '@eplant/View'
+import { ViewMetadata } from '@eplant/View'
 import {
   AppBar,
   Box,
@@ -20,16 +20,14 @@ import {
 } from '@mui/material'
 
 interface TopBarProps {
-  activeView: View<any, any>
+  activeView: ViewMetadata<any, any>
   setViewingCitations: (value: boolean) => void
   loading: boolean
-  activeActions: any[]
 }
 export const TopBar = ({
   activeView,
   setViewingCitations,
   loading,
-  activeActions,
 }: TopBarProps) => {
   const { userViews, views } = useConfig()
   const [activeViewId, setActiveViewId] = useActiveViewId()
@@ -162,7 +160,7 @@ export const TopBar = ({
             </Select>
           </FormControl>
         </Stack>
-        <ActionsPanel actions={activeActions} />
+        <ActionsPanel actions={activeView.actions} />
         <Button
           variant='text'
           sx={{

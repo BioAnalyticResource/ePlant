@@ -1,6 +1,6 @@
-import { View } from '../../View'
+import { ViewMetadata } from '../../View'
 
-const FallbackView: View<null> = {
+const FallbackView: ViewMetadata<null> = {
   name: 'Unknown view',
   id: 'fallback',
 }

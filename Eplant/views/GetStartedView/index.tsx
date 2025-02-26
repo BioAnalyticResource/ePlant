@@ -1,6 +1,6 @@
-import { View } from '@eplant/View'
+import { ViewMetadata } from '@eplant/View'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
-const GetStartedView: View = {
+const GetStartedView: ViewMetadata = {
   name: 'Get started',
   id: 'get-started',
   icon: () => <HomeOutlinedIcon />,

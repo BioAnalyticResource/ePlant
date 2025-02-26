@@ -1,7 +1,7 @@
 import { SVGProps } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { View, ViewDataError } from '@eplant/View'
+import { ViewDataError, ViewMetadata } from '@eplant/View'
 import { Player } from '@lottiefiles/react-lottie-player'
 import { Box, LinearProgress, Stack, Typography, useTheme } from '@mui/material'
 
@@ -35,7 +35,7 @@ export function LoadingImage(props: SVGProps<SVGSVGElement>) {
 export default function LoadingPage(props: {
   loadingAmount: number
   gene: GeneticElement | null
-  view: View
+  view: ViewMetadata
   error: ViewDataError | null
 }) {
   const theme = useTheme()

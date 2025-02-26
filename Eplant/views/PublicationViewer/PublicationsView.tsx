@@ -20,25 +20,19 @@ import {
 } from './types'
 
 export const PublicationsView = () => {
-  const { geneticElement, setIsLoading, setLoadAmount, setActiveActions } =
+  const { geneticElement, setIsLoading, setLoadAmount } =
     useOutletContext<ViewContext>()
   const { state, setState, initializeState } =
     useURLState<PublicationsViewerState>()
   const { data, isLoading, isError, error } = useQuery<PublicationViewerData>({
     queryKey: [`publications-${geneticElement?.id}`],
     queryFn: async () => {
-      if (!geneticElement) {
-        throw Error('No gene')
-      }
-      const data = publicationsLoader(geneticElement, setLoadAmount)
-      return data
+      return publicationsLoader(geneticElement, setLoadAmount)
     },
-    enabled: !!geneticElement,
   })
   const theme = useTheme()
   useEffect(() => {
     initializeState(PublicationsViewStateSchema)
-    setActiveActions([])
   }, [])
 
   useEffect(() => {
@@ -91,7 +85,7 @@ export const PublicationsView = () => {
 }
 
 const publicationsLoader = async (
-  geneticElement: GeneticElement,
+  geneticElement: GeneticElement | null,
   setLoadAmount: (loaded: number) => void
 ) => {
   if (!geneticElement)

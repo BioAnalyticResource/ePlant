@@ -3,12 +3,12 @@ import { StateAction } from '@eplant/View'
 import { Box, Button, Grid, Tooltip } from '@mui/material'
 
 interface ActionsPanelProps<T> {
-  actions: StateAction<T>[]
+  actions?: StateAction<T>[]
 }
 
 export const ActionsPanel = <T,>({ actions }: ActionsPanelProps<T>) => {
   const { state, setState, initializeState } = useURLState<T>()
-  const actionButtons = actions.map((action) => {
+  const actionButtons = actions?.map((action) => {
     return (
       <Tooltip key={action.name} title={action.description}>
         <Button
@@ -20,7 +20,7 @@ export const ActionsPanel = <T,>({ actions }: ActionsPanelProps<T>) => {
       </Tooltip>
     )
   })
-
+  if (actionButtons === undefined) return <></>
   const rows = []
   for (let i = 0; i < actionButtons.length; i += 5) {
     rows.push(actionButtons.slice(i, i + 5))

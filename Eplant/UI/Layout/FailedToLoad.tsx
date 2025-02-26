@@ -3,7 +3,7 @@ import { SVGProps } from 'react'
 import GeneticElement from '@eplant/GeneticElement'
 import { Link, Stack, Typography, useTheme } from '@mui/material'
 
-import { View } from '../../View'
+import { ViewMetadata } from '../../View'
 
 const Illustration = ({
   color,

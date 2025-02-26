@@ -8,14 +8,14 @@ import useDimensions from '@eplant/util/useDimensions'
 import { ViewDataError } from '@eplant/View'
 import { Box, MenuItem, Typography } from '@mui/material'
 
-import { ColorMode, EFPId } from '../types'
+import { EFPId } from '../types'
 import EFP from '..'
 
 import { EFPListMemoized } from './EFPList'
 import GeneDistributionChart from './GeneDistributionChart'
 import Legend from './legend'
 import MaskModal from './MaskModal'
-import { EFPViewerData, EFPViewerSortTypes, EFPViewerState } from './types'
+import { EFPViewerData, EFPViewerState } from './types'
 
 interface EFPViewerProps {
   data: EFPViewerData
@@ -31,7 +31,6 @@ export const EFPViewer = ({
   efps,
   setViewState,
 }: EFPViewerProps) => {
-  const [maskModalVisible, setMaskModalVisible] = useState(false)
   const viewIndices: number[] = [...Array(data.views.length).keys()]
   viewIndices.sort((a, b) => {
     if (state.sortBy == 'name')
@@ -56,12 +55,6 @@ export const EFPViewer = ({
       activeView: sortedEfps[activeViewIndex].id,
     })
   }, [state.activeView])
-
-  useEffect(() => {
-    if (state.maskingEnabled) {
-      setMaskModalVisible(true)
-    }
-  }, [state.maskingEnabled])
 
   const efp = useMemo(() => {
     const Component = sortedEfps[activeViewIndex].component
@@ -218,11 +211,16 @@ export const EFPViewer = ({
               </div>
               <MaskModal
                 state={state}
-                isVisible={maskModalVisible}
-                onClose={() => setMaskModalVisible(false)}
+                isVisible={state.maskModalVisible}
+                onClose={() =>
+                  setViewState({ ...state, maskModalVisible: false })
+                }
                 onSubmit={(threshold) => {
-                  setViewState({ ...state, maskThreshold: threshold })
-                  setMaskModalVisible(false)
+                  setViewState({
+                    ...state,
+                    maskThreshold: threshold,
+                    maskModalVisible: false,
+                  })
                 }}
               />
               <Legend
@@ -274,44 +272,6 @@ export const EFPViewer = ({
       </Box>
     </Box>
   )
-}
-
-export const ValidateEFPViewerParams = (
-  params: URLSearchParams,
-  efps: EFP[]
-): EFPViewerState => {
-  const activeViewParam = params.get('activeView') ?? ''
-  const activeView =
-    efps.find((efp) => efp.name === activeViewParam)?.name ?? ''
-  const colorModeParam = params.get('colorMode') ?? 'absolute'
-  const colorMode: ColorMode =
-    colorModeParam === 'absolute' || colorModeParam === 'relative'
-      ? colorModeParam
-      : 'absolute'
-  const transform = {
-    offset: {
-      x: parseInt(params.get('x') || '0') || 0,
-      y: parseInt(params.get('y') || '0') || 0,
-    },
-    zoom: parseInt(params.get('zoom') || '1') || 1,
-  }
-  const sortByParam = params.get('sortBy') ?? 'name'
-  const sortBy: EFPViewerSortTypes =
-    sortByParam === 'name' || sortByParam === 'expression-level'
-      ? sortByParam
-      : 'name'
-
-  const maskingEnabled = params.get('maskingEnabled') === 'true' ? true : false
-  const maskThreshold = parseInt(params.get('maskThreshold') || '100') || 100
-
-  return {
-    activeView: activeView,
-    transform: transform,
-    colorMode: colorMode,
-    sortBy: sortBy,
-    maskingEnabled: maskingEnabled,
-    maskThreshold: maskThreshold,
-  }
 }
 
 export const EFPViewerLoader = async (

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 
 import { getCitation } from '@eplant/util/citations'
-import { View } from '@eplant/View'
+import { ViewMetadata } from '@eplant/View'
+import YoutubeSearchedForRoundedIcon from '@mui/icons-material/YoutubeSearchedForRounded'
 
 import EFPViewerCitation from '../eFP/Viewer/EFPViewerCitation'
 
@@ -9,7 +10,7 @@ import { CellEFPDataObject } from './CellEFPDataObject'
 import CellEFPIcon from './icon'
 import { CellEFPViewerData, CellEFPViewerState } from './types'
 
-const CellEFP: View<CellEFPViewerData, CellEFPViewerState> = {
+const CellEFP: ViewMetadata<CellEFPViewerData, CellEFPViewerState> = {
   id: 'cell-efp',
   name: 'Cell eFP',
   icon: () => <CellEFPIcon />,
@@ -55,6 +56,23 @@ const CellEFP: View<CellEFPViewerData, CellEFPViewerState> = {
       ></EFPViewerCitation>
     )
   },
+  actions: [
+    {
+      name: 'Reset Pan/Zoom',
+      description: 'Reset the pan and zoom of the viewer',
+      icon: <YoutubeSearchedForRoundedIcon />,
+      mutation: (prevState) => ({
+        ...prevState,
+        transform: {
+          offset: {
+            x: 0,
+            y: 0,
+          },
+          zoom: 1,
+        },
+      }),
+    },
+  ],
 }
 
 export default CellEFP

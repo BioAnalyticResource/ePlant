@@ -41,7 +41,6 @@ export function ViewContainer<T, S, A>({
 }: {
   gene: GeneticElement | null
 } & BoxProps) {
-  // const { activeData, error, dispatch, state } = useViewData(view, gene)
   const [loading, setLoading] = useState(false)
   const [loadAmount, setLoadAmount] = useState(0)
   const [printing, setPrinting] = usePrinting()
@@ -56,13 +55,14 @@ export function ViewContainer<T, S, A>({
   const [genes, setGenes] = useGeneticElements()
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [activeViewId, setActiveViewId] = useActiveViewId()
-  const [activeActions, setActiveActions] = useState<StateAction<A>[]>([])
   const [geneNotFound, setGeneNotFound] = useState(false)
-  const activeView =
-    views.find((view) => view.id === activeViewId) ?? GeneInfoView
 
+  console.log(location)
+  console.log(activeViewId)
+  useEffect(() => console.log('first render'), [])
   // On app url change, make sure loaded gene and view aligns with URL
   useEffect(() => {
+    console.log('on startup')
     const loadGene = async (geneid: string) => {
       // TODO: This is super jank, should probably write some better utilities for loading genes
       const species = speciesList.find(
@@ -91,11 +91,14 @@ export function ViewContainer<T, S, A>({
       }
     }
 
+    // Set activeview
     const urlView =
       views.find((view) => view.id === location.pathname.split('/')[1]) ??
       GeneInfoView
     setActiveViewId(urlView.id)
-  }, [])
+    console.log('inner view', activeViewId)
+  }, [location.pathname])
+  console.log('outer nav1', activeViewId)
 
   // On active gene change update the gene path segment
   useEffect(() => {
@@ -116,19 +119,28 @@ export function ViewContainer<T, S, A>({
       }
       const newPath = '/' + pathSegments.join('/') + '/' + location.search
       if (newPath !== location.pathname + '/' + location.search) {
+        console.log('nav', newPath)
         navigate(newPath)
       }
     }
   }, [activeGeneId, gene])
 
+  console.log('outer nav2', activeViewId)
   useEffect(() => {
+    console.log('nav2', activeViewId)
+
     const pathSegments = location.pathname.split('/')
     pathSegments[1] = activeViewId
     const newPath = pathSegments.join('/')
     if (newPath !== location.pathname + location.search) {
+      console.log('nav2', newPath)
       navigate(newPath)
     }
   }, [activeViewId])
+
+  // Get activeview object after everything resolves
+  const activeView =
+    views.find((view) => view.id === activeViewId) ?? GeneInfoView
   return (
     <Box {...props} display='flex' flexDirection='column'>
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
@@ -153,7 +165,6 @@ export function ViewContainer<T, S, A>({
         activeView={activeView}
         loading={loading}
         setViewingCitations={setViewingCitations}
-        activeActions={activeActions}
       />
       <Box
         sx={(theme) => ({
@@ -206,7 +217,6 @@ export function ViewContainer<T, S, A>({
                   geneticElement: gene,
                   setLoadAmount: setLoadAmount,
                   setIsLoading: setLoading,
-                  setActiveActions: setActiveActions,
                 }}
               ></Outlet>
             </>

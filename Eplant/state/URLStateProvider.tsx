@@ -49,11 +49,6 @@ export const URLStateProvider = ({ children }: { children: ReactNode }) => {
     }, 50),
     [activeViewId]
   )
-  const handleSetState = (updatedState: any) => {
-    setState((prevState: any) => {
-      return updatedState
-    })
-  }
 
   useEffect(() => {
     if (state) {

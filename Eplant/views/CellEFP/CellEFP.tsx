@@ -11,7 +11,6 @@ import { useQuery } from '@tanstack/react-query'
 
 import Legend from '../eFP/Viewer/legend'
 
-import { CellEFPStateActions } from './actions'
 import { CellEFPDataObject } from './CellEFPDataObject'
 import {
   CellEFPStateSchema,
@@ -20,23 +19,17 @@ import {
 } from './types'
 
 export const CellEFPView = () => {
-  const { geneticElement, setIsLoading, setLoadAmount, setActiveActions } =
+  const { geneticElement, setIsLoading, setLoadAmount } =
     useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<CellEFPViewerState>()
   const { data, isLoading, isError, error } = useQuery<CellEFPViewerData>({
     queryKey: [`cell-efp-${geneticElement?.id}`],
     queryFn: async () => {
-      if (!geneticElement) {
-        throw Error('No gene')
-      }
-      const data = cellEFPLoader(geneticElement, setLoadAmount)
-      return data
+      return cellEFPLoader(geneticElement, setLoadAmount)
     },
-    enabled: !!geneticElement,
   })
   useEffect(() => {
-    // On mount, set the active actions and initialize the state
-    setActiveActions(CellEFPStateActions)
+    // On mount, initialize state
     initializeState(CellEFPStateSchema)
   }, [])
 
@@ -77,11 +70,6 @@ export const CellEFPView = () => {
           {geneticElement?.id}
         </Typography>
       </Box>
-      {/* <ActionsPanel
-        actions={CellEFPStateActions}
-        prevState={state}
-        setState={setState}
-      ></ActionsPanel> */}
       <Box
         sx={{
           width: '100%',

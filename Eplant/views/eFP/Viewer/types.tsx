@@ -33,6 +33,7 @@ export const EFPViewerStateSchema = z.object({
   sortBy: z.enum(['name', 'expression-level']).default('name'),
   maskingEnabled: z.boolean().default(false),
   maskThreshold: z.number().default(100),
+  maskModalVisible: z.boolean().default(false),
 })
 
 export type EFPViewerState = z.infer<typeof EFPViewerStateSchema>

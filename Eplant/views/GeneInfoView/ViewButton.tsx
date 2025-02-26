@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import GeneticElement from '@eplant/GeneticElement'
-import { View } from '@eplant/View'
+import { ViewMetadata } from '@eplant/View'
 import { Box, Button, ButtonProps, LinearProgress } from '@mui/material'
 
 export const ViewButton = styled(function ViewButton({
   geneticElement,
   view,
   ...props
-}: { geneticElement: GeneticElement; view: View } & ButtonProps) {
+}: { geneticElement: GeneticElement; view: ViewMetadata } & ButtonProps) {
   return (
     <Button {...props}>
       <Box

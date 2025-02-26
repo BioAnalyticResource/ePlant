@@ -16,29 +16,23 @@ import {
 import { experimentEFPs, experimentEFPViews } from './efps'
 
 export const ExperimentEFP = () => {
-  const { geneticElement, setIsLoading, setLoadAmount, setActiveActions } =
+  const { geneticElement, setIsLoading, setLoadAmount } =
     useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<EFPViewerState>()
   const { data, isLoading, isError, error } = useQuery<EFPViewerData>({
     queryKey: [`tissue-${geneticElement?.id}`],
     queryFn: async () => {
-      if (!geneticElement) {
-        throw Error('No gene')
-      }
-      const data = EFPViewerLoader(
+      return EFPViewerLoader(
         geneticElement,
         experimentEFPs,
         experimentEFPViews,
         setLoadAmount
       )
-      return data
     },
-    enabled: !!geneticElement,
   })
 
   useEffect(() => {
     // On mount, set the active actions and initialize the state
-    setActiveActions(EFPViewerActions)
     initializeState(EFPViewerStateSchema)
   }, [])
 

@@ -12,6 +12,7 @@ import Sidebar, { collapsedSidebarWidth, sidebarWidth } from './UI/Sidebar'
 import { useConfig } from './config'
 import {
   useActiveGeneId,
+  useActiveViewId,
   useDarkMode,
   useGeneticElements,
   usePageLoad,
@@ -28,17 +29,18 @@ const Eplant = () => {
   const [darkMode] = useDarkMode()
   const [isCollapse, setIsCollapse] = useSidebarState()
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
+  const [activeViewId, setActiveViewId] = useActiveViewId()
   const [genes, setGenes] = useGeneticElements()
   const theme = useTheme()
   const [globalProgress, loaded] = usePageLoad()
   const config = useConfig()
-
   useEffect(() => {
     if (loaded) {
       updateColors(theme)
     }
   }, [theme, loaded])
 
+  console.log('eplant', activeViewId)
   return (
     <ThemeProvider theme={darkMode ? dark : light}>
       <CssBaseline />

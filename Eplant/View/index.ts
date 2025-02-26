@@ -12,7 +12,7 @@ export enum ViewDataError {
   FAILED_TO_LOAD = 'Failed to load',
 }
 
-export interface View<Data = any, State = any> {
+export interface ViewMetadata<Data = any, State = any> {
   /**
    * A react component returning icon that represents this view.
    * Used in the gene info viewer
@@ -30,4 +30,8 @@ export interface View<Data = any, State = any> {
     activeData?: Data
     gene?: GeneticElement | null
   }) => JSX.Element
+  /**
+   * The list of view actions that can be performed on this view
+   */
+  actions?: StateAction<State>[]
 }

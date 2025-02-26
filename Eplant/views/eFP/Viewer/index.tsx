@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { getCitation } from '@eplant/util/citations'
-import { View } from '@eplant/View'
+import { StateAction, ViewMetadata } from '@eplant/View'
 
 import EFP from '..'
 
@@ -15,7 +15,9 @@ interface ICitationProps {
   gene?: GeneticElement | null
 }
 
-export default class EFPViewer implements View<EFPViewerData, EFPViewerState> {
+export default class EFPViewer
+  implements ViewMetadata<EFPViewerData, EFPViewerState>
+{
   constructor(
     public id: string,
     public name: string,
@@ -23,7 +25,8 @@ export default class EFPViewer implements View<EFPViewerData, EFPViewerState> {
     public efps: EFP[],
     public icon: () => JSX.Element,
     public description?: string,
-    public thumbnail?: string
+    public thumbnail?: string,
+    public actions?: StateAction<EFPViewerState>[]
   ) {}
   citation = ({ activeData, state }: ICitationProps) => {
     const [xmlData, setXMLData] = useState<string[]>([])

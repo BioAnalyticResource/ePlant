@@ -33,13 +33,8 @@ export const ChromosomeView = () => {
   const { data, isLoading, isError, error } = useQuery<ChromosomeViewerData>({
     queryKey: [`chromosome`],
     queryFn: async () => {
-      if (!geneticElement) {
-        throw Error('No gene')
-      }
-      const data = ChromosomeViewLoader(geneticElement, setLoadAmount)
-      return data
+      return ChromosomeViewLoader(geneticElement, setLoadAmount)
     },
-    enabled: !!geneticElement,
   })
 
   useEffect(() => {

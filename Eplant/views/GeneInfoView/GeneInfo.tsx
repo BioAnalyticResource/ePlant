@@ -6,7 +6,6 @@ import { z } from 'zod'
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { useSetActiveViewId } from '@eplant/state'
-import { useURLState } from '@eplant/state/URLStateProvider'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { Alert, Box, IconButton, Snackbar } from '@mui/material'
@@ -14,7 +13,7 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useQuery } from '@tanstack/react-query'
 
-import { View } from '../../View'
+import { ViewMetadata } from '../../View'
 
 import { CodeBody } from './CodeBody'
 import { GeneModel } from './GeneModel'
@@ -26,31 +25,21 @@ import { ViewButton } from './ViewButton'
 
 export const GeneInfoView = () => {
   const [snackBarOpen, setSnackBarOpen] = useState(false)
-  const { geneticElement, setIsLoading, setLoadAmount, setActiveActions } =
+  const { geneticElement, setIsLoading, setLoadAmount } =
     useOutletContext<ViewContext>()
-  const { state, setState, initializeState } = useURLState<null>()
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
   const { data, isLoading, isError, error } = useQuery<GeneInfoViewData>({
     queryKey: [`geneInfo-${geneticElement?.id}`],
     queryFn: async () => {
-      if (!geneticElement) {
-        throw Error('No gene')
-      }
-      const data = geneInfoLoader(geneticElement, setLoadAmount)
-      return data
+      return geneInfoLoader(geneticElement, setLoadAmount)
     },
-    enabled: !!geneticElement,
   })
   const copyToClipboard = (text: string) => {
     setSnackBarOpen(true)
     navigator.clipboard.writeText(text)
   }
-
-  useEffect(() => {
-    setActiveActions([])
-  })
 
   if (isLoading || isError || !data) return <></>
   return (
@@ -229,7 +218,7 @@ function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement }) {
     </Stack>
   )
 
-  function switchViews(view: View) {
+  function switchViews(view: ViewMetadata) {
     setActiveViewId(view.id)
   }
 }
