@@ -57,8 +57,6 @@ export function ViewContainer<T, S, A>({
   const [activeViewId, setActiveViewId] = useActiveViewId()
   const [geneNotFound, setGeneNotFound] = useState(false)
 
-  console.log(location)
-  console.log(activeViewId)
   useEffect(() => console.log('first render'), [])
   // On app url change, make sure loaded gene and view aligns with URL
   useEffect(() => {
@@ -97,7 +95,7 @@ export function ViewContainer<T, S, A>({
       GeneInfoView
     setActiveViewId(urlView.id)
     console.log('inner view', activeViewId)
-  }, [location.pathname])
+  }, [])
   console.log('outer nav1', activeViewId)
 
   // On active gene change update the gene path segment

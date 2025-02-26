@@ -8,7 +8,7 @@ import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import { Box, CircularProgress, Snackbar, SnackbarContent } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 
-import ChromosomeViewer from './Viewer/Viewer'
+import { ChromosomeViewer } from './Viewer/Viewer'
 import {
   ChromosomeItem,
   ChromosomesResponseObj,
@@ -81,6 +81,7 @@ export const ChromosomeView = () => {
         <ChromosomeViewer
           chromosomes={data.viewData}
           scale={state.transform.dZoom}
+          annotations={[]}
         />
       </Space>
       <Snackbar
