@@ -195,7 +195,7 @@ const activeGeneIdAtom = atom<string>('')
 export const useActiveGeneId = () => useAtom(activeGeneIdAtom)
 export const useSetActiveGeneId = () => useSetAtom(activeGeneIdAtom)
 
-const activeViewIdAtom = atom<string>('gene-info')
+const activeViewIdAtom = atom<string>('')
 export const useActiveViewId = () => useAtom(activeViewIdAtom)
 export const useSetActiveViewId = () => useSetAtom(activeViewIdAtom)
 
