@@ -188,9 +188,6 @@ export const TopBar = ({
               // Some views don't cache based on geneId
               data = queryClient.getQueryData([activeView.id])
             }
-            console.log(`${activeView.id}-${activeGeneId}`)
-            console.log(data)
-            console.log(JSON.stringify(data, null, 2))
             downloadFile(
               `${activeView.id}${activeGeneId ? '-' + activeGeneId : ''}.json`,
               JSON.stringify(data, null, 2)

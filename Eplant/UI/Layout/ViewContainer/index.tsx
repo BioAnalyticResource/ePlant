@@ -57,10 +57,8 @@ export function ViewContainer<T, S, A>({
   const [activeViewId, setActiveViewId] = useActiveViewId()
   const [geneNotFound, setGeneNotFound] = useState(false)
 
-  useEffect(() => console.log('first render'), [])
   // On app url change, make sure loaded gene and view aligns with URL
   useEffect(() => {
-    console.log('on startup')
     const loadGene = async (geneid: string) => {
       // TODO: This is super jank, should probably write some better utilities for loading genes
       const species = speciesList.find(
@@ -94,9 +92,7 @@ export function ViewContainer<T, S, A>({
       views.find((view) => view.id === location.pathname.split('/')[1]) ??
       GeneInfoView
     setActiveViewId(urlView.id)
-    console.log('inner view', activeViewId)
   }, [])
-  console.log('outer nav1', activeViewId)
 
   // On active gene change update the gene path segment
   useEffect(() => {
@@ -117,21 +113,16 @@ export function ViewContainer<T, S, A>({
       }
       const newPath = '/' + pathSegments.join('/') + '/' + location.search
       if (newPath !== location.pathname + '/' + location.search) {
-        console.log('nav', newPath)
         navigate(newPath)
       }
     }
   }, [activeGeneId, gene])
 
-  console.log('outer nav2', activeViewId)
   useEffect(() => {
-    console.log('nav2', activeViewId)
-
     const pathSegments = location.pathname.split('/')
     pathSegments[1] = activeViewId
     const newPath = pathSegments.join('/')
     if (newPath !== location.pathname + location.search) {
-      console.log('nav2', newPath)
       navigate(newPath)
     }
   }, [activeViewId])

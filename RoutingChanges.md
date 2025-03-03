@@ -189,7 +189,7 @@ Zod also allows for easy type inference meaning that we can quickly define a Typ
 ```
 export type EFPViewerState = z.infer<typeof EFPViewerStateSchema>
 
-# This is equivalent to
+// This is equivalent to:
 type ColorMode = 'absolute' | 'relative'
 type EFPViewerSortTypes = 'expression-level' | 'name'
 
@@ -236,3 +236,210 @@ export const CellEFPView = () => {
   ...
 }
 ```
+
+From this point, the `state` variable can be used in the same way that it is used before the routing changes. Any update to the state can be done using the `setState` function. This means that any state setting that was previously performed using reducer functions should now be done using this setState function. Using this `setState` function, all changes to the view state will automatically be synced with the url search params, allowing for link sharing of exact view states.
+
+## Creating a New View (Tutorial)
+
+Given the changes, the developer process for view creation has changed slightly. This short tutorial will provide a more clear understanding of what is necessary to create a new view.
+
+### Defining Types
+
+Similar to in the past, a new view will need to define several different types to specify the shape of data that it will be using. The key types will be its `Data` type and its `State` type.
+
+The `Data` type will be the type of the data which the view fetches from its corresponding backend. There has been no change to the definition of thee types, they are defined in the same way.
+
+The `State` defines the shape of the object encoding the view's state. Unlike `Data` types which can be defined using Typescript's typing system, `State` types are defined using Zod's schema definition Since view state can be "user defined" via url query params, Zod is necessary for defining constraints and default values to state, to ensure that any passed values are handled gracefully.
+
+```
+// Another example of Zod schema definition
+// See that we can define schemas with arbitrarily nested object, numbers, strings and more.
+
+export const TutorialViewStateSchema = z.object({
+  transform: z.object({
+    offset: z.object({
+      x: z.number().default(0),
+      y: z.number().default(0),
+    }),
+    zoom: z.number().min(0.25).max(4).default(1),
+  }),
+  count: z.number().min(0).default(0),
+  colour: z.enum(['red', 'blue', 'green']).default('red'),
+})
+
+// Directly infering Typescript type from Zod schema
+
+export type TutorialViewState = z.infer<typeof TutorialViewStateSchema>
+
+/*
+The TutorialViewState type will look like this
+
+{
+  transform: {
+    offset: {
+      x: number,
+      y: number,
+    },
+    zoom: number,
+  },
+  count: number
+  colour: 'red' | 'blue' | 'green'
+}
+*/
+```
+
+### Creating the ViewMetadata Object
+
+As mentioned above, a majority of View functionality has been moved to a functional component form, despite this, the `View` object remains, now called the `ViewMetadata` object, which as the name suggests, holds metadata about the view which can be accessed by the rest of the application.
+
+Example ViewMetadata object for our new Tutorial View
+
+```
+const TutorialView: ViewMetadata<TutorialViewData, TutorialViewState> = {
+  id: 'tutorial',
+  name: 'Tutorial View',
+  icon: () => <TutorialViewIcon />,
+  citation: () => <TutorialViewCitations/>
+  actions: [
+    {
+      name: 'Change Colour',
+      description: 'Change view colour',
+      icon: <PaintBucketIcon />,
+      mutation: (prevState, newColour) => ({
+        ...prevState,
+        colour: newColour,
+      }),
+    },
+  ],
+}
+```
+
+As you can see, the ViewMetadata interface is significanly smaller than before, without any new field additions. All remaining fields are used the same as in the old `View` object definition, with the `actions` field. In this example, our view would have one StateAction, which changes the `colour` field in the view state.
+
+### Creating the View Component
+
+A new view will need a component which can be rendered within `ViewContainer` and will need a few new bits of boilerplate to interface with the rest of the ePlant application.
+
+There are 5 important parts which must be included in most views (in the case that a view has no state, the state related parts can be ommitted.)
+
+1. **A call to useOutletContext**
+   - This allows the view to access the active geneticElement, as well as communicate its loading status to `ViewContainer`
+2. **A call to useURLState**
+   - This provides access to the view state and state setter functions
+   - Also provides access to the initializeState function for initializing the view state on component mount
+3. **A call to useQuery**
+   - Fetches data from the view's corresponding backend and stores it in a key-value store.
+   - Allows for data to be cached and accessed **globally**.
+   - Note that the function
+4. **A call to initializeState**
+   - As mentioned above, initializeState must be called on component mount, the easiest way to achieve this is with a useEffect with an empty dependency array.
+   - This function takes the Zod schema which defines the view state.
+5. **Setting load status**
+   - In another useEffect, setting `isLoading` is necessary to communicate the loading status of the useQuery fetch.
+   - Note that `isLoading` is a variable that is provided by the useQuery hook which provides loading status
+
+```
+export const TutorialView = () => {
+
+  // 1. useOutletContext Call
+  const { geneticElement, setIsLoading, setLoadAmount } =
+    useOutletContext<ViewContext>()
+
+  // 2. useURLState call
+  const { state, setState, initializeState } = useURLState<TutorialViewState>()
+
+  // 3. useQuery Call
+  const { data, isLoading, isError, error } = useQuery<TutorialViewData>({
+    queryKey: [`tutorial-${geneticElement?.id}`],
+    queryFn: async () => {
+      return tutorialViewLoader(geneticElement, setLoadAmount)
+    },
+  })
+
+  // 4. Initialize State call
+  useEffect(() => {
+    // On mount, initialize state
+    initializeState(TutorialViewStateSchema)
+  }, [])
+
+  // 5. Setting load status
+  useEffect(() => {
+    setIsLoading(isLoading)
+  }, [isLoading])
+  ...
+  // The rest of your view component logic and rendering here
+}
+```
+
+### Final Steps
+
+The last two things that need to be done are adding your view to the `userViewMetadata` array in `config.tsx` and adding a new Route for your view in `main.tsx`.
+
+**Adding metadata**
+
+```
+// List of views that a user can select from
+// Can contain views from the genericViews list too
+const userViewMetadata = [
+  GetStartedView,
+  GeneInfoView,
+  PublicationViewer,
+  PlantEFP,
+  CellEFP,
+  ExperimentEFP,
+  ChromosomeViewerObject,
+  TutorialViewMetadata
+]
+```
+
+**Adding new Route**
+
+```
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Eplant />,
+    children: [
+      {
+        element: <Navigate to={'gene-info/'} replace={true}></Navigate>,
+        index: true,
+      },
+      {
+        path: 'cell-efp/:geneid?',
+        element: <CellEFPView></CellEFPView>,
+      },
+      {
+        path: 'publications/:geneid?',
+        element: <PublicationsView></PublicationsView>,
+      },
+      {
+        path: 'chromosome/:geneid?',
+        element: <ChromosomeView></ChromosomeView>,
+      },
+      {
+        path: 'plant-efp/:geneid?',
+        element: <PlantEFP></PlantEFP>,
+      },
+      {
+        path: 'tissue/:geneid?',
+        element: <ExperimentEFP></ExperimentEFP>,
+      },
+      {
+        path: 'gene-info/:geneid?',
+        element: <GeneInfoView></GeneInfoView>,
+      },
+      {
+        path: 'get-started/:geneid?',
+        element: <GetStartedView></GetStartedView>,
+      },
+      {
+        path: 'tutorial/:geneid?',
+        element: <TutorialView></TutorialView>,
+      }
+    ],
+    errorElement: <ErrorBoundary></ErrorBoundary>,
+  },
+])
+```
+
+Congratulations, you have successfully created a new view!

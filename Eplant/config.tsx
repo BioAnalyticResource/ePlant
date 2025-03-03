@@ -20,11 +20,11 @@ export type EplantConfig = {
 }
 
 // Views that aren't associated with individual genes
-const genericViews = [GetStartedView, FallbackView]
+const genericViewMetadata = [GetStartedView, FallbackView]
 
 // List of views that a user can select from
 // Can contain views from the genericViews list too
-const userViews = [
+const userViewMetadata = [
   GetStartedView,
   GeneInfoView,
   PublicationViewer,
@@ -35,11 +35,11 @@ const userViews = [
 ]
 
 // List of views that are used to lookup a view by id
-const views = [...genericViews, ...userViews]
+const views = [...genericViewMetadata, ...userViewMetadata]
 
 export const defaultConfig = {
-  genericViews,
-  userViews,
+  genericViews: genericViewMetadata,
+  userViews: userViewMetadata,
   views,
   rootPath: import.meta.env.BASE_URL,
   defaultView: 'gene-info',

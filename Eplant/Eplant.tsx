@@ -40,7 +40,6 @@ const Eplant = () => {
     }
   }, [theme, loaded])
 
-  console.log('eplant', activeViewId)
   return (
     <ThemeProvider theme={darkMode ? dark : light}>
       <CssBaseline />
