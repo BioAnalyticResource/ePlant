@@ -128,7 +128,6 @@ export default class EFP {
         )
       )
     ).flat()
-
     for (const { name, value } of data) samples[name] = value
     loadEvent(100)
     const groupsData = groups

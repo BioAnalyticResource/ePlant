@@ -28,7 +28,7 @@ const MaskModal = ({ isVisible, state, onClose, onSubmit }: MaskModalProps) => {
   }
 
   const handleClose = () => {
-    setSliderValue(state.maskThreshold)
+    setSliderValue(maskThreshold)
     onClose()
   }
 
