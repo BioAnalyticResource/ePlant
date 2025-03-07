@@ -177,7 +177,7 @@ export function ViewContainer<T, S, A>({ ...props }) {
         <ErrorBoundary>
           {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
 
-          {!gene ? (
+          {!gene && activeViewId !== 'get-started' ? (
             <LoadingPage
               loadingAmount={loadAmount}
               gene={gene}
