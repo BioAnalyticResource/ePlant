@@ -20,8 +20,6 @@ jobs:
         with:
           node-version: '22.x'
       - run: npm ci
-      - run: echo $VITE_MAPS_API_KEY
       - run: npm run build
         env:
           BASE_URL: '/ePlant'
-          VITE_MAPS_API_KEY: ${{ secrets.VITE_MAPS_API_KEY }}

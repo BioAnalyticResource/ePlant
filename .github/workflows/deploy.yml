@@ -25,11 +25,9 @@ jobs:
         with:
           node-version: '22.x'
       - run: npm ci
-      - run: echo $VITE_MAPS_API_KEY
       - run: npm run build
         env:
           BASE_URL: '/ePlant'
-          VITE_MAPS_API_KEY: ${{ secrets.VITE_MAPS_API_KEY }}
       - run: mv dist _site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
