@@ -23,4 +23,4 @@ jobs:
       - run: npm run build
         env:
           BASE_URL: '/ePlant'
-          VITE_MAPS_API_KEY: ${{ vars.VITE_MAPS_API_KEY }}
+          VITE_MAPS_API_KEY: ${{ secrets.VITE_MAPS_API_KEY }}
