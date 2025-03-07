@@ -30,7 +30,6 @@ const Eplant = () => {
   const [isCollapse, setIsCollapse] = useSidebarState()
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [activeViewId, setActiveViewId] = useActiveViewId()
-  const [genes, setGenes] = useGeneticElements()
   const theme = useTheme()
   const [globalProgress, loaded] = usePageLoad()
   const config = useConfig()
@@ -69,7 +68,6 @@ const Eplant = () => {
             <div />
             {loaded ? (
               <ViewContainer
-                gene={genes.find((gene) => gene.id === activeGeneId) ?? null}
                 sx={{
                   width: '100%',
                   height: '100%',

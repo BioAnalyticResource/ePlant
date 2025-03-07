@@ -25,7 +25,6 @@ const router = createBrowserRouter([
     children: [
       {
         element: <Navigate to={'gene-info/'} replace={true}></Navigate>,
-        index: true,
       },
       {
         path: 'cell-efp/:geneid?',

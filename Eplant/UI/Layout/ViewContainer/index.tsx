@@ -35,12 +35,7 @@ import { TopBar } from './Topbar'
  * @param props The remaining props are passed directly to the container
  * @returns
  */
-export function ViewContainer<T, S, A>({
-  gene,
-  ...props
-}: {
-  gene: GeneticElement | null
-} & BoxProps) {
+export function ViewContainer<T, S, A>({ ...props }) {
   const [loading, setLoading] = useState(false)
   const [loadAmount, setLoadAmount] = useState(0)
   const [printing, setPrinting] = usePrinting()
@@ -56,7 +51,6 @@ export function ViewContainer<T, S, A>({
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [activeViewId, setActiveViewId] = useActiveViewId()
   const [geneNotFound, setGeneNotFound] = useState(false)
-
   // On app url change, make sure loaded gene and view aligns with URL
   useEffect(() => {
     const loadGene = async (geneid: string) => {
@@ -69,6 +63,7 @@ export function ViewContainer<T, S, A>({
         setGenes([...genes, newGene])
       } else {
         setGeneNotFound(true)
+        setActiveGeneId('')
       }
     }
     if (params.geneid) {
@@ -76,7 +71,7 @@ export function ViewContainer<T, S, A>({
         if (!genes.find((g) => g.id === params.geneid)) {
           loadGene(params.geneid)
         }
-        setActiveGeneId(params.geneid)
+        if (!geneNotFound) setActiveGeneId(params.geneid)
       }
     } else {
       // Set active gene to first available if one is already loaded
@@ -91,45 +86,45 @@ export function ViewContainer<T, S, A>({
     const urlView =
       views.find((view) => view.id === location.pathname.split('/')[1]) ??
       GeneInfoView
+
     setActiveViewId(urlView.id)
   }, [])
 
-  // On active gene change update the gene path segment
+  // On when the activegene or view changes, update path
   useEffect(() => {
-    if (location.pathname !== import.meta.env.BASE_URL) {
-      // Only run this after initial redirect
-      const pathSegments = location.pathname
-        .split('/')
-        .filter((segment) => segment !== '')
-      if (pathSegments.length == 2 && gene) {
-        pathSegments[pathSegments.length - 1] = activeGeneId
-      } else if (pathSegments.length == 1 && gene) {
-        pathSegments.push(activeGeneId)
-        // Will never get here as of now, but if we decide to persist activeGene need
-        // to do this.
-      } else {
-        // No gene selected, remove gene path segment
-        pathSegments.pop()
-      }
-      const newPath = '/' + pathSegments.join('/') + '/' + location.search
-      if (newPath !== location.pathname + '/' + location.search) {
-        navigate(newPath)
+    const oldPathSegments = location.pathname
+      .split('/')
+      .filter((segment) => segment !== '')
+
+    const newPathSegments = []
+    if (activeViewId) {
+      newPathSegments.push(activeViewId)
+    }
+    if (activeGeneId) {
+      newPathSegments.push(activeGeneId)
+    }
+
+    if (newPathSegments.length > 0) {
+      let newPath
+      if (oldPathSegments.length > 0) {
+        if (oldPathSegments[0] == newPathSegments[0]) {
+          // If the view is the same we want to retain quary params in url, else we can wipe
+          // them and have URLStateManager handle things
+          newPath = '/' + newPathSegments.join('/') + location.search
+        } else {
+          newPath = '/' + newPathSegments.join('/')
+        }
+        if (newPath !== location.pathname) {
+          navigate(newPath)
+        }
       }
     }
-  }, [activeGeneId, gene])
+  }, [activeGeneId, activeViewId])
 
-  useEffect(() => {
-    const pathSegments = location.pathname.split('/')
-    pathSegments[1] = activeViewId
-    const newPath = pathSegments.join('/')
-    if (newPath !== location.pathname + location.search) {
-      navigate(newPath)
-    }
-  }, [activeViewId])
-
-  // Get activeview object after everything resolves
+  // Get view and gene objects once everything resolves
   const activeView =
     views.find((view) => view.id === activeViewId) ?? GeneInfoView
+  const gene = genes.find((gene) => gene.id === activeGeneId) ?? null
   return (
     <Box {...props} display='flex' flexDirection='column'>
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>

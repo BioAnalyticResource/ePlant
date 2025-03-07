@@ -36,7 +36,7 @@ export const EFPViewerActions: StateAction<EFPViewerState>[] = [
     mutation: (prevState) => ({
       ...prevState,
       maskingEnabled: !prevState.maskingEnabled,
-      maskModalVisible: true,
+      maskModalVisible: prevState.maskingEnabled ? false : true,
     }),
   },
 ]

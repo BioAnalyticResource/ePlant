@@ -6,7 +6,6 @@ import { useURLState } from '@eplant/state/URLStateProvider'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import { useQuery } from '@tanstack/react-query'
 
-import { EFPViewerActions } from '../eFP/Viewer/actions'
 import { EFPViewer, EFPViewerLoader } from '../eFP/Viewer/EFPViewer'
 import {
   EFPViewerData,

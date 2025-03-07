@@ -203,11 +203,9 @@ export const EFPViewer = ({
                   {geneticElement?.id}
                 </Typography>
 
-                {data.views[activeViewIndex].name !== 'cellEFP' && (
-                  <GeneDistributionChart
-                    data={{ ...data.viewData[activeViewIndex] }}
-                  />
-                )}
+                <GeneDistributionChart
+                  data={{ ...data.viewData[activeViewIndex] }}
+                />
               </div>
               <MaskModal
                 state={state}
