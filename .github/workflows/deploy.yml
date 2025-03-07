@@ -28,6 +28,7 @@ jobs:
       - run: npm run build
         env:
           BASE_URL: '/ePlant'
+          VITE_MAPS_API_KEY: ${{ vars.VITE_MAPS_API_KEY }}
       - run: mv dist _site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
