@@ -161,7 +161,6 @@ export default function GeneticElementComponent({
         },
       })}
       elevation={0}
-      onClick={onClick}
     >
       <Stack
         direction='row'
@@ -170,6 +169,7 @@ export default function GeneticElementComponent({
         overflow='hidden'
         whiteSpace={'nowrap'}
         sx={(theme) => ({})}
+        onClick={onClick}
       >
         <Box sx={{ position: 'relative' }} minWidth={24} minHeight={24}>
           <Box sx={{ position: 'absolute' }} minWidth={24} minHeight={24}>

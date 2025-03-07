@@ -40,7 +40,7 @@ export default function Sidebar() {
         >
           <LeftNav
             onSelectGene={(gene: SerializedGeneticElement) => {
-              if (genes.filter((g) => g.id === gene.id).length !== 0) {
+              if (genes.find((g) => g.id === gene.id)) {
                 setActiveGeneId(gene.id)
               }
             }}

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
-import GeneticElement from '@eplant/GeneticElement'
 import {
   useActiveGeneId,
   useActiveViewId,
@@ -12,11 +11,10 @@ import {
 } from '@eplant/state'
 import Modal from '@eplant/UI/Modal'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
-import { StateAction, ViewDataError } from '@eplant/View'
+import { ViewDataError } from '@eplant/View'
 import GeneInfoView from '@eplant/views/GeneInfoView'
 import {
   Box,
-  BoxProps,
   Button,
   DialogActions,
   DialogContent,
@@ -106,18 +104,17 @@ export function ViewContainer<T, S, A>({ ...props }) {
 
     if (newPathSegments.length > 0) {
       let newPath
-      if (oldPathSegments.length > 0) {
-        if (oldPathSegments[0] == newPathSegments[0]) {
-          // If the view is the same we want to retain quary params in url, else we can wipe
-          // them and have URLStateManager handle things
-          newPath = '/' + newPathSegments.join('/') + location.search
-        } else {
-          newPath = '/' + newPathSegments.join('/')
-        }
-        if (newPath !== location.pathname) {
-          navigate(newPath)
-        }
+      if (
+        oldPathSegments.length > 0 &&
+        oldPathSegments[0] == newPathSegments[0]
+      ) {
+        // If the view is the same we want to retain quary params in url, else we can wipe
+        // them and have URLStateManager handle things
+        newPath = '/' + newPathSegments.join('/') + location.search
+      } else {
+        newPath = '/' + newPathSegments.join('/')
       }
+      navigate(newPath)
     }
   }, [activeGeneId, activeViewId])
 
