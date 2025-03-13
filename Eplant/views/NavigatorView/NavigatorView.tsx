@@ -24,12 +24,6 @@ import PlantEFPIcon from './Icons/PlantEFPIcon'
 import * as constants from './Utility/constants'
 import { MetadataVisualizations } from './Utility/MetadataVisualizations'
 import {
-  D3Node,
-  NavigatorViewerData,
-  NavigatorViewerState,
-  NavigatorViewStateSchema,
-} from './types'
-import {
   calculateDimensions,
   ePlantLinks,
   extractPrimaryGene,
@@ -40,6 +34,12 @@ import {
   getGrameneLink,
   newickToD3,
 } from './Utility/utils'
+import {
+  D3Node,
+  NavigatorViewerData,
+  NavigatorViewerState,
+  NavigatorViewStateSchema,
+} from './types'
 
 /**
  * Main component for rendering the Navigator View.
