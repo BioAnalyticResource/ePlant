@@ -18,7 +18,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'react-hooks', 'simple-import-sort', 'eslint-plugin-tsdoc'], // add eslint-plugin-tsdoc for tsdoc checks
+  plugins: ['react', '@typescript-eslint', 'react-hooks', 'simple-import-sort'],
   rules: {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
@@ -27,7 +27,6 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
-    'tsdoc/syntax': 'warn'
   },
   'overrides': [
     {
