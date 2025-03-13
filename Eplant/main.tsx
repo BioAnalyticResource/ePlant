@@ -12,6 +12,7 @@ import { ChromosomeView } from './views/ChromosomeViewer/ChromosomeView'
 import { ExperimentEFP } from './views/ExperimentEFP/ExperimentEFP'
 import { GeneInfoView } from './views/GeneInfoView/GeneInfo'
 import GetStartedView from './views/GetStartedView/GetStartedView'
+import {NavigatorViewObject} from './views/NavigatorView/NavigatorView'
 import { PlantEFP } from './views/PlantEFP/PlantEFP'
 import { PublicationsView } from './views/PublicationViewer/PublicationsView'
 import { Config, defaultConfig } from './config'
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: 'get-started/:geneid?',
         element: <GetStartedView></GetStartedView>,
+      },
+      {
+        path: 'navigator-view/:geneid?',
+        element: <NavigatorViewObject></NavigatorViewObject>,
       },
     ],
     errorElement: <ErrorBoundary></ErrorBoundary>,
