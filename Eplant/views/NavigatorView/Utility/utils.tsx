@@ -1,5 +1,6 @@
-import * as constants from './Utility/constants'
-import { D3Node, TreeData } from './types'
+import { D3Node, TreeData } from '../types'
+
+import * as constants from './constants'
 
 interface CacheEntry<T> {
   data: T

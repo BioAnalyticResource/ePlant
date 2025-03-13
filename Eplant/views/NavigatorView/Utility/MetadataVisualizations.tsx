@@ -1,8 +1,9 @@
 import { useRef } from 'react'
 import * as d3 from 'd3'
 
-import * as constants from './Utility/constants'
-import { D3Node } from './types'
+import { D3Node } from '../types'
+
+import * as constants from './constants'
 
 /**
  * Props interface for the MetadataVisualizations component
