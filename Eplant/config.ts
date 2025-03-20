@@ -36,7 +36,7 @@ const userViews = [
   ExperimentEFP,
   WorldEFP,
   ChromosomeViewer,
-  NavigatorView
+  NavigatorView,
 ]
 
 // List of views that are used to lookup a view by id

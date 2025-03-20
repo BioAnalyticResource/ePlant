@@ -372,14 +372,18 @@ const views = [...genericViews, ...userViews]
 
 #### View Switching Functionality
 
-If your new view has function to swap to a different view and/or gene available on ePlant, you may benefit from the generalized view switching component file (name tbd). 
+If your new view has function to swap to a different view and/or gene available on ePlant, you may benefit from the generalized view switching component file (name tbd).
 
 To utilize the component:
-1. Import createViewSwitchProvider into your index file and export it: 
+
+1. Import createViewSwitchProvider into your index file and export it:
+
 ```
 export const ViewSwitchProvider = createViewSwitchProvider();
 ```
+
 2. Import your exported provider into your view's main component and wrap your component in the view's return statement:
+
 ```
 const App = () => {
   return (
@@ -389,9 +393,11 @@ const App = () => {
   );
 };
 ```
+
 3.  Import and use useViewSwitch in your main component whenever you want to invoke the switching functionality. For example: `switchViewAndGene('Cell eFP', geneName);`
 
 There are 3 main swithing functions you can invoke based on needs.
+
 ```
   /** Function to switch view only */
   switchViewOnly: (viewId: string) => Promise<void>;
@@ -401,18 +407,19 @@ There are 3 main swithing functions you can invoke based on needs.
 
   /** Function to switch both view and gene */
   switchViewAndGene: (viewId: string, geneName: string, speciesUrl?: string) => Promise<void>;
-  ```
+```
 
 ## Documentation and Commenting Style
 
 It is important to maintain a common standard for commenting code and documentation. If you want to make contributions to the project, we ask that you follow the TSdoc(typescript) commenting style. As an example this includes adding function/class headers and comments as seen below:
+
 ```
 /**
  * Extracts the primary gene identifier from the API URL
- * 
+ *
  * @param url - The complete API URL containing query parameters
  * @returns The primary gene identifier, or an empty string not found
- * 
+ *
  * Uses regex to find the primaryGene parameter in the URL
  */
 function extractPrimaryGene(url: string): string {
