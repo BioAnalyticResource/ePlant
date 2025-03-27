@@ -304,39 +304,28 @@ export const NavigatorViewObject = () => {
     text: string
   ) => {
     const tooltip = d3.select('.d3-tooltip')
-
-    let isHidden = false
+  
     element
       .on('mouseover', (event: MouseEvent) => {
-        if (!isHidden) {
-          tooltip
-            .style('visibility', 'visible')
-            .html(text)
-            .style('left', `${event.pageX + 10}px`)
-            .style('top', `${event.pageY - 10}px`)
-        }
+        tooltip
+          .style('visibility', 'visible')
+          .html(text)
+          .style('left', `${event.pageX + 10}px`)
+          .style('top', `${event.pageY - 10}px`)
       })
       .on('mousemove', (event: MouseEvent) => {
-        if (!isHidden) {
-          tooltip
-            .style('left', `${event.pageX + 10}px`)
-            .style('top', `${event.pageY - 10}px`)
-        }
+        tooltip
+          .style('left', `${event.pageX + 10}px`)
+          .style('top', `${event.pageY - 10}px`)
       })
       .on('mouseout', () => {
         tooltip.style('visibility', 'hidden')
       })
-
-    element.on('click', () => {
-      isHidden = true
-      tooltip.style('visibility', 'hidden')
-    })
-
-    tooltip.on('mouseover', () => {
-      /** Reactivate the tooltip on hover */
-      isHidden = false
-    })
-  }
+      .on('click', () => {
+        // Optionally hide tooltip on click
+        tooltip.style('visibility', 'hidden')
+      })
+  }  
 
   /**
    * Generate SVG content for the tree visualization.
