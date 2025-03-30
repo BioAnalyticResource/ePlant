@@ -921,11 +921,6 @@ export const NavigatorViewObject = () => {
         tooltip.style('visibility', 'hidden')
       })
 
-    element.on('click', () => {
-      isHidden = true /** Mark the tooltip as hidden */
-      tooltip.style('visibility', 'hidden')
-    })
-
     /** Reactivate the tooltip on hover */
     tooltip.on('mouseover', () => {
       isHidden = false /** Reset the hidden state */
