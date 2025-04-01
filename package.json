@@ -28,7 +28,6 @@
     "@mui/x-data-grid": "^6.15.0",
     "@mui/x-tree-view": "^7.5.1",
     "@popperjs/core": "^2.11.8",
-    "@tanstack/react-query": "^5.61.5",
     "@types/d3-hierarchy": "^3.1.7",
     "@types/d3-scale": "^4.0.8",
     "@types/d3-selection": "^3.0.11",
@@ -47,7 +46,6 @@
     "newick-js": "^1.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
-    "react-query": "^3.39.3",
     "react-router-dom": "^6.16.0",
     "react-window": "^1.8.9"
   },
