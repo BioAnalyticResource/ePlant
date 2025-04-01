@@ -705,9 +705,9 @@ const fetchGeneData = async (apiUrl: string): Promise<TreeData> => {
   return data
 }
 
-/** 
+/**
  * Custom hook for gene data fetching with basic caching
- * 
+ *
  * @param apiUrl - The Url used to access the necessary phylogeny data of a specific gene
  * @returns Loading, error, and Tree data states
  */
