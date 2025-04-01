@@ -1,12 +1,4 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import React from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
 import { useConfig } from '@eplant/config'
@@ -291,7 +283,7 @@ function newickToD3(
  * @param metadata - Metadata associated with the node
  * @param isPrimaryGene - Whether this node represents the primary gene being analyzed
  * @param themeColors - colouring for the metadata to match ePlant
- * @param isHighestY - have we hit the node with the highest Y coordinate
+ * @param isHighestNode - have we hit the node with the highest Y coordinate
  */
 interface MetadataVisualizationsProps {
   x: number
@@ -339,7 +331,7 @@ const calculateDimensions = (leafCount: number = 0) => {
  * Component for rendering metadata visualizations next to tree nodes
  * Displays expression similarity and sequence similarity using color-coded bars
  *
- * @param props - Component properties
+ * @param MetadataVisualizationsProps - Component properties
  * @returns JSX element containing metadata visualizations
  */
 const MetadataVisualizations = ({
@@ -700,7 +692,6 @@ export const NavigatorViewObject = () => {
   const { switchViewAndGene } = useViewSwitch()
   const { userViews } = useConfig()
   const [speciesList] = useSpecies()
-  const speciesAPI = speciesList.length ? speciesList[0] : undefined
 
   /** Initialize dimensions with default calculation */
   const [dimensions, setDimensions] = useState(calculateDimensions())
@@ -755,7 +746,6 @@ export const NavigatorViewObject = () => {
 
   /** Keep track of current gene to detect changes */
   const prevGeneRef = useRef<string>(primaryGene)
-  const prevTreeDataRef = useRef<any>(null)
 
   /** Use the custom hook for data fetching */
   const { data: treeData, error, isLoading } = useGeneData(apiUrl)
