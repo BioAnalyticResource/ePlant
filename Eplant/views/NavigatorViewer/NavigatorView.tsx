@@ -666,6 +666,13 @@ const MetadataVisualizations = ({
 
 const geneDataCache: Record<string, CacheEntry<TreeData>> = {}
 
+/**
+ * Fetches data from a given Url and determines if the data already exists in memory
+ * Updates the cache if the data is unique and/or the cache timer has expired
+ *
+ * @param apiUrl - The Url used to access the necessary phylogeny data of a specific gene
+ * @returns A json formatted object of the data for use in downstream functions
+ */
 const fetchGeneData = async (apiUrl: string): Promise<TreeData> => {
   /** Check if data exists in cache and is still valid */
   const cachedEntry = geneDataCache[apiUrl]
@@ -698,7 +705,12 @@ const fetchGeneData = async (apiUrl: string): Promise<TreeData> => {
   return data
 }
 
-/** Custom hook for gene data fetching with basic caching */
+/** 
+ * Custom hook for gene data fetching with basic caching
+ * 
+ * @param apiUrl - The Url used to access the necessary phylogeny data of a specific gene
+ * @returns Loading, error, and Tree data states
+ */
 const useGeneData = (apiUrl: string) => {
   const [data, setData] = useState<TreeData | null>(null)
   const [error, setError] = useState<Error | null>(null)
@@ -829,7 +841,7 @@ export const NavigatorViewObject = () => {
       const d3Data = newickToD3(treeData.tree, treeData, primaryGene, species)
       const newHierarchy = d3.hierarchy(d3Data)
 
-      /** Clear any cached properties */
+      /** Clear any cached properties - used for when switching between genes*/
       newHierarchy.descendants().forEach((node) => {
         delete (node as any).x0
         delete (node as any).y0
@@ -845,7 +857,7 @@ export const NavigatorViewObject = () => {
     }
   }, [treeData, primaryGene, species])
 
-  /** Update dimensions when hierarchy changes */
+  /** Update dimensions when hierarchy object changes */
   useEffect(() => {
     if (!isLoading && treeData && hierarchy) {
       try {
@@ -874,6 +886,7 @@ export const NavigatorViewObject = () => {
       delete (node as any).parentY
     })
 
+    /** Essential assigns coordinates for each node*/
     const navigatorGenerator = d3
       .cluster<D3Node>()
       .size([dimensions.boundsHeight * 0.9, dimensions.boundsWidth * 0.2])
@@ -881,6 +894,7 @@ export const NavigatorViewObject = () => {
 
     const processedNavigator = navigatorGenerator(hierarchy)
 
+    /** Calculates how much space is actually used by the nodes of a given tree for use in scaling */
     const xExtent = d3.extent(processedNavigator.descendants(), (d) => d.x) as [
       number,
       number,
@@ -890,6 +904,7 @@ export const NavigatorViewObject = () => {
       number,
     ]
 
+    /** Converts raw coordinates into pixel values for placement on the screen */
     const xScale = d3
       .scaleLinear()
       .domain(xExtent)
@@ -900,7 +915,7 @@ export const NavigatorViewObject = () => {
       .domain(yExtent)
       .range([0, dimensions.boundsWidth * 0.2])
 
-    /** Process nodes with fresh coordinates */
+    /** Process nodes with fresh coordinates and aligns by leaf node vertically*/
     processedNavigator.descendants().forEach((node) => {
       node.x = xScale(node.x)
       node.y = yScale(node.y)
@@ -917,7 +932,7 @@ export const NavigatorViewObject = () => {
     return processedNavigator
   }, [hierarchy, dimensions.boundsWidth, dimensions.boundsHeight])
 
-  /** Create a single tooltip instance, seemingly works for metadata as well but if failing add this to metadata as well*/
+  /** Create a single tooltip instance */
   const tooltip = d3
     .select('body')
     .selectAll<HTMLDivElement, unknown>('.d3-tooltip')
