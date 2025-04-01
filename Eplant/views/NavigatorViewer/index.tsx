@@ -6,7 +6,7 @@ import { View } from '@eplant/View'
 
 import { createViewSwitchProvider } from '../ViewGeneSwitching'
 
-import { NavigatorIcon } from './Icons/NavigatorViewIcon'
+import NavigatorIcon from './Icons/NavigatorViewIcon'
 import NavigatorViewObject from './NavigatorView'
 
 /** Use the provider from helper function */
