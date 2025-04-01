@@ -203,6 +203,44 @@ interface CacheEntry<T> {
  * @param species - Species name for the primary gene
  * @returns A D3-compatible tree structure
  * @throws Error If the Newick string format is invalid
+ *
+ * Example:
+ * newickToD3("(A:0.1,B:0.2):0.3;", {
+ *   efp_links: { A: "linkA", B: "linkB" },
+ *   genomes: { A: "SOYBEAN", B: "RICE" },
+ *   SCC_values: { A: 0.9, B: -0.2 },
+ *   sequence_similarity: { A: 95, B: 88 },
+ *   maximum_values: { A: 1.0, B: 1.0 },
+ *   tree: "(A:0.1,B:0.2):0.3;"
+ * }, "A", "SOYBEAN")
+ *
+ * Returns:
+ * {
+ *   name: 'internal',
+ *   value: 0.3,
+ *   children: [
+ *     {
+ *       name: 'A',
+ *       value: 0.1,
+ *       metadata: {
+ *         genome: 'SOYBEAN',
+ *         efp_link: 'linkA',
+ *         scc_value: 0.9,
+ *         sequence_similarity: 95
+ *       }
+ *     },
+ *     {
+ *       name: 'B',
+ *       value: 0.2,
+ *       metadata: {
+ *         genome: 'RICE',
+ *         efp_link: 'linkB',
+ *         scc_value: -0.2,
+ *         sequence_similarity: 88
+ *       }
+ *     }
+ *   ]
+ * }
  */
 function newickToD3(
   newickString: string,
@@ -306,7 +344,13 @@ interface MetadataVisualizationsProps {
   }
 }
 
-/** Calculate dimensions based on number of leaf nodes */
+/**
+ * Calculates dimensions for rendering the tree based on the number of leaf nodes.
+ * Ensures the height stays within defined min and max bounds.
+ *
+ * @param leafCount - Number of leaf nodes in the tree (default is 0)
+ * @returns An object with calculated width, height, and drawable bounds
+ */
 const calculateDimensions = (leafCount: number = 0) => {
   /** If no leafCount provided, use MIN_HEIGHT as default */
   const requiredHeight =
@@ -331,7 +375,13 @@ const calculateDimensions = (leafCount: number = 0) => {
  * Component for rendering metadata visualizations next to tree nodes
  * Displays expression similarity and sequence similarity using color-coded bars
  *
- * @param MetadataVisualizationsProps - Component properties
+ * @param MetadataVisualizationsProps - Follows the structure of the MetadataVisualizationsProps interface defined in this file
+ * @param MetadataVisualizationsProps.x - X coordinate for rendering the visualization
+ * @param MetadataVisualizationsProps.y - Y coordinate for rendering the visualization
+ * @param MetadataVisualizationsProps.metadata - Metadata associated with the node
+ * @param MetadataVisualizationsProps.isPrimaryGene - Whether this node represents the primary gene being analyzed
+ * @param MetadataVisualizationsProps.themeColors - colouring for the metadata to match ePlant
+ * @param MetadataVisualizationsProps.isHighestNode - have we hit the node with the highest Y coordinate
  * @returns JSX element containing metadata visualizations
  */
 const MetadataVisualizations = ({
@@ -691,7 +741,6 @@ export const NavigatorViewObject = () => {
   const theme = useTheme()
   const { switchViewAndGene } = useViewSwitch()
   const { userViews } = useConfig()
-  const [speciesList] = useSpecies()
 
   /** Initialize dimensions with default calculation */
   const [dimensions, setDimensions] = useState(calculateDimensions())
