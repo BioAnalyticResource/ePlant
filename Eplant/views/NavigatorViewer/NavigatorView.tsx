@@ -8,9 +8,9 @@ import { useTheme } from '@mui/material/styles'
 import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
 import { useViewSwitch } from '../ViewGeneSwitching'
 
-import CellEFPIcon from './Icons/Nav_CellEFPIcon'
-import GeneInfoViewIcon from './Icons/Nav_GeneInfoViewerIcon' /** Placeholder icon for those that are not yet implemented in ePlant3 */
-import PlantEFPIcon from './Icons/Nav_PlantEFPIcon'
+import Nav_CellEFPIcon from './Icons/Nav_CellEFPIcon'
+import Nav_GeneInfoViewIcon from './Icons/Nav_GeneInfoViewerIcon' /** Placeholder icon for those that are not yet implemented in ePlant3 */
+import Nav_PlantEFPIcon from './Icons/Nav_PlantEFPIcon'
 import * as constants from './constants'
 import { NavigatorContext, ViewSwitchProvider } from './index'
 
@@ -1041,7 +1041,7 @@ export const NavigatorViewObject = () => {
                     : 0.5,
                 }}
               >
-                <GeneInfoViewIcon />
+                <Nav_GeneInfoViewIcon />
               </g>
             </g>
 
@@ -1097,7 +1097,7 @@ export const NavigatorViewObject = () => {
                     : 0.5,
                 }}
               >
-                <PlantEFPIcon />
+                <Nav_PlantEFPIcon />
               </g>
             </g>
 
@@ -1157,7 +1157,7 @@ export const NavigatorViewObject = () => {
                     : 0.5,
                 }}
               >
-                <CellEFPIcon />
+                <Nav_CellEFPIcon />
               </g>
             </g>
 
@@ -1212,7 +1212,7 @@ export const NavigatorViewObject = () => {
                     : 0.5,
                 }}
               >
-                <GeneInfoViewIcon />
+                <Nav_GeneInfoViewIcon />
               </g>
             </g>
 
@@ -1267,7 +1267,7 @@ export const NavigatorViewObject = () => {
                     : 0.5,
                 }}
               >
-                <GeneInfoViewIcon />
+                <Nav_GeneInfoViewIcon />
               </g>
             </g>
 
