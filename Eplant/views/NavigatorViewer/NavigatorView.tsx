@@ -16,9 +16,9 @@ import { useTheme } from '@mui/material/styles'
 import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
 import { useViewSwitch } from '../ViewGeneSwitching'
 
-import CellEFPIcon from './Icons/CellEFPIcon'
-import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon' /** Placeholder icon for those that are not yet implemented in ePlant3 */
-import PlantEFPIcon from './Icons/PlantEFPIcon'
+import CellEFPIcon from './Icons/Nav_CellEFPIcon'
+import GeneInfoViewIcon from './Icons/Nav_GeneInfoViewerIcon' /** Placeholder icon for those that are not yet implemented in ePlant3 */
+import PlantEFPIcon from './Icons/Nav_PlantEFPIcon'
 import * as constants from './constants'
 import { NavigatorContext, ViewSwitchProvider } from './index'
 
