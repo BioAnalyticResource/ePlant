@@ -1,5 +1,6 @@
 import { styled } from '@mui/material'
-export default styled(function CellEFPIcon(props) {
+
+export default styled((props) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
