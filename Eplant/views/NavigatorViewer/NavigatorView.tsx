@@ -2,7 +2,6 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
 import { useConfig } from '@eplant/config'
-import { useSpecies } from '@eplant/state'
 import { useTheme } from '@mui/material/styles'
 
 import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
