@@ -820,7 +820,7 @@ export const NavigatorViewObject = () => {
         prevGeneRef.current = newGene
       }
     }
-  }, [apiUrl, species, treeData])
+  }, [activeGeneId, species, treeData])
 
   /** Create D3 hierarchy from tree data 
    * D3 hierarchy encompasses a number of object types such as Tree, Cluster, Treemap, etc.
