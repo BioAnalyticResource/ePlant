@@ -2,6 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
 import { useConfig } from '@eplant/config'
+import { useActiveGeneId } from '@eplant/state'
 import { useTheme } from '@mui/material/styles'
 
 import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
@@ -115,19 +116,6 @@ const getGrameneLink = (
   }
   /** Replace geneName in the template */
   return linkTemplate.replace('{geneName}', processedGeneName)
-}
-
-/**
- * Extracts the primary gene identifier from the API URL
- *
- * @param url - The complete API URL containing query parameters
- * @returns The primary gene identifier, or an empty string not found
- *
- * Uses regex to find the primaryGene parameter in the URL
- */
-function extractPrimaryGene(url: string): string {
-  const match = url.match(/primaryGene=([^&]+)/)
-  return match ? match[1] : ''
 }
 
 /**
@@ -802,21 +790,19 @@ export const NavigatorViewObject = () => {
 
   /** State management */
   const { apiUrl } = useContext(NavigatorContext)
-  const [primaryGene, setPrimaryGene] = useState<string>(
-    extractPrimaryGene(apiUrl)
-  )
+  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [species, setSpecies] = useState<string>(extractSpecies(apiUrl))
   const [transform, setTransform] = useState<d3.ZoomTransform>(d3.zoomIdentity)
 
   /** Keep track of current gene to detect changes */
-  const prevGeneRef = useRef<string>(primaryGene)
+  const prevGeneRef = useRef<string>(activeGeneId)
 
   /** Use the custom hook for data fetching */
   const { data: treeData, error, isLoading } = useGeneData(apiUrl)
 
   /** Reset state when API URL changes */
   useEffect(() => {
-    const newGene = extractPrimaryGene(apiUrl)
+    const newGene = activeGeneId
     const newSpecies = extractSpecies(apiUrl)
 
     /** Add more robust validation */
@@ -827,7 +813,7 @@ export const NavigatorViewObject = () => {
     ) {
       /** Ensure data is valid before updating */
       if (treeData && treeData.tree) {
-        setPrimaryGene(newGene)
+        setActiveGeneId(newGene)
         setSpecies(newSpecies)
         setTransform(d3.zoomIdentity)
 
@@ -846,7 +832,7 @@ export const NavigatorViewObject = () => {
     if (!treeData) return null
 
     try {
-      const d3Data = newickToD3(treeData.tree, treeData, primaryGene, species)
+      const d3Data = newickToD3(treeData.tree, treeData, activeGeneId, species)
       const newHierarchy = d3.hierarchy(d3Data)
 
       /** Clear any cached properties - used for when switching between genes*/
@@ -863,7 +849,7 @@ export const NavigatorViewObject = () => {
       console.error('Error parsing Newick string:', error)
       return null
     }
-  }, [treeData, primaryGene, species])
+  }, [treeData, activeGeneId, species])
 
   /** Update dimensions when hierarchy object changes */
   useEffect(() => {
@@ -1003,7 +989,7 @@ export const NavigatorViewObject = () => {
   /** Generate node elements for rendering */
   const allNodes = navigator?.descendants().map((node, index: number) => {
     const isPrimaryGene =
-      node.data.name.toUpperCase() === primaryGene.toUpperCase()
+      node.data.name.toUpperCase() === activeGeneId.toUpperCase()
     let displayName = node.data.name
     const isHighestNode =
       node.x === Math.min(...navigator.descendants().map((d) => d.y))
@@ -1445,7 +1431,7 @@ export const NavigatorViewObject = () => {
       {!isLoading && (
         <div className='w-full px-4 py-0 flex items-center'>
           <h2 className='text-lg font-bold text-gray-800 flex-1'>
-            Navigator View: {primaryGene}
+            Navigator View: {activeGeneId}
           </h2>
         </div>
       )}
