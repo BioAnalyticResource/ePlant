@@ -412,7 +412,9 @@ const MetadataVisualizations = ({
   )
 
   /** Calculate the width and position of the indicator bar
-   * TODO Explanation of how this will be drawn
+   * As the code draws expression bar from left -> right, an indicatorX value is used to determine the start point for drawing.
+   * If a positive value, indicatorX will be the position of the center(halfWidth).
+   * If negative, we offset from the center by the width of the actual expression data(indicatorWidth) and draw towards the center.
    */
   const halfWidth = constants.BAR_WIDTH / 2
   const indicatorWidth = Math.abs(clampedExpression) * halfWidth
@@ -835,7 +837,10 @@ export const NavigatorViewObject = () => {
   }, [apiUrl, species, treeData])
 
   /** Create D3 hierarchy from tree data 
-   * TODO Note about using hierarchy over the other format
+   * D3 hierarchy encompasses a number of object types such as Tree, Cluster, Treemap, etc.
+   * Using Tree does not yield what is required(leaf nodes aligned vertically).
+   * Therefore, this view relies on the Cluster object. 
+   * Citation: https://d3js.org/d3-hierarchy/cluster
   */
   const hierarchy = useMemo(() => {
     if (!treeData) return null
@@ -889,15 +894,21 @@ export const NavigatorViewObject = () => {
       delete (node as any).parentY
     })
 
-    /** Essentially assigns coordinates for each node*/
+    /** Essentially assigns coordinates for each node.
+     * Create the cluster object, sets max size of the object to take 90% of available height and 20% width.
+    */
     const navigatorGenerator = d3
       .cluster<D3Node>()
       .size([dimensions.boundsHeight * 0.9, dimensions.boundsWidth * 0.2])
       .separation((a, b) => (a.parent === b.parent ? 1.5 : 2.5)) /** If two nodes share a parent, they are spaced closer together */
 
+    /** Applies the cluster layout to our hierarchy object */
     const processedNavigator = navigatorGenerator(hierarchy)
 
-    /** Calculates how much space is actually used by the nodes of a given tree for use in scaling */
+    /** Calculates how much space is actually used by the nodes of a given tree for use in scaling
+     * Does this by finding the max x and y values of all the nodes(the extent).
+     * Helpful in determining the space needed by the nodes.
+     */
     const xExtent = d3.extent(processedNavigator.descendants(), (d) => d.x) as [
       number,
       number,
@@ -907,7 +918,9 @@ export const NavigatorViewObject = () => {
       number,
     ]
 
-    /** Converts raw coordinates into pixel values for placement on the screen */
+    /** Converts raw coordinates into pixel values for placement on the screen 
+     * Scales based on calculated extents within an output range.
+    */
     const xScale = d3
       .scaleLinear()
       .domain(xExtent)
@@ -918,7 +931,10 @@ export const NavigatorViewObject = () => {
       .domain(yExtent)
       .range([0, dimensions.boundsWidth * 0.2])
 
-    /** Process nodes with fresh coordinates and aligns by leaf node vertically*/
+    /** Process nodes with fresh coordinates and aligns by leaf node vertically 
+     * Applies scaling functions onto each node with special leaf node handling.
+     * Forced alignment may be redundant here upon further review. (April 4th 2025)
+    */
     processedNavigator.descendants().forEach((node) => {
       node.x = xScale(node.x)
       node.y = yScale(node.y)
@@ -1393,9 +1409,9 @@ export const NavigatorViewObject = () => {
   /** Generate edge elements for rendering */
   const allEdges = navigator?.links().map((link, index: number) => {
     /** Create an elbow-shaped path for each edge using SVG path commands:
-     * M: Move to starting point (source node)
-     * H: Draw horizontal line to parent's y-coordinate
-     * V: Draw vertical line to target's x-coordinate
+     * M: Move to starting point (source node, the midpoint of both leaf nodes)
+     * H: Draw horizontal line to parent's x-coordinate(the code shows y-coordinate as they are flipped)
+     * V: Draw vertical line to target's y-coordinate(the code shows x-coordinate as they are flipped)
      * H: Draw horizontal line to target node
      */
     const sourceX = link.source.x
