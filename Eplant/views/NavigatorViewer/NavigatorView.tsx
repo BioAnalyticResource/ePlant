@@ -431,7 +431,7 @@ const MetadataVisualizations = ({
     >
       {/* Expression similarity bar with tooltip */}
       <g
-        transform={`translate(0, ${
+        transform={`translate(125, ${
           constants.BAR_HEIGHT + constants.BAR_SPACING
         })`}
       >
@@ -560,7 +560,7 @@ const MetadataVisualizations = ({
 
       {/* Sequence Similarity bar with tooltip */}
       <g
-        transform={`translate(120, ${
+        transform={`translate(0, ${
           constants.BAR_HEIGHT + constants.BAR_SPACING
         })`}
       >
