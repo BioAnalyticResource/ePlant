@@ -2,7 +2,6 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
 import { useConfig } from '@eplant/config'
-import { useSpecies } from '@eplant/state'
 import { useTheme } from '@mui/material/styles'
 
 import { LoadingImage } from '../../UI/Layout/ViewContainer/LoadingPage'
@@ -412,7 +411,9 @@ const MetadataVisualizations = ({
     -1
   )
 
-  /** Calculate the width and position of the indicator bar */
+  /** Calculate the width and position of the indicator bar
+   * TODO Explanation of how this will be drawn
+   */
   const halfWidth = constants.BAR_WIDTH / 2
   const indicatorWidth = Math.abs(clampedExpression) * halfWidth
   const indicatorX =
@@ -833,7 +834,9 @@ export const NavigatorViewObject = () => {
     }
   }, [apiUrl, species, treeData])
 
-  /** Create D3 hierarchy from tree data */
+  /** Create D3 hierarchy from tree data 
+   * TODO Note about using hierarchy over the other format
+  */
   const hierarchy = useMemo(() => {
     if (!treeData) return null
 
@@ -886,11 +889,11 @@ export const NavigatorViewObject = () => {
       delete (node as any).parentY
     })
 
-    /** Essential assigns coordinates for each node*/
+    /** Essentially assigns coordinates for each node*/
     const navigatorGenerator = d3
       .cluster<D3Node>()
       .size([dimensions.boundsHeight * 0.9, dimensions.boundsWidth * 0.2])
-      .separation((a, b) => (a.parent === b.parent ? 1.5 : 2.5))
+      .separation((a, b) => (a.parent === b.parent ? 1.5 : 2.5)) /** If two nodes share a parent, they are spaced closer together */
 
     const processedNavigator = navigatorGenerator(hierarchy)
 
@@ -1489,7 +1492,7 @@ export const NavigatorViewObject = () => {
           height={dimensions.height}
           style={{ cursor: 'grab' }}
         >
-          {/* Group element for tree content with transformation support 
+          {/* Group element for tree content with transformation support
               1. Translate to account for margins
               2. Scale by zoom factor (transform.k)
               3. Translate by pan offset (transform.x, transform.y)*/}
