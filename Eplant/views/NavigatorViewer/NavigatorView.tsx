@@ -1,3 +1,12 @@
+/**
+ * Title: Navigator View
+ * Author: Kobi Schmalenberg with reference to ePlant2
+ * Description:
+ * The navigator viewer works by fetching data from an API source, which includes information on phylogeny, sequence/expression similarity, etc,
+ * and converting it into formats usable by the external package D3. D3 contains a suite of functions/tools that streamline the process of
+ * visualizing a phylogeny tree. SVG elements surround the D3 phylogeny tree object to showcase various relevant information to the user.
+ */
+
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
