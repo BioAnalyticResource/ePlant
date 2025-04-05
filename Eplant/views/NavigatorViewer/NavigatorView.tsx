@@ -831,12 +831,12 @@ export const NavigatorViewObject = () => {
     }
   }, [activeGeneId, species, treeData])
 
-  /** Create D3 hierarchy from tree data 
+  /** Create D3 hierarchy from tree data
    * D3 hierarchy encompasses a number of object types such as Tree, Cluster, Treemap, etc.
    * Using Tree does not yield what is required(leaf nodes aligned vertically).
-   * Therefore, this view relies on the Cluster object. 
+   * Therefore, this view relies on the Cluster object.
    * Citation: https://d3js.org/d3-hierarchy/cluster
-  */
+   */
   const hierarchy = useMemo(() => {
     if (!treeData) return null
 
@@ -891,11 +891,13 @@ export const NavigatorViewObject = () => {
 
     /** Essentially assigns coordinates for each node.
      * Create the cluster object, sets max size of the object to take 90% of available height and 20% width.
-    */
+     */
     const navigatorGenerator = d3
       .cluster<D3Node>()
       .size([dimensions.boundsHeight * 0.9, dimensions.boundsWidth * 0.2])
-      .separation((a, b) => (a.parent === b.parent ? 1.5 : 2.5)) /** If two nodes share a parent, they are spaced closer together */
+      .separation((a, b) =>
+        a.parent === b.parent ? 1.5 : 2.5
+      ) /** If two nodes share a parent, they are spaced closer together */
 
     /** Applies the cluster layout to our hierarchy object */
     const processedNavigator = navigatorGenerator(hierarchy)
@@ -913,9 +915,9 @@ export const NavigatorViewObject = () => {
       number,
     ]
 
-    /** Converts raw coordinates into pixel values for placement on the screen 
+    /** Converts raw coordinates into pixel values for placement on the screen
      * Scales based on calculated extents within an output range.
-    */
+     */
     const xScale = d3
       .scaleLinear()
       .domain(xExtent)
@@ -926,10 +928,10 @@ export const NavigatorViewObject = () => {
       .domain(yExtent)
       .range([0, dimensions.boundsWidth * 0.2])
 
-    /** Process nodes with fresh coordinates and aligns by leaf node vertically 
+    /** Process nodes with fresh coordinates and aligns by leaf node vertically
      * Applies scaling functions onto each node with special leaf node handling.
      * Forced alignment may be redundant here upon further review. (April 4th 2025)
-    */
+     */
     processedNavigator.descendants().forEach((node) => {
       node.x = xScale(node.x)
       node.y = yScale(node.y)
