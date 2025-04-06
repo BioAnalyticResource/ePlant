@@ -222,7 +222,7 @@ export const EFPViewerStateSchema = z.object({
 })
 ```
 
-Above is an example of the View State Schema for EFPViewer views (this is shared between the Plant eFP and Experiment eFP views). As you can see, schema definition is very similar to Type definition, but allows for the definition of constraints and defulat values.
+Above is an example of the View State Schema for EFPViewer views (this is shared between the Plant eFP and Experiment eFP views). As you can see, schema definition is very similar to Type definition, but allows for the definition of constraints and default values.
 
 Note that the following would also be a valid definition of the same schema, meaning complex schemas can be broken up for readability:
 
