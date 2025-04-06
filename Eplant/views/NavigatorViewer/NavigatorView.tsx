@@ -32,7 +32,7 @@ const genomeColors: { [key: string]: string } = {
   MAIZE: '#00FFFF' /** Cyan */,
   BARLEY: '#FFDC00' /** Yellow */,
   RICE: '#008000' /** Green */,
-  "M. TRUNCATULA": '#B03060' /** Violet Red */,
+  'M. TRUNCATULA': '#B03060' /** Violet Red */,
   POPLAR: '#20B2AA' /** Sea Green */,
   default: '#000000' /** Default color: black */,
 }
@@ -269,10 +269,14 @@ function newickToD3(
         value: parseFloat(lengthStr),
         metadata: {
           genome: (() => {
-            const genomeValue = isPrimaryGene ? species : metadata.genomes[upperName]
-            return genomeValue?.toUpperCase() === 'ATHL' ? 'ARABIDOPSIS' : genomeValue
+            const genomeValue = isPrimaryGene
+              ? species
+              : metadata.genomes[upperName]
+            return genomeValue?.toUpperCase() === 'ATHL'
+              ? 'ARABIDOPSIS'
+              : genomeValue
           })(),
-          scc_value: metadata.SCC_values[upperName], 
+          scc_value: metadata.SCC_values[upperName],
           sequence_similarity: metadata.sequence_similarity[upperName],
           efp_link: metadata.efp_links[upperName],
         },
