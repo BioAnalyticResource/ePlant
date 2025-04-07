@@ -8,6 +8,11 @@ export default class ErrorBoundary extends Component<
     this.state = { hasError: false }
   }
   componentDidCatch(error: Error, info: ErrorInfo) {
+    console.log(
+      'Error caught by ErrorBoundary:',
+      error.message,
+      info.componentStack
+    )
     this.setState({ hasError: true })
   }
   render() {
