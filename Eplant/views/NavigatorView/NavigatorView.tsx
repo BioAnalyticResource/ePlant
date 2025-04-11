@@ -18,9 +18,9 @@ import { ViewDataError } from '@eplant/View'
 import { Box, Typography, useTheme } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 
-import CellEFPIcon from './Icons/CellEFPIcon'
-import GeneInfoViewIcon from './Icons/GeneInfoViewerIcon'
-import PlantEFPIcon from './Icons/PlantEFPIcon'
+import CellEFPIcon from './Icons/Nav_CellEFPIcon'
+import GeneInfoViewIcon from './Icons/Nav_GeneInfoViewerIcon'
+import PlantEFPIcon from './Icons/Nav_PlantEFPIcon'
 import * as constants from './Utility/constants'
 import { MetadataVisualizations } from './Utility/MetadataVisualizations'
 import {

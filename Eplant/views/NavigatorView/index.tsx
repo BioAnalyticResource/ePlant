@@ -4,13 +4,9 @@ import { getCitation } from '@eplant/util/citations'
 import { ViewMetadata } from '@eplant/View'
 import YoutubeSearchedForRoundedIcon from '@mui/icons-material/YoutubeSearchedForRounded'
 
-import { NavigatorIcon } from './Icons/NavigatorViewIcon'
+import { NavigatorIcon } from './Icons/Nav_NavigatorViewIcon'
 import { NavigatorViewerData, NavigatorViewerState } from './types'
 
-export const NavigatorContext = React.createContext<{ apiUrl: string }>({
-  apiUrl:
-    'https://bar.utoronto.ca/webservices/eplant_navigator/cgi-bin/eplant_navigator_service.cgi?primaryGene=AT3G24650&species=Arabidopsis&dataset=Developmental&checkedspecies=arabidopsis_poplar_medicago_soybean_rice_barley_maize_potato_tomato_grape',
-})
 
 const NavigatorView: ViewMetadata<NavigatorViewerData, NavigatorViewerState> = {
   id: 'navigator-view',
