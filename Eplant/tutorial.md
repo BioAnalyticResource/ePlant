@@ -91,7 +91,7 @@ The selection and rendering of the active view is handled via React Router, and 
 ></Outlet>
 ```
 
-Retrieval of props in a view is  done use the `useOutletContext` hook provided by ReactRouterDOM. 
+Retrieval of props in a view is done use the `useOutletContext` hook provided by ReactRouterDOM.
 
 ```
 const { geneticElement, setIsLoading, setLoadAmount } =
@@ -450,6 +450,7 @@ const userViewMetadata = [
   TutorialViewMetadata
 ]
 ```
+
 #### Adding a New Route
 
 ```
@@ -581,6 +582,7 @@ The config.ts file in your project is responsible for defining the configuration
 ## Documentation and Commenting Style
 
 It is important to maintain a common standard for commenting code and documentation. If you want to make contributions to the project, we ask that you follow the TSdoc(typescript) commenting style. As an example this includes adding function/class headers and comments as seen below:
+
 ```
 /**
  * Extracts the species name from the API URL
