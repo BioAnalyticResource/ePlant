@@ -7,7 +7,6 @@ import YoutubeSearchedForRoundedIcon from '@mui/icons-material/YoutubeSearchedFo
 import { NavigatorIcon } from './Icons/Nav_NavigatorViewIcon'
 import { NavigatorViewerData, NavigatorViewerState } from './types'
 
-
 const NavigatorView: ViewMetadata<NavigatorViewerData, NavigatorViewerState> = {
   id: 'navigator-view',
   name: 'Navigator View',

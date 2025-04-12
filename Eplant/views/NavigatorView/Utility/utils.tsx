@@ -2,6 +2,12 @@ import { D3Node, TreeData } from '../types'
 
 import * as constants from './constants'
 
+/**
+ * Interface representing a cached data entry
+ *
+ * @param data - The cached data object of type T
+ * @param timestamp - Timestamp of when the data was cached (in milliseconds since epoch)
+ */
 interface CacheEntry<T> {
   data: T
   timestamp: number
@@ -10,7 +16,12 @@ interface CacheEntry<T> {
 /** Global cache for gene data */
 const geneDataCache: Record<string, CacheEntry<TreeData>> = {}
 
-/** Fetch gene data from API with caching */
+/**
+ * Fetches data from a given Url and determines if the data already exists in memory
+ * Updates the cache if the data is unique and/or the cache timer has expired
+ * @param apiUrl - The Url used to access the necessary phylogeny data of a specific gene
+ * @returns A json formatted object of the data for use in downstream functions
+ */
 export const fetchGeneData = async (
   apiUrl: string,
   loadEvent?: (loaded: number) => void
@@ -70,6 +81,8 @@ export const genomeColors: { [key: string]: string } = {
   MAIZE: '#00FFFF' /** Cyan */,
   BARLEY: '#FFDC00' /** Yellow */,
   RICE: '#008000' /** Green */,
+  'M. TRUNCATULA': '#B03060' /** Violet Red */,
+  POPLAR: '#20B2AA' /** Sea Green */,
   default: '#000000' /** Default color: black */,
 }
 
@@ -82,6 +95,44 @@ export const genomeColors: { [key: string]: string } = {
  * @param species - Species name for the primary gene
  * @returns A D3-compatible tree structure
  * @throws Error If the Newick string format is invalid
+ *
+ * Example:
+ * newickToD3("(A:0.1,B:0.2):0.3;", {
+ *   efp_links: { A: "linkA", B: "linkB" },
+ *   genomes: { A: "SOYBEAN", B: "RICE" },
+ *   SCC_values: { A: 0.9, B: -0.2 },
+ *   sequence_similarity: { A: 95, B: 88 },
+ *   maximum_values: { A: 1.0, B: 1.0 },
+ *   tree: "(A:0.1,B:0.2):0.3;"
+ * }, "A", "SOYBEAN")
+ *
+ * Returns:
+ * {
+ *   name: 'internal',
+ *   value: 0.3,
+ *   children: [
+ *     {
+ *       name: 'A',
+ *       value: 0.1,
+ *       metadata: {
+ *         genome: 'SOYBEAN',
+ *         efp_link: 'linkA',
+ *         scc_value: 0.9,
+ *         sequence_similarity: 95
+ *       }
+ *     },
+ *     {
+ *       name: 'B',
+ *       value: 0.2,
+ *       metadata: {
+ *         genome: 'RICE',
+ *         efp_link: 'linkB',
+ *         scc_value: -0.2,
+ *         sequence_similarity: 88
+ *       }
+ *     }
+ *   ]
+ * }
  */
 export function newickToD3(
   newickString: string,
@@ -111,7 +162,14 @@ export function newickToD3(
         name: cleanName,
         value: parseFloat(lengthStr),
         metadata: {
-          genome: isPrimaryGene ? species : metadata.genomes[upperName],
+          genome: (() => {
+            const genomeValue = isPrimaryGene
+              ? species
+              : metadata.genomes[upperName]
+            return genomeValue?.toUpperCase() === 'ATHL'
+              ? 'ARABIDOPSIS'
+              : genomeValue
+          })(),
           scc_value: metadata.SCC_values[upperName],
           sequence_similarity: metadata.sequence_similarity[upperName],
           efp_link: metadata.efp_links[upperName],
@@ -157,7 +215,13 @@ export function newickToD3(
   return parseNode(cleaned)
 }
 
-/** Calculate dimensions based on number of leaf nodes */
+/**
+ * Calculates dimensions for rendering the tree based on the number of leaf nodes.
+ * Ensures the height stays within defined min and max bounds.
+ *
+ * @param leafCount - Number of leaf nodes in the tree (default is 0)
+ * @returns An object with calculated width, height, and drawable bounds
+ */
 export const calculateDimensions = (leafCount: number = 0) => {
   /** If no leafCount provided, use MIN_HEIGHT as default */
   const requiredHeight =
@@ -252,34 +316,37 @@ export const getGrameneLink = (
   const linkTemplate =
     grameneLinks[normalizedSpecies] || grameneLinks['default']
 
+  /** Special case handling for specific species */
   let processedGeneName = geneName
 
+  /** SOYBEAN: Replace period with underscore */
   if (normalizedSpecies === 'SOYBEAN') {
     processedGeneName = geneName.replace(/\./g, '_')
   }
+  /** RICE: Remove underscore */
   if (normalizedSpecies === 'RICE') {
     processedGeneName = geneName.replace(/_/g, '')
   }
+  /** MAIZE: Remove everything after underscore */
   if (normalizedSpecies === 'MAIZE') {
     processedGeneName = geneName.split('_')[0]
   }
+  /** BARLEY: Only works for MLOC genes */
   if (normalizedSpecies === 'BARLEY' && !geneName.startsWith('MLOC')) {
     return ''
   }
 
+  /** Replace geneName in the template */
   return linkTemplate.replace('{geneName}', processedGeneName)
 }
 
 /**
- * Extracts the primary gene ID from API URL
- */
-export const extractPrimaryGene = (url: string): string => {
-  const match = url.match(/primaryGene=([^&]+)/)
-  return match ? decodeURIComponent(match[1]) : ''
-}
-
-/**
- * Extracts the species from API URL
+ * Extracts the species name from the API URL
+ *
+ * @param url - The complete API URL containing query parameters
+ * @returns The species name, or an empty string if not found
+ *
+ * Uses regex to find the species parameter in the URL
  */
 export const extractSpecies = (url: string): string => {
   const match = url.match(/species=([^&]+)/)

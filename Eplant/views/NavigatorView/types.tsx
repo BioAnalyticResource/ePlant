@@ -1,7 +1,14 @@
 import { z } from 'zod'
 
 /**
- * Type definitions for Navigator View state and data
+ * Interface representing the tree data structure received from the API
+ *
+ * @param tree - Newick format string representing the phylogenetic tree
+ * @param efp_links - Map of gene identifiers to their expression profile URLs
+ * @param genomes - Map of gene identifiers to their genome information
+ * @param SCC_values - Map of gene identifiers to their expression correlation values
+ * @param sequence_similarity - Map of gene identifiers to their sequence similarity scores
+ * @param maximum_values - Map of gene identifiers to their maximum normalized values
  */
 export interface TreeData {
   tree: string

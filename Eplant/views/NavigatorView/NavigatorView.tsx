@@ -1,3 +1,12 @@
+/**
+ * Title: Navigator View
+ * Author: Kobi Schmalenberg with reference to ePlant2
+ * Description:
+ * The navigator viewer works by fetching data from an API source, which includes information on phylogeny, sequence/expression similarity, etc,
+ * and converting it into formats usable by the external package D3. D3 contains a suite of functions/tools that streamline the process of
+ * visualizing a phylogeny tree. SVG elements surround the D3 phylogeny tree object to showcase various relevant information to the user.
+ */
+
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import { useOutletContext } from 'react-router-dom'
@@ -6,6 +15,7 @@ import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import arabidopsis from '@eplant/Species/arabidopsis'
 import {
+  useActiveGeneId,
   useGeneticElements,
   useSetActiveGeneId,
   useSetActiveViewId,
@@ -26,7 +36,6 @@ import { MetadataVisualizations } from './Utility/MetadataVisualizations'
 import {
   calculateDimensions,
   ePlantLinks,
-  extractPrimaryGene,
   extractSpecies,
   fetchGeneData,
   genomeColors,
@@ -73,6 +82,7 @@ export const NavigatorViewObject = () => {
   const [dimensions, setDimensions] = useState(calculateDimensions())
   const [primaryGene, setPrimaryGene] = useState<string>('')
   const [species, setSpecies] = useState<string>('')
+  const [activeGeneId] = useActiveGeneId()
 
   /**
    * Load navigator data with React Query.
@@ -107,15 +117,18 @@ export const NavigatorViewObject = () => {
    * Extract primary gene ID and species from the API URL when data loads
    */
   useEffect(() => {
+    const newGene = activeGeneId
     if (data?.url) {
-      setPrimaryGene(extractPrimaryGene(data.url))
+      setPrimaryGene(newGene)
       setSpecies(extractSpecies(data.url))
     }
-  }, [data?.url])
+  }, [data?.url, data?.treeData, activeGeneId])
 
-  /**
-   * Create D3 hierarchy from tree data.
-   * Converts the Newick tree format to D3 hierarchical structure for visualization.
+  /** Create D3 hierarchy from tree data
+   * D3 hierarchy encompasses a number of object types such as Tree, Cluster, Treemap, etc.
+   * Using Tree does not yield what is required(leaf nodes aligned vertically).
+   * Therefore, this view relies on the Cluster object.
+   * Citation: https://d3js.org/d3-hierarchy/cluster
    */
   const hierarchy = useMemo(() => {
     if (!navigatorData || !navigatorData.tree) return null
@@ -129,7 +142,7 @@ export const NavigatorViewObject = () => {
       )
       const newHierarchy = d3.hierarchy(d3Data)
 
-      /** Clear any cached properties */
+      /** Clear any cached properties - used for when switching between genes*/
       newHierarchy.descendants().forEach((node) => {
         delete (node as any).x0
         delete (node as any).y0
@@ -146,7 +159,7 @@ export const NavigatorViewObject = () => {
   }, [navigatorData, primaryGene, species])
 
   /**
-   * Update dimensions when hierarchy changes.
+   * Update dimensions when hierarchy object changes.
    * Adjusts container height based on the number of leaf nodes.
    */
   useEffect(() => {
@@ -224,13 +237,17 @@ export const NavigatorViewObject = () => {
       delete (node as any).parentY
     })
 
+    /** Essentially assigns coordinates for each node*/
     const navigatorGenerator = d3
       .cluster<D3Node>()
       .size([dimensions.boundsHeight * 0.9, dimensions.boundsWidth * 0.2])
-      .separation((a, b) => (a.parent === b.parent ? 1.5 : 2.5))
+      .separation((a, b) =>
+        a.parent === b.parent ? 1.5 : 2.5
+      ) /** If two nodes share a parent, they are spaced closer together */
 
     const processedNavigator = navigatorGenerator(hierarchy)
 
+    /** Calculates how much space is actually used by the nodes of a given tree for use in scaling */
     const xExtent = d3.extent(processedNavigator.descendants(), (d) => d.x) as [
       number,
       number,
@@ -240,6 +257,7 @@ export const NavigatorViewObject = () => {
       number,
     ]
 
+    /** Converts raw coordinates into pixel values for placement on the screen */
     const xScale = d3
       .scaleLinear()
       .domain(xExtent)
@@ -250,7 +268,10 @@ export const NavigatorViewObject = () => {
       .domain(yExtent)
       .range([0, dimensions.boundsWidth * 0.2])
 
-    /** Process nodes with fresh coordinates */
+    /** Process nodes with fresh coordinates and aligns by leaf node vertically
+     * Applies scaling functions onto each node with special leaf node handling.
+     * Forced alignment may be redundant here upon further review. (April 4th 2025)
+     */
     processedNavigator.descendants().forEach((node) => {
       node.x = xScale(node.x)
       node.y = yScale(node.y)
@@ -304,7 +325,7 @@ export const NavigatorViewObject = () => {
     text: string
   ) => {
     const tooltip = d3.select('.d3-tooltip')
-  
+
     element
       .on('mouseover', (event: MouseEvent) => {
         tooltip
@@ -322,10 +343,10 @@ export const NavigatorViewObject = () => {
         tooltip.style('visibility', 'hidden')
       })
       .on('click', () => {
-        // Optionally hide tooltip on click
+        /** Optionally hide tooltip on click */
         tooltip.style('visibility', 'hidden')
       })
-  }  
+  }
 
   /**
    * Generate SVG content for the tree visualization.
@@ -342,6 +363,7 @@ export const NavigatorViewObject = () => {
       const isHighestNode =
         node.x === Math.min(...navigator.descendants().map((d) => d.y))
 
+      /** Add genome information to leaf node labels */
       if (!node.children && node.data.metadata?.genome) {
         displayName = `${node.data.name}`
       }
@@ -444,9 +466,9 @@ export const NavigatorViewObject = () => {
 
                   /** If found, set that gene as active */
                   if (foundGene) {
-                    // Check if gene is already loaded
+                    /** Check if gene is already loaded */
                     if (!genes.find((g) => g.id === foundGene.id)) {
-                      // Add gene to the list if not already loaded
+                      /** Add gene to the list if not already loaded */
                       setGenes([...genes, foundGene])
                     }
                     setActiveGeneId(foundGene.id)
@@ -514,9 +536,9 @@ export const NavigatorViewObject = () => {
 
                   /** If found, set that gene as active */
                   if (foundGene) {
-                    // Check if gene is already loaded
+                    /** Check if gene is already loaded */
                     if (!genes.find((g) => g.id === foundGene.id)) {
-                      // Add gene to the list if not already loaded
+                      /** Add gene to the list if not already loaded */
                       setGenes([...genes, foundGene])
                     }
                     setActiveGeneId(foundGene.id)
@@ -584,9 +606,9 @@ export const NavigatorViewObject = () => {
 
                   /** If found, set that gene as active */
                   if (foundGene) {
-                    // Check if gene is already loaded
+                    /** Check if gene is already loaded */
                     if (!genes.find((g) => g.id === foundGene.id)) {
-                      // Add gene to the list if not already loaded
+                      /** Add gene to the list if not already loaded */
                       setGenes([...genes, foundGene])
                     }
                     setActiveGeneId(foundGene.id)
@@ -654,9 +676,9 @@ export const NavigatorViewObject = () => {
 
                   /** If found, set that gene as active */
                   if (foundGene) {
-                    // Check if gene is already loaded
+                    /** Check if gene is already loaded */
                     if (!genes.find((g) => g.id === foundGene.id)) {
-                      // Add gene to the list if not already loaded
+                      /** Add gene to the list if not already loaded */
                       setGenes([...genes, foundGene])
                     }
                     setActiveGeneId(foundGene.id)
@@ -724,9 +746,9 @@ export const NavigatorViewObject = () => {
 
                   /** If found, set that gene as active */
                   if (foundGene) {
-                    // Check if gene is already loaded
+                    /** Check if gene is already loaded */
                     if (!genes.find((g) => g.id === foundGene.id)) {
-                      // Add gene to the list if not already loaded
+                      /** Add gene to the list if not already loaded */
                       setGenes([...genes, foundGene])
                     }
                     setActiveGeneId(foundGene.id)
@@ -819,6 +841,12 @@ export const NavigatorViewObject = () => {
 
     /** Generate edge elements for rendering */
     const allEdges = navigator?.links().map((link, index: number) => {
+      /** Create an elbow-shaped path for each edge using SVG path commands:
+       * M: Move to starting point (source node, the midpoint of both leaf nodes)
+       * H: Draw horizontal line to parent's x-coordinate(the code shows y-coordinate as they are flipped)
+       * V: Draw vertical line to target's y-coordinate(the code shows x-coordinate as they are flipped)
+       * H: Draw horizontal line to target node
+       */
       const sourceX = link.source.x
       const sourceY = link.source.y
       const targetX = link.target.x
@@ -1018,7 +1046,7 @@ export const navigatorViewerLoader = async (
     /** Fetch and process the data */
     const treeData = await fetchGeneData(apiUrl, loadEvent)
 
-    /** Return the actual tree data instead of just the URL */
+    /** Return the actual tree data */
     return {
       treeData,
       url: apiUrl,

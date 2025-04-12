@@ -13,7 +13,7 @@ import * as constants from './constants'
  * @param metadata - Metadata associated with the node
  * @param isPrimaryGene - Whether this node represents the primary gene being analyzed
  * @param themeColors - colouring for the metadata to match ePlant
- * @param isHighestY - have we hit the node with the highest Y coordinate
+ * @param isHighestNode - have we hit the node with the highest Y coordinate
  */
 interface MetadataVisualizationsProps {
   x: number
@@ -40,7 +40,13 @@ interface MetadataVisualizationsProps {
  * Component for rendering metadata visualizations next to tree nodes
  * Displays expression similarity and sequence similarity using color-coded bars
  *
- * @param props - Component properties
+ * @param MetadataVisualizationsProps - Follows the structure of the MetadataVisualizationsProps interface defined in this file
+ * @param MetadataVisualizationsProps.x - X coordinate for rendering the visualization
+ * @param MetadataVisualizationsProps.y - Y coordinate for rendering the visualization
+ * @param MetadataVisualizationsProps.metadata - Metadata associated with the node
+ * @param MetadataVisualizationsProps.isPrimaryGene - Whether this node represents the primary gene being analyzed
+ * @param MetadataVisualizationsProps.themeColors - colouring for the metadata to match ePlant
+ * @param MetadataVisualizationsProps.isHighestNode - have we hit the node with the highest Y coordinate
  * @returns JSX element containing metadata visualizations
  */
 export const MetadataVisualizations = ({
@@ -71,7 +77,11 @@ export const MetadataVisualizations = ({
     -1
   )
 
-  /** Calculate the width and position of the indicator bar */
+  /** Calculate the width and position of the indicator bar
+   * As the code draws expression bar from left -> right, an indicatorX value is used to determine the start point for drawing.
+   * If a positive value, indicatorX will be the position of the center(halfWidth).
+   * If negative, we offset from the center by the width of the actual expression data(indicatorWidth) and draw towards the center.
+   */
   const halfWidth = constants.BAR_WIDTH / 2
   const indicatorWidth = Math.abs(clampedExpression) * halfWidth
   const indicatorX =
@@ -87,7 +97,7 @@ export const MetadataVisualizations = ({
     >
       {/* Expression similarity bar with tooltip */}
       <g
-        transform={`translate(0, ${
+        transform={`translate(125, ${
           constants.BAR_HEIGHT + constants.BAR_SPACING
         })`}
       >
@@ -216,7 +226,7 @@ export const MetadataVisualizations = ({
 
       {/* Sequence Similarity bar with tooltip */}
       <g
-        transform={`translate(120, ${
+        transform={`translate(0, ${
           constants.BAR_HEIGHT + constants.BAR_SPACING
         })`}
       >

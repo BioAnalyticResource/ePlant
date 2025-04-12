@@ -583,16 +583,16 @@ The config.ts file in your project is responsible for defining the configuration
 It is important to maintain a common standard for commenting code and documentation. If you want to make contributions to the project, we ask that you follow the TSdoc(typescript) commenting style. As an example this includes adding function/class headers and comments as seen below:
 ```
 /**
- * Extracts the primary gene identifier from the API URL
- * 
+ * Extracts the species name from the API URL
+ *
  * @param url - The complete API URL containing query parameters
- * @returns The primary gene identifier, or an empty string not found
- * 
- * Uses regex to find the primaryGene parameter in the URL
- */
-function extractPrimaryGene(url: string): string {
-  const match = url.match(/primaryGene=([^&]+)/);
-  return match ? match[1] : "";
+ * @returns The species name, or an empty string if not found
+ *
+ * Uses regex to find the species parameter in the URL
+*/
+export const extractSpecies = (url: string): string => {
+  const match = url.match(/species=([^&]+)/)
+  return match ? decodeURIComponent(match[1]) : ''
 }
 ```
 
