@@ -8,8 +8,10 @@ import FallbackView from './views/FallbackView'
 import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
 import InteractionsViewer from './views/InteractionsViewer'
+import NavigatorView from './views/NavigatorViewer'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
+import WorldEFP from './views/WorldEFP'
 import { type View } from './View'
 
 export type EplantConfig = {
@@ -33,8 +35,10 @@ const userViews = [
   PlantEFP,
   CellEFP,
   ExperimentEFP,
+  WorldEFP,
   ChromosomeViewer,
   InteractionsViewer,
+  NavigatorView,
 ]
 
 // List of views that are used to lookup a view by id
