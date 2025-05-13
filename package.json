@@ -34,6 +34,8 @@
     "@vis.gl/react-google-maps": "^1.0.1",
     "axios": "^1.5.1",
     "color2k": "^2.0.2",
+    "cytoscape": "^3.32.0",
+    "cytoscape-popper": "^4.0.1",
     "d3": "^7.9.0",
     "dompurify": "^3.0.6",
     "flexlayout-react": "^0.7.11",
@@ -44,6 +46,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.26.1",
     "react-window": "^1.8.9",
+    "tippy.js": "^6.3.7",
     "zod": "^3.24.2"
   },
   "devDependencies": {
