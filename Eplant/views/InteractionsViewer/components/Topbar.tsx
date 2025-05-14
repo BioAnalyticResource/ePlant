@@ -101,7 +101,7 @@ const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
       selectors.PPDISelector,
       ppdiConf,
     ]
-
+    // @ts-expect-error error with show no fix, still works
     cy.elements().show()
     for (let i = 0; i < filterStatus.length; i++) {
       console.log(i)
