@@ -1,5 +1,5 @@
 import { useEffect,useMemo,useRef, useState } from "react"
-import cytoscape, { Core } from 'cytoscape'
+import cytoscape, { Core, ElementsDefinition, warnings } from 'cytoscape'
 import { useOutletContext } from "react-router-dom"
 
 import { useTheme } from "@emotion/react"
@@ -56,109 +56,130 @@ export const InteractionsViewObject = () => {
     /** Get interactionsData from the returned data */
     const interactionsData = data?.viewData
 
-    const [cyto, setCyto] = useState<Core>(cytoscape())
+    const [cyto, setCyto] = useState<Core | null>(null)
     const cyRef = useRef(null)
+    const cyContainerRef = useRef<HTMLDivElement>(null)
     const theme = useTheme()
     const geneId = geneticElement?.id
     const viewData = interactionsData || {
         nodes: [],
         edges: [],
         loadFlags: {
-            empty: true,
-            existsPDI: false,
-            existsPPI: false,
-            recursive: false,
+          empty: true,
+          existsPDI: false,
+          existsPPI: false,
+          recursive: false,
         },
     }
     
-    const elements: any = useMemo(() => {
-        if (!viewData?.nodes || !viewData?.edges) return [];
-        
-        return [...viewData.nodes, ...viewData.edges];
-    }, [viewData?.nodes, viewData?.edges]);
+    const elements: any = [...(viewData.nodes || []), ...(viewData.edges || [])]
     
+
     // Snackbar state
     const [snackbarOpen, setSnackbarOpen] = useState(true)
 
+    // Initialize or reinitialize cytoscape when data changes or gene changes
     useEffect(() => {
-    if (!cyRef.current || elements?.length === 0) return;
+        // Don't proceed if we're still loading or don't have a container
+        if (isLoading || !cyContainerRef.current) return;
+        
+        // Clean up any existing instance
+        if (cyto) {
+            cyto.destroy();
+        }
+        
+        // Create a new instance with the current elements
+        const cy: Core = cytoscape({
+            container: cyContainerRef.current,
+            style: cytoStyles,
+            elements: elements
+        });
+        
+        // Add event listeners
+        addNodeListener(cy);
+        addEdgeListener(cy);
+        
+        // Apply layout if we have data
+        if (elements.length > 0) {
+            setLayout(cy, viewData.loadFlags);
+            cy.fit();
+        }
+        
+        // Update the state
+        
+        console.log(
+  cy.nodes().map(n => ({
+    id: n.id(),
+    classes: n.classes(),  // string of classes attached to the node
+    data: n.data(),
+  }))
+);
+        cy.style().update();
 
-    const cy = cytoscape({
-        container: cyRef.current,
-        elements: elements,
-        style: cytoStyles,
-    });
-
-    setCyto(cy);
-    setLayout(cy, viewData.loadFlags);
-    addNodeListener(cy);
-    addEdgeListener(cy);
-
-    return () => {
-        cy.destroy();
-    };
-    }, [elements, viewData.loadFlags]);
+        setCyto(cy);
+        
+    }, [geneId, isLoading]);
 
     /**
      * Function to close the Snackbar */
     const handleCloseSnackbar = () => {
-    setSnackbarOpen(false)
+      setSnackbarOpen(false)
     }
 
     return (
-    <div style={{ background: 'white', overflow: 'hidden' }}>
-      {/* TOPBAR - contains legend and filter buttons */}
-      <Topbar cy={cyto} gene={geneId === undefined ? '' : geneId}></Topbar>
-      {/* CYTOSCAPE - container to render cytoscape */}
-      <div
-        ref={cyRef}
-        id='cy'
-        style={{ width: '100%', height: '80vh' }}
-      ></div>
-      {/* SNACKBAR - alerts user what to do if protein localization colours are not visible*/}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={5000} // Auto-hide after 5 seconds
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        sx={{
-          '& .MuiSnackbar-root': {
-            bottom: '50px',
-            right: '24px',
-          },
-        }}
-      >
-        <Alert
+      <div style={{ background: 'white', overflow: 'hidden' }}>
+        {/* TOPBAR - contains legend and filter buttons */}
+        {cyto && <Topbar cy={cyto} gene={geneId ?? ''} />}
+        {/* CYTOSCAPE - container to render cytoscape */}
+        <div
+          ref={cyContainerRef}
+          id='cy'
+          style={{ width: '100%', height: '80vh' }}
+        ></div>
+        {/* SNACKBAR - alerts user what to do if protein localization colours are not visible*/}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={5000} // Auto-hide after 5 seconds
           onClose={handleCloseSnackbar}
-          severity='info'
-          color='success'
-          sx={(theme) => ({
-            '& .MuiAlert-icon': {
-              color: theme.palette.primary.main, // Change the icon color if needed
-              marginTop: '5px',
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          sx={{
+            '& .MuiSnackbar-root': {
+              bottom: '50px',
+              right: '24px',
             },
-            width: '300px',
-            fontSize: '0.875rem',
-            padding: '8px 16px',
-            maxHeight: '100px', // Limit height
-            overflow: 'auto', // Add scroll if content overflows
-          })}
-          action={
-            <IconButton
-              color='secondary'
-              title='Close'
-              onClick={handleCloseSnackbar} // Close the Snackbar when clicked
-            >
-              <Close />
-            </IconButton>
-          }
+          }}
         >
-          Are protein localization colours not visible? Interact with the view
-          to fix
-        </Alert>
-      </Snackbar>
-    </div>
-  )
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity='info'
+            color='success'
+            sx={(theme) => ({
+              '& .MuiAlert-icon': {
+                color: theme.palette.primary.main, // Change the icon color if needed
+                marginTop: '5px',
+              },
+              width: '300px',
+              fontSize: '0.875rem',
+              padding: '8px 16px',
+              maxHeight: '100px', // Limit height
+              overflow: 'auto', // Add scroll if content overflows
+            })}
+            action={
+              <IconButton
+                color='secondary'
+                title='Close'
+                onClick={handleCloseSnackbar} // Close the Snackbar when clicked
+              >
+                <Close />
+              </IconButton>
+            }
+          >
+            Are protein localization colours not visible? Interact with the view
+            to fix
+          </Alert>
+        </Snackbar>
+      </div>
+    )
 }
 
 /**
@@ -219,5 +240,3 @@ export const InteractionsViewLoader = async (
   }
 }
 
-
-    

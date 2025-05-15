@@ -1,4 +1,4 @@
-import { useEffect,useRef, useState } from "react"
+import { useEffect,useMemo,useRef, useState } from "react"
 import cytoscape, { Core } from 'cytoscape'
 import { useOutletContext } from "react-router-dom"
 
@@ -70,20 +70,22 @@ export const InteractionsViewObject = () => {
             recursive: false,
         },
     }
-    const elements: any = [...(viewData.nodes || []), ...(viewData.edges || [])]
     
-
+    const elements: any = useMemo(() => {
+        if (!viewData?.nodes || !viewData?.edges) return [];
+        
+        return [...viewData.nodes, ...viewData.edges];
+    }, [viewData?.nodes, viewData?.edges]);
+    
     // Snackbar state
     const [snackbarOpen, setSnackbarOpen] = useState(true)
 
     useEffect(() => {
-    if (!cyRef.current || elements.length === 0) return;
-
-    console.log("✅ Building Cytoscape with", elements.length, "elements");
+    if (!cyRef.current || elements?.length === 0) return;
 
     const cy = cytoscape({
         container: cyRef.current,
-        elements,
+        elements: elements,
         style: cytoStyles,
     });
 
@@ -95,7 +97,7 @@ export const InteractionsViewObject = () => {
     return () => {
         cy.destroy();
     };
-    }, [elements]);
+    }, [elements, viewData.loadFlags]);
 
     /**
      * Function to close the Snackbar */
@@ -159,53 +161,62 @@ export const InteractionsViewObject = () => {
   )
 }
 
+/**
+ * Data loader function for Interactions View
+ * Separated from component as per new architecture
+ */
 export const InteractionsViewLoader = async (
-    geneticElement: GeneticElement | null,
-    loadEvent: (loaded: number) => void
+  geneticElement: GeneticElement | null,
+  loadEvent: (loaded: number) => void
 ): Promise<InteractionsViewData> => {
-    if (!geneticElement) throw ViewDataError.UNSUPPORTED_GENE
-    
-    let data: ViewData = {
-      nodes: [],
-      edges: [],
-      loadFlags: {
-        empty: true,
-        existsPDI: false,
-        existsPPI: false,
-        recursive: false,
-      }
+  if (!geneticElement) throw ViewDataError.UNSUPPORTED_GENE
+  
+  let data: ViewData = {
+    nodes: [],
+    edges: [],
+    loadFlags: {
+      empty: true,
+      existsPDI: false,
+      existsPPI: false,
+      recursive: false,
     }
-    
-    if (geneticElement) {
-      let recursive: string, interactions: Array<Interaction>
-      const query = geneticElement.id.toUpperCase()
-      const url =
-        'https://bar.utoronto.ca/eplant/cgi-bin/get_interactions_dapseq.py?locus=' +
-        query
-      try {
-        // Fetch interaction data
-        const response = await fetch(url)
-        const json = await response.json()
-        const interactionsData = json[query]
+  }
+  
+  if (geneticElement) {
+    let recursive: string, interactions: Array<Interaction>
+    const query = geneticElement.id.toUpperCase()
+    const url =
+      'https://bar.utoronto.ca/eplant/cgi-bin/get_interactions_dapseq.py?locus=' +
+      query
+    try {
+      // Fetch interaction data
+      loadEvent(25) // Start progress
+      const response = await fetch(url)
+      loadEvent(50) // Halfway
+      const json = await response.json()
+      const interactionsData = json[query]
 
-        if (interactionsData === undefined) {
-          recursive = 'false'
-          interactions = []
-        } else {
-          // recursive is always the last element in the array
-          recursive = interactionsData[interactionsData.length - 1]
-          // the interaction are everythign else
-          interactions = interactionsData.slice(0, interactionsData.length - 1)
-        }
-        // Load interactions
-        data = loadInteractions(geneticElement, interactions, recursive)
-      } catch (error) {
-        throw ViewDataError.UNSUPPORTED_GENE
+      if (interactionsData === undefined) {
+        recursive = 'false'
+        interactions = []
+      } else {
+        // recursive is always the last element in the array
+        recursive = interactionsData[interactionsData.length - 1]
+        // the interaction are everything else
+        interactions = interactionsData.slice(0, interactionsData.length - 1)
       }
+      // Load interactions
+      loadEvent(75)
+      data = loadInteractions(geneticElement, interactions, recursive)
+      loadEvent(100) // Complete
+    } catch (error) {
+      console.error("Error loading interactions:", error)
+      throw ViewDataError.UNSUPPORTED_GENE
     }
-    return {
-      viewData: data,
-    }
+  }
+  return {
+    viewData: data,
+  }
 }
 
 
