@@ -13,14 +13,13 @@ import tippy, {
 } from 'tippy.js'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { ViewDataError } from '@eplant/View/viewData'
+import { ViewDataError, ViewMetadata } from '@eplant/View/'
 import Close from '@mui/icons-material/Close'
+import YoutubeSearchedForRoundedIcon from '@mui/icons-material/YoutubeSearchedForRounded'
 import { useTheme } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
-
-import { View, ViewProps } from '../../View'
 
 import Topbar from './components/Topbar'
 import { addEdgeListener, addNodeListener } from './scripts/eventHandlers'
@@ -93,7 +92,7 @@ declare module '@mui/material/IconButton' {
     custom: true
   }
 }
-const InteractionsViewer: View = {
+const InteractionsViewer: ViewMetadata<InteractionsViewData, InteractionsViewState> = {
   name: 'Interactions Viewer',
   id: 'interactions-viewer',
 
@@ -102,157 +101,27 @@ const InteractionsViewer: View = {
   citation() {
     return <div></div>
   },
-  async getInitialData(
-    gene: GeneticElement | null,
-    loadEvent: (progress: number) => void
-  ) {
-    let data: ViewData = {
-      nodes: [],
-      edges: [],
-      loadFlags: {
-        empty: true,
-        existsPDI: false,
-        existsPPI: false,
-        recursive: false,
-      },
-    }
-
-    if (gene) {
-      let recursive: string, interactions: Array<Interaction>
-      const query = gene.id.toUpperCase()
-      const url =
-        'https://bar.utoronto.ca/eplant/cgi-bin/get_interactions_dapseq.py?locus=' +
-        query
-      try {
-        // Fetch interaction data
-        const response = await fetch(url)
-        const json = await response.json()
-        const interactionsData = json[query]
-
-        if (interactionsData === undefined) {
-          recursive = 'false'
-          interactions = []
-        } else {
-          // recursive is always the last element in the array
-          recursive = interactionsData[interactionsData.length - 1]
-          // the interaction are everythign else
-          interactions = interactionsData.slice(0, interactionsData.length - 1)
-        }
-        // Load interactions
-        data = loadInteractions(gene, interactions, recursive)
-      } catch (error) {
-        throw ViewDataError.UNSUPPORTED_GENE
-      }
-    }
-    return {
-      activeView: InteractionsViewer.id,
-      viewData: data,
-    }
-  },
-  component({
-    activeData,
-    state,
-    dispatch,
-    geneticElement,
-  }: ViewProps<
-    InteractionsViewData,
-    InteractionsViewState,
-    InteractionsViewAction
-  >) {
-    const [cyto, setCyto] = useState<Core>(cytoscape())
-    const cyRef = useRef(null)
-    const theme = useTheme()
-    const geneId = geneticElement?.id
-    const viewData = activeData?.viewData || {
-      nodes: [],
-      edges: [],
-      loadFlags: {
-        empty: true,
-        existsPDI: false,
-        existsPPI: false,
-        recursive: false,
-      },
-    }
-    const elements: any = [...(viewData.nodes || []), ...(viewData.edges || [])]
-
-    // Snackbar state
-    const [snackbarOpen, setSnackbarOpen] = useState(true)
-
-    useEffect(() => {
-      const cy: Core = cytoscape({
-        container: document.getElementById('cy'), // container to render in
-        elements: elements,
-        style: cytoStyles,
-      })
-
-      setCyto(cy)
-
-      setLayout(cy, viewData.loadFlags)
-      // Listen for mouseover events on nodes
-      addNodeListener(cy)
-      // Listen for mouseover events on edges
-      addEdgeListener(cy)
-    }, [])
-
-    /**
-     * Function to close the Snackbar */
-    const handleCloseSnackbar = () => {
-      setSnackbarOpen(false)
-    }
-    return (
-      <div style={{ background: 'white', overflow: 'hidden' }}>
-        {/* TOPBAR - contains legend and filter buttons */}
-        <Topbar cy={cyto} gene={geneId === undefined ? '' : geneId}></Topbar>
-        {/* CYTOSCAPE - container to render cytoscape */}
-        <div
-          ref={cyRef}
-          id='cy'
-          style={{ width: '100%', height: '80vh' }}
-        ></div>
-        {/* SNACKBAR - alerts user what to do if protein localization colours are not visible*/}
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={5000} // Auto-hide after 5 seconds
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          sx={{
-            '& .MuiSnackbar-root': {
-              bottom: '50px',
-              right: '24px',
-            },
-          }}
-        >
-          <Alert
-            onClose={handleCloseSnackbar}
-            severity='info'
-            color='success'
-            sx={(theme) => ({
-              '& .MuiAlert-icon': {
-                color: theme.palette.primary.main, // Change the icon color if needed
-                marginTop: '5px',
-              },
-              width: '300px',
-              fontSize: '0.875rem',
-              padding: '8px 16px',
-              maxHeight: '100px', // Limit height
-              overflow: 'auto', // Add scroll if content overflows
-            })}
-            action={
-              <IconButton
-                color='secondary'
-                title='Close'
-                onClick={handleCloseSnackbar} // Close the Snackbar when clicked
-              >
-                <Close />
-              </IconButton>
-            }
-          >
-            Are protein localization colours not visible? Interact with the view
-            to fix
-          </Alert>
-        </Snackbar>
-      </div>
-    )
-  },
+  actions: [
+    { 
+      name: 'Reset Pan/Zoom',
+      description: 'Reset the pan and zoom of the viewer',
+      icon: <YoutubeSearchedForRoundedIcon />,
+      mutation: (prevState) => ({
+        ...prevState,
+        transform: {
+          offset: {
+            x: 0,
+            y: 0,
+          },
+          zoom: 1,
+        },
+      }),
+    },
+  ]
 }
+
+
 export default InteractionsViewer
+
+
+  

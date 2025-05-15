@@ -1,4 +1,5 @@
 import { EdgeSingular, NodeSingular } from 'cytoscape'
+import { z } from 'zod'
 
 import GeneticElement from '@eplant/GeneticElement'
 /* Level 1 - API results */
@@ -107,8 +108,20 @@ export type NodeCollection = Node[]
 export type EdgeCollection = Edge[]
 
 // InteractionsViewer component
-export type InteractionsViewData = {
+export interface InteractionsViewData {
   viewData: ViewData
 }
-export type InteractionsViewState = null
+
+/** Define the schema for URL state synchronization */
+export const InteractionsViewStateSchema = z.object({
+  transform: z.object({
+    offset: z.object({
+      x: z.number().default(0),
+      y: z.number().default(0),
+    }),
+    zoom: z.number().default(1),
+  }),
+})
+
+export type InteractionsViewState = z.infer<typeof InteractionsViewStateSchema>
 export type InteractionsViewAction = null
