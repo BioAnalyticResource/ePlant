@@ -116,8 +116,8 @@ export interface InteractionsViewData {
 export const InteractionsViewStateSchema = z.object({
   transform: z.object({
     offset: z.object({
-      x: z.number().default(0),
-      y: z.number().default(0),
+      x: z.number().default(500),
+      y: z.number().default(320),
     }),
     zoom: z.number().default(1),
   }),

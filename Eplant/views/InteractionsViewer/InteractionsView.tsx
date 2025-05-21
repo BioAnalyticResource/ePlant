@@ -74,51 +74,140 @@ export const InteractionsViewObject = () => {
     
     const elements: any = [...(viewData.nodes || []), ...(viewData.edges || [])]
     
-
     // Snackbar state
     const [snackbarOpen, setSnackbarOpen] = useState(true)
 
+    // Track if transform is being applied from URL state to prevent circular updates
+    const isApplyingTransform = useRef(false)
+
     // Initialize or reinitialize cytoscape when data changes or gene changes
     useEffect(() => {
-        // Don't proceed if we're still loading or don't have a container
-        if (isLoading || !cyContainerRef.current) return;
-        
-        // Clean up any existing instance
-        if (cyto) {
-            cyto.destroy();
-        }
-        
-        // Create a new instance with the current elements
-        const cy: Core = cytoscape({
-            container: cyContainerRef.current,
-            style: cytoStyles,
-            elements: elements
-        });
-        
-        // Add event listeners
-        addNodeListener(cy);
-        addEdgeListener(cy);
-        
-        // Apply layout if we have data
-        if (elements.length > 0) {
-            setLayout(cy, viewData.loadFlags);
-            cy.fit();
-        }
-        
-        // Update the state
-        
-        console.log(
-  cy.nodes().map(n => ({
-    id: n.id(),
-    classes: n.classes(),  // string of classes attached to the node
-    data: n.data(),
-  }))
-);
-        cy.style().update();
+      // Don't proceed if we're still loading or don't have a container
+      if (isLoading || !cyContainerRef.current) return;
+      
+      // Clean up any existing instance
+      if (cyto) {
+          cyto.destroy();
+      }
+      
+      // Create a new instance with the current elements
+      const cy: Core = cytoscape({
+          container: cyContainerRef.current,
+          style: cytoStyles,
+          elements: elements
+      });
+      
+      // Add event listeners
+      addNodeListener(cy);
+      addEdgeListener(cy);
+      
+      // Apply layout if we have data
+      if (elements.length > 0) {
+          // Set the layout
+          setLayout(cy, viewData.loadFlags);
+          
+          // Force a complete layout run to ensure positions are calculated
+          const layout = cy.layout({
+              name: 'preset',
+              fit: false  // Don't fit automatically, we'll handle this manually
+          });
+          
+          // Execute the layout with a callback
+          layout.run();
+          
+          // Set up listener for viewport changes (pan/zoom) to update URL state
+          cy.on('viewport', () => {
+              // Skip update if we're currently applying transform from URL
+              if (isApplyingTransform.current) return;
+              
+              const zoom = cy.zoom();
+              const pan = cy.pan();
+              
+              setState({
+                  transform: {
+                      offset: {
+                          x: pan.x,
+                          y: pan.y
+                      },
+                      zoom: zoom
+                  }
+              });
+          });
+          
+          // Wait for layout to stop, then apply transform or fit
+          cy.one('layoutstop', () => {
+              // Give time for rendering to complete
+              setTimeout(() => {
+                  // First fit the graph properly to center it
+                  cy.fit();
+                  cy.center();
+                  
+                  // Then apply transform from URL if available
+                  if (state?.transform) {
+                      isApplyingTransform.current = true;
+                      
+                      // Apply the saved transform
+                      cy.zoom(state.transform.zoom);
+                      cy.pan({
+                          x: state.transform.offset.x,
+                          y: state.transform.offset.y
+                      });
+                      
+                      // Reset flag after transform completes
+                      setTimeout(() => {
+                          isApplyingTransform.current = false;
+                      }, 100);
+                  }
+              }, 100);
+          });
+      } else {
+          // If no elements, just center and fit the view
+          cy.fit();
+          cy.center();
+      }
+      
+      cy.style().update();
+      setCyto(cy);
+      
+      // When component unmounts, clean up
+      return () => {
+          if (cy) {
+              cy.destroy();
+          }
+      };
+    }, [geneId, isLoading, elements.length]);
 
-        setCyto(cy);
-        
-    }, [geneId, isLoading]);
+
+    useEffect(() => {
+      if (!cyto || !state?.transform || isLoading || elements.length === 0) return;
+      
+      // Only apply transform if this is different from the current view
+      const currentZoom = cyto.zoom();
+      const currentPan = cyto.pan();
+      
+      // Check if transform has actually changed to avoid unnecessary updates
+      const zoomChanged = Math.abs(currentZoom - state.transform.zoom) > 0.001;
+      const panChanged = 
+          Math.abs(currentPan.x - state.transform.offset.x) > 1 ||
+          Math.abs(currentPan.y - state.transform.offset.y) > 1;
+      
+      if (zoomChanged || panChanged) {
+          // Prevent triggering viewport event listener
+          isApplyingTransform.current = true;
+          
+          // Apply transform from URL state
+          cyto.zoom(state.transform.zoom);
+          cyto.pan({
+              x: state.transform.offset.x,
+              y: state.transform.offset.y
+          });
+          
+          // Reset flag after a longer delay to ensure completion
+          setTimeout(() => {
+              isApplyingTransform.current = false;
+          }, 100);
+      }
+    }, [cyto, state?.transform?.zoom, state?.transform?.offset.x, state?.transform?.offset.y]);
 
     /**
      * Function to close the Snackbar */
