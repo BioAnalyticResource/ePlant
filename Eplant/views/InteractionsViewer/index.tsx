@@ -62,6 +62,7 @@ declare module 'cytoscape-popper' {
 function createTooltip(ref: { getBoundingClientRect: any }, content: any) {
   // Since tooltip constructor requires DOM element/elements, create a placeholder
   const dummyDomElement = document.createElement('div')
+  console.log(content)
   const config: Partial<TProps> = {
     getReferenceClientRect: ref.getBoundingClientRect,
     // touch: add this later for touch screen capabilities
@@ -69,7 +70,7 @@ function createTooltip(ref: { getBoundingClientRect: any }, content: any) {
     content: content.content,
     // your own preferences:
     arrow: content.arrow,
-    placement: 'left',
+    placement: 'top',
     delay: [1000, 1000],
     animation: 'fade',
     followCursor: content.followCursor,

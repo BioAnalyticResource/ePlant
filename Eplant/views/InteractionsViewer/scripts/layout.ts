@@ -40,6 +40,7 @@ const setLayout = (cytoscape: Core, flags: LoadFlags) => {
     },
     when: 'matching',
   })
+  cy.$('node[id $= "QUERY_NODE"]').position({x: -30, y: 20})
   cy.minZoom(0.2)
   cy.fit()
 }
