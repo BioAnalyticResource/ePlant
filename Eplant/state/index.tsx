@@ -95,7 +95,7 @@ export function atomWithStorage<T>(
 
 // TODO: This should probably be removed
 // Atom with storage that doesn't persist when persistAtom is set to false
-function atomWithOptionalStorage<T>(
+export function atomWithOptionalStorage<T>(
   key: string,
   initialValue: T,
   serialize: (value: T) => string = JSON.stringify,
