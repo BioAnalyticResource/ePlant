@@ -394,6 +394,7 @@ const createProteinEdge = (data: Interaction) => {
     edge.data.reference = data.reference
   }
 
+  // @ts-expect-error unknown type errror
   edge = setProteinEdgeStyles(edge)
   edge.data.tooltip = setEdgeTooltipContent(edge)
   // edgesPush(edge)
@@ -442,10 +443,13 @@ const setProteinEdgeStyles = (edge: RawEdge): RawEdge => {
   edge.data.lineStyle = 'solid'
   if (edge.data.method === 'E') {
     edge.data.size = 6
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
   } else if (edge.data.interolog_conf > 10) {
     edge.data.size = 6
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
   } else if (edge.data.interolog_conf > 5) {
     edge.data.size = 4
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
   } else if (edge.data.interolog_conf > 2) {
     edge.data.size = 1
   } else {
@@ -455,12 +459,16 @@ const setProteinEdgeStyles = (edge: RawEdge): RawEdge => {
 
   if (edge.data.method === 'E') {
     edge.data.lineColor = '#99CC00'
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
   } else if (edge.data.correlation > 0.8) {
     edge.data.lineColor = '#B1171D'
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
   } else if (edge.data.correlation > 0.7) {
     edge.data.lineColor = '#D32E09'
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
   } else if (edge.data.correlation > 0.6) {
     edge.data.lineColor = '#E97911'
+    // @ts-expect-error occurs because protein edge and chromsoome edge must me lumped into the same type (RawEdge)
   } else if (edge.data.correlation > 0.5) {
     edge.data.lineColor = '#EEB807'
   } else {

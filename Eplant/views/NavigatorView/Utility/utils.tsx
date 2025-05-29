@@ -43,33 +43,29 @@ export const fetchGeneData = async (
   }
 
   /** Fetch new data if not in cache or cache has expired */
-  try {
-    loadEvent?.(40)
-    const response = await fetch(apiUrl)
+  loadEvent?.(40)
+  const response = await fetch(apiUrl)
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
-    }
-
-    loadEvent?.(80)
-    const data = await response.json()
-
-    if (data.status !== 'success') {
-      throw new Error('Failed to load tree data')
-    }
-
-    /** Store in cache */
-    geneDataCache[apiUrl] = {
-      data,
-      timestamp: Date.now(),
-    }
-
-    loadEvent?.(100)
-    return data
-  } catch (error) {
-    console.error('Error fetching gene data:', error)
-    throw error
+  if (!response.ok) {
+    throw new Error('Network response was not ok')
   }
+
+  loadEvent?.(80)
+  const data = await response.json()
+
+  if (data.status !== 'success') {
+    throw new Error('Failed to load tree data')
+  }
+
+  /** Store in cache */
+  geneDataCache[apiUrl] = {
+    data,
+    timestamp: Date.now(),
+  }
+
+  loadEvent?.(100)
+  return data
+
 }
 
 /** Static declaration of genome label colors */

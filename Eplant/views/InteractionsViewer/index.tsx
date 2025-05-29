@@ -110,8 +110,8 @@ const InteractionsViewer: ViewMetadata<InteractionsViewData, InteractionsViewSta
         ...prevState,
         transform: {
           offset: {
-            x: 0,
-            y: 0,
+            x: 500,
+            y: 320,
           },
           zoom: 1,
         },

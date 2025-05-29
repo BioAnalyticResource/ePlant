@@ -1,4 +1,4 @@
-import { useEffect,useMemo,useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import cytoscape, { Core, ElementsDefinition, warnings } from 'cytoscape'
 import { useOutletContext } from "react-router-dom"
 
@@ -31,13 +31,15 @@ export const InteractionsViewObject = () => {
     /**
      * Load interactions data with React Query.
      */
-    const { data, isLoading, isError, error } = useQuery<InteractionsViewData>({
-    queryKey: [`interactions-viewer-${geneticElement?.id}`],
-    queryFn: async () => {
-        return InteractionsViewLoader(geneticElement, setLoadAmount)
-    },
-    enabled: !!geneticElement,
-    })
+    const { data, isLoading, isError, error, refetch} = useQuery<InteractionsViewData>({
+      queryKey: [`interactions-viewer-${geneticElement?.id}`],
+      queryFn: async () => InteractionsViewLoader(geneticElement, setLoadAmount),
+      enabled: !!geneticElement,
+      staleTime: 0,
+      cacheTime: 0,
+      keepPreviousData: false,
+      refetchOnMount: 'always',
+    }as any);
 
     /**
      * Initialize Interactions view state from URL or defaults on first mount
@@ -143,22 +145,23 @@ export const InteractionsViewObject = () => {
                   cy.center();
                   
                   // Then apply transform from URL if available
-                  if (state?.transform) {
-                      isApplyingTransform.current = true;
+                  // if (state?.transform) {
+                  //     isApplyingTransform.current = true;
                       
-                      // Apply the saved transform
-                      cy.zoom(state.transform.zoom);
-                      cy.pan({
-                          x: state.transform.offset.x,
-                          y: state.transform.offset.y
-                      });
+                  //     // Apply the saved transform
+                  //     cy.zoom(state.transform.zoom);
+                  //     cy.pan({
+                  //         x: state.transform.offset.x,
+                  //         y: state.transform.offset.y
+                  //     });
                       
-                      // Reset flag after transform completes
-                      setTimeout(() => {
-                          isApplyingTransform.current = false;
-                      }, 100);
-                  }
+                  //     // Reset flag after transform completes
+                  //     setTimeout(() => {
+                  //         isApplyingTransform.current = false;
+                  //     }, 100);
+                  // }  
               }, 100);
+              cy.style().update()
           });
       } else {
           // If no elements, just center and fit the view
@@ -176,6 +179,7 @@ export const InteractionsViewObject = () => {
           }
       };
     }, [geneId, isLoading, elements.length]);
+    
 
 
     useEffect(() => {
