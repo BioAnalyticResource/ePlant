@@ -13,6 +13,7 @@ const loadSublocalizations = (cynodes: RawNode[]): RawNode[] => {
   nodes = cynodes
   loadData().then((data) => {
     nodes = setSublocalizations(data)
+    console.log("after setSublocalizations")
   })
   return nodes
 }
@@ -144,6 +145,7 @@ const setSublocalizations = (data: Sublocalization[]) => {
     )
     newNodes.push(node)
   }
+  console.log("newnodes", newNodes)
 
   return newNodes
 }

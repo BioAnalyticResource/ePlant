@@ -35,6 +35,7 @@ const loadViewData = (
   getLoadFlags(data, recursive)
   loadInteractions(data)
   nodes = loadSublocalizations(nodes)
+  console.log("After sublocalizations:", nodes.map(n => ({ id: n.data.id, pie1Colour: n.data.pie1Colour })));
   return {
     nodes: nodes,
     edges: edges,

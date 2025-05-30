@@ -1,0 +1,223 @@
+import { useEffect,useMemo,useRef, useState } from "react"
+import cytoscape, { Core } from 'cytoscape'
+import { useOutletContext } from "react-router-dom"
+
+import { useTheme } from "@emotion/react"
+import GeneticElement from "@eplant/GeneticElement"
+import { useURLState } from "@eplant/state/URLStateProvider"
+import { ViewContext } from "@eplant/UI/Layout/ViewContainer/types"
+import { ViewDataError } from "@eplant/View"
+import { Close } from "@mui/icons-material"
+import { Alert, IconButton,Snackbar } from "@mui/material"
+import { useQuery } from "@tanstack/react-query"
+
+import Topbar from "./components/Topbar"
+import { addEdgeListener,addNodeListener } from "./scripts/eventHandlers"
+import setLayout from "./scripts/layout"
+import loadInteractions from "./scripts/loadInteractions"
+import cytoStyles from "./cytoStyles"
+import { Interaction, InteractionsViewData, InteractionsViewState, InteractionsViewStateSchema, ViewData } from "./types"
+
+
+export const InteractionsViewObject = () => {
+    /** Get context from parent (geneticElement, plus loading callbacks) */
+    const { geneticElement, setIsLoading, setLoadAmount } =
+    useOutletContext<ViewContext>()
+
+    /** Manage URL-synchronized state */
+    const { state, setState, initializeState } =
+    useURLState<InteractionsViewState>()
+
+    /**
+     * Load interactions data with React Query.
+     */
+    const { data, isLoading, isError, error } = useQuery<InteractionsViewData>({
+    queryKey: [`interactions-viewer-${geneticElement?.id}`],
+    queryFn: async () => {
+        return InteractionsViewLoader(geneticElement, setLoadAmount)
+    },
+    enabled: !!geneticElement,
+    })
+
+    /**
+     * Initialize Interactions view state from URL or defaults on first mount
+     */
+    useEffect(() => {
+    initializeState(InteractionsViewStateSchema)
+    }, [initializeState])
+
+    /**
+     * Let the parent know if we are currently loading data
+     */
+    useEffect(() => {
+    setIsLoading(isLoading)
+    }, [isLoading, setIsLoading])
+
+    /** Get interactionsData from the returned data */
+    const interactionsData = data?.viewData
+
+    const [cyto, setCyto] = useState<Core>(cytoscape())
+    const cyRef = useRef(null)
+    const theme = useTheme()
+    const geneId = geneticElement?.id
+    const viewData = interactionsData || {
+        nodes: [],
+        edges: [],
+        loadFlags: {
+            empty: true,
+            existsPDI: false,
+            existsPPI: false,
+            recursive: false,
+        },
+    }
+    
+    const elements: any = useMemo(() => {
+        if (!viewData?.nodes || !viewData?.edges) return [];
+        
+        return [...viewData.nodes, ...viewData.edges];
+    }, [viewData?.nodes, viewData?.edges]);
+    
+    // Snackbar state
+    const [snackbarOpen, setSnackbarOpen] = useState(true)
+
+    useEffect(() => {
+    if (!cyRef.current || elements?.length === 0) return;
+
+    const cy = cytoscape({
+        container: cyRef.current,
+        elements: elements,
+        style: cytoStyles,
+    });
+
+    setCyto(cy);
+    setLayout(cy, viewData.loadFlags);
+    addNodeListener(cy);
+    addEdgeListener(cy);
+
+    return () => {
+        cy.destroy();
+    };
+    }, [elements, viewData.loadFlags]);
+
+    /**
+     * Function to close the Snackbar */
+    const handleCloseSnackbar = () => {
+    setSnackbarOpen(false)
+    }
+
+    return (
+    <div style={{ background: 'white', overflow: 'hidden' }}>
+      {/* TOPBAR - contains legend and filter buttons */}
+      <Topbar cy={cyto} gene={geneId === undefined ? '' : geneId}></Topbar>
+      {/* CYTOSCAPE - container to render cytoscape */}
+      <div
+        ref={cyRef}
+        id='cy'
+        style={{ width: '100%', height: '80vh' }}
+      ></div>
+      {/* SNACKBAR - alerts user what to do if protein localization colours are not visible*/}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000} // Auto-hide after 5 seconds
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        sx={{
+          '& .MuiSnackbar-root': {
+            bottom: '50px',
+            right: '24px',
+          },
+        }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity='info'
+          color='success'
+          sx={(theme) => ({
+            '& .MuiAlert-icon': {
+              color: theme.palette.primary.main, // Change the icon color if needed
+              marginTop: '5px',
+            },
+            width: '300px',
+            fontSize: '0.875rem',
+            padding: '8px 16px',
+            maxHeight: '100px', // Limit height
+            overflow: 'auto', // Add scroll if content overflows
+          })}
+          action={
+            <IconButton
+              color='secondary'
+              title='Close'
+              onClick={handleCloseSnackbar} // Close the Snackbar when clicked
+            >
+              <Close />
+            </IconButton>
+          }
+        >
+          Are protein localization colours not visible? Interact with the view
+          to fix
+        </Alert>
+      </Snackbar>
+    </div>
+  )
+}
+
+/**
+ * Data loader function for Interactions View
+ * Separated from component as per new architecture
+ */
+export const InteractionsViewLoader = async (
+  geneticElement: GeneticElement | null,
+  loadEvent: (loaded: number) => void
+): Promise<InteractionsViewData> => {
+  if (!geneticElement) throw ViewDataError.UNSUPPORTED_GENE
+  
+  let data: ViewData = {
+    nodes: [],
+    edges: [],
+    loadFlags: {
+      empty: true,
+      existsPDI: false,
+      existsPPI: false,
+      recursive: false,
+    }
+  }
+  
+  if (geneticElement) {
+    let recursive: string, interactions: Array<Interaction>
+    const query = geneticElement.id.toUpperCase()
+    const url =
+      'https://bar.utoronto.ca/eplant/cgi-bin/get_interactions_dapseq.py?locus=' +
+      query
+    try {
+      // Fetch interaction data
+      loadEvent(25) // Start progress
+      const response = await fetch(url)
+      loadEvent(50) // Halfway
+      const json = await response.json()
+      const interactionsData = json[query]
+
+      if (interactionsData === undefined) {
+        recursive = 'false'
+        interactions = []
+      } else {
+        // recursive is always the last element in the array
+        recursive = interactionsData[interactionsData.length - 1]
+        // the interaction are everything else
+        interactions = interactionsData.slice(0, interactionsData.length - 1)
+      }
+      // Load interactions
+      loadEvent(75)
+      data = loadInteractions(geneticElement, interactions, recursive)
+      loadEvent(100) // Complete
+    } catch (error) {
+      console.error("Error loading interactions:", error)
+      throw ViewDataError.UNSUPPORTED_GENE
+    }
+  }
+  return {
+    viewData: data,
+  }
+}
+
+
+    
