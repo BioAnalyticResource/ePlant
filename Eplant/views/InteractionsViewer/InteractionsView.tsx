@@ -34,9 +34,10 @@ export const InteractionsViewObject = () => {
     const { data, isLoading, isError, error } = useQuery<InteractionsViewData>({
     queryKey: [`interactions-viewer-${geneticElement?.id}`],
     queryFn: async () => {
-        return InteractionsViewLoader(geneticElement, setLoadAmount)
+        return await InteractionsViewLoader(geneticElement, setLoadAmount)
     },
     enabled: !!geneticElement,
+    staleTime: 0,
     })
 
     /**
@@ -73,6 +74,7 @@ export const InteractionsViewObject = () => {
     }
     
     const elements: any = [...(viewData.nodes || []), ...(viewData.edges || [])]
+  
     
     // Snackbar state
     const [snackbarOpen, setSnackbarOpen] = useState(true)
@@ -84,11 +86,22 @@ export const InteractionsViewObject = () => {
     useEffect(() => {
       // Don't proceed if we're still loading or don't have a container
       if (isLoading || !cyContainerRef.current) return;
+
+      viewData.nodes
+  .filter((n) => n.classes?.includes('protein-back'))
+  .forEach((node) => {
+    console.log(`Node ${node.data.id}`, {
+      borderWidth: node.data?.borderWidth,
+      pie1Colour: node.data?.pie1Colour,
+      pie1Size: node.data?.pie1Size,
+    });
+  });
       
       // Clean up any existing instance
       if (cyto) {
           cyto.destroy();
       }
+      
       
       // Create a new instance with the current elements
       const cy: Core = cytoscape({
@@ -226,6 +239,7 @@ export const InteractionsViewObject = () => {
         <div
           ref={cyContainerRef}
           id='cy'
+          key={geneId}
           style={{ width: '100%', height: '80vh' }}
         ></div>
         {/* SNACKBAR - alerts user what to do if protein localization colours are not visible*/}
@@ -319,7 +333,7 @@ export const InteractionsViewLoader = async (
       }
       // Load interactions
       loadEvent(75)
-      data = loadInteractions(geneticElement, interactions, recursive)
+      data = await loadInteractions(geneticElement, interactions, recursive)
       loadEvent(100) // Complete
     } catch (error) {
       console.error("Error loading interactions:", error)

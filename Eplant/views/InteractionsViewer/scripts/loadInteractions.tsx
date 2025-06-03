@@ -23,7 +23,7 @@ let edges: RawEdge[]
  * @param {string} recursive whether the interactions are recursive
  * @returns
  */
-const loadViewData = (
+const loadViewData = async (
   gene: GeneticElement,
   data: Interaction[],
   recursive: string
@@ -34,7 +34,7 @@ const loadViewData = (
   geneticElement = gene
   getLoadFlags(data, recursive)
   loadInteractions(data)
-  nodes = loadSublocalizations(nodes)
+  nodes = await loadSublocalizations(nodes)
   console.log("After sublocalizations:", nodes.map(n => ({ id: n.data.id, pie1Colour: n.data.pie1Colour })));
   return {
     nodes: nodes,

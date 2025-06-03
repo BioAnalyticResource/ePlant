@@ -9,13 +9,18 @@ let nodes: RawNode[] = []
  * @param {RawNode[]} cynodes array of nodes with missing sublocalization data
  * @returns {RawNode[]} array of nodes with proper sublocalization data
  */
-const loadSublocalizations = (cynodes: RawNode[]): RawNode[] => {
+const loadSublocalizations = async (cynodes: RawNode[]): Promise<RawNode[]> => {
   nodes = cynodes
-  loadData().then((data) => {
-    nodes = setSublocalizations(data)
-    console.log("after setSublocalizations")
-  })
-  return nodes
+
+  try {
+    const data = await loadData()
+    const enrichedNodes = setSublocalizations(data)
+
+    return enrichedNodes
+  } catch (err) {
+    console.error("Failed to load sublocalizations", err)
+    return nodes // fallback
+  }
 }
 export default loadSublocalizations
 
