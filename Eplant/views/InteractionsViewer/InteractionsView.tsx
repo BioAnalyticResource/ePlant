@@ -1,4 +1,4 @@
-import { useEffect,useMemo,useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import cytoscape, { Core, ElementsDefinition, warnings } from 'cytoscape'
 import { useOutletContext } from "react-router-dom"
 
@@ -8,7 +8,7 @@ import { useURLState } from "@eplant/state/URLStateProvider"
 import { ViewContext } from "@eplant/UI/Layout/ViewContainer/types"
 import { ViewDataError } from "@eplant/View"
 import { Close } from "@mui/icons-material"
-import { Alert, IconButton,Snackbar } from "@mui/material"
+import { Alert, IconButton, Snackbar } from "@mui/material"
 import { useQuery } from "@tanstack/react-query"
 
 import Topbar from "./components/Topbar"
