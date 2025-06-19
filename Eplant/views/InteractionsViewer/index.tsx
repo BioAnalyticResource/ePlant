@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
 import cytoscape, { Core } from 'cytoscape'
-// @ts-expect-error addon typing error no fix, still works
+/** @ts-expect-error addon typing error no fix, still works */
 import automove from 'cytoscape-automove'
-// @ts-expect-error addon typing error no fix, still works
+/** @ts-expect-error addon typing error no fix, still works */
 import coseBilkent from 'cytoscape-cose-bilkent'
 import popper from 'cytoscape-popper'
 import tippy, {
@@ -12,27 +11,13 @@ import tippy, {
   sticky,
 } from 'tippy.js'
 
-import GeneticElement from '@eplant/GeneticElement'
-import { ViewDataError, ViewMetadata } from '@eplant/View/'
-import Close from '@mui/icons-material/Close'
+import { ViewMetadata } from '@eplant/View/'
 import YoutubeSearchedForRoundedIcon from '@mui/icons-material/YoutubeSearchedForRounded'
-import { useTheme } from '@mui/material'
-import Alert from '@mui/material/Alert'
-import IconButton from '@mui/material/IconButton'
-import Snackbar from '@mui/material/Snackbar'
 
-import Topbar from './components/Topbar'
-import { addEdgeListener, addNodeListener } from './scripts/eventHandlers'
-import setLayout from './scripts/layout'
-import loadInteractions from './scripts/loadInteractions'
-import cytoStyles from './cytoStyles'
 import { InteractionsIcon } from './icon'
 import {
-  Interaction,
-  InteractionsViewAction,
   InteractionsViewData,
   InteractionsViewState,
-  ViewData,
 } from './types'
 
 /*--------------------
@@ -59,14 +44,14 @@ declare module 'cytoscape-popper' {
  * @returns {Tooltip} Returns a tooltip instance.
  */
 function createTooltip(ref: { getBoundingClientRect: any }, content: any) {
-  // Since tooltip constructor requires DOM element/elements, create a placeholder
+  /** Since tooltip constructor requires DOM element/elements, create a placeholder */
   const dummyDomElement = document.createElement('div')
   const config: Partial<TProps> = {
     getReferenceClientRect: ref.getBoundingClientRect,
-    // touch: add this later for touch screen capabilities
-    // DOM element inside the tooltip:
+    /** touch: add this later for touch screen capabilities */
+    /** DOM element inside the tooltip: */
     content: content.content,
-    // your own preferences:
+    /** your own preferences: */
     arrow: content.arrow,
     placement: 'left',
     delay: [1000, 1000],
@@ -76,7 +61,7 @@ function createTooltip(ref: { getBoundingClientRect: any }, content: any) {
     sticky: false,
     interactive: content.interactive,
     interactiveBorder: 3,
-    appendTo: document.body, // or append dummyDomEle to document.body
+    appendTo: document.body, /** or append dummyDomEle to document.body */
     plugins: [followCursor, sticky],
   }
   const tip = tippy(dummyDomElement, config)

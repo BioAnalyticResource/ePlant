@@ -107,7 +107,7 @@ export interface Edge extends EdgeSingular {
 export type NodeCollection = Node[]
 export type EdgeCollection = Edge[]
 
-// InteractionsViewer component
+/** InteractionsViewer component */
 export interface InteractionsViewData {
   viewData: ViewData
 }
