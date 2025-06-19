@@ -49,6 +49,7 @@ export function ViewContainer<T, S, A>({ ...props }) {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [activeViewId, setActiveViewId] = useActiveViewId()
   const [geneNotFound, setGeneNotFound] = useState(false)
+  const [error, setError] = useState<ViewDataError | null>(null)
   // On app url change, make sure loaded gene and view aligns with URL
   useEffect(() => {
     const loadGene = async (geneid: string) => {
@@ -189,7 +190,7 @@ export function ViewContainer<T, S, A>({ ...props }) {
               loadingAmount={loadAmount}
               gene={gene}
               view={activeView}
-              error={null}
+              error={error}
             />
           ) : (
             <>
@@ -198,6 +199,7 @@ export function ViewContainer<T, S, A>({ ...props }) {
                   geneticElement: gene,
                   setLoadAmount: setLoadAmount,
                   setIsLoading: setLoading,
+                  setError: setError,
                 }}
               ></Outlet>
             </>

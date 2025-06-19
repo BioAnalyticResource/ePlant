@@ -26,51 +26,40 @@ export const fetchGeneData = async (
   apiUrl: string,
   loadEvent?: (loaded: number) => void
 ): Promise<TreeData> => {
-  /** Update load status if available */
+  console.log("→ Fetching gene data from:", apiUrl)
   loadEvent?.(20)
 
-  /** Check if data exists in cache and is still valid */
-  const cachedEntry = geneDataCache[apiUrl]
-  const currentTime = Date.now()
-
-  if (
-    cachedEntry &&
-    currentTime - cachedEntry.timestamp < constants.CACHE_DURATION
-  ) {
-    /** Skip fetch, we have cached data */
-    loadEvent?.(100)
-    return cachedEntry.data
-  }
-
-  /** Fetch new data if not in cache or cache has expired */
   try {
     loadEvent?.(40)
-    const response = await fetch(apiUrl)
+
+    const response = await Promise.race([
+      fetch(apiUrl),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Fetch timed out after 10s")), 10000)
+      ),
+    ])
 
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }
 
     loadEvent?.(80)
+
     const data = await response.json()
+    console.log("→ Response JSON:", data)
 
     if (data.status !== 'success') {
       throw new Error('Failed to load tree data')
     }
 
-    /** Store in cache */
-    geneDataCache[apiUrl] = {
-      data,
-      timestamp: Date.now(),
-    }
-
     loadEvent?.(100)
     return data
-  } catch (error) {
-    console.error('Error fetching gene data:', error)
-    throw error
+  } catch (err) {
+    console.error('🔥 fetchGeneData failed:', err)
+    throw err // This MUST be rethrown to trigger isError
   }
 }
+
 
 /** Static declaration of genome label colors */
 export const genomeColors: { [key: string]: string } = {

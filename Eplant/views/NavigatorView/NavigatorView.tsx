@@ -59,8 +59,8 @@ import {
  */
 export const NavigatorViewObject = () => {
   /** Get context from parent (geneticElement, plus loading callbacks) */
-  const { geneticElement, setIsLoading, setLoadAmount } =
-    useOutletContext<ViewContext>()
+  const { geneticElement, setIsLoading, setLoadAmount, setError } =
+     useOutletContext<ViewContext>()
 
   /** Manage URL-synchronized state */
   const { state, setState, initializeState } =
@@ -91,10 +91,16 @@ export const NavigatorViewObject = () => {
   const { data, isLoading, isError, error } = useQuery<NavigatorViewerData>({
     queryKey: [`navigator-view-${geneticElement?.id}`],
     queryFn: async () => {
-      return navigatorViewerLoader(geneticElement, setLoadAmount)
+      try {
+        return await navigatorViewerLoader(geneticElement, setLoadAmount)
+      } catch (err) {
+        setError(ViewDataError.UNSUPPORTED_GENE)
+        console.error('Error loading navigator data:', err)
+        throw err
+      }
     },
-    enabled: !!geneticElement,
   })
+  
 
   /**
    * Initialize Navigator view state from URL or defaults on first mount
@@ -107,8 +113,9 @@ export const NavigatorViewObject = () => {
    * Let the parent know if we are currently loading data
    */
   useEffect(() => {
+    console.log('setIsLoading triggered:', isLoading)
     setIsLoading(isLoading)
-  }, [isLoading, setIsLoading])
+  }, [isLoading, setIsLoading, isError])
 
   /** Get navigatorData from the returned data */
   const navigatorData = data?.treeData
@@ -884,20 +891,7 @@ export const NavigatorViewObject = () => {
     )
   }
 
-  /** If there is an error, display something more user-friendly */
-  if (isError) {
-    return (
-      <Typography color='error'>
-        Error loading Navigator view:{' '}
-        {error instanceof Error ? error.message : 'Unknown error'}
-      </Typography>
-    )
-  }
-
-  /** The spinner should disappear once isLoading is false and our data + state are ready */
-  if (!navigatorData || !state) {
-    return null
-  }
+  if (isLoading || isError || !data || !state) return <></>
 
   /** Render the complete tree visualization */
   return (
@@ -943,50 +937,6 @@ export const NavigatorViewObject = () => {
           })}
           ref={containerRef}
         >
-          {/* Conditional loading animation */}
-          {isLoading && (
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'inherit',
-                zIndex: 10,
-              }}
-            >
-              <LoadingImage
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '300px',
-                }}
-              />
-            </div>
-          )}
-
-          {/* Error message when no data is available */}
-          {!isLoading &&
-            (!navigator?.links() || navigator.links().length === 0) &&
-            (!navigator?.descendants() ||
-              navigator.descendants().length === 0) && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                  textAlign: 'center',
-                  color: 'red',
-                  fontSize: '1.2rem',
-                }}
-              >
-                <p>No data available for the selected gene.</p>
-              </div>
-            )}
 
           {/* Use PanZoom component for handling zoom and pan with URL state synchronization */}
           {navigator && (
@@ -999,6 +949,7 @@ export const NavigatorViewObject = () => {
                 height: '100%',
                 zIndex: 0,
               })}
+              key={geneticElement?.id}
               transform={state.transform}
               onTransformChange={(transform) => {
                 setState({ ...state, transform: transform })
@@ -1012,6 +963,7 @@ export const NavigatorViewObject = () => {
     </Box>
   )
 }
+
 
 /**
  * Data loader function for Navigator view.
@@ -1042,17 +994,12 @@ export const navigatorViewerLoader = async (
       )}&dataset=Developmental&checkedspecies=arabidopsis_poplar_medicago_soybean_rice_barley_maize_potato_tomato_grape`
     : `${baseUrl}?primaryGene=AT3G24650&species=Arabidopsis&dataset=Developmental&checkedspecies=arabidopsis_poplar_medicago_soybean_rice_barley_maize_potato_tomato_grape`
 
-  try {
-    /** Fetch and process the data */
-    const treeData = await fetchGeneData(apiUrl, loadEvent)
+  /** Fetch and process the data */
+  const treeData = await fetchGeneData(apiUrl, loadEvent)
 
-    /** Return the actual tree data */
-    return {
-      treeData,
-      url: apiUrl,
-    }
-  } catch (error) {
-    console.error('Error loading navigator data:', error)
-    throw error
+  /** Return the actual tree data */
+  return {
+    treeData,
+    url: apiUrl,
   }
 }
