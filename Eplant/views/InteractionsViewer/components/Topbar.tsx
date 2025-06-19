@@ -337,7 +337,7 @@ const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
               }
               label='Hide ALL experimentally  determined Protein-DNA interactions'
             />
-            {/* FILTER: Predicted Protien-DNA Interactions*/}
+            {/* FILTER: Predicted Protein-DNA Interactions*/}
             <FormControlLabel
               control={
                 <Checkbox
@@ -345,7 +345,7 @@ const Topbar: FC<TopbarProps> = ({ cy, gene }) => {
                   onChange={() => setPpdiSelected(!ppdiSelected)}
                 />
               }
-              label='Hide ALL predicted Protien-DNA interactions'
+              label='Hide ALL predicted Protein-DNA interactions'
             />
             <Box sx={{ display: 'flex', flexDirection: 'row', ml: 3 }}>
               {/* FILTER (Checkbox) - PPDI Confidence*/}

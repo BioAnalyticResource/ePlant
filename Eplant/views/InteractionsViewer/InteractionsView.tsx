@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react"
 import cytoscape, { Core } from 'cytoscape'
 import { useOutletContext } from "react-router-dom"
 
-import { useTheme } from "@emotion/react"
 import GeneticElement from "@eplant/GeneticElement"
 import { useURLState } from "@eplant/state/URLStateProvider"
 import { ViewContext } from "@eplant/UI/Layout/ViewContainer/types"

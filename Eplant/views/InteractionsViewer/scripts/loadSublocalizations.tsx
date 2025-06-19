@@ -150,7 +150,6 @@ const setSublocalizations = (data: Sublocalization[]) => {
     )
     newNodes.push(node)
   }
-  console.log("newnodes", newNodes)
 
   return newNodes
 }
