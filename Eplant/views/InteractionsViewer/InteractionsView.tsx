@@ -242,48 +242,6 @@ export const InteractionsViewObject = () => {
           key={geneId}
           style={{ width: '100%', height: '80vh' }}
         ></div>
-        {/* SNACKBAR - alerts user what to do if protein localization colours are not visible*/}
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={5000} // Auto-hide after 5 seconds
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          sx={{
-            '& .MuiSnackbar-root': {
-              bottom: '50px',
-              right: '24px',
-            },
-          }}
-        >
-          <Alert
-            onClose={handleCloseSnackbar}
-            severity='info'
-            color='success'
-            sx={(theme) => ({
-              '& .MuiAlert-icon': {
-                color: theme.palette.primary.main, // Change the icon color if needed
-                marginTop: '5px',
-              },
-              width: '300px',
-              fontSize: '0.875rem',
-              padding: '8px 16px',
-              maxHeight: '100px', // Limit height
-              overflow: 'auto', // Add scroll if content overflows
-            })}
-            action={
-              <IconButton
-                color='secondary'
-                title='Close'
-                onClick={handleCloseSnackbar} // Close the Snackbar when clicked
-              >
-                <Close />
-              </IconButton>
-            }
-          >
-            Are protein localization colours not visible? Interact with the view
-            to fix
-          </Alert>
-        </Snackbar>
       </div>
     )
 }
