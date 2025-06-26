@@ -7,6 +7,7 @@ import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
 import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
+import InteractionsViewer from './views/InteractionsViewer'
 import NavigatorView from './views/NavigatorViewer'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
@@ -36,6 +37,7 @@ const userViews = [
   ExperimentEFP,
   WorldEFP,
   ChromosomeViewer,
+  InteractionsViewer,
   NavigatorView,
 ]
 
