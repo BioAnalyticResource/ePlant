@@ -12,7 +12,7 @@ import {
 import Modal from '@eplant/UI/Modal'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
 import { ViewDataError } from '@eplant/View'
-import GeneInfoView from '@eplant/views/GeneInfoView'
+import GeneInfoViewMetadata from '@eplant/views/GeneInfoView'
 import {
   Box,
   Button,
@@ -34,12 +34,8 @@ import { TopBar } from './Topbar'
  * @returns
  */
 export function ViewContainer<T, S, A>({ ...props }) {
-  const [loading, setLoading] = useState(false)
-  const [loadAmount, setLoadAmount] = useState(0)
   const [printing, setPrinting] = usePrinting()
-
   const [viewingCitations, setViewingCitations] = useState(false)
-
   const { views } = useConfig()
   const navigate = useNavigate()
   const location = useLocation()
@@ -49,7 +45,7 @@ export function ViewContainer<T, S, A>({ ...props }) {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [activeViewId, setActiveViewId] = useActiveViewId()
   const [geneNotFound, setGeneNotFound] = useState(false)
-  const [error, setError] = useState<ViewDataError | null>(null)
+
   // On app url change, make sure loaded gene and view aligns with URL
   useEffect(() => {
     const loadGene = async (geneid: string) => {
@@ -84,7 +80,7 @@ export function ViewContainer<T, S, A>({ ...props }) {
     // Set activeview
     const urlView =
       views.find((view) => view.id === location.pathname.split('/')[1]) ??
-      GeneInfoView
+      GeneInfoViewMetadata
 
     setActiveViewId(urlView.id)
   }, [])
@@ -121,7 +117,7 @@ export function ViewContainer<T, S, A>({ ...props }) {
 
   // Get view and gene objects once everything resolves
   const activeView =
-    views.find((view) => view.id === activeViewId) ?? GeneInfoView
+    views.find((view) => view.id === activeViewId) ?? GeneInfoViewMetadata
   const gene = genes.find((gene) => gene.id === activeGeneId) ?? null
   return (
     <Box {...props} display='flex' flexDirection='column'>
@@ -145,7 +141,7 @@ export function ViewContainer<T, S, A>({ ...props }) {
 
       <TopBar
         activeView={activeView}
-        loading={loading}
+        loading={false}
         setViewingCitations={setViewingCitations}
       />
       <Box
@@ -176,34 +172,11 @@ export function ViewContainer<T, S, A>({ ...props }) {
         })}
       >
         <ErrorBoundary>
-          {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-
-          {!gene && activeViewId !== 'get-started' ? (
-            <LoadingPage
-              loadingAmount={loadAmount}
-              gene={gene}
-              view={activeView}
-              error={ViewDataError.UNSUPPORTED_GENE}
-            />
-          ) : loading && loadAmount < 100 ? (
-            <LoadingPage
-              loadingAmount={loadAmount}
-              gene={gene}
-              view={activeView}
-              error={error}
-            />
-          ) : (
-            <>
               <Outlet
                 context={{
                   geneticElement: gene,
-                  setLoadAmount: setLoadAmount,
-                  setIsLoading: setLoading,
-                  setError: setError,
                 }}
               ></Outlet>
-            </>
-          )}
         </ErrorBoundary>
       </Box>
     </Box>

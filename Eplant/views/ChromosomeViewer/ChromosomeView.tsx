@@ -4,7 +4,9 @@ import { Space } from 'react-zoomable-ui'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { useURLState } from '@eplant/state/URLStateProvider'
+import LoadingPage from '@eplant/UI/Layout/ViewContainer/LoadingPage'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
+import { ViewDataError } from '@eplant/View'
 import { Box, CircularProgress, Snackbar, SnackbarContent } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 
@@ -18,12 +20,14 @@ import {
   Transform,
 } from './types'
 import ZoomControls from './ZoomControls'
+import { ChromosomeViewerObject } from '.'
 
 export const ChromosomeView = () => {
-  const { geneticElement, setIsLoading, setLoadAmount } =
+  const { geneticElement } =
     useOutletContext<ViewContext>()
   const { state, setState, initializeState } =
     useURLState<ChromosomeViewerState>()
+    const [loadAmount, setLoadAmount] = useState(0)
 
   const spaceRef = useRef<Space | null>(null)
   const [messageOpen, setMessageOpen] = useState(true)
@@ -42,11 +46,10 @@ export const ChromosomeView = () => {
     initializeState(ChromosomeViewerStateScheme)
   }, [])
 
-  useEffect(() => {
-    setIsLoading(isLoading)
-  }, [isLoading, setIsLoading])
-
-  if (isLoading || isError || !data || !state) return <></>
+  if (isLoading && loadAmount < 100 || isError) {
+    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={ChromosomeViewerObject} error={ViewDataError.FAILED_TO_LOAD}></LoadingPage>
+  }else if (!data || !state) return <></>
+  
   return (
     <Box>
       {/* ZOOM CONTROLS */}

@@ -9,12 +9,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ErrorBoundary from './util/ErrorBoundary'
 import { CellEFPView } from './views/CellEFP/CellEFP'
 import { ChromosomeView } from './views/ChromosomeViewer/ChromosomeView'
-import { ExperimentEFP } from './views/ExperimentEFP/ExperimentEFP'
+import { ExperimentEFPView } from './views/ExperimentEFP/ExperimentEFP'
 import { GeneInfoView } from './views/GeneInfoView/GeneInfo'
 import GetStartedView from './views/GetStartedView/GetStartedView'
 import { NavigatorViewObject } from './views/NavigatorView/NavigatorView'
-import { PlantEFP } from './views/PlantEFP/PlantEFP'
-import { PublicationsView } from './views/PublicationViewer/PublicationsView'
+import { PlantEFPView } from './views/PlantEFP/PlantEFP'
+import { PublicationsViewer } from './views/PublicationViewer/PublicationsView'
 import { Config, defaultConfig } from './config'
 import Eplant from './Eplant'
 
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'publications/:geneid?',
-        element: <PublicationsView></PublicationsView>,
+        element: <PublicationsViewer></PublicationsViewer>,
       },
       {
         path: 'chromosome/:geneid?',
@@ -41,11 +41,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'plant-efp/:geneid?',
-        element: <PlantEFP></PlantEFP>,
+        element: <PlantEFPView></PlantEFPView>,
       },
       {
         path: 'tissue/:geneid?',
-        element: <ExperimentEFP></ExperimentEFP>,
+        element: <ExperimentEFPView></ExperimentEFPView>,
       },
       {
         path: 'gene-info/:geneid?',

@@ -1,10 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useOutletContext } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { useURLState } from '@eplant/state/URLStateProvider'
+import LoadingPage from '@eplant/UI/Layout/ViewContainer/LoadingPage'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
+import { ViewDataError } from '@eplant/View'
 import { Tab, Tabs, Typography, useTheme } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 
@@ -18,12 +20,14 @@ import {
   PublicationViewerData,
   TabValues,
 } from './types'
+import PublicationView from '.'
 
-export const PublicationsView = () => {
-  const { geneticElement, setIsLoading, setLoadAmount } =
+export const PublicationsViewer = () => {
+  const { geneticElement } =
     useOutletContext<ViewContext>()
   const { state, setState, initializeState } =
     useURLState<PublicationsViewerState>()
+  const [loadAmount, setLoadAmount] = useState(0)
   const { data, isLoading, isError, error } = useQuery<PublicationViewerData>({
     queryKey: [`publications-${geneticElement?.id}`],
     queryFn: async () => {
@@ -35,11 +39,10 @@ export const PublicationsView = () => {
     initializeState(PublicationsViewStateSchema)
   }, [])
 
-  useEffect(() => {
-    setIsLoading(isLoading)
-  }, [isLoading, setIsLoading])
+  if (isLoading && loadAmount < 100 || isError) {
+    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={PublicationView} error={ViewDataError.FAILED_TO_LOAD}></LoadingPage>
+  }else if (!data || !state) return <></>
 
-  if (isLoading || isError || !data || !state) return <></>
   return (
     <div>
       <Typography variant='h6'>

@@ -21,7 +21,7 @@ import {
   useSetActiveViewId,
 } from '@eplant/state'
 import { useURLState } from '@eplant/state/URLStateProvider'
-import { LoadingImage } from '@eplant/UI/Layout/ViewContainer/LoadingPage'
+import LoadingPage, { LoadingImage } from '@eplant/UI/Layout/ViewContainer/LoadingPage'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import PanZoom from '@eplant/util/PanZoom'
 import { ViewDataError } from '@eplant/View'
@@ -49,6 +49,7 @@ import {
   NavigatorViewerState,
   NavigatorViewStateSchema,
 } from './types'
+import NavigatorView from '.'
 
 /**
  * Main component for rendering the Navigator View.
@@ -59,8 +60,9 @@ import {
  */
 export const NavigatorViewObject = () => {
   /** Get context from parent (geneticElement, plus loading callbacks) */
-  const { geneticElement, setIsLoading, setLoadAmount, setError } =
+  const { geneticElement } =
      useOutletContext<ViewContext>()
+  const [loadAmount, setLoadAmount] = useState(0)
 
   /** Manage URL-synchronized state */
   const { state, setState, initializeState } =
@@ -91,14 +93,9 @@ export const NavigatorViewObject = () => {
   const { data, isLoading, isError, error } = useQuery<NavigatorViewerData>({
     queryKey: [`navigator-view-${geneticElement?.id}`],
     queryFn: async () => {
-      try {
-        return await navigatorViewerLoader(geneticElement, setLoadAmount)
-      } catch (err) {
-        setError(ViewDataError.UNSUPPORTED_GENE)
-        console.error('Error loading navigator data:', err)
-        throw err
-      }
+      return navigatorViewerLoader(geneticElement, setLoadAmount)
     },
+    retry: false, /** Limit the delay when trying to load invalid data */
   })
   
 
@@ -108,14 +105,6 @@ export const NavigatorViewObject = () => {
   useEffect(() => {
     initializeState(NavigatorViewStateSchema)
   }, [initializeState])
-
-  /**
-   * Let the parent know if we are currently loading data
-   */
-  useEffect(() => {
-    console.log('setIsLoading triggered:', isLoading)
-    setIsLoading(isLoading)
-  }, [isLoading, setIsLoading, isError])
 
   /** Get navigatorData from the returned data */
   const navigatorData = data?.treeData
@@ -891,7 +880,11 @@ export const NavigatorViewObject = () => {
     )
   }
 
-  if (isLoading || isError || !data || !state) return <></>
+  if (isError) {
+    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={NavigatorView} error={ViewDataError.UNSUPPORTED_GENE}></LoadingPage>
+  }else if (isLoading && loadAmount < 100) {
+    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={NavigatorView} error={null}></LoadingPage>
+  }else if (!data || !state) return <></>
 
   /** Render the complete tree visualization */
   return (
