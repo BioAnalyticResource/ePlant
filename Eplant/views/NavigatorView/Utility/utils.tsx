@@ -26,7 +26,7 @@ export const fetchGeneData = async (
   apiUrl: string,
   loadEvent?: (loaded: number) => void
 ): Promise<TreeData> => {
-  console.log("→ Fetching gene data from:", apiUrl)
+  console.log('→ Fetching gene data from:', apiUrl)
   loadEvent?.(20)
 
   try {
@@ -35,7 +35,7 @@ export const fetchGeneData = async (
     const response = await Promise.race([
       fetch(apiUrl),
       new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Fetch timed out after 10s")), 10000)
+        setTimeout(() => reject(new Error('Fetch timed out after 10s')), 10000)
       ),
     ])
 
@@ -46,7 +46,7 @@ export const fetchGeneData = async (
     loadEvent?.(80)
 
     const data = await response.json()
-    console.log("→ Response JSON:", data)
+    console.log('→ Response JSON:', data)
 
     if (data.status !== 'success') {
       throw new Error('Failed to load tree data')
@@ -59,7 +59,6 @@ export const fetchGeneData = async (
     throw err // This MUST be rethrown to trigger isError
   }
 }
-
 
 /** Static declaration of genome label colors */
 export const genomeColors: { [key: string]: string } = {

@@ -21,7 +21,9 @@ import {
   useSetActiveViewId,
 } from '@eplant/state'
 import { useURLState } from '@eplant/state/URLStateProvider'
-import LoadingPage, { LoadingImage } from '@eplant/UI/Layout/ViewContainer/LoadingPage'
+import LoadingPage, {
+  LoadingImage,
+} from '@eplant/UI/Layout/ViewContainer/LoadingPage'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import PanZoom from '@eplant/util/PanZoom'
 import { ViewDataError } from '@eplant/View'
@@ -60,8 +62,7 @@ import NavigatorView from '.'
  */
 export const NavigatorViewObject = () => {
   /** Get context from parent (geneticElement, plus loading callbacks) */
-  const { geneticElement } =
-     useOutletContext<ViewContext>()
+  const { geneticElement } = useOutletContext<ViewContext>()
   const [loadAmount, setLoadAmount] = useState(0)
 
   /** Manage URL-synchronized state */
@@ -95,9 +96,8 @@ export const NavigatorViewObject = () => {
     queryFn: async () => {
       return navigatorViewerLoader(geneticElement, setLoadAmount)
     },
-    retry: false, /** Limit the delay when trying to load invalid data */
+    retry: false /** Limit the delay when trying to load invalid data */,
   })
-  
 
   /**
    * Initialize Navigator view state from URL or defaults on first mount
@@ -881,10 +881,24 @@ export const NavigatorViewObject = () => {
   }
 
   if (isError) {
-    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={NavigatorView} error={ViewDataError.UNSUPPORTED_GENE}></LoadingPage>
-  }else if (isLoading && loadAmount < 100) {
-    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={NavigatorView} error={null}></LoadingPage>
-  }else if (!data || !state) return <></>
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={NavigatorView}
+        error={ViewDataError.UNSUPPORTED_GENE}
+      ></LoadingPage>
+    )
+  } else if (isLoading && loadAmount < 100) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={NavigatorView}
+        error={null}
+      ></LoadingPage>
+    )
+  } else if (!data || !state) return <></>
 
   /** Render the complete tree visualization */
   return (
@@ -930,7 +944,6 @@ export const NavigatorViewObject = () => {
           })}
           ref={containerRef}
         >
-
           {/* Use PanZoom component for handling zoom and pan with URL state synchronization */}
           {navigator && (
             <PanZoom
@@ -956,7 +969,6 @@ export const NavigatorViewObject = () => {
     </Box>
   )
 }
-
 
 /**
  * Data loader function for Navigator view.

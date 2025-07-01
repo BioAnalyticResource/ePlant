@@ -21,8 +21,7 @@ import {
 import CellEFP from '.'
 
 export const CellEFPView = () => {
-  const { geneticElement } =
-    useOutletContext<ViewContext>()
+  const { geneticElement } = useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<CellEFPViewerState>()
   const [loadAmount, setLoadAmount] = useState(0)
   const { data, isLoading, isError, error } = useQuery<CellEFPViewerData>({
@@ -36,7 +35,6 @@ export const CellEFPView = () => {
     initializeState(CellEFPStateSchema)
   }, [])
 
-
   const efp = useMemo(() => {
     const Component = CellEFPDataObject.component
     if (data) {
@@ -46,9 +44,16 @@ export const CellEFPView = () => {
     }
   }, [geneticElement?.id, data])
 
- if (isLoading && loadAmount < 100 || isError) {
-    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={CellEFP} error={ViewDataError.FAILED_TO_LOAD}></LoadingPage>
-  }else if (!data || !state) return <></>
+  if ((isLoading && loadAmount < 100) || isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={CellEFP}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (!data || !state) return <></>
 
   return (
     <Box

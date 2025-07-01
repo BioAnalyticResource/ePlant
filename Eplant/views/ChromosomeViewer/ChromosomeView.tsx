@@ -23,11 +23,10 @@ import ZoomControls from './ZoomControls'
 import { ChromosomeViewerObject } from '.'
 
 export const ChromosomeView = () => {
-  const { geneticElement } =
-    useOutletContext<ViewContext>()
+  const { geneticElement } = useOutletContext<ViewContext>()
   const { state, setState, initializeState } =
     useURLState<ChromosomeViewerState>()
-    const [loadAmount, setLoadAmount] = useState(0)
+  const [loadAmount, setLoadAmount] = useState(0)
 
   const spaceRef = useRef<Space | null>(null)
   const [messageOpen, setMessageOpen] = useState(true)
@@ -46,10 +45,17 @@ export const ChromosomeView = () => {
     initializeState(ChromosomeViewerStateScheme)
   }, [])
 
-  if (isLoading && loadAmount < 100 || isError) {
-    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={ChromosomeViewerObject} error={ViewDataError.FAILED_TO_LOAD}></LoadingPage>
-  }else if (!data || !state) return <></>
-  
+  if ((isLoading && loadAmount < 100) || isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={ChromosomeViewerObject}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (!data || !state) return <></>
+
   return (
     <Box>
       {/* ZOOM CONTROLS */}

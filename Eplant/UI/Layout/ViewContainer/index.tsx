@@ -172,11 +172,11 @@ export function ViewContainer<T, S, A>({ ...props }) {
         })}
       >
         <ErrorBoundary>
-              <Outlet
-                context={{
-                  geneticElement: gene,
-                }}
-              ></Outlet>
+          <Outlet
+            context={{
+              geneticElement: gene,
+            }}
+          ></Outlet>
         </ErrorBoundary>
       </Box>
     </Box>

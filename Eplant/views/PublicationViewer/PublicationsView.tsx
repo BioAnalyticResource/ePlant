@@ -23,8 +23,7 @@ import {
 import PublicationView from '.'
 
 export const PublicationsViewer = () => {
-  const { geneticElement } =
-    useOutletContext<ViewContext>()
+  const { geneticElement } = useOutletContext<ViewContext>()
   const { state, setState, initializeState } =
     useURLState<PublicationsViewerState>()
   const [loadAmount, setLoadAmount] = useState(0)
@@ -39,9 +38,16 @@ export const PublicationsViewer = () => {
     initializeState(PublicationsViewStateSchema)
   }, [])
 
-  if (isLoading && loadAmount < 100 || isError) {
-    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={PublicationView} error={ViewDataError.FAILED_TO_LOAD}></LoadingPage>
-  }else if (!data || !state) return <></>
+  if ((isLoading && loadAmount < 100) || isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={PublicationView}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (!data || !state) return <></>
 
   return (
     <div>

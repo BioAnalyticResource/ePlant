@@ -1,22 +1,25 @@
 # ePlant
+
 ePlant is a gene-centric visualization tool for plant genomes.
 
 ## Using ePlant
+
 Choose a gene of interest (GOI) using the search bar on the left. Currently we only support the _Arabidopsis thaliania_ genome.
 
 Use the navigation dropdown to select different views. Each view displays information from the organism level to the molecular leve. Nanometer scale all the way to the kilometer scale.
 
 Available views:
 
-  ℹ️ Gene information. This view provides a brief description, location, gene model, DNA sequence, and protein sequence
+ℹ️ Gene information. This view provides a brief description, location, gene model, DNA sequence, and protein sequence
 
-  📑 Publications. This view displays publications and Gene RIFs related to your gene of interest.
+📑 Publications. This view displays publications and Gene RIFs related to your gene of interest.
 
-  🌱 Plant eFP. This view displays expression levels for your gene of interest at the organism level.
+🌱 Plant eFP. This view displays expression levels for your gene of interest at the organism level.
 
-  🔬 Tissue & Experiment eFP: This view displays expression levels for your gene of interest after experimental treatment.
+🔬 Tissue & Experiment eFP: This view displays expression levels for your gene of interest after experimental treatment.
 
 ## How to contribute
+
 Read the CONTRIBUTING.md file. Read the [onboarding blueprint](https://github.com/BioAnalyticResource/ePlant/issues/29).
 
 If you'd like to contribute, [pick an issue](https://github.com/BioAnalyticResource/ePlant/issues). We use a forking workflow. For an in-depth look at what that means, [read this article](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow).

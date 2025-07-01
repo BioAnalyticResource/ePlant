@@ -26,9 +26,8 @@ import GeneInfoViewMetadata from '.'
 
 export const GeneInfoView = () => {
   const [snackBarOpen, setSnackBarOpen] = useState(false)
-  const { geneticElement } =
-    useOutletContext<ViewContext>()
-    const [loadAmount, setLoadAmount] = useState(0)
+  const { geneticElement } = useOutletContext<ViewContext>()
+  const [loadAmount, setLoadAmount] = useState(0)
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
@@ -43,10 +42,17 @@ export const GeneInfoView = () => {
     navigator.clipboard.writeText(text)
   }
 
-  if (isLoading && loadAmount < 100 || isError) {
-    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={GeneInfoViewMetadata} error={ViewDataError.FAILED_TO_LOAD}></LoadingPage>
-  }else if (!data) return <></>
-  
+  if ((isLoading && loadAmount < 100) || isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={GeneInfoViewMetadata}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (!data) return <></>
+
   return (
     <Stack direction='row' gap={'20px'}>
       <ViewSwitcher geneticElement={geneticElement} />

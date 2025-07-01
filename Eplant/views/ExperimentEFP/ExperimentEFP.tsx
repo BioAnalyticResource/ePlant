@@ -19,8 +19,7 @@ import { experimentEFPs, experimentEFPViews } from './efps'
 import ExperimentEFP from '.'
 
 export const ExperimentEFPView = () => {
-  const { geneticElement } =
-    useOutletContext<ViewContext>()
+  const { geneticElement } = useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<EFPViewerState>()
   const [loadAmount, setLoadAmount] = useState(0)
   const { data, isLoading, isError, error } = useQuery<EFPViewerData>({
@@ -40,9 +39,16 @@ export const ExperimentEFPView = () => {
     initializeState(EFPViewerStateSchema)
   }, [])
 
- if (isLoading && loadAmount < 100 || isError) {
-    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={ExperimentEFP} error={ViewDataError.FAILED_TO_LOAD}></LoadingPage>
-  }else if (!data || !state) return <></>
+  if ((isLoading && loadAmount < 100) || isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={ExperimentEFP}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (!data || !state) return <></>
 
   return (
     <EFPViewer

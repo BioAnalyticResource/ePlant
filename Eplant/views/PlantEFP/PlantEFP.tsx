@@ -18,8 +18,7 @@ import { plantEFPs, plantEFPViews } from './efps'
 import PlantEFP from '.'
 
 export const PlantEFPView = () => {
-  const { geneticElement } =
-    useOutletContext<ViewContext>()
+  const { geneticElement } = useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<EFPViewerState>()
   const [loadAmount, setLoadAmount] = useState(0)
 
@@ -40,9 +39,16 @@ export const PlantEFPView = () => {
     initializeState(EFPViewerStateSchema)
   }, [])
 
-  if (isLoading && loadAmount < 100 || isError) {
-    return <LoadingPage loadingAmount={loadAmount} gene={geneticElement} view={PlantEFP} error={ViewDataError.FAILED_TO_LOAD}></LoadingPage>
-  }else if (!data || !state) return <></>
+  if ((isLoading && loadAmount < 100) || isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={PlantEFP}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (!data || !state) return <></>
 
   return (
     <EFPViewer
@@ -55,4 +61,3 @@ export const PlantEFPView = () => {
   )
 }
 export { PlantEFP }
-
