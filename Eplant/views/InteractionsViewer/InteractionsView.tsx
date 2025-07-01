@@ -4,6 +4,7 @@ import { useOutletContext } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { useURLState } from '@eplant/state/URLStateProvider'
+import LoadingPage from '@eplant/UI/Layout/ViewContainer/LoadingPage'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import { ViewDataError } from '@eplant/View'
 import { useQuery } from '@tanstack/react-query'
@@ -20,11 +21,14 @@ import {
   InteractionsViewStateSchema,
   ViewData,
 } from './types'
+import InteractionsView from '.'
 
 export const InteractionsViewObject = () => {
   /** Get context from parent (geneticElement, plus loading callbacks) */
-  const { geneticElement, setIsLoading, setLoadAmount } =
+  const { geneticElement} =
     useOutletContext<ViewContext>()
+  
+  const [loadAmount, setLoadAmount] = useState(0)
 
   /** Manage URL-synchronized state */
   const { state, setState, initializeState } =
@@ -36,19 +40,14 @@ export const InteractionsViewObject = () => {
     queryFn: async () => {
       return await InteractionsViewLoader(geneticElement, setLoadAmount)
     },
-    enabled: !!geneticElement,
     staleTime: 0,
+    retry: false
   })
 
   /** Initialize Interactions view state from URL or defaults on first mount */
   useEffect(() => {
     initializeState(InteractionsViewStateSchema)
   }, [initializeState])
-
-  /** Let the parent know if we are currently loading data */
-  useEffect(() => {
-    setIsLoading(isLoading)
-  }, [isLoading, setIsLoading])
 
   /** Get interactionsData from the returned data */
   const interactionsData = data?.viewData
@@ -207,6 +206,26 @@ export const InteractionsViewObject = () => {
     state?.transform?.offset.x,
     state?.transform?.offset.y,
   ])
+
+  if (isError) {
+  return (
+    <LoadingPage
+      loadingAmount={loadAmount}
+      gene={geneticElement}
+      view={InteractionsView}
+      error={ViewDataError.FAILED_TO_LOAD}
+    ></LoadingPage>
+  )
+} else if (isLoading && loadAmount < 100) {
+  return (
+    <LoadingPage
+      loadingAmount={loadAmount}
+      gene={geneticElement}
+      view={InteractionsView}
+      error={null}
+    ></LoadingPage>
+  )
+} else if (!data || !state) return <></>
 
   return (
     <div style={{ background: 'white', overflow: 'hidden' }}>

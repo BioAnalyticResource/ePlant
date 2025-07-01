@@ -12,12 +12,12 @@ export const GeneSequence = ({
   geneticElement,
 }: {
   activeData: GeneInfoViewData
-  geneticElement: GeneticElement
+  geneticElement: GeneticElement | null
 }) => {
   const theme = useTheme()
   const spans = []
   const feature = activeData.features.find(
-    (sf) => sf.uniqueID == geneticElement.id + '.1'
+    (sf) => sf.uniqueID == geneticElement?.id + '.1'
   )
   // Can't render anything if there is no feature
   if (!feature) return <></>

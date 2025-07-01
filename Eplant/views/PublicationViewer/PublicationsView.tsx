@@ -32,22 +32,32 @@ export const PublicationsViewer = () => {
     queryFn: async () => {
       return publicationsLoader(geneticElement, setLoadAmount)
     },
+    retry: false,
   })
   const theme = useTheme()
   useEffect(() => {
     initializeState(PublicationsViewStateSchema)
   }, [])
 
-  if ((isLoading && loadAmount < 100) || isError) {
-    return (
-      <LoadingPage
-        loadingAmount={loadAmount}
-        gene={geneticElement}
-        view={PublicationView}
-        error={ViewDataError.FAILED_TO_LOAD}
-      ></LoadingPage>
-    )
-  } else if (!data || !state) return <></>
+  if (isError) {
+      return (
+        <LoadingPage
+          loadingAmount={loadAmount}
+          gene={geneticElement}
+          view={PublicationView}
+          error={ViewDataError.FAILED_TO_LOAD}
+        ></LoadingPage>
+      )
+    } else if (isLoading && loadAmount < 100) {
+      return (
+        <LoadingPage
+          loadingAmount={loadAmount}
+          gene={geneticElement}
+          view={PublicationView}
+          error={null}
+        ></LoadingPage>
+      )
+    } else if (!data || !state) return <></>
 
   return (
     <div>

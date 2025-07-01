@@ -3,7 +3,7 @@ import GeneticElement from '@eplant/GeneticElement'
 import { GeneInfoViewData } from './types'
 
 export const geneInfoLoader = async (
-  geneticElement: GeneticElement,
+  geneticElement: GeneticElement | null,
   loadEvent: (loaded: number) => void
 ) => {
   if (!geneticElement)

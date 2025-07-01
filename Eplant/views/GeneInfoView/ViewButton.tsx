@@ -7,7 +7,7 @@ export const ViewButton = styled(function ViewButton({
   geneticElement,
   view,
   ...props
-}: { geneticElement: GeneticElement; view: ViewMetadata } & ButtonProps) {
+}: { geneticElement: GeneticElement | null; view: ViewMetadata } & ButtonProps) {
   return (
     <Button {...props}>
       <Box

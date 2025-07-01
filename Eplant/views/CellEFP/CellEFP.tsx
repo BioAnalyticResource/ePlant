@@ -29,6 +29,7 @@ export const CellEFPView = () => {
     queryFn: async () => {
       return cellEFPLoader(geneticElement, setLoadAmount)
     },
+    retry: false,
   })
   useEffect(() => {
     // On mount, initialize state
@@ -44,16 +45,25 @@ export const CellEFPView = () => {
     }
   }, [geneticElement?.id, data])
 
-  if ((isLoading && loadAmount < 100) || isError) {
-    return (
-      <LoadingPage
-        loadingAmount={loadAmount}
-        gene={geneticElement}
-        view={CellEFP}
-        error={ViewDataError.FAILED_TO_LOAD}
-      ></LoadingPage>
-    )
-  } else if (!data || !state) return <></>
+  if (isError) {
+      return (
+        <LoadingPage
+          loadingAmount={loadAmount}
+          gene={geneticElement}
+          view={CellEFP}
+          error={ViewDataError.FAILED_TO_LOAD}
+        ></LoadingPage>
+      )
+    } else if (isLoading && loadAmount < 100) {
+      return (
+        <LoadingPage
+          loadingAmount={loadAmount}
+          gene={geneticElement}
+          view={CellEFP}
+          error={null}
+        ></LoadingPage>
+      )
+    } else if (!data || !state) return <></>
 
   return (
     <Box

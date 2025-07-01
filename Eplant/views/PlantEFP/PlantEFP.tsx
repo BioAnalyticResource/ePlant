@@ -32,6 +32,7 @@ export const PlantEFPView = () => {
         setLoadAmount
       )
     },
+    retry: false,
   })
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export const PlantEFPView = () => {
     initializeState(EFPViewerStateSchema)
   }, [])
 
-  if ((isLoading && loadAmount < 100) || isError) {
+  if (isError) {
     return (
       <LoadingPage
         loadingAmount={loadAmount}
@@ -48,7 +49,17 @@ export const PlantEFPView = () => {
         error={ViewDataError.FAILED_TO_LOAD}
       ></LoadingPage>
     )
+  } else if (isLoading && loadAmount < 100) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={PlantEFP}
+        error={null}
+      ></LoadingPage>
+    )
   } else if (!data || !state) return <></>
+
 
   return (
     <EFPViewer

@@ -886,7 +886,7 @@ export const NavigatorViewObject = () => {
         loadingAmount={loadAmount}
         gene={geneticElement}
         view={NavigatorView}
-        error={ViewDataError.UNSUPPORTED_GENE}
+        error={ViewDataError.FAILED_TO_LOAD}
       ></LoadingPage>
     )
   } else if (isLoading && loadAmount < 100) {
