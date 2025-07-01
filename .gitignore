@@ -107,10 +107,3 @@ dist
 # notes files
 *-notes.md
 .DS_Store
-
-
-# Docker (yonah)
-.dockerignore
-Dockerfile
-Dockerfile.develop
-docker-compose.yml
