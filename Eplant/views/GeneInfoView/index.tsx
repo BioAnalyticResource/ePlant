@@ -8,7 +8,7 @@ import { GeneInfoViewData } from './types'
 /**
  * Show information about a gene, including its sequence and features.
  */
-const GeneInfoView: ViewMetadata<GeneInfoViewData> = {
+const GeneInfoViewMetadata: ViewMetadata<GeneInfoViewData> = {
   name: 'Gene info viewer',
   id: 'gene-info',
   icon: () => <GeneInfoViewIcon />,
@@ -38,4 +38,4 @@ const GeneInfoView: ViewMetadata<GeneInfoViewData> = {
   },
 }
 
-export default GeneInfoView
+export default GeneInfoViewMetadata

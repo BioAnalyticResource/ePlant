@@ -28,14 +28,14 @@ module.exports = {
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
   },
-  'overrides': [
+  overrides: [
     {
-      'files': ['**/*.js', '**/*.ts', '**/*.tsx'],
-      'rules': {
+      files: ['**/*.js', '**/*.ts', '**/*.tsx'],
+      rules: {
         'simple-import-sort/imports': [
           'error',
           {
-            'groups': [
+            groups: [
               // `react` first, `next` second, then packages starting with a character
               ['^react$', '^next', '^[a-z]'],
               // Packages starting with `@`

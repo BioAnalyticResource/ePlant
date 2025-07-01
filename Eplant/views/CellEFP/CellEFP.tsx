@@ -1,8 +1,9 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { useURLState } from '@eplant/state/URLStateProvider'
+import LoadingPage from '@eplant/UI/Layout/ViewContainer/LoadingPage'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import PanZoom from '@eplant/util/PanZoom'
 import { ViewDataError } from '@eplant/View'
@@ -17,11 +18,12 @@ import {
   CellEFPViewerData,
   CellEFPViewerState,
 } from './types'
+import CellEFP from '.'
 
 export const CellEFPView = () => {
-  const { geneticElement, setIsLoading, setLoadAmount } =
-    useOutletContext<ViewContext>()
+  const { geneticElement } = useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<CellEFPViewerState>()
+  const [loadAmount, setLoadAmount] = useState(0)
   const { data, isLoading, isError, error } = useQuery<CellEFPViewerData>({
     queryKey: [`cell-efp-${geneticElement?.id}`],
     queryFn: async () => {
@@ -33,10 +35,6 @@ export const CellEFPView = () => {
     initializeState(CellEFPStateSchema)
   }, [])
 
-  useEffect(() => {
-    setIsLoading(isLoading)
-  }, [isLoading])
-
   const efp = useMemo(() => {
     const Component = CellEFPDataObject.component
     if (data) {
@@ -46,7 +44,16 @@ export const CellEFPView = () => {
     }
   }, [geneticElement?.id, data])
 
-  if (isLoading || isError || !data || !state) return <></>
+  if ((isLoading && loadAmount < 100) || isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={CellEFP}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (!data || !state) return <></>
 
   return (
     <Box

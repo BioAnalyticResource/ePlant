@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import _ from 'lodash'
 import { useOutletContext } from 'react-router-dom'
-import { z } from 'zod'
 
 import { useConfig } from '@eplant/config'
 import GeneticElement from '@eplant/GeneticElement'
 import { useSetActiveViewId } from '@eplant/state'
+import LoadingPage from '@eplant/UI/Layout/ViewContainer/LoadingPage'
 import { ViewContext } from '@eplant/UI/Layout/ViewContainer/types'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { Alert, Box, IconButton, Snackbar } from '@mui/material'
@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useQuery } from '@tanstack/react-query'
 
-import { ViewMetadata } from '../../View'
+import { ViewDataError, ViewMetadata } from '../../View'
 
 import { CodeBody } from './CodeBody'
 import { GeneModel } from './GeneModel'
@@ -22,11 +22,12 @@ import { geneInfoLoader } from './loader'
 import { SecondaryText } from './SecondaryText'
 import { GeneInfoViewData } from './types'
 import { ViewButton } from './ViewButton'
+import GeneInfoViewMetadata from '.'
 
 export const GeneInfoView = () => {
   const [snackBarOpen, setSnackBarOpen] = useState(false)
-  const { geneticElement, setIsLoading, setLoadAmount } =
-    useOutletContext<ViewContext>()
+  const { geneticElement } = useOutletContext<ViewContext>()
+  const [loadAmount, setLoadAmount] = useState(0)
   if (geneticElement == null) {
     throw new TypeError('Genetic element must be provided for Gene Info View')
   }
@@ -41,7 +42,17 @@ export const GeneInfoView = () => {
     navigator.clipboard.writeText(text)
   }
 
-  if (isLoading || isError || !data) return <></>
+  if ((isLoading && loadAmount < 100) || isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={GeneInfoViewMetadata}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (!data) return <></>
+
   return (
     <Stack direction='row' gap={'20px'}>
       <ViewSwitcher geneticElement={geneticElement} />
