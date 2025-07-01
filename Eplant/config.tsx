@@ -4,7 +4,7 @@ import CellEFP from './views/CellEFP'
 import { ChromosomeViewerObject } from './views/ChromosomeViewer'
 import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
-import GeneInfoView from './views/GeneInfoView'
+import GeneInfoViewMetadata from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
 import InteractionsViewer from './views/InteractionsViewer'
 import NavigatorView from './views/NavigatorView'
@@ -29,7 +29,7 @@ const genericViewMetadata = [GetStartedView, FallbackView]
 // Can contain views from the genericViews list too
 const userViewMetadata = [
   GetStartedView,
-  GeneInfoView,
+  GeneInfoViewMetadata,
   PublicationViewer,
   PlantEFP,
   CellEFP,
