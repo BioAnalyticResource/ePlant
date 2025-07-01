@@ -49,11 +49,16 @@ module.exports = {
               // Style imports
               ['^.+\\.s?css$'],
               // Side effect imports
-              ['^\\u0000'],
-            ],
-          },
-        ],
-      },
-    },
+              ['^\\u0000']
+            ]
+          }
+        ]
+      }
+    }
   ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
 }
