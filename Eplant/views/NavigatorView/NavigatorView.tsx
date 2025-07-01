@@ -998,7 +998,6 @@ export const navigatorViewerLoader = async (
         speciesName
       )}&dataset=Developmental&checkedspecies=arabidopsis_poplar_medicago_soybean_rice_barley_maize_potato_tomato_grape`
     : `${baseUrl}?primaryGene=AT3G24650&species=Arabidopsis&dataset=Developmental&checkedspecies=arabidopsis_poplar_medicago_soybean_rice_barley_maize_potato_tomato_grape`
-
   /** Fetch and process the data */
   const treeData = await fetchGeneData(apiUrl, loadEvent)
 

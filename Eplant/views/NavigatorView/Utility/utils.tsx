@@ -26,7 +26,6 @@ export const fetchGeneData = async (
   apiUrl: string,
   loadEvent?: (loaded: number) => void
 ): Promise<TreeData> => {
-  console.log('→ Fetching gene data from:', apiUrl)
   loadEvent?.(20)
 
   try {
@@ -46,7 +45,6 @@ export const fetchGeneData = async (
     loadEvent?.(80)
 
     const data = await response.json()
-    console.log('→ Response JSON:', data)
 
     if (data.status !== 'success') {
       throw new Error('Failed to load tree data')
@@ -56,7 +54,7 @@ export const fetchGeneData = async (
     return data
   } catch (err) {
     console.error('🔥 fetchGeneData failed:', err)
-    throw err // This MUST be rethrown to trigger isError
+    throw err
   }
 }
 
