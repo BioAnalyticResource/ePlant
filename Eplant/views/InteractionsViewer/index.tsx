@@ -15,10 +15,7 @@ import { ViewMetadata } from '@eplant/View/'
 import YoutubeSearchedForRoundedIcon from '@mui/icons-material/YoutubeSearchedForRounded'
 
 import { InteractionsIcon } from './icon'
-import {
-  InteractionsViewData,
-  InteractionsViewState,
-} from './types'
+import { InteractionsViewData, InteractionsViewState } from './types'
 
 /*--------------------
 CYTOSCAPE PLUGIN SETUP
@@ -61,7 +58,7 @@ function createTooltip(ref: { getBoundingClientRect: any }, content: any) {
     sticky: false,
     interactive: content.interactive,
     interactiveBorder: 3,
-    appendTo: document.body, /** or append dummyDomEle to document.body */
+    appendTo: document.body /** or append dummyDomEle to document.body */,
     plugins: [followCursor, sticky],
   }
   const tip = tippy(dummyDomElement, config)
@@ -77,7 +74,10 @@ declare module '@mui/material/IconButton' {
     custom: true
   }
 }
-const InteractionsViewer: ViewMetadata<InteractionsViewData, InteractionsViewState> = {
+const InteractionsViewer: ViewMetadata<
+  InteractionsViewData,
+  InteractionsViewState
+> = {
   name: 'Interactions Viewer',
   id: 'interactions-viewer',
 
@@ -87,7 +87,7 @@ const InteractionsViewer: ViewMetadata<InteractionsViewData, InteractionsViewSta
     return <div></div>
   },
   actions: [
-    { 
+    {
       name: 'Reset Pan/Zoom',
       description: 'Reset the pan and zoom of the viewer',
       icon: <YoutubeSearchedForRoundedIcon />,
@@ -102,11 +102,7 @@ const InteractionsViewer: ViewMetadata<InteractionsViewData, InteractionsViewSta
         },
       }),
     },
-  ]
+  ],
 }
 
-
 export default InteractionsViewer
-
-
-  

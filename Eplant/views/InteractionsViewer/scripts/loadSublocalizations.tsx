@@ -18,7 +18,7 @@ const loadSublocalizations = async (cynodes: RawNode[]): Promise<RawNode[]> => {
 
     return enrichedNodes
   } catch (err) {
-    console.error("Failed to load sublocalizations", err)
+    console.error('Failed to load sublocalizations', err)
     return nodes // fallback
   }
 }

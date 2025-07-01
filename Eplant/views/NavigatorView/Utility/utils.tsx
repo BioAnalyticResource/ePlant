@@ -65,7 +65,6 @@ export const fetchGeneData = async (
 
   loadEvent?.(100)
   return data
-
 }
 
 /** Static declaration of genome label colors */

@@ -62,8 +62,8 @@ const router = createBrowserRouter([
       },
       {
         path: 'interactions-viewer/:geneid?',
-        element: <InteractionsViewObject></InteractionsViewObject>
-      }
+        element: <InteractionsViewObject></InteractionsViewObject>,
+      },
     ],
     errorElement: <ErrorBoundary></ErrorBoundary>,
   },
