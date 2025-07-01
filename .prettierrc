@@ -4,5 +4,5 @@
   "semi": false,
   "singleQuote": true,
   "jsxSingleQuote": true,
-  "trailingComma":"es5"
+  "trailingComma": "es5"
 }
