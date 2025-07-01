@@ -6,6 +6,8 @@ import ExperimentEFP from './views/ExperimentEFP'
 import FallbackView from './views/FallbackView'
 import GeneInfoView from './views/GeneInfoView'
 import GetStartedView from './views/GetStartedView'
+import InteractionsViewer from './views/InteractionsViewer'
+import NavigatorView from './views/NavigatorView'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
 // import WorldEFP from './views/WorldEFP'
@@ -34,6 +36,8 @@ const userViewMetadata = [
   ExperimentEFP,
   // WorldEFP,
   ChromosomeViewerObject,
+  NavigatorView,
+  InteractionsViewer,
 ]
 
 // List of views that are used to lookup a view by id
