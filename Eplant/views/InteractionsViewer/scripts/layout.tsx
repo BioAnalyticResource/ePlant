@@ -105,7 +105,6 @@ const positionProteinBack = (nodes: NodeCollection) => {
     const position = nodes[i]._private.position
     // @ts-expect-error typing error with _private, if removed breaks functionality
     const id = nodes[i]._private.data.id.substring(0, 9)
-    console.log(`Updating position of ${id}PROTEIN_BACK to`, position)
     cy.$('#' + id + 'PROTEIN_BACK').position(position)
   }
 }

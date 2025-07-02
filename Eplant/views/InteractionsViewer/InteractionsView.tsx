@@ -24,18 +24,13 @@ import {
 import InteractionsView from '.'
 
 export const InteractionsViewObject = () => {
-  /** Get context from parent (geneticElement, plus loading callbacks) */
-  const { geneticElement} =
-    useOutletContext<ViewContext>()
-  
+  const { geneticElement } = useOutletContext<ViewContext>()
   const [loadAmount, setLoadAmount] = useState(0)
 
-  /** Manage URL-synchronized state */
   const { state, setState, initializeState } =
     useURLState<InteractionsViewState>()
 
-  /** Load interactions data with React Query */
-  const { data, isLoading, isError, error } = useQuery<InteractionsViewData>({
+  const { data, isLoading, isError } = useQuery<InteractionsViewData>({
     queryKey: [`interactions-viewer-${geneticElement?.id}`],
     queryFn: async () => {
       return await InteractionsViewLoader(geneticElement, setLoadAmount)
@@ -44,17 +39,15 @@ export const InteractionsViewObject = () => {
     retry: false
   })
 
-  /** Initialize Interactions view state from URL or defaults on first mount */
-  useEffect(() => {
-    initializeState(InteractionsViewStateSchema)
-  }, [initializeState])
-
-  /** Get interactionsData from the returned data */
-  const interactionsData = data?.viewData
-
   const [cyto, setCyto] = useState<Core | null>(null)
-  const cyContainerRef = useRef<HTMLDivElement>(null)
+  const cyContainerRef = useRef<HTMLDivElement | null>(null) as {
+    current: HTMLDivElement | null
+  }
+  const [containerReady, setContainerReady] = useState(false)
+  const isApplyingTransform = useRef(false)
+
   const geneId = geneticElement?.id
+  const interactionsData = data?.viewData
   const viewData = interactionsData || {
     nodes: [],
     edges: [],
@@ -65,137 +58,89 @@ export const InteractionsViewObject = () => {
       recursive: false,
     },
   }
-
   const elements: any = [...(viewData.nodes || []), ...(viewData.edges || [])]
 
-  /** Track if transform is being applied from URL state to prevent circular updates */
-  const isApplyingTransform = useRef(false)
-
-  /** Initialize or reinitialize cytoscape when data changes or gene changes */
   useEffect(() => {
-    /** Don't proceed if we're still loading or don't have a container */
-    if (isLoading || !cyContainerRef.current) return
+    initializeState(InteractionsViewStateSchema)
+  }, [initializeState])
 
-    /** Clean up any existing instance */
-    if (cyto) {
-      cyto.destroy()
-    }
+useEffect(() => {
+  if (!containerReady || isLoading || !cyContainerRef.current) return
 
-    /** Create a new instance with the current elements */
-    const cy: Core = cytoscape({
-      container: cyContainerRef.current,
-      elements: elements,
-      style: cytoStyles,
+  if (cyto) {
+    cyto.destroy()
+  }
+
+  const cy: Core = cytoscape({
+    container: cyContainerRef.current,
+    elements: elements,
+    style: cytoStyles,
+  })
+
+  addNodeListener(cy)
+  addEdgeListener(cy)
+
+  if (elements.length > 0) {
+    setLayout(cy, viewData.loadFlags)
+
+    const layout = cy.layout({
+      name: 'preset',
+      fit: false,
     })
+    layout.run()
 
-    /** Add event listeners */
-    addNodeListener(cy)
-    addEdgeListener(cy)
-
-    /** Apply layout if we have data */
-    if (elements.length > 0) {
-      /** Set the layout */
-      setLayout(cy, viewData.loadFlags)
-
-      /** Force a complete layout run to ensure positions are calculated */
-      const layout = cy.layout({
-        name: 'preset',
-        fit: false /** Don't fit automatically, we'll handle this manually */,
-      })
-
-      /** Execute the layout with a callback */
-      layout.run()
-
-      /** Set up listener for viewport changes (pan/zoom) to update URL state */
-      cy.on('viewport', () => {
-        /** Skip update if we're currently applying transform from URL */
-        if (isApplyingTransform.current) return
-
-        const zoom = cy.zoom()
-        const pan = cy.pan()
-
-        setState({
-          transform: {
-            offset: {
-              x: pan.x,
-              y: pan.y,
-            },
-            zoom: zoom,
-          },
-        })
-      })
-
-      /** Wait for layout to stop, then apply transform or fit */
-      cy.one('layoutstop', () => {
-        /** Give time for rendering to complete */
-        setTimeout(() => {
-          /** First fit the graph properly to center it */
+    cy.one('layoutstop', () => {
+      setTimeout(() => {
+        if (state?.transform) {
+          /** Apply saved transform */
+          isApplyingTransform.current = true
+          cy.zoom(state.transform.zoom)
+          cy.pan({
+            x: state.transform.offset.x,
+            y: state.transform.offset.y,
+          })
+          setTimeout(() => {
+            isApplyingTransform.current = false
+          }, 100)
+        } else {
+          /** Only fit/center if no transform exists */
           cy.fit()
           cy.center()
+        }
+      }, 100)
+    })
+  } else {
+    cy.fit()
+    cy.center()
+  }
 
-          /** Then apply transform from URL if available */
-          if (state?.transform) {
-            isApplyingTransform.current = true
+  cy.style().update()
+  setCyto(cy)
 
-            /** Apply the saved transform */
-            cy.zoom(state.transform.zoom)
-            cy.pan({
-              x: state.transform.offset.x,
-              y: state.transform.offset.y,
-            })
+  return () => {
+    if (cy) cy.destroy()
+  }
+}, [geneId, isLoading, elements.length, containerReady])
 
-            /** Reset flag after transform completes */
-            setTimeout(() => {
-              isApplyingTransform.current = false
-            }, 100)
-          }
-        }, 100)
-      })
-    } else {
-      /** If no elements, just center and fit the view */
-      cy.fit()
-      cy.center()
-    }
 
-    cy.style().update()
-    setCyto(cy)
-
-    /** When component unmounts, clean up */
-    return () => {
-      if (cy) {
-        cy.destroy()
-      }
-    }
-  }, [geneId, isLoading, elements.length])
-
-  /**
-   * Use effect to synchronize cytoscape zoom and pan state with the URL state
-   */
   useEffect(() => {
     if (!cyto || !state?.transform || isLoading || elements.length === 0) return
 
-    /** Only apply transform if this is different from the current view */
     const currentZoom = cyto.zoom()
     const currentPan = cyto.pan()
 
-    /** Check if transform has actually changed to avoid unnecessary updates */
     const zoomChanged = Math.abs(currentZoom - state.transform.zoom) > 0.001
     const panChanged =
       Math.abs(currentPan.x - state.transform.offset.x) > 1 ||
       Math.abs(currentPan.y - state.transform.offset.y) > 1
 
     if (zoomChanged || panChanged) {
-      /** Prevent triggering viewport event listener */
       isApplyingTransform.current = true
-
-      /** Apply transform from URL state */
       cyto.zoom(state.transform.zoom)
       cyto.pan({
         x: state.transform.offset.x,
         y: state.transform.offset.y,
       })
-
-      /** Reset flag after a longer delay to ensure completion */
       setTimeout(() => {
         isApplyingTransform.current = false
       }, 100)
@@ -208,32 +153,43 @@ export const InteractionsViewObject = () => {
   ])
 
   if (isError) {
-  return (
-    <LoadingPage
-      loadingAmount={loadAmount}
-      gene={geneticElement}
-      view={InteractionsView}
-      error={ViewDataError.FAILED_TO_LOAD}
-    ></LoadingPage>
-  )
-} else if (isLoading && loadAmount < 100) {
-  return (
-    <LoadingPage
-      loadingAmount={loadAmount}
-      gene={geneticElement}
-      view={InteractionsView}
-      error={null}
-    ></LoadingPage>
-  )
-} else if (!data || !state) return <></>
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={InteractionsView}
+        error={ViewDataError.FAILED_TO_LOAD}
+      />
+    )
+  } else if (isLoading && loadAmount < 100) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={InteractionsView}
+        error={null}
+      />
+    )
+  } else if (!data || !state) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={InteractionsView}
+        error={null}
+      />
+    )
+  }
+  
 
   return (
     <div style={{ background: 'white', overflow: 'hidden' }}>
-      {/* TOPBAR - contains legend and filter buttons */}
       {cyto && <Topbar cy={cyto} gene={geneId ?? ''} />}
-      {/* CYTOSCAPE - container to render cytoscape */}
       <div
-        ref={cyContainerRef}
+        ref={(ref) => {
+          cyContainerRef.current = ref
+          if (ref) setContainerReady(true)
+        }}
         id='cy'
         key={geneId}
         style={{ width: '100%', height: '80vh' }}
@@ -241,6 +197,7 @@ export const InteractionsViewObject = () => {
     </div>
   )
 }
+
 
 /**
  * Data loader function for Interactions View
