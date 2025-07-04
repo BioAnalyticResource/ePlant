@@ -40,24 +40,24 @@ export const PublicationsViewer = () => {
   }, [])
 
   if (isError) {
-      return (
-        <LoadingPage
-          loadingAmount={loadAmount}
-          gene={geneticElement}
-          view={PublicationView}
-          error={ViewDataError.FAILED_TO_LOAD}
-        ></LoadingPage>
-      )
-    } else if (isLoading && loadAmount < 100) {
-      return (
-        <LoadingPage
-          loadingAmount={loadAmount}
-          gene={geneticElement}
-          view={PublicationView}
-          error={null}
-        ></LoadingPage>
-      )
-    } else if (!data || !state) return <></>
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={PublicationView}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (isLoading && loadAmount < 100) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={PublicationView}
+        error={null}
+      ></LoadingPage>
+    )
+  } else if (!data || !state) return <></>
 
   return (
     <div>

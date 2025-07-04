@@ -36,7 +36,7 @@ export const InteractionsViewObject = () => {
       return await InteractionsViewLoader(geneticElement, setLoadAmount)
     },
     staleTime: 0,
-    retry: false
+    retry: false,
   })
 
   const [cyto, setCyto] = useState<Core | null>(null)
@@ -64,64 +64,63 @@ export const InteractionsViewObject = () => {
     initializeState(InteractionsViewStateSchema)
   }, [initializeState])
 
-useEffect(() => {
-  if (!containerReady || isLoading || !cyContainerRef.current) return
+  useEffect(() => {
+    if (!containerReady || isLoading || !cyContainerRef.current) return
 
-  if (cyto) {
-    cyto.destroy()
-  }
+    if (cyto) {
+      cyto.destroy()
+    }
 
-  const cy: Core = cytoscape({
-    container: cyContainerRef.current,
-    elements: elements,
-    style: cytoStyles,
-  })
-
-  addNodeListener(cy)
-  addEdgeListener(cy)
-
-  if (elements.length > 0) {
-    setLayout(cy, viewData.loadFlags)
-
-    const layout = cy.layout({
-      name: 'preset',
-      fit: false,
+    const cy: Core = cytoscape({
+      container: cyContainerRef.current,
+      elements: elements,
+      style: cytoStyles,
     })
-    layout.run()
 
-    cy.one('layoutstop', () => {
-      setTimeout(() => {
-        if (state?.transform) {
-          /** Apply saved transform */
-          isApplyingTransform.current = true
-          cy.zoom(state.transform.zoom)
-          cy.pan({
-            x: state.transform.offset.x,
-            y: state.transform.offset.y,
-          })
-          setTimeout(() => {
-            isApplyingTransform.current = false
-          }, 100)
-        } else {
-          /** Only fit/center if no transform exists */
-          cy.fit()
-          cy.center()
-        }
-      }, 100)
-    })
-  } else {
-    cy.fit()
-    cy.center()
-  }
+    addNodeListener(cy)
+    addEdgeListener(cy)
 
-  cy.style().update()
-  setCyto(cy)
+    if (elements.length > 0) {
+      setLayout(cy, viewData.loadFlags)
 
-  return () => {
-    if (cy) cy.destroy()
-  }
-}, [geneId, isLoading, elements.length, containerReady])
+      const layout = cy.layout({
+        name: 'preset',
+        fit: false,
+      })
+      layout.run()
 
+      cy.one('layoutstop', () => {
+        setTimeout(() => {
+          if (state?.transform) {
+            /** Apply saved transform */
+            isApplyingTransform.current = true
+            cy.zoom(state.transform.zoom)
+            cy.pan({
+              x: state.transform.offset.x,
+              y: state.transform.offset.y,
+            })
+            setTimeout(() => {
+              isApplyingTransform.current = false
+            }, 100)
+          } else {
+            /** Only fit/center if no transform exists */
+            cy.fit()
+            cy.center()
+          }
+        }, 100)
+      })
+    } else {
+      cy.fit()
+      cy.center()
+    }
+
+    cy.style().update()
+    setCyto(cy)
+
+    return () => {
+      if (cy) cy.destroy()
+    }
+  }, [geneId, isLoading, elements.length, containerReady])
 
   useEffect(() => {
     if (!cyto || !state?.transform || isLoading || elements.length === 0) return
@@ -180,7 +179,6 @@ useEffect(() => {
       />
     )
   }
-  
 
   return (
     <div style={{ background: 'white', overflow: 'hidden' }}>
@@ -197,7 +195,6 @@ useEffect(() => {
     </div>
   )
 }
-
 
 /**
  * Data loader function for Interactions View

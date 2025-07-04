@@ -36,7 +36,7 @@ export const InteractionsViewObject = () => {
       return await InteractionsViewLoader(geneticElement, setLoadAmount)
     },
     staleTime: 0,
-    retry: false
+    retry: false,
   })
 
   const [cyto, setCyto] = useState<Core | null>(null)
@@ -177,7 +177,6 @@ export const InteractionsViewObject = () => {
       />
     )
   }
-  
 
   return (
     <div style={{ background: 'white', overflow: 'hidden' }}>
@@ -194,7 +193,6 @@ export const InteractionsViewObject = () => {
     </div>
   )
 }
-
 
 /**
  * Data loader function for Interactions View

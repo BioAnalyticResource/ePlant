@@ -500,6 +500,7 @@ const router = createBrowserRouter([
   },
 ])
 ```
+
 Congratulations, you have successfully created a new view!
 
 ## `config.ts` file

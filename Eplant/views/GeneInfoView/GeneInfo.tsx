@@ -33,7 +33,7 @@ export const GeneInfoView = () => {
     queryFn: async () => {
       return geneInfoLoader(geneticElement, setLoadAmount)
     },
-    retry: false
+    retry: false,
   })
   const copyToClipboard = (text: string) => {
     setSnackBarOpen(true)
@@ -41,24 +41,24 @@ export const GeneInfoView = () => {
   }
 
   if (isError) {
-      return (
-        <LoadingPage
-          loadingAmount={loadAmount}
-          gene={geneticElement}
-          view={GeneInfoViewMetadata}
-          error={ViewDataError.FAILED_TO_LOAD}
-        ></LoadingPage>
-      )
-    } else if (isLoading && loadAmount < 100) {
-      return (
-        <LoadingPage
-          loadingAmount={loadAmount}
-          gene={geneticElement}
-          view={GeneInfoViewMetadata}
-          error={null}
-        ></LoadingPage>
-      )
-    } else if (!data) return <></>
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={GeneInfoViewMetadata}
+        error={ViewDataError.FAILED_TO_LOAD}
+      ></LoadingPage>
+    )
+  } else if (isLoading && loadAmount < 100) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={GeneInfoViewMetadata}
+        error={null}
+      ></LoadingPage>
+    )
+  } else if (!data) return <></>
 
   return (
     <Stack direction='row' gap={'20px'}>
@@ -175,7 +175,11 @@ export const GeneInfoView = () => {
     </Stack>
   )
 }
-function ViewSwitcher({ geneticElement }: { geneticElement: GeneticElement | null}) {
+function ViewSwitcher({
+  geneticElement,
+}: {
+  geneticElement: GeneticElement | null
+}) {
   const setActiveViewId = useSetActiveViewId()
   const { userViews } = useConfig()
   return (

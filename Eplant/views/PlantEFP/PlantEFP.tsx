@@ -60,7 +60,6 @@ export const PlantEFPView = () => {
     )
   } else if (!data || !state) return <></>
 
-
   return (
     <EFPViewer
       data={data}
