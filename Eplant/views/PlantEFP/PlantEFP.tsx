@@ -22,7 +22,7 @@ export const PlantEFPView = () => {
   const { state, setState, initializeState } = useURLState<EFPViewerState>()
   const [loadAmount, setLoadAmount] = useState(0)
 
-  const { data, isLoading, isError, error } = useQuery<EFPViewerData>({
+  const { data, isLoading, isError, error } = useQuery<EFPViewerData, ViewDataError>({
     queryKey: [`plant-efp-${geneticElement?.id}`],
     queryFn: async () => {
       return EFPViewerLoader(
@@ -39,14 +39,22 @@ export const PlantEFPView = () => {
     // On mount, set the active actions and initialize the state
     initializeState(EFPViewerStateSchema)
   }, [])
-
-  if (isError) {
+  if (!geneticElement) {
     return (
       <LoadingPage
         loadingAmount={loadAmount}
         gene={geneticElement}
         view={PlantEFP}
-        error={ViewDataError.FAILED_TO_LOAD}
+        error={ViewDataError.UNSUPPORTED_GENE}
+      ></LoadingPage>
+    )
+  } else if (isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={PlantEFP}
+        error={error}
       ></LoadingPage>
     )
   } else if (isLoading && loadAmount < 100) {

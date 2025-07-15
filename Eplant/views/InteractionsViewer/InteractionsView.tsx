@@ -30,12 +30,13 @@ export const InteractionsViewObject = () => {
   const { state, setState, initializeState } =
     useURLState<InteractionsViewState>()
 
-  const { data, isLoading, isError } = useQuery<InteractionsViewData>({
+  const { data, isLoading, isError, error } = useQuery<InteractionsViewData, ViewDataError>({
     queryKey: [`interactions-viewer-${geneticElement?.id}`],
     queryFn: async () => {
-      return await InteractionsViewLoader(geneticElement, setLoadAmount)
+        return await InteractionsViewLoader(geneticElement, setLoadAmount)
     },
     staleTime: 0,
+    enabled: !!geneticElement,
     retry: false,
   })
 
@@ -157,7 +158,7 @@ export const InteractionsViewObject = () => {
         loadingAmount={loadAmount}
         gene={geneticElement}
         view={InteractionsView}
-        error={ViewDataError.FAILED_TO_LOAD}
+        error={error}
       />
     )
   } else if (isLoading && loadAmount < 100) {
@@ -244,8 +245,7 @@ export const InteractionsViewLoader = async (
       data = await loadInteractions(geneticElement, interactions, recursive)
       loadEvent(100) /** Complete */
     } catch (error) {
-      console.error('Error loading interactions:', error)
-      throw ViewDataError.UNSUPPORTED_GENE
+      throw ViewDataError.FAILED_TO_LOAD
     }
   }
   return {

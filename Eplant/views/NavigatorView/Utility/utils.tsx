@@ -28,34 +28,29 @@ export const fetchGeneData = async (
 ): Promise<TreeData> => {
   loadEvent?.(20)
 
-  try {
-    loadEvent?.(40)
+  loadEvent?.(40)
 
-    const response = await Promise.race([
-      fetch(apiUrl),
-      new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('Fetch timed out after 10s')), 10000)
-      ),
-    ])
+  const response = await Promise.race([
+    fetch(apiUrl),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Fetch timed out after 10s')), 10000)
+    ),
+  ])
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
-    }
-
-    loadEvent?.(80)
-
-    const data = await response.json()
-
-    if (data.status !== 'success') {
-      throw new Error('Failed to load tree data')
-    }
-
-    loadEvent?.(100)
-    return data
-  } catch (err) {
-    console.error('🔥 fetchGeneData failed:', err)
-    throw err
+  if (!response.ok) {
+    throw new Error('Network response was not OK')
   }
+
+  loadEvent?.(80)
+
+  const data = await response.json()
+
+  if (data.status !== 'success') {
+    throw new Error('Failed to load tree data')
+  }
+
+  loadEvent?.(100)
+  return data
 }
 
 /** Static declaration of genome label colors */

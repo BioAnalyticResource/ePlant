@@ -33,10 +33,14 @@ export const ChromosomeView = () => {
   const handleClose = () => {
     setMessageOpen(false)
   }
-  const { data, isLoading, isError, error } = useQuery<ChromosomeViewerData>({
+  const { data, isLoading, isError, error } = useQuery<ChromosomeViewerData, ViewDataError>({
     queryKey: [`chromosome`],
     queryFn: async () => {
-      return ChromosomeViewLoader(geneticElement, setLoadAmount)
+      try{
+        return ChromosomeViewLoader(geneticElement, setLoadAmount)
+      }catch{
+          throw ViewDataError.FAILED_TO_LOAD
+      }
     },
   })
 
@@ -44,14 +48,23 @@ export const ChromosomeView = () => {
     // On mount, set the active actions and initialize the state
     initializeState(ChromosomeViewerStateScheme)
   }, [])
-
-  if ((isLoading && loadAmount < 100) || isError) {
+  
+  if (!geneticElement) {
     return (
       <LoadingPage
         loadingAmount={loadAmount}
         gene={geneticElement}
         view={ChromosomeViewerObject}
-        error={ViewDataError.FAILED_TO_LOAD}
+        error={ViewDataError.UNSUPPORTED_GENE}
+      ></LoadingPage>
+    )
+  } else if ((isLoading && loadAmount < 100) || isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={ChromosomeViewerObject}
+        error={error}
       ></LoadingPage>
     )
   } else if (!data || !state) return <></>
@@ -129,10 +142,16 @@ const ChromosomeViewLoader = async (
   }/cgi-bin/chromosomeinfo.cgi?species=${species}`
 
   const chromosomeViewData: ChromosomeItem[] = await fetch(url)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw ViewDataError.FAILED_TO_LOAD
+      }
+      return response.json()
+    })
     .then((responseObj: ChromosomesResponseObj) => responseObj['chromosomes'])
   loadEvent(100)
   return {
     viewData: chromosomeViewData,
   }
 }
+

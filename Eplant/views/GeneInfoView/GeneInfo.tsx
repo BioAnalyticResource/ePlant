@@ -28,7 +28,7 @@ export const GeneInfoView = () => {
   const [snackBarOpen, setSnackBarOpen] = useState(false)
   const { geneticElement } = useOutletContext<ViewContext>()
   const [loadAmount, setLoadAmount] = useState(0)
-  const { data, isLoading, isError, error } = useQuery<GeneInfoViewData>({
+  const { data, isLoading, isError, error } = useQuery<GeneInfoViewData, ViewDataError>({
     queryKey: [`geneInfo-${geneticElement?.id}`],
     queryFn: async () => {
       return geneInfoLoader(geneticElement, setLoadAmount)
@@ -40,13 +40,22 @@ export const GeneInfoView = () => {
     navigator.clipboard.writeText(text)
   }
 
-  if (isError) {
+  if (!geneticElement) {
     return (
       <LoadingPage
         loadingAmount={loadAmount}
         gene={geneticElement}
         view={GeneInfoViewMetadata}
-        error={ViewDataError.FAILED_TO_LOAD}
+        error={ViewDataError.UNSUPPORTED_GENE}
+      ></LoadingPage>
+    )
+  } else if (isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={GeneInfoViewMetadata}
+        error={error}
       ></LoadingPage>
     )
   } else if (isLoading && loadAmount < 100) {

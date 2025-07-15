@@ -24,7 +24,7 @@ export const CellEFPView = () => {
   const { geneticElement } = useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<CellEFPViewerState>()
   const [loadAmount, setLoadAmount] = useState(0)
-  const { data, isLoading, isError, error } = useQuery<CellEFPViewerData>({
+  const { data, isLoading, isError, error } = useQuery<CellEFPViewerData, ViewDataError>({
     queryKey: [`cell-efp-${geneticElement?.id}`],
     queryFn: async () => {
       return cellEFPLoader(geneticElement, setLoadAmount)
@@ -45,13 +45,22 @@ export const CellEFPView = () => {
     }
   }, [geneticElement?.id, data])
 
-  if (isError) {
+  if (!geneticElement) {
+      return (
+        <LoadingPage
+          loadingAmount={loadAmount}
+          gene={geneticElement}
+          view={CellEFP}
+          error={ViewDataError.UNSUPPORTED_GENE}
+        ></LoadingPage>
+      )
+    } else if (isError) {
     return (
       <LoadingPage
         loadingAmount={loadAmount}
         gene={geneticElement}
         view={CellEFP}
-        error={ViewDataError.FAILED_TO_LOAD}
+        error={error}
       ></LoadingPage>
     )
   } else if (isLoading && loadAmount < 100) {

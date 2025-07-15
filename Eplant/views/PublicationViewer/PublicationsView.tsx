@@ -27,7 +27,7 @@ export const PublicationsViewer = () => {
   const { state, setState, initializeState } =
     useURLState<PublicationsViewerState>()
   const [loadAmount, setLoadAmount] = useState(0)
-  const { data, isLoading, isError, error } = useQuery<PublicationViewerData>({
+  const { data, isLoading, isError, error } = useQuery<PublicationViewerData, ViewDataError>({
     queryKey: [`publications-${geneticElement?.id}`],
     queryFn: async () => {
       return publicationsLoader(geneticElement, setLoadAmount)
@@ -38,14 +38,22 @@ export const PublicationsViewer = () => {
   useEffect(() => {
     initializeState(PublicationsViewStateSchema)
   }, [])
-
-  if (isError) {
+  if (!geneticElement) {
+      return (
+        <LoadingPage
+          loadingAmount={loadAmount}
+          gene={geneticElement}
+          view={PublicationView}
+          error={ViewDataError.UNSUPPORTED_GENE}
+        ></LoadingPage>
+      )
+  } else if (isError) {
     return (
       <LoadingPage
         loadingAmount={loadAmount}
         gene={geneticElement}
         view={PublicationView}
-        error={ViewDataError.FAILED_TO_LOAD}
+        error={error}
       ></LoadingPage>
     )
   } else if (isLoading && loadAmount < 100) {
