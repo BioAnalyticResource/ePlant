@@ -30,10 +30,13 @@ export const InteractionsViewObject = () => {
   const { state, setState, initializeState } =
     useURLState<InteractionsViewState>()
 
-  const { data, isLoading, isError, error } = useQuery<InteractionsViewData, ViewDataError>({
+  const { data, isLoading, isError, error } = useQuery<
+    InteractionsViewData,
+    ViewDataError
+  >({
     queryKey: [`interactions-viewer-${geneticElement?.id}`],
     queryFn: async () => {
-        return await InteractionsViewLoader(geneticElement, setLoadAmount)
+      return await InteractionsViewLoader(geneticElement, setLoadAmount)
     },
     staleTime: 0,
     enabled: !!geneticElement,

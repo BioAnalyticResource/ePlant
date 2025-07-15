@@ -28,7 +28,10 @@ export const GeneInfoView = () => {
   const [snackBarOpen, setSnackBarOpen] = useState(false)
   const { geneticElement } = useOutletContext<ViewContext>()
   const [loadAmount, setLoadAmount] = useState(0)
-  const { data, isLoading, isError, error } = useQuery<GeneInfoViewData, ViewDataError>({
+  const { data, isLoading, isError, error } = useQuery<
+    GeneInfoViewData,
+    ViewDataError
+  >({
     queryKey: [`geneInfo-${geneticElement?.id}`],
     queryFn: async () => {
       return geneInfoLoader(geneticElement, setLoadAmount)

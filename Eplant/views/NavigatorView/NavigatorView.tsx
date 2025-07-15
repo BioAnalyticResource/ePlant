@@ -91,7 +91,10 @@ export const NavigatorViewObject = () => {
    * Load navigator data with React Query.
    * Fetches tree data for the current genetic element.
    */
-  const { data, isLoading, isError, error } = useQuery<NavigatorViewerData, ViewDataError>({
+  const { data, isLoading, isError, error } = useQuery<
+    NavigatorViewerData,
+    ViewDataError
+  >({
     queryKey: [`navigator-view-${geneticElement?.id}`],
     queryFn: async () => {
       return navigatorViewerLoader(geneticElement, setLoadAmount)
@@ -886,7 +889,9 @@ export const NavigatorViewObject = () => {
         loadingAmount={loadAmount}
         gene={geneticElement}
         view={NavigatorView}
-        error={ViewDataError.UNSUPPORTED_GENE} /** If using ={error} we get a hanging page when loading a gene with no data */
+        error={
+          ViewDataError.UNSUPPORTED_GENE
+        } /** If using ={error} we get a hanging page when loading a gene with no data */
       ></LoadingPage>
     )
   } else if (isLoading && loadAmount < 100) {
@@ -998,7 +1003,7 @@ export const navigatorViewerLoader = async (
         speciesName
       )}&dataset=Developmental&checkedspecies=arabidopsis_poplar_medicago_soybean_rice_barley_maize_potato_tomato_grape`
     : `${baseUrl}?primaryGene=AT3G24650&species=Arabidopsis&dataset=Developmental&checkedspecies=arabidopsis_poplar_medicago_soybean_rice_barley_maize_potato_tomato_grape`
-  
+
   /** Fetch and process the data */
   const treeData = await fetchGeneData(apiUrl, loadEvent)
 

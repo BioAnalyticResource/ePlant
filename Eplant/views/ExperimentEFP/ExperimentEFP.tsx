@@ -22,7 +22,10 @@ export const ExperimentEFPView = () => {
   const { geneticElement } = useOutletContext<ViewContext>()
   const { state, setState, initializeState } = useURLState<EFPViewerState>()
   const [loadAmount, setLoadAmount] = useState(0)
-  const { data, isLoading, isError, error } = useQuery<EFPViewerData, ViewDataError>({
+  const { data, isLoading, isError, error } = useQuery<
+    EFPViewerData,
+    ViewDataError
+  >({
     queryKey: [`tissue-${geneticElement?.id}`],
     queryFn: async () => {
       return EFPViewerLoader(
@@ -40,15 +43,15 @@ export const ExperimentEFPView = () => {
   }, [])
 
   if (!geneticElement) {
-      return (
-        <LoadingPage
-          loadingAmount={loadAmount}
-          gene={geneticElement}
-          view={ExperimentEFP}
-          error={ViewDataError.UNSUPPORTED_GENE}
-        ></LoadingPage>
-      )
-    } else if (isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={ExperimentEFP}
+        error={ViewDataError.UNSUPPORTED_GENE}
+      ></LoadingPage>
+    )
+  } else if (isError) {
     return (
       <LoadingPage
         loadingAmount={loadAmount}

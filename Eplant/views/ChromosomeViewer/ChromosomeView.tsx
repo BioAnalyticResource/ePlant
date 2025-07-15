@@ -33,13 +33,16 @@ export const ChromosomeView = () => {
   const handleClose = () => {
     setMessageOpen(false)
   }
-  const { data, isLoading, isError, error } = useQuery<ChromosomeViewerData, ViewDataError>({
+  const { data, isLoading, isError, error } = useQuery<
+    ChromosomeViewerData,
+    ViewDataError
+  >({
     queryKey: [`chromosome`],
     queryFn: async () => {
-      try{
+      try {
         return ChromosomeViewLoader(geneticElement, setLoadAmount)
-      }catch{
-          throw ViewDataError.FAILED_TO_LOAD
+      } catch {
+        throw ViewDataError.FAILED_TO_LOAD
       }
     },
   })
@@ -48,7 +51,7 @@ export const ChromosomeView = () => {
     // On mount, set the active actions and initialize the state
     initializeState(ChromosomeViewerStateScheme)
   }, [])
-  
+
   if (!geneticElement) {
     return (
       <LoadingPage
@@ -154,4 +157,3 @@ const ChromosomeViewLoader = async (
     viewData: chromosomeViewData,
   }
 }
-

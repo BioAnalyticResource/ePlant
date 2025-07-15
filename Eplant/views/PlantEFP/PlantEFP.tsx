@@ -22,7 +22,10 @@ export const PlantEFPView = () => {
   const { state, setState, initializeState } = useURLState<EFPViewerState>()
   const [loadAmount, setLoadAmount] = useState(0)
 
-  const { data, isLoading, isError, error } = useQuery<EFPViewerData, ViewDataError>({
+  const { data, isLoading, isError, error } = useQuery<
+    EFPViewerData,
+    ViewDataError
+  >({
     queryKey: [`plant-efp-${geneticElement?.id}`],
     queryFn: async () => {
       return EFPViewerLoader(
