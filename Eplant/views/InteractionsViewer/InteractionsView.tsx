@@ -156,15 +156,15 @@ export const InteractionsViewObject = () => {
   ])
 
   if (!geneticElement) {
-      return (
-        <LoadingPage
-          loadingAmount={loadAmount}
-          gene={geneticElement}
-          view={InteractionsView}
-          error={ViewDataError.UNSUPPORTED_GENE}
-        ></LoadingPage>
-      )
-    } else if (isError) {
+    return (
+      <LoadingPage
+        loadingAmount={loadAmount}
+        gene={geneticElement}
+        view={InteractionsView}
+        error={ViewDataError.UNSUPPORTED_GENE}
+      ></LoadingPage>
+    )
+  } else if (isError) {
     return (
       <LoadingPage
         loadingAmount={loadAmount}
