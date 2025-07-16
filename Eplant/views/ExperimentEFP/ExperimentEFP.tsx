@@ -26,7 +26,7 @@ export const ExperimentEFPView = () => {
     EFPViewerData,
     ViewDataError
   >({
-    queryKey: [`tissue-${geneticElement?.id}`],
+    queryKey: [`experiment-efp-${geneticElement?.id}`],
     queryFn: async () => {
       return EFPViewerLoader(
         geneticElement,

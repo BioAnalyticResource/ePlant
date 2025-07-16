@@ -79,7 +79,7 @@ const InteractionsViewer: ViewMetadata<
   InteractionsViewState
 > = {
   name: 'Interactions Viewer',
-  id: 'interactions-viewer',
+  id: 'interactions-view',
 
   icon: () => <InteractionsIcon />,
   description: 'Interactions Viewer.',

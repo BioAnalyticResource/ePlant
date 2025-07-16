@@ -45,7 +45,7 @@ const router = createBrowserRouter([
         element: <PlantEFPView></PlantEFPView>,
       },
       {
-        path: 'tissue/:geneid?',
+        path: 'experiment-efp/:geneid?',
         element: <ExperimentEFPView></ExperimentEFPView>,
       },
       {
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
         element: <NavigatorViewObject></NavigatorViewObject>,
       },
       {
-        path: 'interactions-viewer/:geneid?',
+        path: 'interactions-view/:geneid?',
         element: <InteractionsViewObject></InteractionsViewObject>,
       },
     ],

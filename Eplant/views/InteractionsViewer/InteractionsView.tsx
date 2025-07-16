@@ -34,7 +34,7 @@ export const InteractionsViewObject = () => {
     InteractionsViewData,
     ViewDataError
   >({
-    queryKey: [`interactions-viewer-${geneticElement?.id}`],
+    queryKey: [`interactions-view-${geneticElement?.id}`],
     queryFn: async () => {
       return await InteractionsViewLoader(geneticElement, setLoadAmount)
     },
@@ -155,7 +155,16 @@ export const InteractionsViewObject = () => {
     state?.transform?.offset.y,
   ])
 
-  if (isError) {
+  if (!geneticElement) {
+      return (
+        <LoadingPage
+          loadingAmount={loadAmount}
+          gene={geneticElement}
+          view={InteractionsView}
+          error={ViewDataError.UNSUPPORTED_GENE}
+        ></LoadingPage>
+      )
+    } else if (isError) {
     return (
       <LoadingPage
         loadingAmount={loadAmount}
