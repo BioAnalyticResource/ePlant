@@ -1,7 +1,7 @@
 import { Container } from '@mui/material'
 
 import SerializedGeneticElement from '../GeneticElement'
-import { useSidebarState } from '../state'
+import { useGeneticElements, useSidebarState } from '../state'
 import { useActiveGeneId } from '../state'
 
 import { LeftNav } from './LeftNav'
@@ -14,6 +14,7 @@ export const collapsedSidebarWidth = 100
 export default function Sidebar() {
   const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [isCollapse] = useSidebarState()
+  const [genes, setGenes] = useGeneticElements()
   return (
     <div>
       <ResponsiveDrawer
@@ -38,9 +39,11 @@ export default function Sidebar() {
           }}
         >
           <LeftNav
-            onSelectGene={(gene: SerializedGeneticElement) =>
-              setActiveGeneId(gene.id)
-            }
+            onSelectGene={(gene: SerializedGeneticElement) => {
+              if (genes.find((g) => g.id === gene.id)) {
+                setActiveGeneId(gene.id)
+              }
+            }}
             selectedGene={activeGeneId}
           />
         </Container>

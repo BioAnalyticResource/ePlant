@@ -132,10 +132,10 @@ export function Collection({
   const [hover, setHover] = useState<boolean>(false)
 
   const { setNodeRef: setTopRef } = useDroppable({
-    id: 'Collection-top' + id ?? '',
+    id: 'Collection-top' + id,
   })
   const { setNodeRef: setBottomRef } = useDroppable({
-    id: 'Collection-bottom' + id ?? '',
+    id: 'Collection-bottom' + id,
   })
 
   const menuId = useId()
@@ -354,6 +354,7 @@ export function Collections(props: {
   selectedGene?: string
 }) {
   const [genes, setGenes] = useGeneticElements()
+  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
   const [collections, setCollections] = useCollections()
 
   const sensors = useSensors(
@@ -433,7 +434,9 @@ export function Collections(props: {
                 return cols
               })
             }}
-            deleteGene={(g) => deleteGene(g)}
+            deleteGene={(g) => {
+              deleteGene(g)
+            }}
             setOpen={() => {
               setCollections((collections) => {
                 const cols = collections.slice()
@@ -593,12 +596,23 @@ export function Collections(props: {
       }
       return cols
     })
-    setGenes(genes.filter((g) => g != gene))
+    const newGenes = genes.filter((g) => g.id != gene.id)
+    setGenes(newGenes)
+    setActiveGeneId(
+      newGenes.find((gene) => gene.id === activeGeneId) ? activeGeneId : ''
+    )
   }
 
   function deleteCollection(index: number) {
-    setGenes(genes.filter((g) => !collections[index]?.genes.includes(g.id)))
+    const newGenes = genes.filter(
+      (g) => !collections[index]?.genes.includes(g.id)
+    )
+
+    setGenes(newGenes)
     setCollections(collections.filter((c, i) => i != index))
+    setActiveGeneId(
+      newGenes.find((gene) => gene.id === activeGeneId) ? activeGeneId : ''
+    )
   }
 
   function addCollection() {

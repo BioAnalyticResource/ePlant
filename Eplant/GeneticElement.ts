@@ -50,12 +50,6 @@ export default class GeneticElement {
 export type SpeciesApi = {
   searchGene: (term: string) => Promise<GeneticElement | null>
   autocomplete: (term: string) => Promise<string[]>
-  loaders: {
-    [key: string]: (
-      gene: GeneticElement,
-      loadEvent: (amount: number) => void
-    ) => Promise<any>
-  }
 }
 
 /**

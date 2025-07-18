@@ -33,5 +33,3 @@ export type EFPSVG = { svg: string; xml: string; id: EFPId }
 export type EFPSVGCache = {
   [key: EFPId]: EFPSVG
 }
-
-export type EFPAction = never

@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { ViewDataError } from '@eplant/View/viewData'
+import { ViewDataError } from '@eplant/View'
 import { CircularProgress, Typography } from '@mui/material'
 
 import { getEFPSampleData } from '../../eFP'
@@ -104,6 +104,7 @@ export const CellEFPDataObject: CellEFPDataObject = {
       })
       .filter((g) => Number.isFinite(g.mean))
 
+    loadEvent(100)
     const out: EFPData = {
       groups: groupData,
       min: Math.min(...groupData.map((g) => g.min)),

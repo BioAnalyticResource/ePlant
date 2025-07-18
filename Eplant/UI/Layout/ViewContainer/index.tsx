@@ -1,32 +1,29 @@
-import { useEffect, useId, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
-import GeneticElement from '@eplant/GeneticElement'
-import { usePrinting } from '@eplant/state'
-import Modal from '@eplant/UI/Modal'
-import downloadFile from '@eplant/util/downloadFile'
-import ErrorBoundary from '@eplant/util/ErrorBoundary'
-import { useViewData } from '@eplant/View/viewData'
 import {
-  AppBar,
+  useActiveGeneId,
+  useActiveViewId,
+  useGeneticElements,
+  usePrinting,
+  useSpecies,
+} from '@eplant/state'
+import Modal from '@eplant/UI/Modal'
+import ErrorBoundary from '@eplant/util/ErrorBoundary'
+import { ViewDataError } from '@eplant/View'
+import GeneInfoViewMetadata from '@eplant/views/GeneInfoView'
+import {
+  Box,
   Button,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  ListItemText,
-  MenuItem,
-  Select,
-  Stack,
-  Toolbar,
   Typography,
 } from '@mui/material'
-import Box, { BoxProps } from '@mui/material/Box'
-
-import { View } from '../../../View'
 
 import LoadingPage from './LoadingPage'
-import ViewOptions from './ViewOptions'
+import { TopBar } from './Topbar'
 
 /**
  * Wraps a view in a container that provides a toolbar and a download button. It also manages loading the view's data.
@@ -36,214 +33,103 @@ import ViewOptions from './ViewOptions'
  * @param props The remaining props are passed directly to the container
  * @returns
  */
-export function ViewContainer<T, S, A>({
-  view,
-  setView,
-  gene,
-  ...props
-}: {
-  view: View<T, S, A>
-  setView: (view: View) => void
-  gene: GeneticElement | null
-} & BoxProps) {
-  const { activeData, error, loading, loadingAmount, dispatch, state } =
-    useViewData(view, gene)
-  const idLabel = useId()
-  const selectId = useId()
+export function ViewContainer<T, S, A>({ ...props }) {
   const [printing, setPrinting] = usePrinting()
-
   const [viewingCitations, setViewingCitations] = useState(false)
+  const { views } = useConfig()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const params = useParams()
+  const [speciesList] = useSpecies()
+  const [genes, setGenes] = useGeneticElements()
+  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
+  const [activeViewId, setActiveViewId] = useActiveViewId()
+  const [geneNotFound, setGeneNotFound] = useState(false)
 
-  const { userViews, views, genericViews } = useConfig()
-
+  // On app url change, make sure loaded gene and view aligns with URL
   useEffect(() => {
-    if (printing) {
-      setTimeout(() => {
-        window.print()
-        setPrinting(false)
-      }, 100)
+    const loadGene = async (geneid: string) => {
+      // TODO: This is super jank, should probably write some better utilities for loading genes
+      const species = speciesList.find(
+        (species) => species.name === 'Arabidopsis'
+      )
+      const newGene = await species?.api.searchGene(geneid)
+      if (newGene) {
+        setGenes([...genes, newGene])
+      } else {
+        setGeneNotFound(true)
+        setActiveGeneId('')
+      }
     }
-  }, [printing])
+    if (params.geneid) {
+      if (params.geneid !== activeGeneId) {
+        if (!genes.find((g) => g.id === params.geneid)) {
+          loadGene(params.geneid)
+        }
+        if (!geneNotFound) setActiveGeneId(params.geneid)
+      }
+    } else {
+      // Set active gene to first available if one is already loaded
+      if (genes.length > 0) {
+        setActiveGeneId(genes[0].id)
+      } else {
+        setActiveGeneId('')
+      }
+    }
 
-  const topBar = useMemo(
-    () => (
-      <AppBar
-        variant='elevation'
-        sx={(theme) => ({
-          background: theme.palette.background.active,
-        })}
-        position='sticky'
-        elevation={0}
-      >
-        <Toolbar
-          sx={(theme) => ({
-            gap: '8px',
-            paddingRight: 16,
-            borderStyle: 'solid',
-            borderWidth: '1px 0px 1px 1px',
-            borderColor: theme.palette.background.edge,
-            borderLeftColor: theme.palette.background.edgeLight,
-          })}
-        >
-          <Stack
-            direction='row'
-            gap={2}
-            sx={{
-              flexGrow: 1,
-              height: '100%',
-              alignItems: 'center',
-            }}
-          >
-            {/* View selector dropdown */}
-            <FormControl variant='standard'>
-              <Select
-                value={view.id}
-                renderValue={() => {
-                  if (view.id == 'get-started') {
-                    return <span style={{ paddingLeft: 8 }}>View selector</span>
-                  }
-                  return (
-                    <span
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Box sx={{ paddingRight: 1.5, marginTop: 0.5 }}>
-                        {view.icon && <view.icon />}
-                      </Box>
-                      {view.name}
-                    </span>
-                  )
-                }}
-                labelId={idLabel}
-                label={'View'}
-                id={selectId}
-                onChange={(e) => {
-                  const view = views.find((view) => view.id == e?.target?.value)
-                  if (view) setView(view)
-                }}
-                sx={{
-                  '& .MuiSelect-select': {
-                    paddingRight: '36px !important',
-                  },
-                }}
-                inputProps={{
-                  sx: (theme: {
-                    shape: any
-                    palette: {
-                      background: { paperOverlay: any; edgeLight: any }
-                    }
-                  }) => ({
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: theme.palette.background.paperOverlay,
-                    paddingTop: 0.75,
-                    paddingLeft: 1,
-                    paddingBottom: 0.5,
-                    borderTopLeftRadius: theme.shape.borderRadius,
-                    borderTopRightRadius: theme.shape.borderRadius,
-                    borderStyle: 'solid',
-                    borderWidth: 1,
-                    borderColor: theme.palette.background.edgeLight,
-                    ':focus': {
-                      backgroundColor: theme.palette.background.paperOverlay,
-                      borderRadius: 1,
-                    },
-                    '& legend': { display: 'none' },
-                    '& fieldset': { top: 0 },
-                  }),
-                }}
-              >
-                <MenuItem disabled value=''>
-                  Select a view
-                </MenuItem>
-                {userViews.map((view) => (
-                  <MenuItem
-                    key={view.id}
-                    value={view.id}
-                    style={{
-                      display: userViews.some((u) => u.id == view.id)
-                        ? 'flex'
-                        : 'none',
-                      paddingTop: 8,
-                      paddingBottom: 8,
-                      marginBottom: 0,
-                    }}
-                  >
-                    <Box sx={{ paddingRight: 2, marginTop: 0.5 }}>
-                      {view.icon && <view.icon />}
-                    </Box>
-                    <ListItemText
-                      sx={{
-                        textAlign: 'left',
-                        color: 'secondary.contrastText',
-                        textTransform: 'none',
-                        fontWeight: 'regular',
-                      }}
-                      key={view.name}
-                      onClick={(e) => {
-                        if (view) setView(view)
-                      }}
-                    >
-                      {view.name}
-                    </ListItemText>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Stack>
+    // Set activeview
+    const urlView =
+      views.find((view) => view.id === location.pathname.split('/')[1]) ??
+      GeneInfoViewMetadata
 
-          <ViewOptions
-            gene={gene}
-            state={state}
-            view={view}
-            loading={loading}
-            dispatch={dispatch}
-          />
-          <Button
-            variant='text'
-            sx={{
-              color: 'secondary.contrastText',
-            }}
-            disabled={loading}
-            color='secondary'
-            onClick={() => {
-              setViewingCitations(true)
-            }}
-          >
-            Data sources
-          </Button>
-          <Button
-            variant='text'
-            sx={{
-              color: 'secondary.contrastText',
-            }}
-            disabled={loading}
-            color='secondary'
-            onClick={() => {
-              downloadFile(
-                `${view.id}${gene ? '-' + gene.id : ''}.json`,
-                JSON.stringify(activeData, null, 2)
-              )
-            }}
-          >
-            Download data
-          </Button>
-        </Toolbar>
-      </AppBar>
-    ),
-    [view.id, gene?.id, loading, activeData, state, dispatch]
-  )
+    setActiveViewId(urlView.id)
+  }, [])
+
+  // On when the activegene or view changes, update path
+  useEffect(() => {
+    const oldPathSegments = location.pathname
+      .split('/')
+      .filter((segment) => segment !== '')
+
+    const newPathSegments = []
+    if (activeViewId) {
+      newPathSegments.push(activeViewId)
+    }
+    if (activeGeneId) {
+      newPathSegments.push(activeGeneId)
+    }
+
+    if (newPathSegments.length > 0) {
+      let newPath
+      if (
+        oldPathSegments.length > 0 &&
+        oldPathSegments[0] == newPathSegments[0]
+      ) {
+        // If the view is the same we want to retain quary params in url, else we can wipe
+        // them and have URLStateManager handle things
+        newPath = '/' + newPathSegments.join('/') + location.search
+      } else {
+        newPath = '/' + newPathSegments.join('/')
+      }
+      navigate(newPath)
+    }
+  }, [activeGeneId, activeViewId])
+
+  // Get view and gene objects once everything resolves
+  const activeView =
+    views.find((view) => view.id === activeViewId) ?? GeneInfoViewMetadata
+  const gene = genes.find((gene) => gene.id === activeGeneId) ?? null
   return (
     <Box {...props} display='flex' flexDirection='column'>
       <Modal open={viewingCitations} onClose={() => setViewingCitations(false)}>
         <DialogTitle sx={{ minWidth: '512px' }}>
-          <Typography variant='h6'>Data sources for {view.name}</Typography>
+          <Typography variant='h6'>
+            Data sources for {activeView.name}
+          </Typography>
         </DialogTitle>
         <DialogContent>
-          {view.citation ? (
-            <view.citation state={state} activeData={activeData} gene={gene} />
+          {activeView.citation ? (
+            <activeView.citation />
           ) : (
             <Box>No information provided for this view</Box>
           )}
@@ -253,7 +139,11 @@ export function ViewContainer<T, S, A>({
         </DialogActions>
       </Modal>
 
-      {topBar}
+      <TopBar
+        activeView={activeView}
+        loading={false}
+        setViewingCitations={setViewingCitations}
+      />
       <Box
         sx={(theme) => ({
           padding: '1rem',
@@ -282,24 +172,11 @@ export function ViewContainer<T, S, A>({
         })}
       >
         <ErrorBoundary>
-          {/* Only show the gene header if a gene is selected and this view belongs to the gene */}
-          {loading || activeData === undefined ? (
-            <LoadingPage
-              loadingAmount={loadingAmount}
-              gene={gene}
-              view={view}
-              error={error}
-            />
-          ) : (
-            <>
-              <view.component
-                state={state}
-                geneticElement={gene}
-                activeData={activeData}
-                dispatch={dispatch}
-              />
-            </>
-          )}
+          <Outlet
+            context={{
+              geneticElement: gene,
+            }}
+          ></Outlet>
         </ErrorBoundary>
       </Box>
     </Box>

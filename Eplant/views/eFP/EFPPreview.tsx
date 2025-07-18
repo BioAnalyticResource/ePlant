@@ -7,6 +7,7 @@ import {
 } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
+import { Transform } from '@eplant/util/PanZoom'
 import { Box, BoxProps, Skeleton, styled, Typography } from '@mui/material'
 
 import { EFPData } from './types'
@@ -37,6 +38,7 @@ export type EFPPreviewProps = {
   data: EFPData
   maskThreshold: number
   maskingEnabled: boolean
+  transform: Transform
 } & BoxProps
 
 export default function EFPPreview({
@@ -47,10 +49,12 @@ export default function EFPPreview({
   data,
   maskThreshold,
   maskingEnabled,
+  transform,
   ...boxProps
 }: EFPPreviewProps) {
   const colorModeDeferred = useDeferredValue(colorMode)
   const dataDeferred = useDeferredValue(data)
+  const transformDeferred = useDeferredValue(transform)
   const [draw, setDraw] = useState(false)
   useEffect(() => {
     if (!draw)
@@ -72,7 +76,6 @@ export default function EFPPreview({
             maskingEnabled: maskingEnabled,
           }}
           geneticElement={gene}
-          dispatch={() => {}}
         />
         <div
           style={{
@@ -99,6 +102,7 @@ export default function EFPPreview({
     selected,
     maskThreshold,
     maskingEnabled,
+    transformDeferred,
   ])
   return draw ? (
     component

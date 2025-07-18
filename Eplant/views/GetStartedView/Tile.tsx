@@ -6,7 +6,7 @@ import {
   useSetActiveGeneId,
   useSetActiveViewId,
 } from '@eplant/state'
-import { View } from '@eplant/View'
+import { ViewMetadata } from '@eplant/View'
 import {
   Button,
   Card,
@@ -17,7 +17,7 @@ import {
 } from '@mui/material'
 
 export type TileProps = {
-  view: View
+  view: ViewMetadata
 }
 
 export default function Tile({ view }: TileProps) {

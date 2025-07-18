@@ -4,6 +4,7 @@ First off, thank you for considering contributing to ePlant! By submitting your 
 agree that it can be shared under the terms of our license.
 
 ### Code of Conduct
+
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms.
 
 ## How to Contribute
@@ -39,7 +40,7 @@ We welcome feature requests! To suggest a new feature, please open an issue on G
    ```bash
    git remote add upstream https://github.com/BioAnalyticResource/ePlant
    ```
-4. **Verify versions**: Most folks are working with _Node v18.0.0^ and npm 9.8.0^. [You can install Node from here.](https://nodejs.org/en/download/package-manager)
+4. **Verify versions**: Most folks are working with \_Node v18.0.0^ and npm 9.8.0^. [You can install Node from here.](https://nodejs.org/en/download/package-manager)
    ```bash
    node -v
    npm -v
@@ -54,12 +55,13 @@ We welcome feature requests! To suggest a new feature, please open an issue on G
    ```
 
 ### Submitting changes
+
 1. **Create a branch**
    ```bash
    git checkout -b your-branch-name
    ```
 2. **Make changes**: Make changes in your forked repository.
-3.  **Test your changes**: Make sure your changes are working correctly.
+3. **Test your changes**: Make sure your changes are working correctly.
 4. **Commit your changes**:
    ```bash
    git commit -m "Your commit message"
@@ -80,6 +82,7 @@ Please include in the PR:
 - **Notes (Optional)**: Additional notes.
 
 ### Code Style
+
 This is an abridged version of the [Google style guide](https://google.github.io/styleguide/tsguide.html) and [MS Typescript Coding guidelines](https://github.com/microsoft/TypeScript/wiki/Coding-guidelines), plus some tweaks to make it our own.
 
 Use Prettier and ESLint for code formatting. You may want to install the plugin for your IDE to get live feedback and you can configure your IDE to apply auto formatting when you save a file. Using the tsconfig.json file, you can customize the rules for type checking. Avoid removing and/or ignoring default rules as much as possible. If you feel strongly about a rule please outline the changes into a PR and we can discuss the merits of introducing a new change.
@@ -87,12 +90,15 @@ Use Prettier and ESLint for code formatting. You may want to install the plugin 
 All the new code must be written in typescript and all the types should be clearly defined in the project.
 
 ### Documentation
+
 If your change affects any part of the documentation, please update the `README.md` accordingly.
 
 ### Testing
+
 Make sure to run all tests before submitting your changes. If you add new functionality, please include tests for it.
 
 ### Getting Help
+
 If you need help, feel free to ask questions by opening an issue. We appreciate your contributions!
 
 Thank you for contributing to ePlant!

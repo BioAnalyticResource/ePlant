@@ -1,17 +1,21 @@
-import React from 'react'
+import { useEffect } from 'react'
+import { z } from 'zod'
 
 import { useConfig } from '@eplant/config'
-import { ViewProps } from '@eplant/View'
+import { useURLState } from '@eplant/state/URLStateProvider'
 import { Filter1, Filter2, Filter3 } from '@mui/icons-material'
 import { Grid, Link, Stack, Typography, useTheme } from '@mui/material'
 
 import Tile from './Tile'
 
-export default function GetStartedView({
-  geneticElement,
-}: ViewProps<Record<string, undefined>, undefined, undefined>) {
+export default function GetStartedView() {
   const theme = useTheme()
   const { views } = useConfig()
+  const { state, setState, initializeState } = useURLState<any>()
+
+  useEffect(() => {
+    initializeState(z.object({}))
+  })
   return (
     <Stack spacing={3}>
       <div>

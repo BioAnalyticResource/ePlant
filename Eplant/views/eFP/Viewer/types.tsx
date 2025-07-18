@@ -1,5 +1,10 @@
+import { z } from 'zod'
+
+import GeneticElement from '@eplant/GeneticElement'
 import { Transform } from '@eplant/util/PanZoom'
-import { ColorMode, EFPData, EFPId } from '@eplant/views/eFP/types'
+import { EFPData, EFPId } from '@eplant/views/eFP/types'
+
+import EFP from '..'
 
 export type EFPViewerData = {
   views: {
@@ -13,22 +18,34 @@ export type EFPViewerData = {
 
 export type EFPViewerSortTypes = 'expression-level' | 'name'
 
-export type EFPViewerState = {
-  activeView: EFPId
-  transform: Transform
-  colorMode: ColorMode
-  sortBy: EFPViewerSortTypes
-  maskingEnabled: boolean
-  maskModalVisible: boolean
-  maskThreshold: number
-}
+const transformSchema = z.object({
+  offset: z.object({
+    x: z.number().default(0),
+    y: z.number().default(0),
+  }),
+  zoom: z.number().min(0.25).max(4).default(1),
+})
 
-export type EFPViewerAction =
-  | { type: 'set-view'; id: EFPId }
-  | { type: 'reset-transform' }
-  | { type: 'set-transform'; transform: Transform }
-  | { type: 'toggle-color-mode' }
-  | { type: 'sort-by'; by: EFPViewerSortTypes }
-  | { type: 'toggle-masking' }
-  | { type: 'toggle-mask-modal' }
-  | { type: 'set-mask-threshold'; threshold: number }
+export const EFPViewerStateSchema = z.object({
+  activeView: z.string().default(''),
+  colorMode: z.enum(['absolute', 'relative']).default('absolute'),
+  transform: transformSchema,
+  sortBy: z.enum(['name', 'expression-level']).default('name'),
+  maskingEnabled: z.boolean().default(false),
+  maskThreshold: z.number().default(100),
+  maskModalVisible: z.boolean().default(false),
+})
+
+export type EFPViewerState = z.infer<typeof EFPViewerStateSchema>
+export type EFPListProps = {
+  geneticElement: GeneticElement
+  views: EFP[]
+  viewData: EFPData[]
+  activeView: EFP
+  setActiveView: (viewID: EFPId) => void
+  height: number
+  colorMode: 'absolute' | 'relative'
+  maskThreshold: number
+  maskingEnabled: boolean
+  transform: Transform
+}

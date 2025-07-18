@@ -1,8 +1,7 @@
 import { SVGProps } from 'react'
 
 import GeneticElement from '@eplant/GeneticElement'
-import { View } from '@eplant/View'
-import { ViewDataError } from '@eplant/View/viewData'
+import { ViewDataError, ViewMetadata } from '@eplant/View'
 import { Player } from '@lottiefiles/react-lottie-player'
 import { Box, LinearProgress, Stack, Typography, useTheme } from '@mui/material'
 
@@ -36,14 +35,21 @@ export function LoadingImage(props: SVGProps<SVGSVGElement>) {
 export default function LoadingPage(props: {
   loadingAmount: number
   gene: GeneticElement | null
-  view: View
+  view: ViewMetadata
   error: ViewDataError | null
 }) {
   const theme = useTheme()
   if (props.error == ViewDataError.UNSUPPORTED_GENE)
-    return <NotSupported geneticElement={props.gene} view={props.view} />
+    return (
+      <NotSupported geneticElement={props.gene} viewName={props.view.name} />
+    )
   if (props.error == ViewDataError.FAILED_TO_LOAD)
-    return <FailedToLoad geneticElement={props.gene} view={props.view} />
+    return (
+      <FailedToLoad
+        geneticElementId={props.gene?.id}
+        viewId={props.view.name}
+      />
+    )
   return (
     <Stack gap={4}>
       <LinearProgress variant='determinate' value={props.loadingAmount * 100} />

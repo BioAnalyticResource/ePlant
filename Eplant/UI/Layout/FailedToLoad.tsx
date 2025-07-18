@@ -3,7 +3,7 @@ import { SVGProps } from 'react'
 import GeneticElement from '@eplant/GeneticElement'
 import { Link, Stack, Typography, useTheme } from '@mui/material'
 
-import { View } from '../../View'
+import { ViewMetadata } from '../../View'
 
 const Illustration = ({
   color,
@@ -39,9 +39,12 @@ const Illustration = ({
 /**
  * The view shown when a view is not supported. Shown when the user switches active genes to a gene that does not support this view
  */
-export default function FailedToLoad(props: {
-  geneticElement: GeneticElement | null
-  view: View
+export default function FailedToLoad({
+  geneticElementId,
+  viewId,
+}: {
+  geneticElementId: string | undefined
+  viewId: string
 }) {
   const theme = useTheme()
   return (
@@ -62,11 +65,9 @@ export default function FailedToLoad(props: {
           marginTop: 2,
         }}
       >
-        {props.geneticElement
-          ? `There was an error while trying to load ${props.view.name.toLowerCase()} for ${
-              props.geneticElement.id
-            }`
-          : `There was an error while trying to load ${props.view.name.toLowerCase()} without a selected gene.`}
+        {geneticElementId
+          ? `There was an error while trying to load ${viewId.toLowerCase()} for ${geneticElementId}`
+          : `There was an error while trying to load ${viewId.toLowerCase()} without a selected gene.`}
       </Typography>
       <Typography
         variant='body1'

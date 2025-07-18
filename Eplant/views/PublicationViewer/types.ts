@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export type PublicationData = {
   first_author: string
   journal: string
@@ -16,3 +18,11 @@ export type PublicationViewerData = {
   geneRIFs: GeneRIFsData[]
 }
 export type TabValues = 'publications' | 'geneRIFs'
+
+export const PublicationsViewStateSchema = z.object({
+  tab: z.enum(['publications', 'geneRIFs']).default('publications'),
+})
+
+export type PublicationsViewerState = z.infer<
+  typeof PublicationsViewStateSchema
+>
