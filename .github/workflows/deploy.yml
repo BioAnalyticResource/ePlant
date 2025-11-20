@@ -29,6 +29,8 @@ jobs:
         env:
           BASE_URL: '/ePlant'
           VITE_MAPS_API_KEY: ${{ secrets.VITE_MAPS_API_KEY }}
+          VITE_MAP_ID: ${{ secrets.VITE_MAP_ID }}
+
       - run: mv dist _site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
