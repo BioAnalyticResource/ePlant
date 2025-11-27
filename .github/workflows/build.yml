@@ -24,3 +24,4 @@ jobs:
         env:
           BASE_URL: '/ePlant'
           VITE_MAPS_API_KEY: ${{ secrets.VITE_MAPS_API_KEY }}
+          VITE_MAP_ID: ${{ secrets.VITE_MAP_ID }}
