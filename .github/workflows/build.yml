@@ -2,8 +2,7 @@ name: Build
 on:
   push:
     branches-ignore:
-      - main
-      - staging
+      - debug-staging
   pull_request:
 jobs:
   build:
