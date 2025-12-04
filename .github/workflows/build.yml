@@ -4,6 +4,7 @@ on:
     branches-ignore:
       - main
       - staging
+      - staging-debug
   pull_request:
 jobs:
   build:
