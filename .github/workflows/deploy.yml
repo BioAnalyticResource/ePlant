@@ -2,8 +2,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main
-      - staging
+      - staging-debug
 
 permissions:
   contents: read
