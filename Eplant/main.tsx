@@ -20,7 +20,6 @@ import { Config, defaultConfig } from './config'
 import Eplant from './Eplant'
 
 import './css/index.css'
-console.log('DEBUG')
 const router = createBrowserRouter([
   {
     path: '/',
