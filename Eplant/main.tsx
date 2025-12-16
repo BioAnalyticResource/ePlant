@@ -22,7 +22,7 @@ import Eplant from './Eplant'
 import './css/index.css'
 const router = createBrowserRouter([
   {
-    path: process.env.BASE_URL ?? '/',
+    path: import.meta.env.BASE_URL ?? '/',
     element: <Eplant />,
     children: [
       {
