@@ -22,7 +22,7 @@ import Eplant from './Eplant'
 import './css/index.css'
 const router = createBrowserRouter([
   {
-    path: import.meta.env.BASE_URL ?? '/',
+    path: '/',
     element: <Eplant />,
     children: [
       {
@@ -67,7 +67,9 @@ const router = createBrowserRouter([
     ],
     errorElement: <ErrorBoundary></ErrorBoundary>,
   },
-])
+], {
+  basename: import.meta.env.BASE_URL ?? '/',
+})
 
 export const queryClient = new QueryClient()
 
