@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { Outlet } from 'react-router-dom'
 
 import { useConfig } from '@eplant/config'
 import {
@@ -7,7 +7,6 @@ import {
   useActiveViewId,
   useGeneticElements,
   usePrinting,
-  useSpecies,
 } from '@eplant/state'
 import Modal from '@eplant/UI/Modal'
 import ErrorBoundary from '@eplant/util/ErrorBoundary'
@@ -37,83 +36,9 @@ export function ViewContainer<T, S, A>({ ...props }) {
   const [printing, setPrinting] = usePrinting()
   const [viewingCitations, setViewingCitations] = useState(false)
   const { views } = useConfig()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const params = useParams()
-  const [speciesList] = useSpecies()
-  const [genes, setGenes] = useGeneticElements()
-  const [activeGeneId, setActiveGeneId] = useActiveGeneId()
-  const [activeViewId, setActiveViewId] = useActiveViewId()
-  const [geneNotFound, setGeneNotFound] = useState(false)
-
-  // On app url change, make sure loaded gene and view aligns with URL
-  useEffect(() => {
-    const loadGene = async (geneid: string) => {
-      // TODO: This is super jank, should probably write some better utilities for loading genes
-      const species = speciesList.find(
-        (species) => species.name === 'Arabidopsis'
-      )
-      const newGene = await species?.api.searchGene(geneid)
-      if (newGene) {
-        setGenes([...genes, newGene])
-      } else {
-        setGeneNotFound(true)
-        setActiveGeneId('')
-      }
-    }
-    if (params.geneid) {
-      if (params.geneid !== activeGeneId) {
-        if (!genes.find((g) => g.id === params.geneid)) {
-          loadGene(params.geneid)
-        }
-        if (!geneNotFound) setActiveGeneId(params.geneid)
-      }
-    } else {
-      // Set active gene to first available if one is already loaded
-      if (genes.length > 0) {
-        setActiveGeneId(genes[0].id)
-      } else {
-        setActiveGeneId('')
-      }
-    }
-
-    // Set activeview
-    const urlView =
-      views.find((view) => view.id === location.pathname.split('/')[1]) ??
-      GeneInfoViewMetadata
-
-    setActiveViewId(urlView.id)
-  }, [])
-
-  // On when the activegene or view changes, update path
-  useEffect(() => {
-    const oldPathSegments = location.pathname
-      .split('/')
-      .filter((segment) => segment !== '')
-
-    const newPathSegments = []
-    if (activeViewId) {
-      newPathSegments.push(activeViewId)
-    }
-    if (activeGeneId) {
-      newPathSegments.push(activeGeneId)
-    }
-
-    if (newPathSegments.length > 0) {
-      let newPath
-      if (
-        oldPathSegments.length > 0 &&
-        oldPathSegments[0] == newPathSegments[0]
-      ) {
-        // If the view is the same we want to retain quary params in url, else we can wipe
-        // them and have URLStateManager handle things
-        newPath = '/' + newPathSegments.join('/') + location.search
-      } else {
-        newPath = '/' + newPathSegments.join('/')
-      }
-      navigate(newPath)
-    }
-  }, [activeGeneId, activeViewId])
+  const [genes] = useGeneticElements()
+  const [activeGeneId] = useActiveGeneId()
+  const [activeViewId] = useActiveViewId()
 
   // Get view and gene objects once everything resolves
   const activeView =
