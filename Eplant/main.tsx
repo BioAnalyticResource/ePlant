@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { Provider } from 'jotai'
 import * as ReactDOM from 'react-dom/client'
-import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -20,7 +20,7 @@ import { Config, defaultConfig } from './config'
 import Eplant from './Eplant'
 
 import './css/index.css'
-const router = createHashRouter(
+const router = createBrowserRouter(
   [
     {
       path: '/',
