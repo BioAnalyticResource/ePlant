@@ -111,3 +111,8 @@ export const unflattenObject = (
   }
   return result
 }
+
+export const getViewIdFromPathname = (pathname: string): string => {
+  const pathParts = pathname.split('/').filter(Boolean)
+  return pathParts[0] || 'gene-info'
+}
