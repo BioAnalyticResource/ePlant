@@ -10,25 +10,28 @@ import {
   useTheme,
 } from '@mui/material'
 
-import { EFPViewerState } from './types'
-
 // Modal component with a slider
 interface MaskModalProps {
   isVisible: boolean
-  state: EFPViewerState
+  threshold: number
   onClose: () => void
   onSubmit: (threshhold: number) => void
 }
 
-const MaskModal = ({ isVisible, state, onClose, onSubmit }: MaskModalProps) => {
-  const [sliderValue, setSliderValue] = useState<number>(state.maskThreshold)
+const MaskModal = ({
+  isVisible,
+  threshold,
+  onClose,
+  onSubmit,
+}: MaskModalProps) => {
+  const [sliderValue, setSliderValue] = useState<number>(threshold)
   const theme = useTheme()
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     setSliderValue(newValue as number)
   }
 
   const handleClose = () => {
-    setSliderValue(state.maskThreshold)
+    setSliderValue(threshold)
     onClose()
   }
 
