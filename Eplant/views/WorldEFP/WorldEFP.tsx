@@ -74,13 +74,7 @@ export const WorldEFPView = () => {
   return (
     <>
       <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY} version='beta'>
-        <MapContainer
-          activeData={data}
-          state={state}
-          dispatch={(action: WorldEFPAction) => {
-            // TODO: implement reducer logic
-          }}
-        />
+        <MapContainer activeData={data} state={state} setState={setState} />
       </APIProvider>
       <MaskModal
         isVisible={state.maskModalVisible}

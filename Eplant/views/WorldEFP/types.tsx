@@ -5,12 +5,10 @@ import { EFPData } from '../eFP/types'
 export type Coordinates = { lat: number; lng: number }
 
 export const WorldEFPStateSchema = z.object({
-  position: z
-    .object({
-      lat: z.number().min(-90).max(90),
-      lng: z.number().min(-180).max(180),
-    })
-    .default({ lat: 25, lng: 0 }),
+  position: z.object({
+    lat: z.number().default(25),
+    lng: z.number().default(0),
+  }),
   zoom: z.number().min(0).max(22).default(2),
   mapTypeId: z
     .enum(['roadmap', 'satellite', 'hybrid', 'terrain'])

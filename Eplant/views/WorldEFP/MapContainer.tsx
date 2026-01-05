@@ -1,9 +1,7 @@
-import { useCallback } from 'react'
+import { useEffect } from 'react'
 
-import { ViewDispatch } from '@eplant/View'
 import { useTheme } from '@mui/material'
 import {
-  APIProvider,
   Map,
   MapCameraChangedEvent,
   MapEvent,
@@ -15,33 +13,32 @@ import GeneDistributionChart from '../eFP/Viewer/GeneDistributionChart'
 import Legend from '../eFP/Viewer/legend'
 
 import MapMarker from './MapMarker'
-import { WorldEFPAction, WorldEFPData, WorldEFPState } from './types'
+import { WorldEFPData, WorldEFPState } from './types'
 
 interface MapContainerProps {
   activeData: WorldEFPData
   state: WorldEFPState
-  dispatch: ViewDispatch<WorldEFPAction>
+  setState: (state: WorldEFPState) => void
 }
-const MapContainer = ({ activeData, state, dispatch }: MapContainerProps) => {
+const MapContainer = ({ activeData, state, setState }: MapContainerProps) => {
   const theme = useTheme()
   const map = useMap('WorldEFP')
+
+  // set map state on load from cache, url or default
+  useEffect(() => {
+    map?.moveCamera({ zoom: state.zoom, center: state.position })
+  }, [map])
 
   const hangleDragEnd = (event: MapEvent) => {
     const mapPos = map?.getCenter()
     if (!mapPos) return
 
     const coords = { lat: mapPos.lat(), lng: mapPos.lng() }
-    dispatch({
-      type: 'set-map-position',
-      position: coords,
-    })
+    setState({ ...state, position: coords })
   }
 
   const handleZoom = (event: MapCameraChangedEvent) => {
-    dispatch({
-      type: 'set-map-zoom',
-      zoom: event.detail.zoom,
-    })
+    setState({ ...state, zoom: event.detail.zoom })
   }
 
   return (
