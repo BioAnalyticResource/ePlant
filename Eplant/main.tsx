@@ -16,6 +16,7 @@ import { InteractionsViewObject } from './views/InteractionsViewer/InteractionsV
 import { NavigatorViewObject } from './views/NavigatorView/NavigatorView'
 import { PlantEFPView } from './views/PlantEFP/PlantEFP'
 import { PublicationsViewer } from './views/PublicationViewer/PublicationsView'
+import { WorldEFPView } from './views/WorldEFP/WorldEFP'
 import { Config, defaultConfig } from './config'
 import Eplant from './Eplant'
 
@@ -64,6 +65,10 @@ const router = createBrowserRouter(
         {
           path: 'interactions-view/:geneid?',
           element: <InteractionsViewObject></InteractionsViewObject>,
+        },
+        {
+          path: 'world-efp/:geneid?',
+          element: <WorldEFPView></WorldEFPView>,
         },
       ],
       errorElement: <ErrorBoundary></ErrorBoundary>,

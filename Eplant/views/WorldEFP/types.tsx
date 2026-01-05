@@ -1,18 +1,27 @@
-import { ColorMode, EFPData } from '../eFP/types'
+import { z } from 'zod'
+
+import { EFPData } from '../eFP/types'
 
 export type Coordinates = { lat: number; lng: number }
 
-type MapTypeId = 'roadmap' | 'satellite' | 'hybrid' | 'terrain'
+export const WorldEFPStateSchema = z.object({
+  position: z
+    .object({
+      lat: z.number().min(-90).max(90),
+      lng: z.number().min(-180).max(180),
+    })
+    .default({ lat: 25, lng: 0 }),
+  zoom: z.number().min(0).max(22).default(2),
+  mapTypeId: z
+    .enum(['roadmap', 'satellite', 'hybrid', 'terrain'])
+    .default('roadmap'),
+  maskModalVisible: z.boolean().default(false),
+  maskingEnabled: z.boolean().default(false),
+  maskThreshold: z.number().min(0).max(100).default(100),
+  colorMode: z.enum(['absolute', 'relative']).default('absolute'),
+})
 
-export type WorldEFPState = {
-  position: Coordinates
-  zoom: number
-  mapTypeId: MapTypeId
-  maskModalVisible: boolean
-  maskingEnabled: boolean
-  maskThreshold: number
-  colorMode: ColorMode
-}
+export type WorldEFPState = z.infer<typeof WorldEFPStateSchema>
 
 export type WorldEFPData = {
   positions: Coordinates[]
@@ -23,7 +32,6 @@ export interface WorldEFPMicroArrayResponse {
   wasSuccessful: boolean
   data: { [key: string]: WorldEFPMicroArrayData }
 }
-
 export interface WorldEFPMicroArrayData {
   source: string
   id: string
@@ -34,6 +42,7 @@ export interface WorldEFPMicroArrayData {
   values: { [key: string]: number }
   code: string
 }
+
 export type WorldEFPAction =
   | { type: 'toggle-color-mode' }
   | { type: 'toggle-masking' }
