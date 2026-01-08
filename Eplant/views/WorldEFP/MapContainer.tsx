@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 
-import { useTheme } from '@mui/material'
+import { Box, useTheme } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 import {
   Map,
   MapCameraChangedEvent,
@@ -74,17 +75,36 @@ const MapContainer = ({ activeData, state, setState }: MapContainerProps) => {
           ></MapMarker>
         )
       })}
-      <Legend
+      <Box
         sx={(theme) => ({
           position: 'absolute',
           left: theme.spacing(2),
           bottom: theme.spacing(4),
           zIndex: 10,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: theme.spacing(1),
+          padding: theme.spacing(1),
+          borderRadius: theme.spacing(1),
+          backgroundColor: alpha(theme.palette.background.active, 0.4),
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
+          border: `1px solid ${alpha(theme.palette.background.edge, 0.7)}`,
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
         })}
-        colorMode={'absolute'}
-        data={activeData.efpData}
-      ></Legend>
-      <GeneDistributionChart data={activeData.efpData} />
+      >
+        <GeneDistributionChart
+          data={activeData.efpData}
+          containerStyle={{
+            position: 'static',
+            width: 'auto',
+            height: 'auto',
+            marginLeft: '-12px',
+          }}
+        />
+        <Legend colorMode={'absolute'} data={activeData.efpData}></Legend>
+      </Box>
     </Map>
   )
 }

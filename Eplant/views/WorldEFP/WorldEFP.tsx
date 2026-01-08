@@ -10,12 +10,12 @@ import { useQuery } from '@tanstack/react-query'
 import { APIProvider } from '@vis.gl/react-google-maps'
 
 import { EFPData, EFPGroup } from '../eFP/types'
+import GeneDistributionChart from '../eFP/Viewer/GeneDistributionChart'
 import MaskModal from '../eFP/Viewer/MaskModal'
 
 import MapContainer from './MapContainer'
 import {
   Coordinates,
-  WorldEFPAction,
   WorldEFPData,
   WorldEFPMicroArrayResponse,
   WorldEFPState,
