@@ -1,7 +1,7 @@
 import { StateAction, ViewMetadata } from '@eplant/View'
+import { Map } from '@mui/icons-material'
 import BuildRoundedIcon from '@mui/icons-material/BuildRounded'
 import ColorLensIcon from '@mui/icons-material/ColorLens'
-import MasksIcon from '@mui/icons-material/Masks'
 
 import WorldEFPIcon from './icon'
 import { WorldEFPData, WorldEFPState } from './types'

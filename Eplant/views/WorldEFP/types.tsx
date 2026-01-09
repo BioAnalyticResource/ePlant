@@ -40,11 +40,3 @@ export interface WorldEFPMicroArrayData {
   values: { [key: string]: number }
   code: string
 }
-
-export type WorldEFPAction =
-  | { type: 'toggle-color-mode' }
-  | { type: 'toggle-masking' }
-  | { type: 'toggle-mask-modal' }
-  | { type: 'set-mask-threshold'; threshold: number }
-  | { type: 'set-map-position'; position: Coordinates }
-  | { type: 'set-map-zoom'; zoom: number }

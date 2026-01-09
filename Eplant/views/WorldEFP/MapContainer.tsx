@@ -14,6 +14,7 @@ import GeneDistributionChart from '../eFP/Viewer/GeneDistributionChart'
 import Legend from '../eFP/Viewer/legend'
 
 import MapMarker from './MapMarker'
+import MapTypeSelector from './MapTypeSelector'
 import { WorldEFPData, WorldEFPState } from './types'
 
 interface MapContainerProps {
@@ -48,7 +49,7 @@ const MapContainer = ({ activeData, state, setState }: MapContainerProps) => {
       defaultZoom={2}
       mapId={import.meta.env.VITE_MAP_ID}
       streetViewControl={false}
-      mapTypeId={'roadmap'}
+      mapTypeId={state.mapTypeId}
       mapTypeControl={false}
       onDragend={hangleDragEnd}
       onZoomChanged={handleZoom}
@@ -75,6 +76,22 @@ const MapContainer = ({ activeData, state, setState }: MapContainerProps) => {
           ></MapMarker>
         )
       })}
+      <Box
+        sx={(theme) => ({
+          position: 'absolute',
+          left: theme.spacing(2),
+          top: theme.spacing(2),
+          zIndex: 10,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: theme.spacing(1),
+        })}
+      >
+        <MapTypeSelector
+          mapTypeId={state.mapTypeId}
+          onSelect={(mapTypeId) => setState({ ...state, mapTypeId })}
+        />
+      </Box>
       <Box
         sx={(theme) => ({
           position: 'absolute',
