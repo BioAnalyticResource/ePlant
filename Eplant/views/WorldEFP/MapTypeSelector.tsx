@@ -86,17 +86,11 @@ const MapTypeSelector = ({ mapTypeId, onSelect }: MapTypeSelectorProps) => {
                 color: theme.palette.text.primary,
                 padding: theme.spacing(0.5, 1),
                 '&:hover': {
-                  backgroundColor: alpha(
-                    theme.palette.background.active,
-                    0.45
-                  ),
+                  backgroundColor: alpha(theme.palette.background.active, 0.45),
                 },
                 ...(mapTypeId === type && {
                   fontWeight: 600,
-                  backgroundColor: alpha(
-                    theme.palette.background.active,
-                    0.6
-                  ),
+                  backgroundColor: alpha(theme.palette.background.active, 0.6),
                   borderRadius: theme.spacing(0.75),
                   '&:hover': {
                     backgroundColor: alpha(
