@@ -1,14 +1,13 @@
 import { StateAction, ViewMetadata } from '@eplant/View'
-import { Map } from '@mui/icons-material'
 import BuildRoundedIcon from '@mui/icons-material/BuildRounded'
 import ColorLensIcon from '@mui/icons-material/ColorLens'
+import PublicIcon from '@mui/icons-material/Public'
 
-import WorldEFPIcon from './icon'
 import { WorldEFPData, WorldEFPState } from './types'
 const WorldEFP: ViewMetadata<WorldEFPData, WorldEFPState> = {
   name: 'World-EFP',
   id: 'world-efp',
-  icon: () => <WorldEFPIcon></WorldEFPIcon>,
+  icon: () => <PublicIcon />,
   description: '',
   // TODO: If dark theme is active, use ThumbnailDark
   citation({ gene }) {
