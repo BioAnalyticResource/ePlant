@@ -8,7 +8,6 @@ import { Theme, useTheme } from '@mui/material'
 import {
   ColorMode,
   EFPData,
-  EFPGroup,
   EFPId,
   EFPSampleData,
   EFPSVGCache,
@@ -90,7 +89,7 @@ export const useEFPSVG = (
 
 export function getColor(
   value: number,
-  group: EFPSampleData | EFPGroup,
+  group: EFPSampleData,
   control: number,
   theme: Theme,
   colorMode: ColorMode,
@@ -124,12 +123,13 @@ export function getColor(
 
 export function useStyles(
   id: string,
-  { groups, control }: EFPData,
+  data: EFPData,
   colorMode: ColorMode,
   maskThreshold?: number,
   maskingEnabled?: boolean
 ) {
   const theme = useTheme()
+  const { groups, control } = data
   const samples = groups
     .flatMap((group) =>
       group.tissues.map(
@@ -138,7 +138,7 @@ export function useStyles(
             tissue.id
           } { fill: ${getColor(
             tissue.mean,
-            group,
+            data,
             control ?? 1,
             theme,
             colorMode,

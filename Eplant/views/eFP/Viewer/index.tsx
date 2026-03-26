@@ -407,7 +407,7 @@ export default class EFPViewer
               borderRadius: 1,
             })}
           >
-            {activeData.viewData[activeViewIndex].supported ? (
+            {sortedViewData[activeViewIndex].supported ? (
               <>
                 <div>
                   <Typography
@@ -422,9 +422,9 @@ export default class EFPViewer
                     {geneticElement?.id}
                   </Typography>
 
-                  {activeData.views[activeViewIndex].name !== 'cellEFP' && (
+                  {sortedViews[activeViewIndex].name !== 'cellEFP' && (
                     <GeneDistributionChart
-                      data={{ ...activeData.viewData[activeViewIndex] }}
+                      data={{ ...sortedViewData[activeViewIndex] }}
                     />
                   )}
                 </div>
@@ -447,7 +447,7 @@ export default class EFPViewer
                     zIndex: 10,
                   })}
                   data={{
-                    ...activeData.viewData[activeViewIndex],
+                    ...sortedViewData[activeViewIndex],
                   }}
                   maskThreshold={state.maskThreshold}
                   colorMode={state.colorMode}
