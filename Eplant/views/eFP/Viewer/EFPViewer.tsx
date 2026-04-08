@@ -191,7 +191,7 @@ export const EFPViewer = ({
             borderRadius: 1,
           })}
         >
-          {data.viewData[activeViewIndex].supported ? (
+          {sortedViewData[activeViewIndex].supported ? (
             <>
               <div>
                 <Typography
@@ -204,7 +204,7 @@ export const EFPViewer = ({
                 </Typography>
 
                 <GeneDistributionChart
-                  data={{ ...data.viewData[activeViewIndex] }}
+                  data={{ ...sortedViewData[activeViewIndex] }}
                 />
               </div>
               <MaskModal
@@ -229,7 +229,7 @@ export const EFPViewer = ({
                   zIndex: 10,
                 })}
                 data={{
-                  ...data.viewData[activeViewIndex],
+                  ...sortedViewData[activeViewIndex],
                 }}
                 maskThreshold={state.maskThreshold}
                 colorMode={state.colorMode}
