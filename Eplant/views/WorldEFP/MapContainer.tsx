@@ -13,9 +13,11 @@ import { getColor } from '../eFP/svg'
 import GeneDistributionChart from '../eFP/Viewer/GeneDistributionChart'
 import Legend from '../eFP/Viewer/legend'
 
+import ClimateOverlay from './ClimateOverlay'
 import MapMarker from './MapMarker'
 import MapTypeSelector from './MapTypeSelector'
-import { WorldEFPData, WorldEFPState } from './types'
+import OverlaySelector from './OverlaySelector'
+import { ColorMode, WorldEFPData, WorldEFPState } from './types'
 
 interface MapContainerProps {
   activeData: WorldEFPData
@@ -55,6 +57,7 @@ const MapContainer = ({ activeData, state, setState }: MapContainerProps) => {
       onZoomChanged={handleZoom}
       id='WorldEFP'
     >
+      <ClimateOverlay overlay={state.overlay} />
       {activeData.positions.map((pos, index) => {
         const color = getColor(
           activeData.efpData.groups[index].mean,
@@ -91,6 +94,10 @@ const MapContainer = ({ activeData, state, setState }: MapContainerProps) => {
           mapTypeId={state.mapTypeId}
           onSelect={(mapTypeId) => setState({ ...state, mapTypeId })}
         />
+        <OverlaySelector
+          overlay={state.overlay}
+          onSelect={(overlay) => setState({ ...state, overlay })}
+        />
       </Box>
       <Box
         sx={(theme) => ({
@@ -120,7 +127,7 @@ const MapContainer = ({ activeData, state, setState }: MapContainerProps) => {
             marginLeft: '-12px',
           }}
         />
-        <Legend colorMode={'absolute'} data={activeData.efpData}></Legend>
+        <Legend colorMode={ColorMode.Absolute} data={activeData.efpData}></Legend>
       </Box>
     </Map>
   )

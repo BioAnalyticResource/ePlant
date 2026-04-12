@@ -1,28 +1,32 @@
 import { useState } from 'react'
 
-import MapIcon from '@mui/icons-material/Map'
+import LayersIcon from '@mui/icons-material/Layers'
 import { Box, Button, Collapse } from '@mui/material'
 import { alpha } from '@mui/material/styles'
 
-import { MapTypeId, WorldEFPState } from './types'
+import { OverlayType, WorldEFPState } from './types'
 
-const MAP_TYPES = Object.values(MapTypeId)
-
-type MapTypeSelectorProps = {
-  mapTypeId: WorldEFPState['mapTypeId']
-  onSelect: (mapTypeId: WorldEFPState['mapTypeId']) => void
+const OVERLAY_LABELS: Record<OverlayType, string> = {
+  [OverlayType.None]: 'None',
+  [OverlayType.Precipitation]: 'Annual Precip.',
+  [OverlayType.HistoricalMinTemp]: 'Min. Temp.',
+  [OverlayType.HistoricalMaxTemp]: 'Max. Temp.',
 }
 
-const MapTypeSelector = ({ mapTypeId, onSelect }: MapTypeSelectorProps) => {
+const OVERLAY_TYPES = Object.values(OverlayType)
+
+type OverlaySelectorProps = {
+  overlay: WorldEFPState['overlay']
+  onSelect: (overlay: WorldEFPState['overlay']) => void
+}
+
+const OverlaySelector = ({ overlay, onSelect }: OverlaySelectorProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
-  const handleMapTypeSelect = (nextType: MapTypeId) => {
-    onSelect(nextType)
+  const handleSelect = (next: OverlayType) => {
+    onSelect(next)
     setIsOpen(false)
   }
-
-  const formatMapTypeLabel = (type: MapTypeId) =>
-    type.charAt(0).toUpperCase() + type.slice(1)
 
   return (
     <Box
@@ -45,14 +49,17 @@ const MapTypeSelector = ({ mapTypeId, onSelect }: MapTypeSelectorProps) => {
           width: '100%',
           justifyContent: 'flex-start',
           textTransform: 'none',
-          color: theme.palette.text.primary,
+          color:
+            overlay !== OverlayType.None
+              ? theme.palette.primary.main
+              : theme.palette.text.primary,
           padding: theme.spacing(1),
           '&:hover': {
             backgroundColor: alpha(theme.palette.background.active, 0.85),
           },
         })}
       >
-        <MapIcon fontSize='small' />
+        <LayersIcon fontSize='small' />
         <Box
           sx={(theme) => ({
             marginLeft: theme.spacing(1),
@@ -63,7 +70,7 @@ const MapTypeSelector = ({ mapTypeId, onSelect }: MapTypeSelectorProps) => {
             transition: 'opacity 200ms ease, max-width 220ms ease',
           })}
         >
-          {formatMapTypeLabel(mapTypeId)}
+          {OVERLAY_LABELS[overlay]}
         </Box>
       </Button>
       <Collapse in={isOpen} timeout={200} unmountOnExit>
@@ -75,11 +82,11 @@ const MapTypeSelector = ({ mapTypeId, onSelect }: MapTypeSelectorProps) => {
             padding: theme.spacing(0.5, 1, 1),
           })}
         >
-          {MAP_TYPES.map((type) => (
+          {OVERLAY_TYPES.map((type) => (
             <Button
               key={type}
               variant='text'
-              onClick={() => handleMapTypeSelect(type as MapTypeId)}
+              onClick={() => handleSelect(type)}
               sx={(theme) => ({
                 justifyContent: 'flex-start',
                 textTransform: 'none',
@@ -88,7 +95,7 @@ const MapTypeSelector = ({ mapTypeId, onSelect }: MapTypeSelectorProps) => {
                 '&:hover': {
                   backgroundColor: alpha(theme.palette.background.active, 0.45),
                 },
-                ...(mapTypeId === type && {
+                ...(overlay === type && {
                   fontWeight: 600,
                   backgroundColor: alpha(theme.palette.background.active, 0.6),
                   borderRadius: theme.spacing(0.75),
@@ -101,7 +108,7 @@ const MapTypeSelector = ({ mapTypeId, onSelect }: MapTypeSelectorProps) => {
                 }),
               })}
             >
-              {formatMapTypeLabel(type)}
+              {OVERLAY_LABELS[type]}
             </Button>
           ))}
         </Box>
@@ -110,4 +117,4 @@ const MapTypeSelector = ({ mapTypeId, onSelect }: MapTypeSelectorProps) => {
   )
 }
 
-export default MapTypeSelector
+export default OverlaySelector
