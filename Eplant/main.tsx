@@ -67,7 +67,7 @@ const router = createBrowserRouter([
     ],
     errorElement: <ErrorBoundary></ErrorBoundary>,
   },
-])
+], { basename: import.meta.env.BASE_URL ?? '/' })
 
 export const queryClient = new QueryClient()
 
