@@ -50,6 +50,7 @@ const MapContainer = ({ activeData, state, setState }: MapContainerProps) => {
     <Map
       defaultCenter={state.position}
       defaultZoom={2}
+      maxZoom={8}
       mapId={import.meta.env.VITE_MAP_ID}
       streetViewControl={false}
       mapTypeId={state.mapTypeId}
