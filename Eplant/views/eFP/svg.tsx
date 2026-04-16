@@ -124,12 +124,13 @@ export function getColor(
 
 export function useStyles(
   id: string,
-  { groups, control }: EFPData,
+  data: EFPData,
   colorMode: ColorMode,
   maskThreshold?: number,
   maskingEnabled?: boolean
 ) {
   const theme = useTheme()
+  const { groups, control } = data
   const samples = groups
     .flatMap((group) =>
       group.tissues.map(
@@ -138,7 +139,7 @@ export function useStyles(
             tissue.id
           } { fill: ${getColor(
             tissue.mean,
-            group,
+            data,
             control ?? 1,
             theme,
             colorMode,
