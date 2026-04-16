@@ -139,8 +139,8 @@ export function useStyles(
             tissue.id
           } { fill: ${getColor(
             tissue.mean,
-            data,
-            control ?? 1,
+            group,
+            group.control ?? control ?? 1,
             theme,
             colorMode,
             tissue.std,
