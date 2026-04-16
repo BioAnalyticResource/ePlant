@@ -11,7 +11,14 @@ const InfoContent = ({ id, mean, std, sampleSize }: InfoContentProps) => {
   return (
     <StyledInfoContent>
       <p>
-        <strong>{id}</strong>
+        <strong>
+          {id.split(/<br\s*\/?>/i).map((line, i, arr) => (
+            <span key={i}>
+              {line}
+              {i < arr.length - 1 && <br />}
+            </span>
+          ))}
+        </strong>
       </p>
       <p>Mean: {mean.toFixed(2)}</p>
       <p>Standard error: {std.toFixed(2)}</p>
