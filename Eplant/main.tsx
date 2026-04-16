@@ -20,54 +20,57 @@ import { Config, defaultConfig } from './config'
 import Eplant from './Eplant'
 
 import './css/index.css'
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Eplant />,
-    children: [
-      {
-        element: <Navigate to={'gene-info/'} replace={true}></Navigate>,
-      },
-      {
-        path: 'cell-efp/:geneid?',
-        element: <CellEFPView></CellEFPView>,
-      },
-      {
-        path: 'publications/:geneid?',
-        element: <PublicationsViewer></PublicationsViewer>,
-      },
-      {
-        path: 'chromosome/:geneid?',
-        element: <ChromosomeView></ChromosomeView>,
-      },
-      {
-        path: 'plant-efp/:geneid?',
-        element: <PlantEFPView></PlantEFPView>,
-      },
-      {
-        path: 'experiment-efp/:geneid?',
-        element: <ExperimentEFPView></ExperimentEFPView>,
-      },
-      {
-        path: 'gene-info/:geneid?',
-        element: <GeneInfoView></GeneInfoView>,
-      },
-      {
-        path: 'get-started/:geneid?',
-        element: <GetStartedView></GetStartedView>,
-      },
-      {
-        path: 'navigator-view/:geneid?',
-        element: <NavigatorViewObject></NavigatorViewObject>,
-      },
-      {
-        path: 'interactions-view/:geneid?',
-        element: <InteractionsViewObject></InteractionsViewObject>,
-      },
-    ],
-    errorElement: <ErrorBoundary></ErrorBoundary>,
-  },
-], { basename: import.meta.env.BASE_URL ?? '/' })
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <Eplant />,
+      children: [
+        {
+          element: <Navigate to={'gene-info/'} replace={true}></Navigate>,
+        },
+        {
+          path: 'cell-efp/:geneid?',
+          element: <CellEFPView></CellEFPView>,
+        },
+        {
+          path: 'publications/:geneid?',
+          element: <PublicationsViewer></PublicationsViewer>,
+        },
+        {
+          path: 'chromosome/:geneid?',
+          element: <ChromosomeView></ChromosomeView>,
+        },
+        {
+          path: 'plant-efp/:geneid?',
+          element: <PlantEFPView></PlantEFPView>,
+        },
+        {
+          path: 'experiment-efp/:geneid?',
+          element: <ExperimentEFPView></ExperimentEFPView>,
+        },
+        {
+          path: 'gene-info/:geneid?',
+          element: <GeneInfoView></GeneInfoView>,
+        },
+        {
+          path: 'get-started/:geneid?',
+          element: <GetStartedView></GetStartedView>,
+        },
+        {
+          path: 'navigator-view/:geneid?',
+          element: <NavigatorViewObject></NavigatorViewObject>,
+        },
+        {
+          path: 'interactions-view/:geneid?',
+          element: <InteractionsViewObject></InteractionsViewObject>,
+        },
+      ],
+      errorElement: <ErrorBoundary></ErrorBoundary>,
+    },
+  ],
+  { basename: import.meta.env.BASE_URL ?? '/' }
+)
 
 export const queryClient = new QueryClient()
 
