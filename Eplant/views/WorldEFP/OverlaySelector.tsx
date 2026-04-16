@@ -31,7 +31,7 @@ const OverlaySelector = ({ overlay, onSelect }: OverlaySelectorProps) => {
   return (
     <Box
       sx={(theme) => ({
-        width: isOpen ? theme.spacing(15) : theme.spacing(5),
+        width: isOpen ? theme.spacing(20) : theme.spacing(5),
         borderRadius: theme.spacing(1),
         backgroundColor: alpha(theme.palette.background.active, 0.7),
         boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
@@ -80,6 +80,7 @@ const OverlaySelector = ({ overlay, onSelect }: OverlaySelectorProps) => {
             flexDirection: 'column',
             gap: theme.spacing(0.5),
             padding: theme.spacing(0.5, 1, 1),
+            minWidth: theme.spacing(20),
           })}
         >
           {OVERLAY_TYPES.map((type) => (

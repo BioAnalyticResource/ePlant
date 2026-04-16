@@ -16,6 +16,7 @@ import Legend from '../eFP/Viewer/legend'
 import ClimateOverlay from './ClimateOverlay'
 import MapMarker from './MapMarker'
 import MapTypeSelector from './MapTypeSelector'
+import OverlayLegend from './OverlayLegend'
 import OverlaySelector from './OverlaySelector'
 import { ColorMode, WorldEFPData, WorldEFPState } from './types'
 
@@ -106,28 +107,38 @@ const MapContainer = ({ activeData, state, setState }: MapContainerProps) => {
           bottom: theme.spacing(4),
           zIndex: 10,
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
+          flexDirection: 'row',
+          alignItems: 'flex-end',
           gap: theme.spacing(1),
-          padding: theme.spacing(1),
-          borderRadius: theme.spacing(1),
-          backgroundColor: alpha(theme.palette.background.active, 0.4),
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
-          border: `1px solid ${alpha(theme.palette.background.edge, 0.7)}`,
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
         })}
       >
-        <GeneDistributionChart
-          data={activeData.efpData}
-          containerStyle={{
-            position: 'static',
-            width: 'auto',
-            height: 'auto',
-            marginLeft: '-12px',
-          }}
-        />
-        <Legend colorMode={ColorMode.Absolute} data={activeData.efpData}></Legend>
+        <Box
+          sx={(theme) => ({
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            gap: theme.spacing(1),
+            padding: theme.spacing(1),
+            borderRadius: theme.spacing(1),
+            backgroundColor: alpha(theme.palette.background.active, 0.4),
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
+            border: `1px solid ${alpha(theme.palette.background.edge, 0.7)}`,
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+          })}
+        >
+          <GeneDistributionChart
+            data={activeData.efpData}
+            containerStyle={{
+              position: 'static',
+              width: 'auto',
+              height: 'auto',
+              marginLeft: '-12px',
+            }}
+          />
+          <Legend colorMode={ColorMode.Absolute} data={activeData.efpData} />
+        </Box>
+        <OverlayLegend overlay={state.overlay} />
       </Box>
     </Map>
   )
