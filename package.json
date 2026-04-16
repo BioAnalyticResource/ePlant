@@ -4,6 +4,7 @@
   "description": "Eplant",
   "main": "index.ts",
   "type": "module",
+  "homepage": "https://bioanalyticresource.github.io/ePlant/",
   "scripts": {
     "test": "jest --passWithNoTests",
     "dev": "vite",
