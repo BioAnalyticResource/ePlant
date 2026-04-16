@@ -96,7 +96,8 @@ export function getColor(
   colorMode: ColorMode,
   tissueStd?: number,
   maskThreshold?: number,
-  maskingEnabled?: boolean
+  maskingEnabled?: boolean,
+  absoluteMax?: number
 ): string {
   const extremum = Math.max(
     Math.abs(Math.log2(group.min / control)),
@@ -118,7 +119,7 @@ export function getColor(
     return mix(
       theme.palette.neutral.main,
       theme.palette.hot.main,
-      value / group.max
+      value / (absoluteMax ?? group.max)
     )
 }
 
@@ -145,7 +146,8 @@ export function useStyles(
             colorMode,
             tissue.std,
             maskThreshold,
-            maskingEnabled
+            maskingEnabled,
+            data.max
           )} !important; }`
       )
     )
