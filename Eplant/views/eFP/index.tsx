@@ -97,7 +97,10 @@ export default class EFP {
     const samples: { [key: string]: number } = {}
 
     const fetchedSamples: { value: number; name: string }[] = await fetch(
-      webservice + `id=${gene.id}&samples=${JSON.stringify(sampleNames)}`
+      webservice +
+        `id=${gene.id}&samples=${JSON.stringify(sampleNames)
+          .replace(/\+/g, '%2B')
+          .replace(/ /g, '%20')}`
     )
       .then((res) => res.json())
       .then((data: any[]) =>
