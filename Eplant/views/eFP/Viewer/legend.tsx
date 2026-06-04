@@ -1,7 +1,7 @@
 import { Box, styled, useTheme } from '@mui/material'
 
 import { getColor } from '../svg'
-import { ColorMode, EFPData, EFPState } from '../types'
+import { ColorMode, EFPData } from '../types'
 
 interface ILegendProps {
   data: EFPData
@@ -18,6 +18,11 @@ export default styled(function Legend({
   ...rest
 }: ILegendProps) {
   const theme = useTheme()
+  // TODO: legend uses data.control (cross-group average) and data.min/max as a
+  // global approximation. This can diverge from per-group colours when groups
+  // have different controls. A per-group legend is out of scope for this fix.
+  // I.e. The colours may not line up in this commit/PR due to group colours being different
+  // than the global legend
   const control = data.control ?? 1
   const values = Array(GRADIENT_STEPS)
     .fill(0)

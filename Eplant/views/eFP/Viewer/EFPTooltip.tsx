@@ -124,7 +124,8 @@ function SVGTooltip(props: {
                 <KeyValueRow
                   label='Log2 fold change vs control'
                   value={Math.log2(
-                    props.tissue.mean / (props.data.control ?? 1)
+                    props.tissue.mean /
+                      (props.group.control ?? props.data.control ?? 1)
                   ).toFixed(2)}
                 />
               </TableBody>
