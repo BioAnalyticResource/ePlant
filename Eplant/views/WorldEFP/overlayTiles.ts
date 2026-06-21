@@ -1,53 +1,47 @@
 import { OverlayType } from './types'
 
-export type TileMap = Record<string, string> // "zoom_x_y" -> URL
+const BASE_URL =
+  'https://bar.utoronto.ca/eplant/src/Eplant.Views/WorldView/Tiles'
 
-export type OverlayTileData = {
-  tileMap: TileMap
+type OverlayConfig = {
+  dir: string
+  prefix: string
   maxZoom: number
 }
 
-const BASE_PATH = '/temp_world_efp'
-
-/**
- * Builds a tileMap by constructing public URLs for all tiles in a grid up to maxZoom.
- * At each zoom level z the grid is 2^z x 2^z.
- */
-function buildTileMap(
-  dir: string,
-  prefix: string,
-  maxZoom: number
-): OverlayTileData {
-  const tileMap: TileMap = {}
-  for (let zoom = 0; zoom <= maxZoom; zoom++) {
-    const count = 1 << zoom
-    for (let x = 0; x < count; x++) {
-      for (let y = 0; y < count; y++) {
-        tileMap[`${zoom}_${x}_${y}`] =
-          `${BASE_PATH}/${dir}/${prefix}&zoom=${zoom}&x=${x}&y=${y}.png`
-      }
-    }
-  }
-  return { tileMap, maxZoom }
+const OVERLAY_CONFIG: Record<
+  Exclude<OverlayType, OverlayType.None>,
+  OverlayConfig
+> = {
+  [OverlayType.Precipitation]: {
+    dir: 'AnnualPrecip',
+    prefix: 'Annual_Precipitation',
+    maxZoom: 8,
+  },
+  [OverlayType.HistoricalMinTemp]: {
+    dir: 'HistMin',
+    prefix: 'Historical_Min_Temp_of_coldest_Month',
+    maxZoom: 8,
+  },
+  [OverlayType.HistoricalMaxTemp]: {
+    dir: 'HistMax',
+    prefix: 'Historical_Max_temp_of_warmest_month',
+    maxZoom: 8,
+  },
 }
 
-/**
- * Fetches overlay tile data for the given overlay type.
- *
- * Currently a mock backed by files in public/temp_world_efp.
- * Replace each case body with a fetch() call to the real tile API endpoint
- * when available — the return type stays the same.
- */
-export async function fetchOverlayTiles(
+export function getOverlayMaxZoom(
   overlay: Exclude<OverlayType, OverlayType.None>
-): Promise<OverlayTileData> {
-  switch (overlay) {
-    case OverlayType.Precipitation:
-      return buildTileMap('AnnualPrecip', 'Annual_Precipitation', 2)
-    case OverlayType.HistoricalMinTemp:
-      // No tiles yet — empty map causes getTileUrl to fall back to placeholder
-      return { tileMap: {}, maxZoom: 2 }
-    case OverlayType.HistoricalMaxTemp:
-      return { tileMap: {}, maxZoom: 2 }
-  }
+): number {
+  return OVERLAY_CONFIG[overlay].maxZoom
+}
+
+export function getTileUrl(
+  overlay: Exclude<OverlayType, OverlayType.None>,
+  zoom: number,
+  x: number,
+  y: number
+): string {
+  const { dir, prefix } = OVERLAY_CONFIG[overlay]
+  return `${BASE_URL}/${dir}/${prefix}&zoom=${zoom}&x=${x}&y=${y}.png`
 }
