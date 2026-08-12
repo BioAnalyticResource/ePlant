@@ -72,7 +72,18 @@ const router = createBrowserRouter(
   { basename: import.meta.env.BASE_URL ?? '/' }
 )
 
-export const queryClient = new QueryClient()
+// BAR expression data is immutable for a given gene, so it never goes stale.
+// Without this, React Query's defaults (staleTime 0 + refetchOnWindowFocus)
+// re-fetch every view's data on each tab focus. Queries are keyed by gene id,
+// so switching genes still fetches; returning to a gene is served from cache.
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 function RootApp() {
   return (
