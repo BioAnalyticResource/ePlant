@@ -95,40 +95,25 @@ export default class EFP {
 
     loadEvent(20)
     const samples: { [key: string]: number } = {}
-    // Fetch the sample names in chunks to give a more accurate progress bar
-    const chunks = _.chunk(sampleNames, 20)
-    let loaded = 20
-    const loadStep = (100 - loaded) / chunks.length
-    const data = (
-      await Promise.all(
-        chunks.map((names) =>
-          fetch(
-            webservice +
-              `id=${gene.id}&samples=${encodeURIComponent(
-                JSON.stringify(names)
-              )}`
-          )
-            .then((res) => res.json())
-            .then(
-              (samples) =>
-                samples
-                  .filter(
-                    (sample: any) => sample && !isNaN(parseFloat(sample.value))
-                  )
-                  .map((sample: any) => ({
-                    name: sample.name,
-                    value: parseFloat(sample.value),
-                  })) as { value: number; name: string }[]
-            )
-            .then((samples) => {
-              loaded += loadStep
-              loadEvent(loaded)
-              return samples
-            })
-        )
+
+    const fetchedSamples: { value: number; name: string }[] = await fetch(
+      webservice +
+        `id=${gene.id}&samples=${JSON.stringify(sampleNames)
+          .replace(/\+/g, '%2B')
+          .replace(/ /g, '%20')}`
+    )
+      .then((res) => res.json())
+      .then((data: any[]) =>
+        data
+          .filter((s) => s && !isNaN(parseFloat(s.value)))
+          .map((s) => ({
+            name: s.name,
+            value: parseFloat(s.value),
+          }))
       )
-    ).flat()
-    for (const { name, value } of data) samples[name] = value
+
+    loadEvent(80)
+    for (const { name, value } of fetchedSamples) samples[name] = value
     loadEvent(100)
     const groupsData = groups
       .map((group) => {
