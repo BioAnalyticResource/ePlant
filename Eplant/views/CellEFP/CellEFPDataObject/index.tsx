@@ -1,12 +1,12 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 
 import GeneticElement from '@eplant/GeneticElement'
 import { ViewDataError } from '@eplant/View'
-import { CircularProgress, Typography } from '@mui/material'
+import { CircularProgress, Typography, useTheme } from '@mui/material'
 
 import { getEFPSampleData } from '../../eFP'
-import { useEFPSVG, useStyles } from '../../eFP/svg'
+import { useColorMap, useEFPSVG } from '../../eFP/svg'
 import { EFPData, EFPGroup, EFPTissue } from '../../eFP/types'
 import CellEFPTooltip from '../tooltip'
 import { CellEFPViewerData } from '../types'
@@ -139,15 +139,8 @@ export const CellEFPDataObject: CellEFPDataObject = {
       (geneticElement?.id ?? 'no-gene') +
       '-' +
       useMemo(() => Math.random().toString(16).slice(3), [])
-    const styles = useStyles(id, data.viewData, 'absolute')
-    useEffect(() => {
-      const el = document.createElement('style')
-      el.innerHTML = styles
-      document.head.appendChild(el)
-      return () => {
-        document.head.removeChild(el)
-      }
-    }, [data.viewData.groups, styles])
+    const theme = useTheme()
+    const colorMap = useColorMap(data.viewData, 'absolute')
     // Add tooltips to svg
     const [svgElements, setSvgElements] = useState<
       {
@@ -174,17 +167,30 @@ export const CellEFPDataObject: CellEFPDataObject = {
     }, [svg, id])
 
     useLayoutEffect(() => {
-      const elements = Array.from(
-        data.viewData.groups.flatMap((group) =>
-          group.tissues.map((t) => ({
-            el: document.querySelector(`#${id} .efp-group-${t.id}`),
-            group,
-            tissue: t,
-          }))
-        )
-      )
-      setSvgElements(elements as any)
-    }, [data.viewData.groups, id, svgDiv])
+      const elements: { el: SVGElement; group: EFPGroup; tissue: EFPTissue }[] =
+        []
+      data.viewData.groups.forEach((group) => {
+        group.tissues.forEach((t) => {
+          const el = document.querySelector(`#${id} .efp-group-${t.id}`)
+          if (!el) return
+          const color = colorMap.get(t.id)
+          if (color) {
+            ;(el as SVGElement).style.fill = color
+            el.querySelectorAll('*').forEach((child) => {
+              ;(child as SVGElement).style.fill = color
+            })
+          }
+          elements.push({ el: el as SVGElement, group, tissue: t })
+        })
+      })
+      const container = document.getElementById(id)
+      if (container) {
+        container.querySelectorAll('text, tspan').forEach((textEl) => {
+          ;(textEl as SVGElement).style.fill = theme.palette.text.primary
+        })
+      }
+      setSvgElements(elements)
+    }, [data.viewData.groups, id, svgDiv, colorMap])
     if (!svg) {
       return (
         <div

@@ -123,22 +123,21 @@ export function getColor(
     )
 }
 
-export function useStyles(
-  id: string,
+export function useColorMap(
   data: EFPData,
   colorMode: ColorMode,
   maskThreshold?: number,
   maskingEnabled?: boolean
-) {
+): Map<string, string> {
   const theme = useTheme()
-  const { groups, control } = data
-  const samples = groups
-    .flatMap((group) =>
-      group.tissues.map(
-        (tissue) => `
-          #${id} .efp-group-${tissue.id} *, #${id} .efp-group-${
-            tissue.id
-          } { fill: ${getColor(
+  return useMemo(() => {
+    const { groups, control } = data
+    const colorMap = new Map<string, string>()
+    groups.forEach((group) => {
+      group.tissues.forEach((tissue) => {
+        colorMap.set(
+          tissue.id,
+          getColor(
             tissue.mean,
             group,
             group.control ?? control ?? 1,
@@ -148,16 +147,10 @@ export function useStyles(
             maskThreshold,
             maskingEnabled,
             data.max
-          )} !important; }`
-      )
-    )
-    .join('\n')
-  return `${samples}
-  #${id} text, .${id} tspan {
-    fill: ${theme.palette.text.primary} !important;
-  }
-  /*#${id} .efp-group-outlines path, #${id} .efp-group-Outlines path {
-    stroke: ${theme.palette.secondary.main};
-  }*/
-  `
+          )
+        )
+      })
+    })
+    return colorMap
+  }, [data, colorMode, maskThreshold, maskingEnabled, theme])
 }
