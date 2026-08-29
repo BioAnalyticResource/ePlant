@@ -1,18 +1,43 @@
-import { ColorMode, EFPData } from '../eFP/types'
+import { z } from 'zod'
+
+import { EFPData } from '../eFP/types'
 
 export type Coordinates = { lat: number; lng: number }
 
-type MapTypeId = 'roadmap' | 'satellite' | 'hybrid' | 'terrain'
-
-export type WorldEFPState = {
-  position: Coordinates
-  zoom: number
-  mapTypeId: MapTypeId
-  maskModalVisible: boolean
-  maskingEnabled: boolean
-  maskThreshold: number
-  colorMode: ColorMode
+export enum MapTypeId {
+  Roadmap = 'roadmap',
+  Satellite = 'satellite',
+  Hybrid = 'hybrid',
+  Terrain = 'terrain',
 }
+
+export enum ColorMode {
+  Absolute = 'absolute',
+  Relative = 'relative',
+}
+
+export enum OverlayType {
+  None = 'None',
+  Precipitation = 'Precipitation',
+  HistoricalMinTemp = 'HistoricalMinTemp',
+  HistoricalMaxTemp = 'HistoricalMaxTemp',
+}
+
+export const WorldEFPStateSchema = z.object({
+  position: z.object({
+    lat: z.number().default(25),
+    lng: z.number().default(0),
+  }),
+  zoom: z.number().min(0).max(8).default(2),
+  mapTypeId: z.nativeEnum(MapTypeId).default(MapTypeId.Roadmap),
+  maskModalVisible: z.boolean().default(false),
+  maskingEnabled: z.boolean().default(false),
+  maskThreshold: z.number().min(0).max(100).default(100),
+  colorMode: z.nativeEnum(ColorMode).default(ColorMode.Absolute),
+  overlay: z.nativeEnum(OverlayType).default(OverlayType.None),
+})
+
+export type WorldEFPState = z.infer<typeof WorldEFPStateSchema>
 
 export type WorldEFPData = {
   positions: Coordinates[]
@@ -23,7 +48,6 @@ export interface WorldEFPMicroArrayResponse {
   wasSuccessful: boolean
   data: { [key: string]: WorldEFPMicroArrayData }
 }
-
 export interface WorldEFPMicroArrayData {
   source: string
   id: string
@@ -34,10 +58,3 @@ export interface WorldEFPMicroArrayData {
   values: { [key: string]: number }
   code: string
 }
-export type WorldEFPAction =
-  | { type: 'toggle-color-mode' }
-  | { type: 'toggle-masking' }
-  | { type: 'toggle-mask-modal' }
-  | { type: 'set-mask-threshold'; threshold: number }
-  | { type: 'set-map-position'; position: Coordinates }
-  | { type: 'set-map-zoom'; zoom: number }

@@ -1,13 +1,19 @@
 import * as React from 'react'
-import { SVGProps, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { useDarkMode } from '@eplant/state'
-import { Mail } from '@mui/icons-material'
 import { useTheme } from '@mui/material'
 
 import { EFPData } from '../types'
 
-const GeneDistributionChart = ({ data }: { data: EFPData }) => {
+type GeneDistributionChartProps = {
+  data: EFPData
+  containerStyle?: React.CSSProperties
+}
+
+const GeneDistributionChart = ({
+  data,
+  containerStyle,
+}: GeneDistributionChartProps) => {
   const theme = useTheme()
   const [geneRanking, setGeneRanking] = useState<{
     [key: string]: string
@@ -41,10 +47,11 @@ const GeneDistributionChart = ({ data }: { data: EFPData }) => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        position: 'relative',
+        position: 'absolute',
         zIndex: 10,
         width: '100%',
         height: '10%',
+        ...containerStyle,
       }}
     >
       {geneRanking ? (

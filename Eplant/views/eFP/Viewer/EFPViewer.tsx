@@ -208,7 +208,7 @@ export const EFPViewer = ({
                 />
               </div>
               <MaskModal
-                state={state}
+                threshold={state.maskThreshold}
                 isVisible={state.maskModalVisible}
                 onClose={() =>
                   setViewState({ ...state, maskModalVisible: false })

@@ -10,7 +10,7 @@ import InteractionsViewer from './views/InteractionsViewer'
 import NavigatorView from './views/NavigatorView'
 import PlantEFP from './views/PlantEFP'
 import PublicationViewer from './views/PublicationViewer'
-// import WorldEFP from './views/WorldEFP'
+import WorldEFP from './views/WorldEFP'
 import { type ViewMetadata } from './View'
 
 export type EplantConfig = {
@@ -34,7 +34,7 @@ const userViewMetadata = [
   PlantEFP,
   CellEFP,
   ExperimentEFP,
-  // WorldEFP,
+  WorldEFP,
   ChromosomeViewerObject,
   NavigatorView,
   InteractionsViewer,
